@@ -30,6 +30,7 @@
         }
     },
     "scripts": {
-        "post-install-cmd": "php init --env=Development --overwrite=n"
+        "production-set": "php init --env=Production --overwrite=n",
+        "development-set": "php init --env=Development --overwrite=n"
     }
 }
