@@ -1,0 +1,10 @@
+class_name: AcceptanceTester
+modules:
+    enabled:
+        - WebDriver:
+            url: http://127.0.0.1:8081/wk-portal_dev/
+            browser: chrome
+            window_size: 1280x1024
+            clear_cookies: false
+        - Yii2:
+            part: init

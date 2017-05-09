@@ -1,0 +1,1 @@
+vendor\bin\selenium-server-standalone.bat

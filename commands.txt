@@ -1,0 +1,3 @@
+codecept run acceptance -c frontend
+codecept run acceptance -c frontend --env firefox
+codecept run acceptance -c frontend --colors
