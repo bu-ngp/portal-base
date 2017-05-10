@@ -18,7 +18,8 @@
 
         "codeception/codeception": "^2.2.3",
         "codeception/verify": "~0.3.1",
-        "se/selenium-server-standalone": "~2.53.1"
+        "se/selenium-server-standalone": "~3.4.0",
+        "enm1989/geckodriver": "~0.16.1"
     },
     "config": {
         "process-timeout": 1800,

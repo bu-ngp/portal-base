@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "e05f9b65ead097b1196e3e935b63bf0b",
+    "content-hash": "c482d36a3ae0dda4b49023bc5d696981",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -889,6 +889,44 @@
                 "instantiate"
             ],
             "time": "2015-06-14T21:17:01+00:00"
+        },
+        {
+            "name": "enm1989/geckodriver",
+            "version": "0.16.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ENM1989/geckodriver.git",
+                "reference": "28cd0f619d4b7af3ed3cbd26b88dd641b44657fb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ENM1989/geckodriver/zipball/28cd0f619d4b7af3ed3cbd26b88dd641b44657fb",
+                "reference": "28cd0f619d4b7af3ed3cbd26b88dd641b44657fb",
+                "shasum": ""
+            },
+            "bin": [
+                "bin/geckodriver"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Mozilla Public License Version 2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Nico Müller",
+                    "email": "nico.mueller.1989@googlemail.com"
+                }
+            ],
+            "description": "Composer distribution of Geckodriver. Adds a executable to your composer bin directory.",
+            "homepage": "https://github.com/ENM1989/geckodriver",
+            "keywords": [
+                "firefox",
+                "geckodriver",
+                "selenium",
+                "webdriver"
+            ],
+            "time": "2017-04-28T19:49:48+00:00"
         },
         {
             "name": "facebook/webdriver",
@@ -1890,16 +1928,16 @@
         },
         {
             "name": "se/selenium-server-standalone",
-            "version": "v2.53.1",
+            "version": "3.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sveneisenschmidt/selenium-server-standalone.git",
-                "reference": "ef4eea9c99efb9c0e3084e9cae625662ccd43361"
+                "reference": "86da4447676b2dfd00688ac43db102cf831682af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sveneisenschmidt/selenium-server-standalone/zipball/ef4eea9c99efb9c0e3084e9cae625662ccd43361",
-                "reference": "ef4eea9c99efb9c0e3084e9cae625662ccd43361",
+                "url": "https://api.github.com/repos/sveneisenschmidt/selenium-server-standalone/zipball/86da4447676b2dfd00688ac43db102cf831682af",
+                "reference": "86da4447676b2dfd00688ac43db102cf831682af",
                 "shasum": ""
             },
             "require-dev": {
@@ -1925,7 +1963,7 @@
                 "selenium",
                 "testing"
             ],
-            "time": "2016-07-01T14:16:52+00:00"
+            "time": "2017-04-27T11:26:21+00:00"
         },
         {
             "name": "sebastian/comparator",
