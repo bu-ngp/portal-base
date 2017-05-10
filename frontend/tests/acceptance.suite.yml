@@ -2,7 +2,7 @@ class_name: AcceptanceTester
 modules:
     enabled:
         - WebDriver:
-            url: http://127.0.0.1:8081/wk-portal_dev/
+            url: http://127.0.0.1:8080/wk-portal_dev/
             browser: chrome
             window_size: 1280x1024
             clear_cookies: false
