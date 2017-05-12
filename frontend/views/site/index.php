@@ -5,49 +5,144 @@
 $this->title = 'My Yii Application';
 ?>
 <div class="site-index">
+    <div class="row">
+        <div class="col-md-4">
+            <!-- Media, Title, and Description area -->
+            <div class="pmd-card pmd-card-default pmd-z-depth">
 
-    <div class="jumbotron">
-        <h1>Congratulations!</h1>
+                <!-- Card media -->
+                <div class="pmd-card-media">
+                    <img class="img-responsive"
+                         src="http://propeller.in/assets/images/profile-pic.png">
+                </div>
 
-        <p class="lead">You have successfully created your Yii-powered application.</p>
+                <!-- Card header -->
+                <div class="pmd-card-title">
+                    <h2 class="pmd-card-title-text">Департамент здравоохранения Ханты-Мансийского автономного округа -
+                        Югры</h2>
+                    <span class="pmd-card-subtitle-text">Официальный сайт Департамента здравоохранения Ханты-Мансийского автономного округа - Югры</span>
+                </div>
 
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
-    </div>
-
-    <div class="body-content">
-
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
+                <!-- Card action -->
+                <div class="pmd-card-actions">
+                    <button class="btn pmd-btn-flat pmd-ripple-effect btn-primary" type="button">Перейти</button>
+                </div>
             </div>
         </div>
+        <div class="col-md-4">
+            <!-- Media, Title, and Description area -->
+            <div class="pmd-card pmd-card-default pmd-z-depth">
 
+                <!-- Card media -->
+                <div class="pmd-card-media">
+                    <img class="img-responsive"
+                         src="http://propeller.in/assets/images/profile-pic.png">
+                </div>
+
+                <!-- Card header -->
+                <div class="pmd-card-title">
+                    <h2 class="pmd-card-title-text">Департамент здравоохранения Ханты-Мансийского автономного округа -
+                        Югры</h2>
+                    <span class="pmd-card-subtitle-text">Официальный сайт Департамента здравоохранения Ханты-Мансийского автономного округа - Югры</span>
+                </div>
+
+                <!-- Card action -->
+                <div class="pmd-card-actions">
+                    <button class="btn pmd-btn-flat pmd-ripple-effect btn-primary" type="button">Перейти</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <!-- Media, Title, and Description area -->
+            <div class="pmd-card pmd-card-default pmd-z-depth">
+
+                <!-- Card media -->
+                <div class="pmd-card-media">
+                    <img class="img-responsive"
+                         src="http://propeller.in/assets/images/profile-pic.png">
+                </div>
+
+                <!-- Card header -->
+                <div class="pmd-card-title">
+                    <h2 class="pmd-card-title-text">Департамент здравоохранения Ханты-Мансийского автономного округа -
+                        Югры</h2>
+                    <span class="pmd-card-subtitle-text">Официальный сайт Департамента здравоохранения Ханты-Мансийского автономного округа - Югры</span>
+                </div>
+
+                <!-- Card action -->
+                <div class="pmd-card-actions">
+                    <button class="btn pmd-btn-flat pmd-ripple-effect btn-primary" type="button">Перейти</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <!-- Media, Title, and Description area -->
+            <div class="pmd-card pmd-card-default pmd-z-depth">
+
+                <!-- Card media -->
+                <div class="pmd-card-media">
+                    <img class="img-responsive"
+                         src="http://propeller.in/assets/images/profile-pic.png">
+                </div>
+
+                <!-- Card header -->
+                <div class="pmd-card-title">
+                    <h2 class="pmd-card-title-text">Департамент здравоохранения Ханты-Мансийского автономного округа -
+                        Югры</h2>
+                    <span class="pmd-card-subtitle-text">Официальный сайт Департамента здравоохранения Ханты-Мансийского автономного округа - Югры</span>
+                </div>
+
+                <!-- Card action -->
+                <div class="pmd-card-actions">
+                    <button class="btn pmd-btn-flat pmd-ripple-effect btn-primary" type="button">Перейти</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <!-- Media, Title, and Description area -->
+            <div class="pmd-card pmd-card-default pmd-z-depth">
+
+                <!-- Card media -->
+                <div class="pmd-card-media">
+                    <img class="img-responsive"
+                         src="http://propeller.in/assets/images/profile-pic.png">
+                </div>
+
+                <!-- Card header -->
+                <div class="pmd-card-title">
+                    <h2 class="pmd-card-title-text">Департамент здравоохранения Ханты-Мансийского автономного округа -
+                        Югры</h2>
+                    <span class="pmd-card-subtitle-text">Официальный сайт Департамента здравоохранения Ханты-Мансийского автономного округа - Югры</span>
+                </div>
+
+                <!-- Card action -->
+                <div class="pmd-card-actions">
+                    <button class="btn pmd-btn-flat pmd-ripple-effect btn-primary" type="button">Перейти</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <!-- Media, Title, and Description area -->
+            <div class="pmd-card pmd-card-default pmd-z-depth">
+
+                <!-- Card media -->
+                <div class="pmd-card-media">
+                    <img class="img-responsive"
+                         src="http://propeller.in/assets/images/profile-pic.png">
+                </div>
+
+                <!-- Card header -->
+                <div class="pmd-card-title">
+                    <h2 class="pmd-card-title-text">Департамент здравоохранения Ханты-Мансийского автономного округа -
+                        Югры</h2>
+                    <span class="pmd-card-subtitle-text">Официальный сайт Департамента здравоохранения Ханты-Мансийского автономного округа - Югры</span>
+                </div>
+
+                <!-- Card action -->
+                <div class="pmd-card-actions">
+                    <button class="btn pmd-btn-flat pmd-ripple-effect btn-primary" type="button">Перейти</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
