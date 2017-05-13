@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common\models;
+namespace common\models\base;
 
 use Yii;
 
@@ -53,15 +53,15 @@ class Person extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'person_id' => Yii::t('app\common', 'Person ID'),
-            'person_code' => Yii::t('app\common', 'Person Code'),
-            'person_fullname' => Yii::t('app\common', 'Person Fullname'),
-            'person_username' => Yii::t('app\common', 'Person Username'),
-            'person_auth_key' => Yii::t('app\common', 'Person Auth Key'),
-            'person_password_hash' => Yii::t('app\common', 'Person Password Hash'),
-            'person_email' => Yii::t('app\common', 'Person Email'),
-            'created_at' => Yii::t('app\common', 'Created At'),
-            'updated_at' => Yii::t('app\common', 'Updated At'),
+            'person_id' => Yii::t('common/Person', 'PersonID'),
+            'person_code' => Yii::t('common/Person', 'PersonCode'),
+            'person_fullname' => Yii::t('common/Person', 'Person Fullname'),
+            'person_username' => Yii::t('common/Person', 'Person Username'),
+            'person_auth_key' => Yii::t('common/Person', 'Person Auth Key'),
+            'person_password_hash' => Yii::t('common/Person', 'Person Password Hash'),
+            'person_email' => Yii::t('common/Person', 'Person Email'),
+            'created_at' => Yii::t('common/Person', 'Created At'),
+            'updated_at' => Yii::t('common/Person', 'Updated At'),
         ];
     }
 

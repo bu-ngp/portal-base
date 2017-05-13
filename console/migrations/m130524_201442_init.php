@@ -93,7 +93,7 @@ class m130524_201442_init extends Migration
 
         $this->addPrimaryKey('name', $authManager->itemTable, 'name');
         $this->createIndex('idx-auth_item-type', $authManager->itemTable, 'type');
-        $this->addForeignKey('rule_name', $authManager->itemTable, 'name', $authManager->ruleTable, 'name', $this->isMSSQL() ? null : 'SET NULL', $this->isMSSQL() ? null : 'CASCADE');
+        $this->addForeignKey('rule_name', $authManager->itemTable, 'rule_name', $authManager->ruleTable, 'name', $this->isMSSQL() ? null : 'SET NULL', $this->isMSSQL() ? null : 'CASCADE');
 
         $this->createTable($authManager->itemChildTable, [
             'parent' => $this->string(64)->notNull(),

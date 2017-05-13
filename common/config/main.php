@@ -4,7 +4,11 @@ return [
     'layoutPath' => dirname(dirname(__DIR__)) . '/common/views/layouts',
     'language' => 'ru-RU',
     'sourceLanguage' => 'en-US',
-    'bootstrap'    => ['assetsAutoCompress', 'log'],
+    'bootstrap' => [
+        'assetsAutoCompress',
+        'log',
+        'domain\bootstrap\BaseDomainBootstrap',
+    ],
     'components' => [
         'assetManager' => [
             'appendTimestamp' => true,
@@ -59,6 +63,23 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'login' => 'site/login',
+            ],
+        ],
+        'urlManagerAdmin' => [
+            'class' => 'yii\web\urlManager',
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'baseUrl' => 'manager',
+            'rules' => [
+                'login' => 'site/login',
+            ],
+        ],
+        'urlManagerFrontend' => [
+            'class' => 'yii\web\urlManager',
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => [
             ],
         ],
         'authManager' => [
@@ -75,6 +96,20 @@ return [
         'session' => [
             // this is the name of the session cookie used for login
             'name' => 'wk-portal',
+        ],
+        'i18n' => [
+            'translations' => [
+                '*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/../common/messages',
+                    'sourceLanguage' => 'en-US',
+                    /*  'fileMap' => [
+                          'app' => 'app.php',
+                          'app/error' => 'error.php',
+                          'app/common' => 'common.php',
+                      ],*/
+                ],
+            ],
         ],
     ],
 ];
