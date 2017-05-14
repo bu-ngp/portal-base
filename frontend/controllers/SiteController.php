@@ -1,6 +1,8 @@
 <?php
 namespace frontend\controllers;
 
+use domain\services\base\PersonService;
+use domain\services\proxyService;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
@@ -18,6 +20,17 @@ use frontend\models\ContactForm;
  */
 class SiteController extends Controller
 {
+    /**
+     * @var PersonService
+     */
+    private $personService;
+
+    public function __construct($id, $module, PersonService $personService, $config = [])
+    {
+        $this->personService = new proxyService($personService);
+        parent::__construct($id, $module, $config = []);
+    }
+
     /**
      * @inheritdoc
      */
@@ -82,18 +95,18 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+        $form = new \domain\forms\LoginForm();
+        if ($form->load(Yii::$app->request->post()) && $form->validate()
+            && $this->personService->login($form->person_username, $form->person_password, $form->person_rememberMe)
+        ) {
+            return $this->goBack();
         }
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            return $this->render('login', [
-                'model' => $model,
-            ]);
-        }
+        $form->addErrors($this->personService->getErrors());
+
+        return $this->render('login', [
+            'LoginForm' => $form,
+        ]);
     }
 
     /**
@@ -103,7 +116,7 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
-        Yii::$app->user->logout();
+        $this->personService->logout();
 
         return $this->goHome();
     }

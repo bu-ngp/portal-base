@@ -13,8 +13,10 @@
         "skeeks/yii2-assets-auto-compress": "*",
         "phpoffice/phpexcel": "~1.8.0",
         "npm-asset/propellerkit": "^1.1",
+        "npm-asset/masonry-layout": "*",
         "wartron/yii2-uuid": "@dev",
-        "moontoast/math": "~1.1.2"
+        "moontoast/math": "~1.1.2",
+        "rmrevin/yii2-fontawesome": "~2.17"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

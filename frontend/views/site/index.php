@@ -25,7 +25,7 @@ $this->title = 'My Yii Application';
 
                 <!-- Card action -->
                 <div class="pmd-card-actions">
-                    <button class="btn pmd-btn-flat pmd-ripple-effect btn-primary" type="button">Перейти</button>
+                    <a class="btn pmd-btn-flat pmd-ripple-effect btn-primary" href="<?= Yii::$app->urlManagerAdmin->createUrl(['/']) ?>">Перейти</a>
                 </div>
             </div>
         </div>

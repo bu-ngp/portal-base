@@ -1,0 +1,29 @@
+i.wk-style {
+    font-size: 160px;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 10px;
+}
+
+div.pmd-card-media {
+    text-align: center;
+}
+
+div.pmd-card-media.wk-red-style {
+    background-color: #ffb2b2;
+}
+
+div.pmd-card-media.wk-blue-style {
+    background-color: #b2d5ff;
+}
+
+div.pmd-card-media.wk-green-style {
+    background-color: #bbecae;
+}
+
+div.pmd-card-media.wk-yellow-style {
+    background-color: #fff59e;
+}
+
+div.pmd-card-media.wk-grey-style {
+    background-color: #d6d6d6;
+}

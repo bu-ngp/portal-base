@@ -2,7 +2,10 @@
 
 namespace common\models\base;
 
+use wartron\yii2uuid\helpers\Uuid;
 use Yii;
+use yii\base\NotSupportedException;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "{{%person}}".
@@ -21,7 +24,7 @@ use Yii;
  * @property AuthItem[] $itemNames
  * @property Profile $person
  */
-class Person extends \yii\db\ActiveRecord
+class Person extends \yii\db\ActiveRecord implements IdentityInterface
 {
     /**
      * @inheritdoc
@@ -53,15 +56,15 @@ class Person extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'person_id' => Yii::t('common/Person', 'PersonID'),
-            'person_code' => Yii::t('common/Person', 'PersonCode'),
-            'person_fullname' => Yii::t('common/Person', 'Person Fullname'),
-            'person_username' => Yii::t('common/Person', 'Person Username'),
-            'person_auth_key' => Yii::t('common/Person', 'Person Auth Key'),
-            'person_password_hash' => Yii::t('common/Person', 'Person Password Hash'),
-            'person_email' => Yii::t('common/Person', 'Person Email'),
-            'created_at' => Yii::t('common/Person', 'Created At'),
-            'updated_at' => Yii::t('common/Person', 'Updated At'),
+            'person_id' => Yii::t('common/person', 'Person ID'),
+            'person_code' => Yii::t('common/person', 'Person Code'),
+            'person_fullname' => Yii::t('common/person', 'Person Fullname'),
+            'person_username' => Yii::t('common/person', 'Person Username'),
+            'person_auth_key' => Yii::t('common/person', 'Person Auth Key'),
+            'person_password_hash' => Yii::t('common/person', 'Person Password Hash'),
+            'person_email' => Yii::t('common/person', 'Person Email'),
+            'created_at' => Yii::t('common/person', 'Created At'),
+            'updated_at' => Yii::t('common/person', 'Updated At'),
         ];
     }
 
@@ -87,5 +90,83 @@ class Person extends \yii\db\ActiveRecord
     public function getPerson()
     {
         return $this->hasOne(Profile::className(), ['profile_id' => 'person_id']);
+    }
+
+    /**
+     * Finds an identity by the given ID.
+     * @param string|int $id the ID to be looked for
+     * @return IdentityInterface the identity object that matches the given ID.
+     * Null should be returned if such an identity cannot be found
+     * or the identity is not in an active state (disabled, deleted, etc.)
+     */
+    public static function findIdentity($id)
+    {
+        return static::findOne($id);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+    }
+
+    /**
+     * Returns an ID that can uniquely identify a user identity.
+     * @return string|int an ID that uniquely identifies a user identity.
+     */
+    public function getId()
+    {
+        return Uuid::uuid2str($this->getPrimaryKey());
+    }
+
+    /**
+     * Returns a key that can be used to check the validity of a given identity ID.
+     *
+     * The key should be unique for each individual user, and should be persistent
+     * so that it can be used to check the validity of the user identity.
+     *
+     * The space of such keys should be big enough to defeat potential identity attacks.
+     *
+     * This is required if [[User::enableAutoLogin]] is enabled.
+     * @return string a key that is used to check the validity of a given identity ID.
+     * @see validateAuthKey()
+     */
+    public function getAuthKey()
+    {
+        return $this->person_auth_key;
+    }
+
+    /**
+     * Validates the given auth key.
+     *
+     * This is required if [[User::enableAutoLogin]] is enabled.
+     * @param string $authKey the given auth key
+     * @return bool whether the given auth key is valid.
+     * @see getAuthKey()
+     */
+    public function validateAuthKey($authKey)
+    {
+        return $this->getAuthKey() === $authKey;
+    }
+
+    /**
+     * Finds user by username
+     *
+     * @param string $username
+     * @return static|null
+     */
+    public static function findByUsername($username)
+    {
+        return static::findOne(['person_username' => $username]);
+    }
+
+    /**
+     * Validates password
+     *
+     * @param string $password password to validate
+     * @return bool if password provided is valid for current user
+     */
+    public function validatePassword($password)
+    {
+        return Yii::$app->security->validatePassword($password, $this->person_password_hash);
     }
 }
