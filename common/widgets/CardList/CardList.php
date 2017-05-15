@@ -54,18 +54,17 @@ class CardList extends Widget
         $this->registerAssets();
         echo $this->initLayout();
         $view = $this->getView();
-        $view->registerJs("$('#container').masonry({ itemSelector: '.wk-widget-card', isAnimated: true });", View::POS_END);
+        $view->registerJs(str_replace('id-widget', $this->id, file_get_contents(__DIR__ . '/assets/js/init.js')), View::POS_END);
     }
 
     protected function registerAssets()
     {
-
         CardListAsset::register(self::getView());
     }
 
     protected function initLayout()
     {
-        return Html::tag('div', $this->renderCards(), ['class' => 'row wk-widget-container', 'id' => 'container']);
+        return Html::tag('div', $this->renderCards(), ['class' => 'row wk-widget-container', 'id' => $this->id]) . $this->renderScrollPager();
     }
 
     protected function renderCards()
@@ -78,6 +77,10 @@ class CardList extends Widget
             }
 
             $content .= $this->renderCard($card);
+
+            if (($index + 1) % 3 == 0) {
+                $content .= $this->renderLineBlock();
+            }
         }
         return $content;
     }
@@ -98,7 +101,7 @@ class CardList extends Widget
 
         $content = Html::tag('div', $media . $title . $actions, ['class' => 'pmd-card pmd-card-default pmd-z-depth']);
 
-        return Html::tag('div', $content, ['class' => 'col-md-4 wk-widget-card']);
+        return Html::tag('div', $content, ['class' => 'col-xs-12 col-sm-6 col-md-4 wk-widget-card wk-widget-show']);
     }
 
     protected function createMedia($preview)
@@ -107,5 +110,15 @@ class CardList extends Widget
             return FA::icon($preview['FAIcon'], ['class' => 'wk-style']);
         }
         return Html::img($preview, ['class' => 'img-responsive']);
+    }
+
+    protected function renderScrollPager()
+    {
+        return Html::tag('div', FA::icon(FA::_COG)->size(FA::SIZE_4X)->spin(), ['id' => $this->id . '-scroll-pager', 'class' => 'wk-widget-pager', 'style' => 'display: none;']);
+    }
+
+    protected function renderLineBlock()
+    {
+        return Html::tag('div', '', ['class' => 'col-xs-12 wk-widget-card wk-widget-hide']);
     }
 }

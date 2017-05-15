@@ -13,12 +13,13 @@ use yii\web\AssetBundle;
 
 class MasonryAssets extends AssetBundle
 {
-    public $sourcePath = '@npm/masonry-layout';
+    public $sourcePath = '@npm';
     public $css = [
 
     ];
     public $js = [
-        'dist/masonry.pkgd.min.js',
+        'masonry-layout/dist/masonry.pkgd.min.js',
+        'imagesloaded/imagesloaded.pkgd.min.js',
     ];
     public $depends = [
     ];
