@@ -20,7 +20,7 @@ class CardListAsset extends AssetBundle
         ];
 
         $this->js = [
-
+            'js/wkcardlist.js',
         ];
 
         $this->depends = [

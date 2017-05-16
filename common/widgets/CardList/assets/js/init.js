@@ -2,7 +2,13 @@
  * Created by VOVANCHO on 15.05.2017.
  */
 $(document).ready(function () {
-    $('#id-widget').imagesLoaded(function () {
+
+
+    console.debug(object);
+
+    $("#id-widget").wkcardlist(object);
+
+ /*   $('#id-widget').imagesLoaded(function () {
         $('#id-widget').masonry({
             itemSelector: '.wk-widget-card',
             isAnimated: true,
@@ -33,6 +39,6 @@ $(document).ready(function () {
     $(".wk-widget-card.wk-widget-show").each(function (i, elem) {
         var stallFor = 100 * parseInt(i);
         $(this).delay(stallFor).animate({opacity: 1}, 500);
-    });
+    });*/
 
 });

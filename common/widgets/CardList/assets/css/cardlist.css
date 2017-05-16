@@ -24,9 +24,9 @@ div.pmd-card-media.wk-red-style {
     background-color: #ffb2b2;
     background: #ef7375;
     background: -moz-radial-gradient(center, ellipse cover, #ef7375 0%, #8e525f 44%, #6b2a38 100%);
-    background: -webkit-radial-gradient(center, ellipse cover, #ef7375 0%,#8e525f 44%,#6b2a38 100%);
-    background: radial-gradient(ellipse at center, #e47779 0%,#e86985 44%,#6b2a38 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ef7375', endColorstr='#6b2a38',GradientType=1 );
+    background: -webkit-radial-gradient(center, ellipse cover, #ef7375 0%, #8e525f 44%, #6b2a38 100%);
+    background: radial-gradient(ellipse at center, #e47779 0%, #e86985 44%, #6b2a38 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ef7375', endColorstr='#6b2a38', GradientType=1);
 }
 
 div.pmd-card-media.wk-blue-style {
@@ -47,6 +47,7 @@ div.pmd-card-media.wk-grey-style {
 
 .wk-widget-card.wk-widget-show {
     opacity: 0;
+    /*height: 460px;*/
 }
 
 .wk-widget-card.wk-widget-show.wk-widget-scroll {
@@ -61,4 +62,31 @@ div.pmd-card-media.wk-grey-style {
 .wk-widget-pager {
     color: #717171;
     text-align: center;
+}
+
+.pmd-card-subtitle-text {
+    text-overflow: ellipsis;
+    max-height: 105px;
+    overflow: hidden;
+    display: inline-block;
+    text-align: justify;
+}
+
+.pmd-card-title-text {
+    text-overflow: ellipsis;
+    max-height: 32px;
+    overflow: hidden;
+}
+
+.pmd-card-actions {
+    max-width: 335px;
+    max-height: 51px;
+    overflow: hidden;
+}
+
+.pmd-card-actions > a {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 335px;
 }
