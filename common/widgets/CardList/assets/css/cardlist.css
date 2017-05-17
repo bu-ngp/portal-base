@@ -62,6 +62,7 @@ div.pmd-card-media.wk-grey-style {
 .wk-widget-pager {
     color: #717171;
     text-align: center;
+    margin-top: 20px;
 }
 
 .pmd-card-subtitle-text {
@@ -89,4 +90,17 @@ div.pmd-card-media.wk-grey-style {
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 335px;
+}
+
+.wk-widget-search-panel {
+    margin-bottom: 20px;
+}
+
+.wk-widget-search-panel-icon {
+    top: 15px;
+    text-align: right;
+}
+
+.wk-widget-search-panel-icon > i {
+    color: rgba(0, 0, 0, 0.4);
 }

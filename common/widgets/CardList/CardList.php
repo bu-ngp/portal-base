@@ -66,10 +66,11 @@ class CardList extends Widget
             'linkName' => Yii::t('wk-widget', 'Follow the link'),
         ];
 
-        $optionsReplaced = str_replace('object', json_encode($options), file_get_contents(__DIR__ . '/assets/js/init.js'));
+        $optionsReplaced = str_replace('object', json_encode($options, JSON_UNESCAPED_UNICODE), file_get_contents(__DIR__ . '/assets/js/init.js'));
 
         $idReplaced = str_replace('id-widget', $this->id, $optionsReplaced);
 
+        $view->registerJs(file_get_contents(__DIR__ . '/assets/js/wkcardlist.ru.js'), View::POS_END);
         $view->registerJs($idReplaced, View::POS_END);
     }
 

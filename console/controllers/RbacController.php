@@ -7,7 +7,7 @@
  */
 namespace console\controllers;
 
-use common\models\Person;
+use common\models\base\Person;
 use console\helpers\RbacHelper;
 use Yii;
 use yii\console\Controller;

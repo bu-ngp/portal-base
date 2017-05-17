@@ -27,6 +27,12 @@ return [
         ],
         'urlManager' => [
             'rules' => [
+                //'base/<controller:\w+>/<action:\w+>' => 'base/<controller>/<action>',
+                //'<controller:\w+>/<action:\w+>' => 'base/<controller>/<action>',
+               // 'roles' => '<controller>/<action>',
+             //    '<controller:roles>/<action:\w+>' => 'base/<controller>/<action>',
+                '<controller:roles>' => 'base/<controller>',
+              //  '<controller:roles>/<action:\w+>' => 'base/<controller>/<action>',
                 'login' => 'site/login',
             ],
         ],
