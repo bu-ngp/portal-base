@@ -113,8 +113,11 @@ return [
         ],
     ],
     'modules' => [
-        'wkcardlist' => [
-            'class' => '\common\widgets\CardList\Module'
+        /*  'wkcardlist' => [
+              'class' => '\common\widgets\CardList\Module'
+          ]*/
+        'gridview' => [
+            'class' => '\kartik\grid\Module'
             // enter optional module parameters below - only if you need to
             // use your own export download action or custom translation
             // message source

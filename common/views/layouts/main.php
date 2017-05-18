@@ -81,6 +81,20 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
 
 </div>
 <?php $this->endBody() ?>
+<script>
+    $('td.kv-nowrap').tooltip({
+
+    });
+    $('td.kv-nowrap').on('show.bs.tooltip', function(e){
+        console.debug(e.target.textContent);
+        console.debug($(e.target).children().width());
+        console.debug(e.target.offsetWidth);
+        console.debug(e.target.offsetWidth - $(e.target).children().width());
+        if (e.target.offsetWidth - $(e.target).children().width() > 20) {
+            return false;
+        }
+    });
+</script>
 </body>
 </html>
 <?php $this->endPage() ?>

@@ -9,6 +9,7 @@ namespace console\controllers;
 
 use common\models\base\Person;
 use console\helpers\RbacHelper;
+use domain\models\base\AuthItem;
 use Yii;
 use yii\console\Controller;
 
@@ -16,60 +17,40 @@ class RbacController extends Controller
 {
     public function actionInit()
     {
-        $auth = Yii::$app->authManager;
+        $userOperator = RbacHelper::createRole(RbacHelper::USER_OPERATOR, 'Оператор менеджера пользователей',
+            RbacHelper::createPermission(RbacHelper::USER_EDIT, 'Редактирование пользователей'));
 
-        $userEdit = $auth->createPermission(RbacHelper::USER_EDIT);
-        $userEdit->description = 'Редактирование пользователей';
-        $auth->add($userEdit);
+        $roleOperator = RbacHelper::createRole(RbacHelper::ROLE_OPERATOR, 'Оператор менеджера ролей',
+            RbacHelper::createPermission(RbacHelper::ROLE_EDIT, 'Редактирование ролей пользователя'));
 
-        $userOperator = $auth->createRole(RbacHelper::USER_OPERATOR);
-        $userOperator->description = 'Оператор менеджера пользователей';
-        $auth->add($userOperator);
-        $auth->addChild($userOperator, $userEdit);
+        $basePodrazEdit = RbacHelper::createRole(RbacHelper::BASE_PODRAZ_EDIT, 'Оператор справочника "Подразделения"',
+            RbacHelper::createPermission(RbacHelper::PODRAZ_EDIT, 'Редактирование справочника "Подразделения"'));
 
-        $roleEdit = $auth->createPermission(RbacHelper::ROLE_EDIT);
-        $roleEdit->description = 'Редактирование ролей пользователя';
-        $auth->add($roleEdit);
+        $baseDolzhEdit = RbacHelper::createRole(RbacHelper::BASE_DOLZH_EDIT, 'Оператор справочника "Должности"',
+            RbacHelper::createPermission(RbacHelper::DOLZH_EDIT, 'Редактирование справочника "Должности"'));
 
-        $roleOperator = $auth->createRole(RbacHelper::ROLE_OPERATOR);
-        $roleOperator->description = 'Оператор менеджера ролей';
-        $auth->add($roleOperator);
-        $auth->addChild($roleOperator, $roleEdit);
+        $baseAdministrator = RbacHelper::createRole(RbacHelper::BASE_ADMINISTRATOR, 'Администратор базовой конфигурации',
+            [
+                $userOperator,
+                $roleOperator,
+                $basePodrazEdit,
+                $baseDolzhEdit,
+            ]);
 
-        $podrazEdit = $auth->createPermission(RbacHelper::PODRAZ_EDIT);
-        $podrazEdit->description = 'Редактирование справочника "Подразделения"';
-        $auth->add($podrazEdit);
-
-        $basePodrazEdit = $auth->createRole(RbacHelper::BASE_PODRAZ_EDIT);
-        $basePodrazEdit->description = 'Оператор справочника "Подразделения"';
-        $auth->add($basePodrazEdit);
-        $auth->addChild($basePodrazEdit, $podrazEdit);
-
-        $dolzhEdit = $auth->createPermission(RbacHelper::DOLZH_EDIT);
-        $dolzhEdit->description = 'Редактирование справочника "Должности"';
-        $auth->add($dolzhEdit);
-
-        $baseDolzhEdit = $auth->createRole(RbacHelper::BASE_DOLZH_EDIT);
-        $baseDolzhEdit->description = 'Оператор справочника "Должности"';
-        $auth->add($baseDolzhEdit);
-        $auth->addChild($baseDolzhEdit, $dolzhEdit);
-
-        $baseAdministrator = $auth->createRole(RbacHelper::BASE_ADMINISTRATOR);
-        $baseAdministrator->description = 'Администратор базовой конфигурации';
-        $auth->add($baseAdministrator);
-        $auth->addChild($baseAdministrator, $userOperator);
-        $auth->addChild($baseAdministrator, $roleOperator);
-        $auth->addChild($baseAdministrator, $basePodrazEdit);
-        $auth->addChild($baseAdministrator, $baseDolzhEdit);
-
-        $administrator = $auth->createRole(RbacHelper::ADMINISTRATOR);
-        $administrator->description = 'Администратор системы';
-        $auth->add($administrator);
-        $auth->addChild($administrator, $baseAdministrator);
+        $administrator = RbacHelper::createRole(RbacHelper::ADMINISTRATOR, 'Администратор системы', $baseAdministrator);
 
         $person = Person::find()->where(['person_username' => 'admin'])->one();
+
         if ($person) {
-            $auth->assign($administrator, $person->primaryKey);
+            $auth = Yii::$app->authManager;
+
+            if (!$auth->getAssignment($administrator->name, $person->primaryKey)) {
+                $auth->assign($administrator, $person->primaryKey);
+            }
+        } else {
+            throw new \Exception('user admin not exist');
         }
+
+        AuthItem::updateAll(['view' => 1], ['name' => 'Administrator']);
     }
 }

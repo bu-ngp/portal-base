@@ -46,7 +46,7 @@ div.pmd-card-media.wk-grey-style {
 }
 
 .wk-widget-card.wk-widget-show {
-    opacity: 0;
+    opacity: 1;
     /*height: 460px;*/
 }
 

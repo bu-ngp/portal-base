@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\controllers\base;
+namespace backend\controllers;
 
 use Yii;
 use domain\models\base\AuthItem;
@@ -25,7 +25,7 @@ class RolesController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index'],
+                      //  'actions' => ['index'],
                         'allow' => true,
                     ],
                 ],

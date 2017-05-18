@@ -21,7 +21,7 @@ $this->title = 'My Yii Application';
     <!--    </div>-->
     <?=
     CardList::widget([
-        //   'url' => '/wk-portal_dev/site/test',
+        //  'url' => '/wk-portal_dev/site/test',
         'items' => [
             [
                 'styleClass' => CardList::RED_STYLE,
@@ -31,8 +31,23 @@ $this->title = 'My Yii Application';
                 'title' => 'Роли',
                 'description' => 'Создание и редактирование ролей в системе',
                 'link' => Yii::$app->urlManager->createUrl(['roles']),
-            ],
-
+            ], [
+                'styleClass' => CardList::BLUE_STYLE,
+                'preview' => [
+                    'FAIcon' => 'list-alt',
+                ],
+                'title' => 'Пользователи',
+                'description' => 'продвинутые люди',
+                'link' => Yii::$app->urlManager->createUrl(['roles']),
+            ], [
+                'styleClass' => CardList::GREY_STYLE,
+                'preview' => [
+                    'FAIcon' => 'list-alt',
+                ],
+                'title' => 'Настройки',
+                'description' => 'серьезные люди',
+                'link' => Yii::$app->urlManager->createUrl(['roles']),
+            ]
         ],
     ])
     ?>

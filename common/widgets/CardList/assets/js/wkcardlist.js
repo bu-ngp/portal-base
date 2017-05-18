@@ -8,9 +8,10 @@
     };
 
     var options = {
-        'url': '',
-        'linkName': LANG.followLink,
-        'items': [],
+        url: '',
+        cardsPerPage: 6,
+        items: [],
+        ajaxSearchName: 'search',
         init: function (options) {
 
             function makeCard(props) {
@@ -114,39 +115,23 @@
                 return $('<div id="' + pagerid + '" class="wk-widget-pager" style="display: none;"><i class="fa fa-refresh fa-4x fa-spin"></i></div>');
             }
 
-            function initMasonry($thisRow, pagerid) {
-                $thisRow.imagesLoaded(function () {
-                    $thisRow.on('layoutComplete', function () {
-                        if (typeof(options.url) == "string" && options.url != '') {
-                            triggerNextPage({
-                                pagerid: pagerid,
-                                appendTo: $thisRow
-                            });
-                            $thisRow.unbind('layoutComplete');
-                        }
-                    });
-
-                    $thisRow.masonry({
-                        itemSelector: '.wk-widget-card',
-                        isAnimated: true,
-                        horizontalOrder: true,
-                        percentPosition: true
-                    });
+            function initMasonry($thisRow) {
+                $thisRow.masonry({
+                    itemSelector: '.wk-widget-card',
+                    isAnimated: true,
+                    horizontalOrder: true,
+                    percentPosition: true,
+                    transitionDuration: '0.8s'
                 });
             }
 
             function initScrollPager(props) {
                 if (typeof props === 'object') {
                     $(window).scroll(function () {
-                        /* console.debug('$(window).scrollTop(): ' + $(window).scrollTop());
-                         console.debug('$(document).height(): ' + $(document).height());
-                         console.debug('$(window).height(): ' + $(window).height());
-                         console.debug('$(document).height() - $(window).height(): ' + ($(document).height() - $(window).height()));
-                         */
                         if ($(window).scrollTop() + 5 >= $(document).height() - $(window).height()) {
                             triggerNextPage({
                                 pagerid: props.pagerid,
-                                appendTo: props.appendTo
+                                container: props.container
                             });
                         }
                     });
@@ -157,38 +142,47 @@
 
             function triggerNextPage(props) {
                 if (typeof props === 'object') {
-                    $('div#' + props.pagerid).show();
-                    $.ajax({
-                        url: options.url,
-                        success: function (items) {
-                            if (typeof items == 'object') {
-                                fillCards({
-                                    items: items,
-                                    appendToElem: props.appendTo,
-                                    scroll: true,
-                                    pagerid: props.pagerid,
-                                    fillComplete: function ($items) {
-                                        this.appendToElem.masonry('appended', $items);
-                                        $($items).animate({opacity: 1}, 500);
-                                        $('div#' + this.pagerid).hide();
-                                    },
-                                    fillIncomplete: function () {
+                    if (!props.container.ajaxSended || typeof props.container.ajaxSended == 'undefined') {
+                        $('div#' + props.pagerid).show();
+                        $.ajax({
+                            url: options.url,
+                            data: {
+                                page: props.container.currentPage,
+                                'per-page': options.cardsPerPage
+                            },
+                            beforeSend: function () {
+                                props.container.ajaxSended = true;
+                            },
+                            success: function (items) {
+                                if (typeof items == 'object') {
+                                    addItemsMasonry({
+                                        itemsElements: getCards({
+                                            items: items
+                                        }),
+                                        container: props.container
+                                    });
+
+                                    $('div#' + props.pagerid).hide();
+
+                                    if (items.length == 0) {
                                         $(window).unbind('scroll');
-                                        $('div#' + this.pagerid).hide();
+                                    } else {
+                                        props.container.currentPage = ++props.container.currentPage;
                                     }
-                                });
+                                }
+                                props.container.ajaxSended = false;
                             }
-                        }
-                    });
+                        });
+                    }
                 } else {
                     console.error('triggerNextPage(props) - props is not Object, is ' + (typeof props));
                 }
             }
 
-            function fillCards(props) {
+            function getCards(props) {
                 if (typeof props === 'object') {
+                    var $cards = $();
                     if (props.items != null && props.items.length > 0) {
-                        var $cards = $();
                         var $card;
 
                         $.each(props.items, function () {
@@ -197,25 +191,40 @@
                                 styleClass: this.styleClass,
                                 title: this.title,
                                 description: this.description,
-                                link: this.link,
-                                scroll: props.scroll
+                                link: this.link
                             });
 
                             $cards = $cards.add($card);
                         });
-
-                        props.appendToElem.append($cards);
-
-                        if (typeof props.fillComplete === 'function') {
-                            props.fillComplete($cards);
-                        }
-                    } else {
-                        if (typeof props.fillComplete === 'function') {
-                            props.fillIncomplete();
-                        }
                     }
+
+                    return $cards;
                 } else {
-                    console.error('fillCards(props) - props is not Object, is ' + (typeof props));
+                    console.error('getCards(props) - props is not Object, is ' + (typeof props));
+                }
+            }
+
+            function itemsExists() {
+                return options.items != null && options.items.length > 0;
+            }
+
+            function itemsUrlExists() {
+                return typeof(options.url) == "string" && options.url != ''
+            }
+
+            function addItemsMasonry(props) {
+                if (typeof props === 'object') {
+                    var isEmptyContainer = props.container.masonry('getItemElements').length == 0;
+                    props.container.append(props.itemsElements);
+                    if (isEmptyContainer) {
+                        props.container.masonry('addItems', props.itemsElements);
+                        props.container.masonry('layout');
+                    } else {
+                        props.container.masonry('appended', props.itemsElements);
+                    }
+
+                } else {
+                    console.error('addItemsMasonry(props) - props is not Object, is ' + (typeof props));
                 }
             }
 
@@ -233,39 +242,108 @@
 
                     console.debug(options);
 
-                    $this.addClass('wk-widget-container');
+                    $this.addClass('wk-widget-container container-fluid');
 
                     var idWidget = makeID($this);
                     var pagerid = idWidget + '-scroll-pager';
 
                     makeSearchPanel(idWidget).appendTo($this);
 
-                    var $thisRow = $('<div class="row pmd-z-depth"></div>').appendTo($this);
+                    var $thisRow = $('<div class="pmd-z-depth"></div>').appendTo($this);
 
-                    fillCards({
-                        items: options.items,
-                        appendToElem: $thisRow
-                    });
-
-                    if (typeof(options.url) == "string" && options.url != '') {
+                    if (itemsUrlExists()) {
                         makeScrollPager(pagerid).insertAfter($thisRow);
+                        $thisRow.currentPage = 1;
                     }
 
-                    initMasonry($thisRow, pagerid);
+                    initMasonry($thisRow);
 
-                    if (typeof(options.url) == "string" && options.url != '') {
+                    if (itemsExists()) {
+                        addItemsMasonry({
+                            itemsElements: getCards({
+                                items: options.items
+                            }),
+                            container: $thisRow
+                        });
+                        var $LocalElemsStore = $thisRow.children().clone(true);
+                    }
+                    if (itemsUrlExists()) {
                         initScrollPager({
                             pagerid: pagerid,
-                            appendTo: $thisRow
+                            container: $thisRow
+                        });
+
+                        triggerNextPage({
+                            pagerid: pagerid,
+                            container: $thisRow
                         });
                     }
 
-                    if (options.items != null && options.items.length > 0) {
-                        $(".wk-widget-card.wk-widget-show").each(function (i) {
-                            var stallFor = 100 * parseInt(i);
-                            $(this).delay(stallFor).animate({opacity: 1}, 500);
-                        });
-                    }
+                    //--------
+
+                    var $searchInput = $('#' + idWidget + '-wk-widget-search-input');
+
+                    $searchInput.keypress(function (e) {
+                        if (e.keyCode != 17 && !e.ctrlKey) {
+                            $searchInput.oldText = $(this).val();
+                        }
+                    });
+
+                    $searchInput.keyup(function (e) {
+                        if (e.keyCode != 17 && !e.ctrlKey
+                            && $searchInput.oldText !== $searchInput.val()
+                        ) {
+                            if ($(this).val().length >= 3) {
+                                var searchString = $(this).val().toLowerCase();
+                                //  var $LocalElemsStore = $thisRow.children().clone(true);
+                                var $LocalElems = $thisRow.children();
+                                /* var $LocalElems = getCards({
+                                 items: options.items
+                                 });*/
+                                var obj1 = $();
+                                var obj2 = $();
+
+                                $.each($LocalElemsStore, function () {
+                                    var title = $(this).find(".pmd-card-title-text").text().toLowerCase();
+                                    var description = $(this).find(".pmd-card-subtitle-text").text().toLowerCase();
+
+                                    if ((title + description).indexOf(searchString) < 0) {
+                                        obj1 = obj1.add(this);
+                                    } else {
+                                        obj2 = obj2.add(this);
+                                    }
+                                });
+
+                                //  if (obj1.length) {
+                                //       console.debug(obj1.length);
+
+                                //   $thisRow.masonry('remove', $LocalElems).masonry();
+                                //  $thisRow.masonry();
+                                // $thisRow.masonry('destroy');
+
+                                // initMasonry($thisRow);
+                                //    console.debug('$thisRow..children().length: ' + $thisRow.children().length);
+                                //   }
+                                //    console.debug(obj2);
+                                /*  if (obj2.length) {
+                                 addItemsMasonry({
+                                 itemsElements: obj2,
+                                 container: $thisRow
+                                 });
+                                 }*/
+
+                            } else if ($(this).val().length == 0) {
+                                console.debug('clear');
+                            }
+                        }
+                    });
+
+                    $(".wk-widget-search-panel-icon").click(function () {
+                        console.debug("click");
+                        $thisRow.masonry('layout');
+                    });
+
+                    //---------
 
                     $(this).data('wkcardlist', {
                         target: $this
@@ -289,6 +367,7 @@
         if (options[method]) {
             return options[method].apply(this, Array.prototype.slice.call(arguments, 1));
         } else if (typeof method === 'object' || !method) {
+            method = $.extend(options, method);
             return options.init.apply(this, arguments);
         } else {
             $.error('Method ' + method + ' not exists in jQuery.wkcardlist');

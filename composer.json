@@ -1,45 +1,49 @@
 {
-    "name": "vovancho/wk-portal",
-    "description": "Портал организации",
-    "keywords": ["yii2", "Портал организации"],
-    "type": "project",
-    "license": "BSD-3-Clause",
-    "minimum-stability": "stable",
-    "require": {
-        "php": ">=5.4.0",
-        "yiisoft/yii2": "~2.0.6",
-        "yiisoft/yii2-bootstrap": "~2.0.0",
-        "yiisoft/yii2-swiftmailer": "~2.0.0",
-        "skeeks/yii2-assets-auto-compress": "*",
-        "phpoffice/phpexcel": "~1.8.0",
-        "npm-asset/propellerkit": "^1.1",
-        "npm-asset/masonry-layout": "*",
-        "npm-asset/imagesloaded": "*",
-        "wartron/yii2-uuid": "@dev",
-        "moontoast/math": "~1.1.2",
-        "rmrevin/yii2-fontawesome": "~2.17"
-    },
-    "require-dev": {
-        "yiisoft/yii2-debug": "~2.0.0",
-        "yiisoft/yii2-gii": "~2.0.0",
-        "yiisoft/yii2-faker": "~2.0.0",
-
-        "codeception/codeception": "^2.2.3",
-        "codeception/verify": "~0.3.1",
-        "se/selenium-server-standalone": "~3.4.0",
-        "enm1989/geckodriver": "~0.16.1"
-    },
-    "config": {
-        "process-timeout": 1800,
-        "fxp-asset": {
-            "installer-paths": {
-                "npm-asset-library": "vendor/npm",
-                "bower-asset-library": "vendor/bower"
-            }
-        }
-    },
-    "scripts": {
-        "production-set": "php init --env=Production --overwrite=n",
-        "development-set": "php init --env=Development --overwrite=n"
+  "name": "vovancho/wk-portal",
+  "description": "Портал организации",
+  "keywords": [
+    "yii2",
+    "Портал организации"
+  ],
+  "type": "project",
+  "license": "BSD-3-Clause",
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=5.4.0",
+    "yiisoft/yii2": "~2.0.6",
+    "yiisoft/yii2-bootstrap": "~2.0.0",
+    "yiisoft/yii2-swiftmailer": "~2.0.0",
+    "skeeks/yii2-assets-auto-compress": "*",
+    "phpoffice/phpexcel": "~1.8.0",
+    "npm-asset/propellerkit": "^1.1",
+    "npm-asset/masonry-layout": "*",
+    "npm-asset/imagesloaded": "*",
+    "wartron/yii2-uuid": "@dev",
+    "moontoast/math": "~1.1.2",
+    "rmrevin/yii2-fontawesome": "~2.17",
+    "kartik-v/yii2-grid": "~3.1.3",
+    "kartik-v/yii2-mpdf": "~1.0.1"
+  },
+  "require-dev": {
+    "yiisoft/yii2-debug": "~2.0.0",
+    "yiisoft/yii2-gii": "~2.0.0",
+    "yiisoft/yii2-faker": "~2.0.0",
+    "codeception/codeception": "^2.2.3",
+    "codeception/verify": "~0.3.1",
+    "se/selenium-server-standalone": "~3.4.0",
+    "enm1989/geckodriver": "~0.16.1"
+  },
+  "config": {
+    "process-timeout": 1800,
+    "fxp-asset": {
+      "installer-paths": {
+        "npm-asset-library": "vendor/npm",
+        "bower-asset-library": "vendor/bower"
+      }
     }
+  },
+  "scripts": {
+    "production-set": "php init --env=Production --overwrite=n",
+    "development-set": "php init --env=Development --overwrite=n"
+  }
 }
