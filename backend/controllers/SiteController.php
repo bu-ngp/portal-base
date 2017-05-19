@@ -1,6 +1,7 @@
 <?php
 namespace backend\controllers;
 
+use domain\models\base\search\AuthItemSearch;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -60,7 +61,8 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $modelSearch = new AuthItemSearch();
+        return $this->render('index', ['modelSearch' => $modelSearch]);
     }
 
     /**

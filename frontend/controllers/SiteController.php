@@ -1,6 +1,8 @@
 <?php
 namespace frontend\controllers;
 
+use common\widgets\CardList\CardListHelper;
+use domain\models\base\search\AuthItemSearch;
 use domain\services\base\PersonService;
 use domain\services\proxyService;
 use Faker\Factory;
@@ -281,27 +283,58 @@ class SiteController extends Controller
 
         $oClass = new ReflectionClass(FA::class);
 
-
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $items = [];
-        /** @var array $card */
-        for ($i = 1; $i <= 6; $i++) {
-            $contsFA = array_rand($oClass->getConstants());
-            $valueConst = $oClass->getConstant($contsFA);
-            $ar1 = ['wk-red-style', 'wk-blue-style', 'wk-yellow-style', 'wk-green-style', 'wk-grey-style'];
+        $searchModel = new AuthItemSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-            $items[] = [
-                'preview' => [
-                    'FAIcon' => $valueConst,
-                ],
-                'title' => Html::encode($faker->company),
-                'description' => Html::encode($faker->realText(rand(40, 200))),
-                'styleClass' => $ar1[rand(0, 4)],
-                'link' => '#',
-            ];
-        }
-        return $items;
+        return CardListHelper::createAjaxCards($dataProvider, 'name', '', '', 'description');
+
+     //      $a1 = $dataProvider->getModels();
+      //  $a2 = $dataProvider->getCount();
+       //    $a3 = $dataProvider->getTotalCount();
+        //   $a4 = $dataProvider->getPagination();
+
+     //   $a2= $dataProvider->getPagination()->getPage() + 1;
+     //   $items = [];
+        /** @var array $card */
+
+       /*   if ($params['page'] <= $dataProvider->getPagination()->getPage() + 1) {
+              foreach ($dataProvider->getModels() as $authitem) {
+                  $contsFA = array_rand($oClass->getConstants());
+                  $valueConst = $oClass->getConstant($contsFA);
+                  $ar1 = ['wk-red-style', 'wk-blue-style', 'wk-yellow-style', 'wk-green-style', 'wk-grey-style'];
+
+                  $items[] = [
+                      'preview' => [
+                          'FAIcon' => $valueConst,
+                      ],
+                      'title' => Html::encode($authitem->name),
+                      'description' => Html::encode($authitem->description),
+                      'styleClass' => $ar1[rand(0, 4)],
+                      'link' => '#',
+                  ];
+              }
+          }*/
+
+
+        /* for ($i = 1; $i <= 6; $i++) {
+             $contsFA = array_rand($oClass->getConstants());
+             $valueConst = $oClass->getConstant($contsFA);
+             $ar1 = ['wk-red-style', 'wk-blue-style', 'wk-yellow-style', 'wk-green-style', 'wk-grey-style'];
+
+             $items[] = [
+                 'preview' => [
+                     'FAIcon' => $valueConst,
+                 ],
+                 'title' => Html::encode($faker->company),
+                 'description' => Html::encode($faker->realText(rand(40, 200))),
+                 'styleClass' => $ar1[rand(0, 4)],
+                 'link' => '#',
+             ];
+         }*/
+          // return $items;
+
 
     }
 }

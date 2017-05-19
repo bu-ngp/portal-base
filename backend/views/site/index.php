@@ -1,8 +1,10 @@
 <?php
 
 /* @var $this yii\web\View */
+/* @var $modelSearch AuthItemSearch */
 
 use common\widgets\CardList\CardList;
+use domain\models\base\search\AuthItemSearch;
 use rmrevin\yii\fontawesome\FA;
 
 $this->title = 'My Yii Application';
@@ -19,9 +21,12 @@ $this->title = 'My Yii Application';
     <!--            </div>-->
     <!--        </div>-->
     <!--    </div>-->
-    <?=
-    CardList::widget([
-        //  'url' => '/wk-portal_dev/site/test',
+    <?= CardList::widget([
+        'url' => '/wk-portal_dev/site/test',
+        'search' => [
+            'modelSearch' => $modelSearch,
+            'searchAttributeName' => 'description',
+        ],
         'items' => [
             [
                 'styleClass' => CardList::RED_STYLE,
@@ -44,7 +49,7 @@ $this->title = 'My Yii Application';
                 'preview' => [
                     'FAIcon' => 'list-alt',
                 ],
-                'title' => 'Настройки',
+                'title' => 'Админы',
                 'description' => 'серьезные люди',
                 'link' => Yii::$app->urlManager->createUrl(['roles']),
             ]

@@ -14,6 +14,7 @@ use Exception;
 use Yii;
 use yii\bootstrap\Html;
 use yii\bootstrap\Widget;
+use yii\db\ActiveRecord;
 use yii\web\View;
 
 class CardList extends Widget
@@ -26,6 +27,10 @@ class CardList extends Widget
 
     public $url;
     public $items;
+    public $cardsPerPage;
+    public $language;
+    /** @var  ActiveRecord */
+    public $search;
 
     public function init()
     {
@@ -37,6 +42,10 @@ class CardList extends Widget
 
         if (empty($this->url) && empty($this->items)) {
             throw new \Exception(Yii::t('wk-widget', 'url or items must be passed'));
+        }
+
+        if (empty($this->search)) {
+            $this->search = false;
         }
     }
 //
@@ -65,6 +74,17 @@ class CardList extends Widget
             'cardsPerPage' => 6,
             'language' => 'ru',
         ];
+
+        if ($this->search && !empty($this->search['modelSearch']) && $this->search['modelSearch'] instanceof ActiveRecord && !empty($this->search['searchAttributeName'])) {
+            $options = array_replace_recursive($options, [
+                'search' => true,
+                'ajaxSearchName' => $this->search['modelSearch']->formName() . '[' . $this->search['searchAttributeName'] . ']',
+            ]);
+        } elseif ($this->search === true) {
+            $options = array_replace_recursive($options, [
+                'search' => true,
+            ]);
+        }
 
         $options = (object)array_filter($options);
 

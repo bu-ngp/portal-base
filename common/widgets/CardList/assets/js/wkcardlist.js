@@ -11,7 +11,9 @@
         url: '',
         cardsPerPage: 6,
         items: [],
+        search: false,
         ajaxSearchName: 'search',
+        //ajaxSearchName: 'AuthItemSearch[description]',
         init: function (options) {
 
             function makeCard(props) {
@@ -121,13 +123,13 @@
                     isAnimated: true,
                     horizontalOrder: true,
                     percentPosition: true,
-                    transitionDuration: '0.8s'
+                    transitionDuration: '0.4s'
                 });
             }
 
             function initScrollPager(props) {
                 if (typeof props === 'object') {
-                    $(window).scroll(function () {
+                    $(window).unbind().bind('scroll', function () {
                         if ($(window).scrollTop() + 5 >= $(document).height() - $(window).height()) {
                             triggerNextPage({
                                 pagerid: props.pagerid,
@@ -143,13 +145,28 @@
             function triggerNextPage(props) {
                 if (typeof props === 'object') {
                     if (!props.container.ajaxSended || typeof props.container.ajaxSended == 'undefined') {
+                        /*  if (typeof props.searchValue == 'undefined') {
+                         props.searchValue = '';
+                         }*/
+
+                        if (typeof props.removeBefore == 'undefined') {
+                            props.removeBefore = false;
+                        }
+
                         $('div#' + props.pagerid).show();
+
+                        var data = {
+                            page: props.container.currentPage,
+                            'per-page': options.cardsPerPage
+                        };
+
+                        if (props.container.searchString != '') {
+                            data[options.ajaxSearchName] = props.container.searchString;
+                        }
+
                         $.ajax({
                             url: options.url,
-                            data: {
-                                page: props.container.currentPage,
-                                'per-page': options.cardsPerPage
-                            },
+                            data: data,
                             beforeSend: function () {
                                 props.container.ajaxSended = true;
                             },
@@ -157,9 +174,11 @@
                                 if (typeof items == 'object') {
                                     addItemsMasonry({
                                         itemsElements: getCards({
-                                            items: items
+                                            items: items,
+                                            scroll: true
                                         }),
-                                        container: props.container
+                                        container: props.container,
+                                        removeBefore: props.removeBefore
                                     });
 
                                     $('div#' + props.pagerid).hide();
@@ -181,6 +200,10 @@
 
             function getCards(props) {
                 if (typeof props === 'object') {
+                    if (typeof props.scroll == 'undefined') {
+                        props.scroll = false;
+                    }
+
                     var $cards = $();
                     if (props.items != null && props.items.length > 0) {
                         var $card;
@@ -191,7 +214,8 @@
                                 styleClass: this.styleClass,
                                 title: this.title,
                                 description: this.description,
-                                link: this.link
+                                link: this.link,
+                                scroll: props.scroll
                             });
 
                             $cards = $cards.add($card);
@@ -214,18 +238,38 @@
 
             function addItemsMasonry(props) {
                 if (typeof props === 'object') {
-                    var isEmptyContainer = props.container.masonry('getItemElements').length == 0;
-                    props.container.append(props.itemsElements);
-                    if (isEmptyContainer) {
-                        props.container.masonry('addItems', props.itemsElements);
-                        props.container.masonry('layout');
-                    } else {
-                        props.container.masonry('appended', props.itemsElements);
-                    }
+                    if (typeof props.removeBefore != 'undefined' && props.removeBefore) {
+                        props.container.one('removeComplete', function () {
+                            var isEmptyContainer = props.container.masonry('getItemElements').length == 0;
+                            props.container.append(props.itemsElements);
+                            if (isEmptyContainer) {
+                                props.container.masonry('addItems', props.itemsElements);
+                                props.container.masonry();
+                            } else {
+                                props.container.masonry('appended', props.itemsElements);
+                            }
+                        });
 
+                        props.container.masonry('remove', props.container.children('.wk-widget-scroll'));
+                    } else {
+                        var isEmptyContainer = props.container.masonry('getItemElements').length == 0;
+                        props.container.append(props.itemsElements);
+                        if (isEmptyContainer) {
+                            props.container.masonry('addItems', props.itemsElements);
+                            props.container.masonry();
+                        } else {
+                            props.container.masonry('appended', props.itemsElements);
+                        }
+                    }
                 } else {
                     console.error('addItemsMasonry(props) - props is not Object, is ' + (typeof props));
                 }
+            }
+
+            function addButtons() {
+                return $('<button id="b1" class="btn pmd-btn-flat pmd-ripple-effect btn-success">Layout</button>' +
+                    '<button id="b2" class="btn pmd-btn-flat pmd-ripple-effect btn-success">ReloadItems</button>'
+                );
             }
 
             return this.each(function () {
@@ -247,9 +291,14 @@
                     var idWidget = makeID($this);
                     var pagerid = idWidget + '-scroll-pager';
 
-                    makeSearchPanel(idWidget).appendTo($this);
+                    if (options.search === true) {
+                        makeSearchPanel(idWidget).appendTo($this);
+                        var $searchInput = $('#' + idWidget + '-wk-widget-search-input');
+                        $searchInput.busy = false;
+                    }
 
                     var $thisRow = $('<div class="pmd-z-depth"></div>').appendTo($this);
+                    $thisRow.searchString = '';
 
                     if (itemsUrlExists()) {
                         makeScrollPager(pagerid).insertAfter($thisRow);
@@ -259,14 +308,18 @@
                     initMasonry($thisRow);
 
                     if (itemsExists()) {
+                        var $cardTmp = getCards({
+                            items: options.items
+                        });
+                        var $LocalElemsStore = $cardTmp.clone(true);
+
                         addItemsMasonry({
-                            itemsElements: getCards({
-                                items: options.items
-                            }),
+                            itemsElements: $cardTmp,
                             container: $thisRow
                         });
-                        var $LocalElemsStore = $thisRow.children().clone(true);
+
                     }
+
                     if (itemsUrlExists()) {
                         initScrollPager({
                             pagerid: pagerid,
@@ -281,68 +334,107 @@
 
                     //--------
 
-                    var $searchInput = $('#' + idWidget + '-wk-widget-search-input');
+                    function keyCtrlPress(event) {
+                        return event.keyCode == 17 || event.ctrlKey
+                    }
 
-                    $searchInput.keypress(function (e) {
-                        if (e.keyCode != 17 && !e.ctrlKey) {
-                            $searchInput.oldText = $(this).val();
-                        }
-                    });
+                    function textSearchChange($searchInput) {
+                        return $searchInput.oldText !== $searchInput.val();
+                    }
 
-                    $searchInput.keyup(function (e) {
-                        if (e.keyCode != 17 && !e.ctrlKey
-                            && $searchInput.oldText !== $searchInput.val()
-                        ) {
-                            if ($(this).val().length >= 3) {
-                                var searchString = $(this).val().toLowerCase();
-                                //  var $LocalElemsStore = $thisRow.children().clone(true);
-                                var $LocalElems = $thisRow.children();
-                                /* var $LocalElems = getCards({
-                                 items: options.items
-                                 });*/
-                                var obj1 = $();
-                                var obj2 = $();
+                    function localSearch($searchInput, $container, afterSearch) {
+                        $searchInput.busy = true;
+                        var searchString = $searchInput.val().toLowerCase();
 
-                                $.each($LocalElemsStore, function () {
-                                    var title = $(this).find(".pmd-card-title-text").text().toLowerCase();
-                                    var description = $(this).find(".pmd-card-subtitle-text").text().toLowerCase();
-
-                                    if ((title + description).indexOf(searchString) < 0) {
-                                        obj1 = obj1.add(this);
-                                    } else {
-                                        obj2 = obj2.add(this);
-                                    }
-                                });
-
-                                //  if (obj1.length) {
-                                //       console.debug(obj1.length);
-
-                                //   $thisRow.masonry('remove', $LocalElems).masonry();
-                                //  $thisRow.masonry();
-                                // $thisRow.masonry('destroy');
-
-                                // initMasonry($thisRow);
-                                //    console.debug('$thisRow..children().length: ' + $thisRow.children().length);
-                                //   }
-                                //    console.debug(obj2);
-                                /*  if (obj2.length) {
-                                 addItemsMasonry({
-                                 itemsElements: obj2,
-                                 container: $thisRow
-                                 });
-                                 }*/
-
-                            } else if ($(this).val().length == 0) {
-                                console.debug('clear');
+                        if (!itemsExists()) {
+                            $searchInput.busy = false;
+                            if (typeof afterSearch == 'function') {
+                                afterSearch();
                             }
+                            return;
                         }
-                    });
 
-                    $(".wk-widget-search-panel-icon").click(function () {
-                        console.debug("click");
-                        $thisRow.masonry('layout');
-                    });
+                        var $foundCards = $();
 
+                        if (searchString == "") {
+                            $foundCards = $LocalElemsStore.clone(true);
+                        } else {
+                            $.each($LocalElemsStore, function () {
+                                var title = $(this).find(".pmd-card-title-text").text().toLowerCase();
+                                var description = $(this).find(".pmd-card-subtitle-text").text().toLowerCase();
+
+                                if ((title + description).indexOf(searchString) >= 0) {
+                                    $foundCards = $foundCards.add($(this).clone(true));
+                                }
+                            });
+                        }
+
+                        $container.one('removeComplete', function () {
+                            $container.one('layoutComplete', function () {
+                                $container.masonry('reloadItems');
+                                $container.masonry();
+                                $searchInput.busy = false;
+                                if (typeof afterSearch == 'function') {
+                                    afterSearch();
+                                }
+                            });
+
+                            addItemsMasonry({
+                                itemsElements: $foundCards,
+                                container: $container
+                            });
+                        });
+
+                        $container.masonry('remove', $container.children());
+                    }
+
+                    function ajaxSearch($searchInput, $container, afterSearch) {
+                        $searchInput.busy = true;
+                        var searchString = $searchInput.val().toLowerCase();
+                        $thisRow.currentPage = 1;
+                        if (itemsUrlExists()) {
+                            initScrollPager({
+                                pagerid: pagerid,
+                                container: $thisRow
+                            });
+                        }
+
+                        if (!itemsUrlExists()) {
+                            $searchInput.busy = false;
+                            if (typeof afterSearch == 'function') {
+                                afterSearch();
+                            }
+                            return;
+                        }
+
+                        $thisRow.searchString = searchString;
+                        triggerNextPage({
+                            pagerid: pagerid,
+                            container: $thisRow,
+                            removeBefore: true
+                            //   searchValue: searchString
+                        });
+                    }
+
+                    if (options.search === true) {
+                        $searchInput.keypress(function (e) {
+                            if (!keyCtrlPress(e)) {
+                                $(this).oldText = $(this).val();
+                            }
+                        });
+
+                        $searchInput.keyup(function (e) {
+                            if (!$(this).busy) {
+                                if (!keyCtrlPress(e) && textSearchChange($(this))) {
+                                    if ($(this).val().length >= 3 || $(this).val().length == 0) {
+                                        localSearch($(this), $thisRow, function () {
+                                            ajaxSearch($searchInput, $thisRow);
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                    }
                     //---------
 
                     $(this).data('wkcardlist', {
