@@ -31,6 +31,7 @@ class CardList extends Widget
     public $language;
     /** @var  ActiveRecord */
     public $search;
+    public $popularity;
 
     public function init()
     {
@@ -46,6 +47,10 @@ class CardList extends Widget
 
         if (empty($this->search)) {
             $this->search = false;
+        }
+
+        if (empty($this->popularity)) {
+            $this->popularity = false;
         }
     }
 //
@@ -71,6 +76,7 @@ class CardList extends Widget
         $options = [
             'url' => $this->url,
             'items' => $this->items,
+            'popularity' => $this->popularity,
             'cardsPerPage' => 6,
             'language' => 'ru',
         ];

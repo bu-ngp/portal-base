@@ -23,9 +23,10 @@ class CardListHelper
      * @param string $previewAttribute Имя атрибута модели, из которого будет браться класс иконки 'fa fa-cog' или url картинки, по умолчанию 'fa fa-cog'
      * @param string $descriptionAttribute Имя атрибута модели, из которого будет браться описание карты
      * @param string $styleClassAttribute Имя атрибута модели, из которого будет браться класс стиля карты
+     * @param string $popularityID Имя атрибута модели, из которого будет браться ИД для сортировки по популярности, должно быть уникальным в рамках одного виджета
      * @return array массив карт
      */
-    public static function createAjaxCards(ActiveDataProvider &$dataProvider, $titleAttribute, $linkAttribute = '', $previewAttribute = '', $descriptionAttribute = '', $styleClassAttribute = '')
+    public static function createAjaxCards(ActiveDataProvider &$dataProvider, $titleAttribute, $linkAttribute = '', $previewAttribute = '', $descriptionAttribute = '', $styleClassAttribute = '', $popularityID = '')
     {
         $items = [];
         $dataProvider->getCount();
@@ -50,6 +51,7 @@ class CardListHelper
                     'description' => empty($descriptionAttribute) ? '' : Html::encode($ar->$descriptionAttribute),
                     'styleClass' => empty($styleClassAttribute) ? CardList::GREY_STYLE : Html::encode($ar->$styleClassAttribute),
                     'link' => empty($linkAttribute) ? '#' : Html::encode($ar->$linkAttribute),
+                    'popularityID' => empty($popularityID) ? '' : Html::encode($ar->$popularityID),
                 ];
             }
         }

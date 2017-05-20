@@ -27,6 +27,7 @@ $this->title = 'My Yii Application';
             'modelSearch' => $modelSearch,
             'searchAttributeName' => 'description',
         ],
+        'popularity' => true,
         'items' => [
             [
                 'styleClass' => CardList::RED_STYLE,
@@ -36,6 +37,7 @@ $this->title = 'My Yii Application';
                 'title' => 'Роли',
                 'description' => 'Создание и редактирование ролей в системе',
                 'link' => Yii::$app->urlManager->createUrl(['roles']),
+                'popularityID' => 'local-1',
             ], [
                 'styleClass' => CardList::BLUE_STYLE,
                 'preview' => [
@@ -44,6 +46,7 @@ $this->title = 'My Yii Application';
                 'title' => 'Пользователи',
                 'description' => 'продвинутые люди',
                 'link' => Yii::$app->urlManager->createUrl(['roles']),
+                'popularityID' => 'local-2',
             ], [
                 'styleClass' => CardList::GREY_STYLE,
                 'preview' => [
@@ -52,6 +55,7 @@ $this->title = 'My Yii Application';
                 'title' => 'Админы',
                 'description' => 'серьезные люди',
                 'link' => Yii::$app->urlManager->createUrl(['roles']),
+                'popularityID' => 'local-3',
             ]
         ],
     ])
