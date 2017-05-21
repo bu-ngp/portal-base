@@ -17,17 +17,24 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
     <style>
         #w0-container {
-            min-height: 450px;
+            /*min-height: 450px;*/
         }
-        td>span {
+        td.wk-nowrap > span {
+            /**/
             display:inline-block;
-            max-width: 1000px;
+            max-width: 600px;
             overflow: hidden; /* optional */
             white-space: nowrap;
             text-overflow: ellipsis;
 
             /*word-wrap: break-word;*/
         }
+
+        td.kv-nowrap {
+
+        }
+
+
     </style>
     <?=
     GridView::widget([
@@ -49,11 +56,24 @@ $this->params['breadcrumbs'][] = $this->title;
                 'noWrap' => true,
             //    'width' => '500px',
                 'contentOptions' => function ($model, $key, $index, $column) {
-                    return ['data-toggle' => 'tooltip', 'title' => $model->description];
+                    return ['data-toggle' => 'tooltip', 'class'  => 'wk-nowrap' /*, 'title' => $model->description*/];
                 },
                 'format' => 'html',
                 'value' =>  function ($model, $key, $index, $column) {
                     return '<span>'.$model->description .'</span>';
+                },
+            ],
+            [
+                'class' => '\kartik\grid\DataColumn',
+                'attribute' => 'name',
+                'noWrap' => true,
+                //    'width' => '500px',
+                'contentOptions' => function ($model, $key, $index, $column) {
+                    return ['data-toggle' => 'tooltip', 'class'  => 'wk-nowrap'/*, 'title' => $model->description*/];
+                },
+                'format' => 'html',
+                'value' =>  function ($model, $key, $index, $column) {
+                    return '<span>'.$model->name .'</span>';
                 },
             ],
         ],

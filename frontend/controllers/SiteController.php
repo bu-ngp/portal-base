@@ -92,7 +92,8 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $modelSearch = new AuthItemSearch();
+        return $this->render('index', ['modelSearch' => $modelSearch]);
     }
 
     /**

@@ -164,8 +164,12 @@
                         if ($widget.data('wkcardlist').$searchInput.val().length >= 3 || $widget.data('wkcardlist').$searchInput.val().length == 0) {
                             localSearch($widget, function () {
                                 ajaxSearch($widget, function () {
+                                    if ($widget.data('wkcardlist').settings.popularity) {
+                                        makePopularity($widget);
+                                    }
+
                                     removeAllandAddItemsMasonry($widget, function () {
-                                        console.debug('searchComplete');
+                                        //console.debug('searchComplete');
                                     });
                                 });
                             });
@@ -223,6 +227,32 @@
         });
     };
 
+    var popularityDataPrepare = function ($widget, data) {
+        var popularity;
+        if ("popularity" in localStorage
+            && $widget[0].id in (popularity = $.parseJSON(localStorage.popularity))
+            && 'local' in popularity[$widget[0].id]
+            && 'ajax' in popularity[$widget[0].id]
+        ) {
+            var popularityArray = [];
+            $.each(popularity[$widget[0].id].ajax, function (key, val) {
+                popularityArray.push({popularityID: key, popularityCount: val});
+            });
+
+            popularityArray.sort(function (a, b) {
+                return a.popularityCount - b.popularityCount;
+            });
+
+            popularityArray = popularityArray.map(function (obj) {
+                return obj.popularityID;
+            });
+
+            data['popularity'] = JSON.stringify(popularityArray);
+        }
+
+        return data;
+    };
+
     var triggerNextPage = function ($widget, afterComplete) {
         if (typeof $widget != undefined) {
             if (!$widget.data('wkcardlist').$masonryContainer.ajaxSended || typeof $widget.data('wkcardlist').$masonryContainer.ajaxSended == undefined) {
@@ -238,31 +268,7 @@
                 }
 
                 if ($widget.data('wkcardlist').popularity) {
-                    var obj1 = $.parseJSON(localStorage.popularity);
-                    var obj2 = obj1[$widget[0].id].ajax;
-                    var arr1 = [];
-                    var arr2 = [];
-                    var str1 = '';
-
-                    $.each(obj2, function (key, val) {
-                        arr1.push({key: key, val: val});
-                    });
-
-                    arr1.sort(function (a, b) {
-                        return a.val - b.val;
-                    });
-
-                    $.each(arr1, function () {
-                      //  str1 =  str1.concat("'"+this.key+"'" + ',') ;
-                        arr2.push(this.key);
-                    });
-                    str1 = str1.slice(0, -1);
-
-                    // var p1 = ($widget.data('wkcardlist').currentPage - 1) * $widget.data('wkcardlist').settings.cardsPerPage;
-                    // var p2 = $widget.data('wkcardlist').currentPage * $widget.data('wkcardlist').settings.cardsPerPage;
-                    //
-                    // arr1 = arr1.slice(p1, p2);
-                    data['popularity'] = JSON.stringify(arr2);
+                    data = popularityDataPrepare($widget, data);
                 }
 
                 $.ajax({
@@ -348,7 +354,10 @@
 
             $widget.data('wkcardlist').$masonryContainer.one('layoutComplete', function () {
                 $widget.data('wkcardlist').$cards = $();
-                $widget.data('wkcardlist').$searchInput.busy = false;
+
+                if ($widget.data('wkcardlist').settings.search) {
+                    $widget.data('wkcardlist').$searchInput.busy = false;
+                }
 
                 if (typeof afterComplete == 'function') {
                     afterComplete();
@@ -489,6 +498,39 @@
         };
     })();
 
+    var makePopularity = function ($widget) {
+        var popularity;
+        if (!"popularity" in localStorage
+            || !$widget[0].id in (popularity = $.parseJSON(localStorage.popularity))
+            || !'local' in popularity[$widget[0].id]
+            || !'ajax' in popularity[$widget[0].id]) {
+            return;
+        }
+
+        var popularityArray = [];
+        $.each(
+            $.extend(true, popularity[$widget[0].id].ajax, popularity[$widget[0].id].local),
+            function (key, val) {
+                popularityArray.push({popularityID: key, popularityCount: val});
+            }
+        );
+
+        var valFirstCard, valSecondCard;
+        [].sort.call($widget.data('wkcardlist').$cards, function (firstCard, secondCard) {
+            valFirstCard = popularityArray.filter(function (obj) {
+                return (obj.popularityID == $(firstCard).attr('popularity-id'));
+            });
+            valFirstCard = valFirstCard.length ? valFirstCard[0].popularityCount : 0;
+
+            valSecondCard = popularityArray.filter(function (obj) {
+                return (obj.popularityID == $(secondCard).attr('popularity-id'));
+            });
+            valSecondCard = valSecondCard.length ? valSecondCard[0].popularityCount : 0;
+
+            return +valSecondCard - +valFirstCard;
+        });
+    };
+
     var methods = {
         init: function (options) {
             return this.each(function () {
@@ -511,7 +553,7 @@
                     settings: settings
                 });
 
-                console.debug(settings);
+                //   console.debug(settings);
 
                 $widget.addClass('wk-widget-container container-fluid');
                 makeID($widget);
@@ -532,9 +574,13 @@
 
                 makeLocalCards($widget, function () {
                     makeAjaxCards($widget, function () {
-                        addItemsMasonry($widget, function () {
-                            console.debug('initComplete');
 
+                        if (settings.popularity) {
+                            makePopularity($widget);
+                        }
+
+                        addItemsMasonry($widget, function () {
+                            //   console.debug('initComplete');
                         });
                     });
                 });

@@ -2,6 +2,7 @@
 
 namespace domain\models\base\search;
 
+use common\widgets\CardList\CardListHelper;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -48,6 +49,7 @@ class AuthItemSearch extends AuthItem
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+           // 'pagination' => ['pageSize' => 5]
         ]);
 
         $this->load($params);
@@ -71,12 +73,7 @@ class AuthItemSearch extends AuthItem
             ->andFilterWhere(['like', 'rule_name', $this->rule_name])
             ->andFilterWhere(['like', 'data', $this->data]);
 
-        $popularity = json_decode($params['popularity']);
-        if (!empty($popularity) && is_array($popularity)) {
-            $query->addOrderBy(new Expression("FIELD(`name`,'" . implode("','", $popularity) . "') DESC"));
-        }
-
-        $query->addOrderBy('name');
+        CardListHelper::applyPopularityOrder($query, 'name');
 
         return $dataProvider;
     }

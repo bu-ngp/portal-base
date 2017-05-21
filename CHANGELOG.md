@@ -1,3 +1,38 @@
+## 0.1.0 - (2017-05-21)
+
+_Дополнения_:
+
+  - Доработка виджета `CardList`:
+      - Добавлен метод `applyPopularityOrder` класса хелпера `CardListHelper`, позволяющий добавить сортировку по популярности к модели поиска ActiveRecord
+        ```php
+        public function search($params)
+            {
+                $query = Post::find();
+
+                // add conditions that should always apply here
+
+                $dataProvider = new ActiveDataProvider([
+                    'query' => $query,
+                ]);
+
+                $this->load($params);
+
+                ...
+
+                $query->andFilterWhere(['like', 'name', $this->name])
+                    ->andFilterWhere(['like', 'description', $this->description])
+
+                // Метод applyPopularityOrder применяет сортировку к ActiveQuery $query по популярности по атрибуту 'name' (PopularityID)
+                CardListHelper::applyPopularityOrder($query, 'name');
+
+                return $dataProvider;
+            }
+        ```
+
+_Исправления_:
+
+  - Проведен рефакторинг плагина `wkcardlist.js`
+
 ## 0.0.9 - (2017-05-20)
 
 _Дополнения_:
@@ -8,7 +43,7 @@ _Дополнения_:
 
 _Исправления_:
 
-  - Сделан рефакторинг плагина `wkcardlist.js`
+  - Проведен рефакторинг плагина `wkcardlist.js`
 
 ## 0.0.8 - (2017-05-19)
 

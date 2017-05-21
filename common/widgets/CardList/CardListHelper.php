@@ -11,6 +11,9 @@ namespace common\widgets\CardList;
 
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
+use yii\db\ActiveQuery;
+use yii\db\ActiveQueryInterface;
+use yii\db\Expression;
 
 class CardListHelper
 {
@@ -57,5 +60,21 @@ class CardListHelper
         }
 
         return $items;
+    }
+
+    /**
+     * Метод добавляет сортировку по популярности к модели поиска ActiveRecord
+     *
+     * @param ActiveQuery $activeQuery Запрос поиска
+     * @param string $popularityIDFieldName Имя поля модели, которое содержит идентификаторы атрибута 'popularity-id' в HTML элементах карт
+     */
+    public static function applyPopularityOrder(ActiveQuery $activeQuery, $popularityIDFieldName)
+    {
+        $popularity = json_decode($_REQUEST['popularity']);
+        if (!empty($popularity) && is_array($popularity)) {
+            $activeQuery->addOrderBy(new Expression("FIELD(`$popularityIDFieldName`,'" . implode("','", $popularity) . "') DESC"));
+        }
+
+        $activeQuery->addOrderBy($popularityIDFieldName);
     }
 }
