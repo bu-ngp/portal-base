@@ -1,0 +1,11 @@
+td.wk-nowrap > span {
+    display:inline-block;
+    max-width: 600px;
+    overflow: hidden; /* optional */
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+div.kv-grid-container {
+    min-height: 450px;
+}

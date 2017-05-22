@@ -51,6 +51,6 @@ class RbacController extends Controller
             throw new \Exception('user admin not exist');
         }
 
-        AuthItem::updateAll(['view' => 1], ['name' => 'Administrator']);
+        AuthItem::updateAll(['view' => 1], ['not', ['name' => 'Administrator']]);
     }
 }

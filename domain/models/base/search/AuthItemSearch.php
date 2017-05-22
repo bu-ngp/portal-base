@@ -62,10 +62,11 @@ class AuthItemSearch extends AuthItem
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'type' => $this->type,
-            'view' => $this->view,
+            'type' => 1,
+            'view' => 0,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
@@ -74,6 +75,36 @@ class AuthItemSearch extends AuthItem
             ->andFilterWhere(['like', 'data', $this->data]);
 
         CardListHelper::applyPopularityOrder($query, 'name');
+
+        return $dataProvider;
+    }
+
+    public function searchForCreate($params)
+    {
+        $query = AuthItem::find();
+
+        // add conditions that should always apply here
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            // 'pagination' => ['pageSize' => 5]
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'type' => 1,
+
+        ]);
+
+        $query->andFilterWhere(['like', 'description', $this->description]);
 
         return $dataProvider;
     }

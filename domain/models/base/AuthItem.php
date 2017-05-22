@@ -44,7 +44,7 @@ class AuthItem extends \yii\db\ActiveRecord
             [['type', 'view', 'created_at', 'updated_at'], 'integer'],
             [['description', 'data'], 'string'],
             [['name', 'rule_name'], 'string', 'max' => 64],
-        //    [['rule_name'], 'exist', 'skipOnError' => true, 'targetClass' => AuthRule::className(), 'targetAttribute' => ['rule_name' => 'name']],
+            //    [['rule_name'], 'exist', 'skipOnError' => true, 'targetClass' => AuthRule::className(), 'targetAttribute' => ['rule_name' => 'name']],
         ];
     }
 
@@ -63,6 +63,16 @@ class AuthItem extends \yii\db\ActiveRecord
             'created_at' => Yii::t('domain/authitem', 'Created At'),
             'updated_at' => Yii::t('domain/authitem', 'Updated At'),
         ];
+    }
+
+    public static function create($name, $description, $type)
+    {
+        $authItem = new self([
+            'name' => $name,
+            'description' => $description,
+            'type' => $type
+        ]);
+        return $authItem;
     }
 
     /**

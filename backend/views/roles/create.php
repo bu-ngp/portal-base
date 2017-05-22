@@ -4,18 +4,26 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model domain\models\base\AuthItem */
+/* @var $modelForm domain\models\base\AuthItem */
+/* @var $searchModel domain\models\base\search\AuthItemSearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Create Auth Item');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Auth Items'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('common/authitem', 'Auth Items'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="auth-item-create">
+    <div class="auth-item-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+        <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
+        <?= $this->render('_form', [
+            'modelForm' => $modelForm,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]) ?>
 
-</div>
+    </div>
+
+<?php
+$this->registerJs(file_get_contents(__DIR__ . '/roleForm.js'));
+?>

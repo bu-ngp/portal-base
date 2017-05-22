@@ -1,6 +1,8 @@
 <?php
 
 use common\widgets\GridView\GridView;
+use rmrevin\yii\fontawesome\FA;
+use yii\data\ArrayDataProvider;
 use yii\helpers\Html;
 
 
@@ -8,133 +10,37 @@ use yii\helpers\Html;
 /* @var $searchModel domain\models\base\search\AuthItemSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Auth Items');
+$this->title = Yii::t('common/roles', 'Roles');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="auth-item-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-    <style>
-        #w0-container {
-            /*min-height: 450px;*/
-        }
-        td.wk-nowrap > span {
-            /**/
-            display:inline-block;
-            max-width: 600px;
-            overflow: hidden; /* optional */
-            white-space: nowrap;
-            text-overflow: ellipsis;
-
-            /*word-wrap: break-word;*/
-        }
-
-        td.kv-nowrap {
-
-        }
+    <?php $a = \domain\models\base\AuthItem::find()->asArray()->all() ?>
 
 
-    </style>
+
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            [
-                'class' => '\kartik\grid\SerialColumn',
-                'noWrap' => true,
-            ],
-            [
-                'class' => '\kartik\grid\CheckboxColumn',
-                'noWrap' => true,
-                'rowSelectedClass' => GridView::TYPE_INFO,
-            ],
-            [
-                'class' => '\kartik\grid\DataColumn',
-                'attribute' => 'description',
-                'noWrap' => true,
-            //    'width' => '500px',
-                'contentOptions' => function ($model, $key, $index, $column) {
-                    return ['data-toggle' => 'tooltip', 'class'  => 'wk-nowrap' /*, 'title' => $model->description*/];
-                },
-                'format' => 'html',
-                'value' =>  function ($model, $key, $index, $column) {
-                    return '<span>'.$model->description .'</span>';
-                },
-            ],
-            [
-                'class' => '\kartik\grid\DataColumn',
-                'attribute' => 'name',
-                'noWrap' => true,
-                //    'width' => '500px',
-                'contentOptions' => function ($model, $key, $index, $column) {
-                    return ['data-toggle' => 'tooltip', 'class'  => 'wk-nowrap'/*, 'title' => $model->description*/];
-                },
-                'format' => 'html',
-                'value' =>  function ($model, $key, $index, $column) {
-                    return '<span>'.$model->name .'</span>';
-                },
-            ],
+            'description'
         ],
-        'hover' => true,
-        'pjax' => true,
-        'pjaxSettings' => [
-//            'loadingCssClass' => false, //kv-grid-loading
-//            'beforeGrid' => Html::a(Yii::t('app', 'Create'), ['create'], ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-success', 'data-pjax' => '0'])
-//                . '<a href="#" class="btn pmd-btn-flat pmd-ripple-effect btn-primary">Update</a>'
-//                . '<a href="#" class="btn pmd-btn-flat pmd-ripple-effect btn-danger">Delete</a>',
-//            'afterGrid' => Html::a(Yii::t('app', 'Create'), ['create'], ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-success', 'data-pjax' => '0'])
-//                . '<a href="#" class="btn pmd-btn-flat pmd-ripple-effect btn-primary">Update</a>'
-//                . '<a href="#" class="btn pmd-btn-flat pmd-ripple-effect btn-danger">Delete</a>',
+        'crudSettings' => [
+            'create' => \yii\helpers\Url::to(['roles/create']),
+            'update' => \yii\helpers\Url::to(['roles/update']),
+            'delete' => \yii\helpers\Url::to(['roles/delete']),
         ],
-        // 'persistResize' => true,
-        'resizableColumns' => false,
-       // 'responsive' => false,
-        // 'resizeStorageKey' => \wartron\yii2uuid\helpers\Uuid::uuid2str(Yii::$app->user->id),
-        'toolbar' => [
-            [
-                'content' =>
-                    Html::a(
-                        Yii::t('app', 'Create'),
-                        ['create'],
-                        [
-                            'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-success',
-                            'data-pjax' => '0'
-                        ]) . ' ' .
-                    '<a href="#" class="btn pmd-btn-flat pmd-ripple-effect btn-primary">Update</a>' .
-                    '<a href="#" class="btn pmd-btn-flat pmd-ripple-effect btn-danger">Delete</a>',
-                'options' => ['class' => 'btn-group pull-left', 'style' => 'position: absolute; bottom: 0;'],
-            ],
-            [
-                'content' =>
-                    '<a href="#" class="btn pmd-btn-flat pmd-ripple-effect btn-primary" style="text-align: right;">Filter</a>' .
-                    '<a href="#" class="btn pmd-btn-flat pmd-ripple-effect btn-danger" style="text-align: right;">Export</a>' .
-                    '<a href="#" class="btn pmd-btn-flat pmd-ripple-effect btn-default" style="text-align: right;">Customize</a>',
-                'options' => ['class' => 'btn-group-vertical btn-group-xs pull-right'],
-            ],
+        'customizeSettings' => [
+            'filterShow' => true,
+            'exportShow' => true,
+            'customizeShow' => true,
         ],
-        'panel' => [
-            'heading' => '<h3 class="panel-title"><i class="fa fa-list-alt"></i> Roles</h3>',
-            'after' => <<<EOT
-            <div class="btn-toolbar kv-grid-toolbar" role="toolbar">
-                <div class="btn-group pull-left">
-                    <a href="#" class="btn pmd-btn-flat pmd-ripple-effect btn-success">Create</a>
-                    <a href="#" class="btn pmd-btn-flat pmd-ripple-effect btn-primary">Update</a>
-                    <a href="#" class="btn pmd-btn-flat pmd-ripple-effect btn-danger">Delete</a>
-                </div>
-            </div>
-EOT
+        'panelHeading' => [
+            'icon' => FA::icon(FA::_LIST_ALT),
+            'title' => Yii::t('common/roles', 'Roles'),
         ],
-        'panelBeforeTemplate' => <<<EOT
-            <div>
-                <div class="btn-toolbar kv-grid-toolbar" role="toolbar" style="position: relative;">
-                    {toolbar}
-                </div>    
-            </div>
-            {before}
-            <div class="clearfix"></div>
-EOT
     ]);
     ?>
 </div>

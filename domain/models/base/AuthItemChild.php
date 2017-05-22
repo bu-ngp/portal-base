@@ -47,6 +47,18 @@ class AuthItemChild extends \yii\db\ActiveRecord
         ];
     }
 
+    public static function create(AuthItem $authItem, array $assignedKeys)
+    {
+        $items = [];
+        foreach ($assignedKeys as $authChild) {
+            $items[] = new self([
+                'parent' => $authItem->name,
+                'child' => $authChild,
+            ]);
+        }
+        return $items;
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */

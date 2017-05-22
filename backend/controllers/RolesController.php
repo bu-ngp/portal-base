@@ -2,6 +2,8 @@
 
 namespace backend\controllers;
 
+use domain\forms\base\RoleForm;
+use domain\services\base\RoleService;
 use Yii;
 use domain\models\base\AuthItem;
 use domain\models\base\search\AuthItemSearch;
@@ -15,6 +17,14 @@ use yii\filters\VerbFilter;
  */
 class RolesController extends Controller
 {
+    private $roleService;
+
+    public function __construct($id, $module, RoleService $roleService, $config = [])
+    {
+        $this->roleService = $roleService;
+        parent::__construct($id, $module, $config = []);
+    }
+
     /**
      * @inheritdoc
      */
@@ -25,7 +35,7 @@ class RolesController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                      //  'actions' => ['index'],
+                        //  'actions' => ['index'],
                         'allow' => true,
                     ],
                 ],
@@ -61,15 +71,24 @@ class RolesController extends Controller
      */
     public function actionCreate()
     {
-        $model = new AuthItem();
+        $form = new RoleForm();
+        $searchModel = new AuthItemSearch();
+        $dataProvider = $searchModel->searchForCreate(Yii::$app->request->queryParams);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->name]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
+            $role = $this->roleService->create(
+                $form->name,
+                $form->description,
+                $form->type,
+                explode(',', $form->assignRoles)
+            );
+            return $this->redirect(['index']);
         }
+        return $this->render('create', [
+            'modelForm' => $form,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**
