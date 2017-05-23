@@ -15,27 +15,24 @@
     var defaults = {};
 
     var saveToStorageSelectedRow = function ($widget, $checkbox) {
-        var idPjax = $widget[0].id;
-        var idGrid = idPjax.substr(0, idPjax.indexOf('-pjax'));
-
         var obj1 = $widget.data('gridselected2input').storage;
 
-        if (obj1[idGrid].checkAll) {
+        if (obj1.checkAll) {
             if ($checkbox.prop('checked')) {
-                var ind1 = obj1[idGrid].excluded.indexOf($checkbox.parent('td').parent('tr').attr('data-key'));
+                var ind1 = obj1.excluded.indexOf($checkbox.parent('td').parent('tr').attr('data-key'));
                 if (ind1 >= 0) {
-                    obj1[idGrid].excluded.splice(ind1, 1);
+                    obj1.excluded.splice(ind1, 1);
                 }
             } else {
-                obj1[idGrid].excluded.push($checkbox.parent('td').parent('tr').attr('data-key'));
+                obj1.excluded.push($checkbox.parent('td').parent('tr').attr('data-key'));
             }
         } else {
             if ($checkbox.prop('checked')) {
-                obj1[idGrid].included.push($checkbox.parent('td').parent('tr').attr('data-key'));
+                obj1.included.push($checkbox.parent('td').parent('tr').attr('data-key'));
             } else {
-                var ind2 = obj1[idGrid].included.indexOf($checkbox.parent('td').parent('tr').attr('data-key'));
+                var ind2 = obj1.included.indexOf($checkbox.parent('td').parent('tr').attr('data-key'));
                 if (ind2 >= 0) {
-                    obj1[idGrid].included.splice(ind2, 1);
+                    obj1.included.splice(ind2, 1);
                 }
             }
 
@@ -51,12 +48,9 @@
     };
 
     var readFromStorage = function ($widget, obj) {
-        var idPjax = $widget[0].id;
-        var idGrid = idPjax.substr(0, idPjax.indexOf('-pjax'));
-        var objTmp = {};
-        objTmp[idGrid] = {checkAll: false, included: [], excluded: []};
         if (typeof obj == 'object' && "selector" in obj && obj.is('input')) {
             if (obj.val() == '') {
+                var objTmp = {checkAll: false, included: [], excluded: []};
                 obj.val(JSON.stringify(objTmp));
                 $widget.data('gridselected2input').storage = objTmp;
             } else {
@@ -71,11 +65,11 @@
         var obj1 = $widget.data('gridselected2input').storage;
         var $checkboxes = $('#' + idGrid).find('input.kv-row-checkbox');
 
-        if (obj1[idGrid].checkAll) {
+        if (obj1.checkAll) {
             $checkboxes.parent('td').parent('tr').addClass('info');
             $checkboxes.prop('checked', true);
             $.each($checkboxes, function () {
-                if (obj1[idGrid].excluded.includes($(this).parent('td').parent('tr').attr('data-key'))) {
+                if (obj1.excluded.includes($(this).parent('td').parent('tr').attr('data-key'))) {
                     $(this).parent('td').parent('tr').removeClass('info');
                     $(this).prop('checked', false);
                 }
@@ -88,7 +82,7 @@
             $checkboxes.parent('td').parent('tr').removeClass('info');
             $checkboxes.prop('checked', false);
             $.each($checkboxes, function () {
-                if (obj1[idGrid].included.includes($(this).parent('td').parent('tr').attr('data-key'))) {
+                if (obj1.included.includes($(this).parent('td').parent('tr').attr('data-key'))) {
                     $(this).parent('td').parent('tr').addClass('info');
                     $(this).prop('checked', true);
                 }
@@ -102,9 +96,9 @@
 
         $('#' + idGrid).parent().on('click', 'input.select-on-check-all', function () {
             var obj1 = $widget.data('gridselected2input').storage;
-            obj1[idGrid].checkAll = $(this).prop('checked');
-            obj1[idGrid].included = [];
-            obj1[idGrid].excluded = [];
+            obj1.checkAll = $(this).prop('checked');
+            obj1.included = [];
+            obj1.excluded = [];
             $widget.data('gridselected2input').storage = obj1;
             saveToStorage($widget, $widget.data('gridselected2input').settings.storage);
         });
@@ -131,7 +125,7 @@
                     widget: $widget,
                     settings: settings
                 });
-                
+
                 readFromStorage($widget, settings.storage);
                 selectRowsFromStorage($widget);
                 $(document).on('pjax:complete', function (e) {

@@ -49,7 +49,7 @@ class AuthItemSearch extends AuthItem
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 5]
+                'pagination' => ['pageSize' => 3]
         ]);
 
         $this->load($params);
@@ -62,8 +62,8 @@ class AuthItemSearch extends AuthItem
 
         // grid filtering conditions
         $query->andFilterWhere([
-            //    'type' => 1,
-            //    'view' => 0,
+         //   'type' => 1,
+         //   'view' => 0,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
 
@@ -87,7 +87,7 @@ class AuthItemSearch extends AuthItem
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-             'pagination' => ['pageSize' => 5]
+            //  'pagination' => ['pageSize' => 5]
         ]);
 
         $this->load($params);
@@ -105,6 +105,7 @@ class AuthItemSearch extends AuthItem
         ]);
 
         $query->andFilterWhere(['like', 'description', $this->description]);
+        $query->andWhere('1=2');
 
         return $dataProvider;
     }

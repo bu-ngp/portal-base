@@ -6,6 +6,14 @@ td.wk-nowrap > span {
     text-overflow: ellipsis;
 }
 
-div.kv-grid-container {
-    min-height: 450px;
+div.wk-custom-buttons {
+   /* position: absolute;
+    bottom: 0;
+    right: 0;*/
+    float: right;
+}
+
+div.wk-grid-toolbar {
+    position: relative;
+    min-height: 35px;
 }

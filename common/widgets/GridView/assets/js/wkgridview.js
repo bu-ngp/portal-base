@@ -21,16 +21,6 @@
         }
     };
 
-    var clickRow = function () {
-        if (parseInt($(this).children('span').css('max-width')) == $(this).children('span').outerWidth()) {
-            $(this).tooltip({
-                container: $(this).children('span'),
-                title: $(this).text()
-            }).tooltip('show');
-        }
-    };
-
-
     var eventsApply = function (gridid) {
         var $widget = $('#' + gridid);
 
@@ -52,75 +42,48 @@
         $widget.parent().on('dblclick', 'td[data-col-seq]', function (e) {
             //    $(this).css('background-color','red');
         });
-
-     /*   $widget.parent().on('click', 'input.select-on-check-all', function () {
-            var obj1 = $.parseJSON(localStorage.selectedRows);
-            obj1[$widget[0].id].checkAll = $(this).prop('checked');
-            obj1[$widget[0].id].included = [];
-            obj1[$widget[0].id].excluded = [];
-            localStorage.selectedRows = JSON.stringify(obj1);
-        });
-
-        $widget.parent().on('click', 'input.kv-row-checkbox', function () {
-            saveToStorageSelectedRow($widget[0].id, $(this));
-        });*/
     };
 
- /*   var saveToStorageSelectedRow = function (gridid, $checkbox) {
-        var $grid = $('#' + gridid);
-        var obj1 = $.parseJSON(localStorage.selectedRows);
+    var makeDialog = function ($widget) {
+        var $dialog = $('<div tabindex="-1" class="modal fade ' + $widget[0].id + '-wk-dialog" style="display: none;" aria-hidden="true">' +
+            '<div class="modal-dialog">' +
+            '<div class="modal-content">' +
+            '<div class="modal-header">' +
+            '<h2 class="pmd-card-title-text wk-dialog-title"></h2>' +
+            '</div>' +
+            '<div class="modal-body">' +
+            '<p class="wk-dialog-text"></p>' +
+            '</div>' +
+            '<div class="pmd-modal-action pmd-modal-bordered text-right">' +
+            '<button data-dismiss="modal" type="button" class="btn pmd-btn-flat pmd-ripple-effect btn-default">CLOSE</button>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>');
 
-        if (obj1[$grid[0].id].checkAll) {
-            if ($checkbox.prop('checked')) {
-                var ind1 = obj1[$grid[0].id].excluded.indexOf($checkbox.parent('td').parent('tr').attr('data-key'));
-                if (ind1 >= 0) {
-                    obj1[$grid[0].id].excluded.splice(ind1, 1);
-                }
-            } else {
-                obj1[$grid[0].id].excluded.push($checkbox.parent('td').parent('tr').attr('data-key'));
-            }
-        } else {
-            if ($checkbox.prop('checked')) {
-                obj1[$grid[0].id].included.push($checkbox.parent('td').parent('tr').attr('data-key'));
-            } else {
-                var ind2 = obj1[$grid[0].id].included.indexOf($checkbox.parent('td').parent('tr').attr('data-key'));
-                if (ind2 >= 0) {
-                    obj1[$grid[0].id].included.splice(ind2, 1);
-                }
-            }
-
-        }
-
-        localStorage.selectedRows = JSON.stringify(obj1);
+        $dialog.insertAfter($widget.parent());
     };
 
-    var selectRowsFromStorage = function (gridid) {
-        var obj1 = $.parseJSON(localStorage.selectedRows);
-        var $this = $('#' + gridid);
-        var $checkboxes = $this.find('input.kv-row-checkbox');
+    var makeConfirm = function ($widget) {
+        var $dialog = $('<div tabindex="-1" class="modal fade ' + $widget[0].id + '-wk-confirm" style="display: none;" aria-hidden="true">' +
+            '<div class="modal-dialog">' +
+            '<div class="modal-content">' +
+            '<div class="modal-header">' +
+            '<h2 class="pmd-card-title-text wk-confirm-title"></h2>' +
+            '</div>' +
+            '<div class="modal-body">' +
+            '<p class="wk-confirm-text"></p>' +
+            '</div>' +
+            '<div class="pmd-modal-action pmd-modal-bordered text-right">' +
+            '<button data-dismiss="modal" type="button" class="btn pmd-btn-flat pmd-ripple-effect btn-primary">CLOSE</button>' +
+            '<button type="button" class="btn pmd-btn-flat pmd-ripple-effect btn-default wk-btn-confirm-ok">OK</button>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>');
 
-        if (obj1[$this[0].id].checkAll) {
-            $checkboxes.parent('td').parent('tr').addClass('info');
-            $checkboxes.prop('checked', true);
-            $.each($checkboxes, function () {
-                if (obj1[$this[0].id].excluded.includes($(this).parent('td').parent('tr').attr('data-key'))) {
-                    $(this).parent('td').parent('tr').removeClass('info');
-                    $(this).prop('checked', false);
-                }
-            });
-
-            if (($checkboxes.length - $checkboxes.not(':checked').length) == $checkboxes.length) {
-                $this.find('input.select-on-check-all').prop('checked', true);
-            }
-        } else {
-            $.each($checkboxes, function () {
-                if (obj1[$this[0].id].included.includes($(this).parent('td').parent('tr').attr('data-key'))) {
-                    $(this).parent('td').parent('tr').addClass('info');
-                    $(this).prop('checked', true);
-                }
-            });
-        }
-    };*/
+        $dialog.insertAfter($widget.parent());
+    };
 
     var methods = {
         init: function (options) {
@@ -139,37 +102,27 @@
                     settings: settings
                 });
 
-               /* if (typeof localStorage.selectedRows == 'undefined') {
-                    var selectedRows = {};
-                    selectedRows[$widget[0].id] = {
-                        checkAll: false,
-                        included: [],
-                        excluded: []
-                    };
-                    localStorage.selectedRows = JSON.stringify(selectedRows);
-                }*/
-
-          /*      var tmp1 = $.parseJSON(localStorage.selectedRows);
-                if (typeof tmp1[$widget[0].id] == 'undefined') {
-                    tmp1[$widget[0].id] = {
-                        checkAll: false,
-                        included: [],
-                        excluded: []
-                    };
-                    localStorage.selectedRows = JSON.stringify(tmp1);
-                }*/
-
                 if (settings.selectionStorage) {
-                  /*  selectRowsFromStorage($widget[0].id);
-                    $(document).on('pjax:complete', function (e) {
-                        if (e.target.id == $widget[0].id + '-pjax') {
-                            selectRowsFromStorage($widget[0].id);
-                        }
-                    });*/
-
 
                 }
+
                 eventsApply($widget[0].id);
+
+                makeDialog($widget);
+                makeConfirm($widget);
+
+                $widget.parent().on('click', 'a.wk-btn-update', function (event) {
+                    var selectedRows = $widget.parent().gridselected2storage('selectedRows');
+                    if (selectedRows == 1) {
+                        event.target.href += '?id=' + $widget.parent().gridselected2storage('selectedRowID');
+                        return true;
+                    } else {
+                        event.preventDefault();
+                        $widget.parent().nextAll('.' + $widget[0].id + '-wk-dialog').find('.wk-dialog-title').text('Error');
+                        $widget.parent().nextAll('.' + $widget[0].id + '-wk-dialog').find('.wk-dialog-text').html('<span>You must select one role. You selected <b>' + selectedRows + '</b>.</span>');
+                        $widget.parent().nextAll('.' + $widget[0].id + '-wk-dialog').modal();
+                    }
+                });
             });
         },
         destroy: function () {

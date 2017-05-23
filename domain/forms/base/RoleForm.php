@@ -22,7 +22,6 @@ class RoleForm extends Model
     {
         $this->name = 'UserRole' . time();
         $this->type = 1;
-        // $this->assignRoles = 'basePodrazEdit''{"RoleFormGrid":{"checkAll":false,"included":[],"excluded":[]}}';
         parent::__construct($config);
     }
 
@@ -33,6 +32,7 @@ class RoleForm extends Model
     {
         return [
             [['description', 'assignRoles', 'type', 'name'], 'required'],
+            [['assignRoles'], 'compare', 'compareValue' => '{"checkAll":false,"included":[],"excluded":[]}', 'operator' => '!=', 'message' => Yii::t('common/roles', 'Select roles')],
         ];
     }
 

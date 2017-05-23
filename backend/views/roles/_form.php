@@ -18,7 +18,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($modelForm, 'description')->textInput() ?>
 
-    <?= $form->field($modelForm, 'assignRoles')/*->hiddenInput()->label(false) */?>
+    <?= $form->field($modelForm, 'assignRoles', ['enableClientValidation' => false])/*->hiddenInput()->label(false)*/ ?>
 
     <?php ActiveForm::end(); ?>
 
@@ -34,6 +34,10 @@ use yii\widgets\ActiveForm;
             'filterShow' => true,
             'exportShow' => true,
             'customizeShow' => true,
+        ],
+        'crudSettings' => [
+            'create' => \yii\helpers\Url::to(['roles/create']),
+            'delete' => \yii\helpers\Url::to(['roles/delete']),
         ],
         'panelHeading' => [
             'icon' => FA::icon(FA::_LIST_ALT),

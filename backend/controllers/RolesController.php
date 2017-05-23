@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use domain\forms\base\RoleForm;
 use domain\services\base\RoleService;
+use domain\services\proxyService;
 use Yii;
 use domain\models\base\AuthItem;
 use domain\models\base\search\AuthItemSearch;
@@ -17,11 +18,14 @@ use yii\filters\VerbFilter;
  */
 class RolesController extends Controller
 {
+    /**
+     * @var RoleService
+     */
     private $roleService;
 
     public function __construct($id, $module, RoleService $roleService, $config = [])
     {
-        $this->roleService = $roleService;
+        $this->roleService = new proxyService($roleService);
         parent::__construct($id, $module, $config = []);
     }
 
@@ -75,15 +79,19 @@ class RolesController extends Controller
         $searchModel = new AuthItemSearch();
         $dataProvider = $searchModel->searchForCreate(Yii::$app->request->queryParams);
 
-        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
-            $role = $this->roleService->create(
+        if ($form->load(Yii::$app->request->post()) && $form->validate()
+            && $this->roleService->create(
                 $form->name,
                 $form->description,
                 $form->type,
-                explode(',', $form->assignRoles)
-            );
+                $form->assignRoles
+            )
+        ) {
             return $this->redirect(['index']);
         }
+
+        $form->addErrors($this->roleService->getErrors());
+
         return $this->render('create', [
             'modelForm' => $form,
             'searchModel' => $searchModel,

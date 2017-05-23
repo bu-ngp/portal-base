@@ -3,6 +3,7 @@
 namespace domain\models\base;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%auth_item_child}}".
@@ -47,15 +48,27 @@ class AuthItemChild extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function create(AuthItem $authItem, array $assignedKeys)
+    public static function create(AuthItem $authItem, \stdClass $assignedKeys)
     {
         $items = [];
-        foreach ($assignedKeys as $authChild) {
+        if ($assignedKeys->checkAll) {
+            $excludedAuthitems = AuthItem::find()
+                ->where(['not', ['in', 'name', $assignedKeys->excluded]])
+                ->asArray()
+                ->all();
+            
+            $authitems = ArrayHelper::getColumn($excludedAuthitems, 'name');
+        } else {
+            $authitems = $assignedKeys->included;
+        }
+
+        foreach ($authitems as $authChild) {
             $items[] = new self([
                 'parent' => $authItem->name,
                 'child' => $authChild,
             ]);
         }
+
         return $items;
     }
 

@@ -24,8 +24,10 @@ $this->params['breadcrumbs'][] = $this->title;
     GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'minHeight' => 450,
         'columns' => [
-            'description'
+            'description',
+            'name',
         ],
         'crudSettings' => [
             'create' => \yii\helpers\Url::to(['roles/create']),
@@ -33,9 +35,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'delete' => \yii\helpers\Url::to(['roles/delete']),
         ],
         'customizeSettings' => [
-            'filterShow' => true,
-            'exportShow' => true,
             'customizeShow' => true,
+            'exportShow' => true,
+            'filterShow' => true,
         ],
         'panelHeading' => [
             'icon' => FA::icon(FA::_LIST_ALT),

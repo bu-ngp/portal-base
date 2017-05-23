@@ -14,6 +14,7 @@ class GridView extends \kartik\grid\GridView
     public $customizeSettings;
     public $panelHeading;
     public $multipleSelect;
+    public $minHeight;
 
     public function __construct(array $config = [])
     {
@@ -49,35 +50,63 @@ class GridView extends \kartik\grid\GridView
     {
         $config['hover'] = isset($config['hover']) ? $config['hover'] : true;
         $config['pjax'] = isset($config['pjax']) ? $config['pjax'] : true;
+        $this->minHeight = isset($config['minHeight']) ? $config['minHeight'] : false;
+
+        if (isset($config['minHeight'])) {
+            $config['containerOptions'] = array_replace_recursive(
+                is_array($config['containerOptions']) ? $config['containerOptions'] : [],
+                ['style' => "min-height: {$config['minHeight']}px;"]
+            );
+        }
+
         $this->multipleSelect = isset($config['multipleSelect']) ? $config['multipleSelect'] : true;
         $config['pjaxSettings']['loadingCssClass'] = isset($config['pjaxSettings']['loadingCssClass']) ? $config['pjaxSettings']['loadingCssClass'] : false;
         $config['resizableColumns'] = isset($config['resizableColumns']) ? $config['resizableColumns'] : false;
-        $this->createCustomizeButtons($config['customizeSettings']);
-        $this->createCrudButtons($config['crudSettings']);
+        $this->createCustomizeButtons($config);
+        $this->createCrudButtons($config);
         if (($key = array_search('{export}', $this->toolbar)) !== false) {
             unset($this->toolbar[$key]);
         }
         if (($key = array_search('{toggleData}', $this->toolbar)) !== false) {
             unset($this->toolbar[$key]);
         }
+
+        //$config['panel']['beforeOptions'] = array_merge_recursive(isset($config['panel']['beforeOptions']) ? $config['panel']['beforeOptions'] : [], ['style' => 'position: relative;']);
         $config['panelBeforeTemplate'] = isset($config['panelBeforeTemplate']) ? $config['panelBeforeTemplate'] : <<<EOT
             <div>
-                <div class="btn-toolbar kv-grid-toolbar" role="toolbar" style="position: relative;">
+                <div class="btn-toolbar kv-grid-toolbar wk-grid-toolbar" role="toolbar">
                     {toolbar}
                 </div>    
             </div>
             {before}
             <div class="clearfix"></div>
 EOT;
-        $this->setPanelHeading($config['panelHeading']);
+
+        $config['panelFooterTemplate'] = isset($config['panelFooterTemplate']) ? $config['panelFooterTemplate'] : <<<EOT
+                    <div class="kv-panel-pager pull-left">
+                        {pager}
+                    </div>
+                    {footer}
+                    <div class="clearfix"></div>
+EOT;
+
+        $config['panel']['footer'] = $config['panel']['footer'] . <<<EOT
+                    <div class="selectedPanel pull-right" style="display: none;">
+                       
+                    </div>
+EOT;
+
+        $this->setPanelHeading($config);
         $config['columns'] = $this->prepareColumns($config['columns']);
 
         return $config;
     }
 
-    protected function createCrudButtons($config)
+    protected function createCrudButtons(&$config)
     {
-        if (is_array($config) && count($config) > 0) {
+        $crudSettings = $config['crudSettings'];
+
+        if (is_array($crudSettings) && count($crudSettings) > 0) {
             $toolbar = [
                 [
                     'content' => '',
@@ -87,7 +116,7 @@ EOT;
 
             $panelButtons = '';
 
-            foreach ($config as $key => $crudUrl) {
+            foreach ($crudSettings as $key => $crudUrl) {
                 switch ($key) {
                     case 'create':
                         $button = Html::a(Yii::t('wk-widget-gridview', 'Create'), $crudUrl,
@@ -102,7 +131,7 @@ EOT;
                     case 'update':
                         $button = Html::a(Yii::t('wk-widget-gridview', 'Update'), $crudUrl,
                             [
-                                'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary',
+                                'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary wk-btn-update',
                                 'data-pjax' => '0'
                             ]);
                         $toolbar[0]['content'] .= $button;
@@ -112,6 +141,7 @@ EOT;
                         $button = Html::a(Yii::t('wk-widget-gridview', 'Delete'), $crudUrl,
                             [
                                 'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger',
+                                'data-pjax' => '0'
                             ]);
                         $toolbar[0]['content'] .= $button;
                         $panelButtons .= $button;
@@ -130,43 +160,54 @@ EOT;
                         </div>
                     </div>
 EOT;
-            $this->toolbar = array_merge_recursive($toolbar, $this->toolbar);
-            $this->panel['after'] = $panel . $this->panel['after'];
+
+            $config['toolbar'] = array_merge_recursive($toolbar, isset($config['toolbar']) ? $config['toolbar'] : []);
+            $config['panel']['after'] = $panel . (isset($config['panel']['after']) ? $config['panel']['after'] : '');
         }
+
+        unset($config['crudSettings']);
     }
 
-    protected function createCustomizeButtons($config)
+    protected
+    function createCustomizeButtons(&$config)
     {
-        if (is_array($config) && count($config) > 0) {
+        $customizeSettings = $config['customizeSettings'];
+        if (is_array($customizeSettings) && count($customizeSettings) > 0) {
             $toolbar = [
                 [
                     'content' => '',
-                    'options' => ['class' => 'btn-group-vertical btn-group-xs pull-right'],
+                    'options' => ['class' => 'btn-group-vertical btn-group-xs wk-custom-buttons'],
                 ],
             ];
 
-            foreach ($config as $key => $option) {
+            foreach ($customizeSettings as $key => $option) {
                 switch ($key) {
-                    case 'filterShow':
-                        $toolbar[0]['content'] .= Html::a(Yii::t('wk-widget-gridview', 'Filter'), '#',
-                            [
-                                'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary',
-                                'style' => 'text-align: right;',
-                            ]);
+                    case 'customizeShow':
+                        if ($option) {
+                            $toolbar[0]['content'] .= Html::a(Yii::t('wk-widget-gridview', 'Customize'), '#',
+                                [
+                                    'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-default',
+                                    'style' => 'text-align: right;',
+                                ]);
+                        }
                         break;
                     case 'exportShow':
-                        $toolbar[0]['content'] .= Html::a(Yii::t('wk-widget-gridview', 'Export'), '#',
-                            [
-                                'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger',
-                                'style' => 'text-align: right;',
-                            ]);
+                        if ($option) {
+                            $toolbar[0]['content'] .= Html::a(Yii::t('wk-widget-gridview', 'Export'), '#',
+                                [
+                                    'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger',
+                                    'style' => 'text-align: right;',
+                                ]);
+                        }
                         break;
-                    case 'customizeShow':
-                        $toolbar[0]['content'] .= Html::a(Yii::t('wk-widget-gridview', 'Customize'), '#',
-                            [
-                                'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-default',
-                                'style' => 'text-align: right;',
-                            ]);
+                    case 'filterShow':
+                        if ($option) {
+                            $toolbar[0]['content'] .= Html::a(Yii::t('wk-widget-gridview', 'Filter'), '#',
+                                [
+                                    'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary',
+                                    'style' => 'text-align: right;',
+                                ]);
+                        }
                         break;
                     default:
                         new \Exception(Yii::t('wk-widget-gridview', "In 'customizeSettings' array must be only this keys ['filterShow', 'exportShow', 'customizeShow']. Passed '{key}'", [
@@ -174,16 +215,20 @@ EOT;
                         ]));
                 }
             }
-            $this->toolbar = array_merge_recursive($toolbar, $this->toolbar);
+            $config['toolbar'] = array_merge_recursive($toolbar, isset($config['toolbar']) ? $config['toolbar'] : []);
         }
+        unset($config['customizeSettings']);
     }
 
-    protected function setPanelHeading($config)
+    protected
+    function setPanelHeading(&$config)
     {
-        if (is_array($config) && count($config) > 0) {
+        $panelHeading = $config['panelHeading'];
+
+        if (is_array($panelHeading) && count($panelHeading) > 0) {
             $icon = '';
             $title = '';
-            foreach ($config as $key => $option) {
+            foreach ($panelHeading as $key => $option) {
                 switch ($key) {
                     case 'icon':
                         $icon = $option . ' ';
@@ -197,11 +242,12 @@ EOT;
                         ]));
                 }
             }
-            $this->panel['heading'] = '<h3 class="panel-title">' . $icon . $title . '</h3>';
+            $config['panel']['heading'] = isset($config['panel']['heading']) ? $config['panel']['heading'] : '<h3 class="panel-title">' . $icon . $title . '</h3>';
         }
     }
 
-    protected function registerAssets()
+    protected
+    function registerAssets()
     {
         parent::registerAssets();
         $view = $this->getView();
@@ -217,7 +263,8 @@ EOT;
         $view->registerJs($idReplaced, View::POS_END);
     }
 
-    protected function prepareColumns($config)
+    protected
+    function prepareColumns($config)
     {
         if (is_array($config) && count($config) > 0) {
             $serialExist = false;
