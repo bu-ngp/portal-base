@@ -21,9 +21,20 @@
         }
     };
 
+    var clickRow = function () {
+        if (parseInt($(this).children('span').css('max-width')) == $(this).children('span').outerWidth()) {
+            $(this).tooltip({
+                container: $(this).children('span'),
+                title: $(this).text()
+            }).tooltip('show');
+        }
+    };
+
+
     var eventsApply = function (gridid) {
         var $widget = $('#' + gridid);
-        $('td.wk-nowrap').unbind('mouseenter').bind('mouseenter', function () {
+
+        $widget.parent().on('mouseenter', 'td.wk-nowrap', function (e) {
             if (parseInt($(this).children('span').css('max-width')) == $(this).children('span').outerWidth()) {
                 $(this).tooltip({
                     container: $(this).children('span'),
@@ -32,15 +43,17 @@
             }
         });
 
-        $widget.find('td').not('td:has(input.kv-row-checkbox)').unbind('click').click(function () {
-            $(this).parent('tr').find('input.kv-row-checkbox').trigger('click');
+        $widget.parent().on('click', 'td[data-col-seq]', function (e) {
+            if (!$(e.target).hasClass('kv-row-checkbox')) {
+                $(e.target).parentsUntil('tbody').find('input.kv-row-checkbox').trigger('click');
+            }
         });
 
-        $widget.find('td').not('td:has(input.kv-row-checkbox)').unbind('dblclick').dblclick(function () {
-//        $(this).css('background-color','red');
+        $widget.parent().on('dblclick', 'td[data-col-seq]', function (e) {
+            //    $(this).css('background-color','red');
         });
 
-        $widget.find('input.select-on-check-all').unbind('click').click(function () {
+     /*   $widget.parent().on('click', 'input.select-on-check-all', function () {
             var obj1 = $.parseJSON(localStorage.selectedRows);
             obj1[$widget[0].id].checkAll = $(this).prop('checked');
             obj1[$widget[0].id].included = [];
@@ -48,12 +61,12 @@
             localStorage.selectedRows = JSON.stringify(obj1);
         });
 
-        $widget.find('input.kv-row-checkbox').unbind('click').click(function () {
+        $widget.parent().on('click', 'input.kv-row-checkbox', function () {
             saveToStorageSelectedRow($widget[0].id, $(this));
-        });
+        });*/
     };
 
-    var saveToStorageSelectedRow = function (gridid, $checkbox) {
+ /*   var saveToStorageSelectedRow = function (gridid, $checkbox) {
         var $grid = $('#' + gridid);
         var obj1 = $.parseJSON(localStorage.selectedRows);
 
@@ -107,7 +120,7 @@
                 }
             });
         }
-    };
+    };*/
 
     var methods = {
         init: function (options) {
@@ -126,7 +139,7 @@
                     settings: settings
                 });
 
-                if (typeof localStorage.selectedRows == 'undefined') {
+               /* if (typeof localStorage.selectedRows == 'undefined') {
                     var selectedRows = {};
                     selectedRows[$widget[0].id] = {
                         checkAll: false,
@@ -134,30 +147,29 @@
                         excluded: []
                     };
                     localStorage.selectedRows = JSON.stringify(selectedRows);
-                }
+                }*/
 
-                var tmp1 = $.parseJSON(localStorage.selectedRows);
-                if (typeof tmp1[$widget[0].id] == 'undefined')  {
-                    var obj1 = {
+          /*      var tmp1 = $.parseJSON(localStorage.selectedRows);
+                if (typeof tmp1[$widget[0].id] == 'undefined') {
+                    tmp1[$widget[0].id] = {
                         checkAll: false,
                         included: [],
                         excluded: []
                     };
-                    tmp1[$widget[0].id] = obj1;
                     localStorage.selectedRows = JSON.stringify(tmp1);
-                }
+                }*/
 
                 if (settings.selectionStorage) {
-                    selectRowsFromStorage($widget[0].id);
+                  /*  selectRowsFromStorage($widget[0].id);
                     $(document).on('pjax:complete', function (e) {
                         if (e.target.id == $widget[0].id + '-pjax') {
                             selectRowsFromStorage($widget[0].id);
-                            eventsApply($widget[0].id);
                         }
-                    });
+                    });*/
 
-                    eventsApply($widget[0].id);
+
                 }
+                eventsApply($widget[0].id);
             });
         },
         destroy: function () {

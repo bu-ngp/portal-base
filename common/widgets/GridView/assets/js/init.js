@@ -3,4 +3,7 @@
  */
 $(document).ready(function () {
     $("#id-widget").wkgridview(object);
+    $("#id-widget").parent().gridselected2storage({
+        storage: 'selectedRows'
+    });
 });

@@ -22,7 +22,7 @@ class RoleForm extends Model
     {
         $this->name = 'UserRole' . time();
         $this->type = 1;
-        $this->assignRoles = 'basePodrazEdit'/*'{"RoleFormGrid":{"checkAll":false,"included":[],"excluded":[]}}'*/;
+        // $this->assignRoles = 'basePodrazEdit''{"RoleFormGrid":{"checkAll":false,"included":[],"excluded":[]}}';
         parent::__construct($config);
     }
 
