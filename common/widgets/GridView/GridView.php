@@ -60,7 +60,7 @@ class GridView extends \kartik\grid\GridView
         }
 
         $this->multipleSelect = isset($config['multipleSelect']) ? $config['multipleSelect'] : true;
-        $config['pjaxSettings']['loadingCssClass'] = isset($config['pjaxSettings']['loadingCssClass']) ? $config['pjaxSettings']['loadingCssClass'] : false;
+        //    $config['pjaxSettings']['loadingCssClass'] = isset($config['pjaxSettings']['loadingCssClass']) ? $config['pjaxSettings']['loadingCssClass'] : false;
         $config['resizableColumns'] = isset($config['resizableColumns']) ? $config['resizableColumns'] : false;
         $this->createCustomizeButtons($config);
         $this->createCrudButtons($config);
@@ -260,7 +260,7 @@ EOT;
         $options = (object)array_filter($options);
         $optionsReplaced = str_replace('object', json_encode($options, JSON_UNESCAPED_UNICODE), file_get_contents(__DIR__ . '/assets/js/init.js'));
         $idReplaced = str_replace('id-widget', $this->id, $optionsReplaced);
-        $view->registerJs($idReplaced, View::POS_END);
+        $view->registerJs($idReplaced);
     }
 
     protected

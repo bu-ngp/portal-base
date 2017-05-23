@@ -7,6 +7,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use domain\models\base\AuthItem;
+use yii\data\ArrayDataProvider;
 use yii\db\Expression;
 
 /**
@@ -47,9 +48,13 @@ class AuthItemSearch extends AuthItem
 
         // add conditions that should always apply here
 
+        if (!Yii::$app->request->isAjax) {
+            return new ArrayDataProvider();
+        }
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-                'pagination' => ['pageSize' => 3]
+            'pagination' => ['pageSize' => 3]
         ]);
 
         $this->load($params);
@@ -62,8 +67,8 @@ class AuthItemSearch extends AuthItem
 
         // grid filtering conditions
         $query->andFilterWhere([
-         //   'type' => 1,
-         //   'view' => 0,
+            //   'type' => 1,
+            //   'view' => 0,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
 

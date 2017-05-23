@@ -7,4 +7,11 @@ $(document).ready(function () {
         storage: 'selectedRows',
         selectedPanelClass: 'selectedPanel'
     });
+
+    console.debug($("#id-widget"));
+
+   // setTimeout(function () {
+        $("#id-widget").yiiGridView('applyFilter');
+   // }, 3000);
+
 });
