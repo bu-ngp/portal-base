@@ -46,10 +46,21 @@ class GridView extends \kartik\grid\GridView
         parent::run();
     }
 
+    protected function beginPjax()
+    {
+        parent::beginPjax();
+        /*   $view = $this->getView();
+           $a=$this->dataProvider->getModels();
+
+           $view->registerJs("console.debug('nigga');");*/
+    }
+
     protected function setDefaults($config)
     {
         $config['hover'] = isset($config['hover']) ? $config['hover'] : true;
         $config['pjax'] = isset($config['pjax']) ? $config['pjax'] : true;
+        //$config['pjaxSettings']['options']['clientOptions']['type'] = 'POST';
+        //$config['pjaxSettings']['options']['clientOptions']['enablePushState'] = 'true';
         $this->minHeight = isset($config['minHeight']) ? $config['minHeight'] : false;
 
         if (isset($config['minHeight'])) {

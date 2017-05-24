@@ -162,6 +162,44 @@
         }
     };
 
+    var resetSelected = function ($widget) {
+        var idPjax = $widget[0].id;
+        var idGrid = idPjax.substr(0, idPjax.indexOf('-pjax'));
+
+        var $filter = $widget.find('.filters').children();
+        var arr2 = [];
+        if (typeof $widget.data('gridselected2storage').storage.filterValues == 'undefined') {
+            $widget.data('gridselected2storage').storage.filterValues = [];
+            saveToStorage($widget, $widget.data('gridselected2storage').settings.storage);
+        } else {
+            arr2 = $widget.data('gridselected2storage').storage.filterValues;
+
+        }
+
+        var arr1 = [];
+        $.each($filter, function () {
+            var $input = $(this).find('input');
+            if ($input.length && $input.val() != '') {
+                arr1.push($input.val());
+            }
+        });
+
+        var diff = ($.extend([], arr1, arr2).length != Math.min(arr1.length, arr2.length));
+
+        if (diff) {
+            $widget.data('gridselected2storage').storage.filterValues = arr1;
+            saveToStorage($widget, $widget.data('gridselected2storage').settings.storage);
+
+            var obj1 = $widget.data('gridselected2storage').storage;
+            obj1[idGrid].checkAll = false;
+            obj1[idGrid].included = [];
+            obj1[idGrid].excluded = [];
+
+            saveToStorage($widget, $widget.data('gridselected2storage').settings.storage);
+            selectedPanelSet($widget);
+        }
+    };
+
     var methods = {
         init: function (options) {
             return this.each(function () {
@@ -183,11 +221,65 @@
                 readFromStorage($widget, settings.storage);
                 selectRowsFromStorage($widget);
                 selectedPanelSet($widget);
-                $(document).on('pjax:complete', function (e) {
+                var tmp1 = [];
+                $(document).on('pjax:complete', function (e, xhr, status, response) {
                     if (e.target.id == $widget[0].id) {
+                        // console.debug(xhr);
+                        //  console.debug(response);
+                        var str1 = '';
+                        $.each(response.data, function () {
+                            if (this.name != '_pjax') {
+                                str1 += this.name + '=' + this.value + ' | ';
+                            }
+                        });
+
+                        console.debug(str1);
+
                         selectRowsFromStorage($widget);
                         selectedPanelSet($widget);
                     }
+                });
+
+                $(document).on('pjax:send', function (e, xhr, response) {
+
+                    if (e.target.id == $widget[0].id) {
+                        // console.debug('--pjax:send--');
+                        //  console.debug(response.data);
+                        /*    var str1 = '';
+                         $.each(response.data, function () {
+                         if (this.name != '_pjax') {
+                         str1 += this.name + '=' + this.value + ' | ';
+                         }
+                         });
+
+                         console.debug('beforeSend: '+str1);
+
+                         selectRowsFromStorage($widget);
+                         selectedPanelSet($widget);*/
+                    }
+                });
+
+                $(document).on('pjax:success', function (e, data, status, xhr, response) {
+
+                    if (e.target.id == $widget[0].id) {
+                        //   console.debug('--pjax:success--');
+                        //  console.debug(response);
+                        /*    var str1 = '';
+                         $.each(response.data, function () {
+                         if (this.name != '_pjax') {
+                         str1 += this.name + '=' + this.value + ' | ';
+                         }
+                         });
+
+                         console.debug('beforeSend: '+str1);
+
+                         selectRowsFromStorage($widget);
+                         selectedPanelSet($widget);*/
+                    }
+                });
+
+                $widget.parent().on('afterFilter', '#' + $widget[0].id, function () {
+                    resetSelected($widget);
                 });
 
                 eventsApply($widget);

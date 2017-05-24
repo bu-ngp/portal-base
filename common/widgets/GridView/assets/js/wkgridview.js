@@ -106,21 +106,24 @@
 
                 }
 
+                var $pjax = $widget.parent();
+
                 eventsApply($widget[0].id);
 
                 makeDialog($widget);
                 makeConfirm($widget);
 
-                $widget.parent().on('click', 'a.wk-btn-update', function (event) {
-                    var selectedRows = $widget.parent().gridselected2storage('selectedRows');
+                $pjax.on('click', 'a.wk-btn-update', function (event) {
+                    event.preventDefault();
+                    var selectedRows = $pjax.gridselected2storage('selectedRows');
                     if (selectedRows == 1) {
-                        event.target.href += '?id=' + $widget.parent().gridselected2storage('selectedRowID');
+                        event.target.href += '?id=' + $pjax.gridselected2storage('selectedRowID');
                         return true;
                     } else {
                         event.preventDefault();
-                        $widget.parent().nextAll('.' + $widget[0].id + '-wk-dialog').find('.wk-dialog-title').text('Error');
-                        $widget.parent().nextAll('.' + $widget[0].id + '-wk-dialog').find('.wk-dialog-text').html('<span>You must select one role. You selected <b>' + selectedRows + '</b>.</span>');
-                        $widget.parent().nextAll('.' + $widget[0].id + '-wk-dialog').modal();
+                        $pjax.nextAll('.' + $widget[0].id + '-wk-dialog').find('.wk-dialog-title').text('Error');
+                        $pjax.nextAll('.' + $widget[0].id + '-wk-dialog').find('.wk-dialog-text').html('<span>You must select one role. You selected <b>' + selectedRows + '</b>.</span>');
+                        $pjax.nextAll('.' + $widget[0].id + '-wk-dialog').modal();
                     }
                 });
             });

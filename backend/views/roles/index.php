@@ -16,9 +16,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="auth-item-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php $a = \domain\models\base\AuthItem::find()->asArray()->all() ?>
-
-
 
     <?=
     GridView::widget([
