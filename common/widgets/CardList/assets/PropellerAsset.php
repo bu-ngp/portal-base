@@ -15,10 +15,13 @@ class PropellerAsset extends AssetBundle
         'components/icons/css/google-icons.css',
         'components/card/css/card.css',
         'components/modal/css/modal.css',
+        'components/list/css/list.css',
+        'components/textfield/css/textfield.css',
     ];
     public $js = [
         'components/button/js/ripple-effect.js',
         'components/modal/js/modal.js',
+        'components/textfield/js/textfield.js',
     ];
     public $depends = [
         'yii\bootstrap\BootstrapAsset',

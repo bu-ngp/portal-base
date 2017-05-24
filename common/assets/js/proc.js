@@ -21,24 +21,17 @@ $(function () {
         checkScrollBars();
     });
 
-    var modalElem = $('div.modal');
     var navElem = $('nav.navbar.navbar-fixed-top');
     var padding = 0;
     var scrollw = 0;
-
-    modalElem.on('show.bs.modal', function (e) {
+    $(document).on('show.bs.modal', 'div.modal', function (e) {
         scrollw = window.innerWidth - $('body').width();
         padding = parseInt(navElem.css('paddingLeft'));
         navElem.css({paddingLeft: (padding - scrollw) + 'px'});
-    }).on('hidden.bs.modal', function (e) {
+    }).on('hidden.bs.modal', 'div.modal', function (e) {
         scrollw = window.innerWidth - $('body').width();
         padding = parseInt(navElem.css('paddingLeft'));
         navElem.css({paddingLeft: (padding + scrollw) + 'px'});
-    });
-
-    modalElem.on('show.bs.modal', function (e) {
-        t1 = $('#simple-dialog > div > div > div > p').text();
-        $('#simple-dialog > div > div > div > p').text(t1 + " my Nigga!");
     });
 
     $('div.wrapper').css({opacity: 1});

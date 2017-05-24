@@ -15,6 +15,7 @@ class GridView extends \kartik\grid\GridView
     public $panelHeading;
     public $multipleSelect;
     public $minHeight;
+    public $customizeDialog;
 
     public function __construct(array $config = [])
     {
@@ -44,12 +45,80 @@ class GridView extends \kartik\grid\GridView
     public function run()
     {
         parent::run();
+
+    }
+
+    protected function endPjax()
+    {
+        if ($this->customizeDialog) {
+            $this->createCustomizeDialog();
+        }
+
+        return parent::endPjax();
+    }
+
+    protected function createCustomizeDialog()
+    {
+        echo <<<EOT
+                <div tabindex="-1" class="modal fade wk-customizeDialog" style="display: none;" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header pmd-modal-bordered">
+                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                <h2 class="pmd-card-title-text">Customize Dialog</h2>                               
+                            </div>
+                            <div class="modal-body wk-customizeDialog-content">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <form class="form-horizontal">
+                                            <div class="form-group pmd-textfield pmd-textfield-floating-label">
+                                               <label for="regular1" class="control-label">
+                                                 Rows Per Page
+                                               </label>
+                                               <input type="text" id="regular1" class="mat-input form-control" value="">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="list-group pmd-z-depth pmd-list pmd-card-list">
+                                            <a class="list-group-item" href="javascript:void(0);">Single-line item</a>
+                                            <a class="list-group-item" href="javascript:void(0);">Single-line item</a>
+                                            <a class="list-group-item" href="javascript:void(0);">Single-line item</a>
+                                            <a class="list-group-item" href="javascript:void(0);">Single-line item</a>
+                                            <a class="list-group-item" href="javascript:void(0);">Single-line item</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="list-group pmd-z-depth pmd-list pmd-card-list">
+                                            <a class="list-group-item" href="javascript:void(0);">Single-line item</a>
+                                            <a class="list-group-item" href="javascript:void(0);">Single-line item</a>
+                                            <a class="list-group-item" href="javascript:void(0);">Single-line item</a>
+                                            <a class="list-group-item" href="javascript:void(0);">Single-line item</a>
+                                            <a class="list-group-item" href="javascript:void(0);">Single-line item</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pmd-modal-action">
+                                <div class="btn-toolbar" role="toolbar" style="display: inline-block;">
+                                    <button data-dismiss="modal"  class="btn pmd-ripple-effect btn-primary wk-customizeDialog-btn-save" type="button">Save changes</button>
+                                    <button data-dismiss="modal"  class="btn pmd-ripple-effect btn-default" type="button">Discard</button>
+                                </div>  
+                                <div class="btn-toolbar" role="toolbar" style="display: inline-block; float: right;">
+                                    <button data-dismiss="modal"  class="btn pmd-ripple-effect btn-danger" type="button">Reset</button>
+                                </div>    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+EOT;
     }
 
     protected function setDefaults($config)
     {
         $config['hover'] = isset($config['hover']) ? $config['hover'] : true;
         $config['pjax'] = isset($config['pjax']) ? $config['pjax'] : true;
+        $config['customizeDialog'] = isset($config['customizeDialog']) ? $config['customizeDialog'] : true;
         //$config['pjaxSettings']['options']['clientOptions']['type'] = 'POST';
         //$config['pjaxSettings']['options']['clientOptions']['enablePushState'] = 'true';
         $this->minHeight = isset($config['minHeight']) ? $config['minHeight'] : false;
@@ -188,7 +257,7 @@ EOT;
                         if ($option) {
                             $toolbar[0]['content'] .= Html::a(Yii::t('wk-widget-gridview', 'Customize'), '#',
                                 [
-                                    'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-default',
+                                    'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-default wk-btn-customizeDialog',
                                     'style' => 'text-align: right;',
                                 ]);
                         }

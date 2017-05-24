@@ -28,7 +28,7 @@ class GridViewAsset extends AssetBundle
             'yii\web\YiiAsset',
             'yii\bootstrap\BootstrapAsset',
             'common\widgets\CardList\assets\PropellerAsset',
-            'rmrevin\yii\fontawesome\AssetBundle',
+            'rmrevin\yii\fontawesome\AssetBundle',            
         ];
 
         parent::init();

@@ -24,7 +24,8 @@
             if (parseInt($(this).children('span').css('max-width')) == $(this).children('span').outerWidth()) {
                 $(this).tooltip({
                     container: $(this).children('span'),
-                    title: $(this).text()
+                    title: $(this).text(),
+                    delay: {show: 1000, hide: 100}
                 }).tooltip('show');
             }
         });
@@ -107,6 +108,22 @@
         });
     };
 
+    var makeButtonCustomizeDialogEvent = function ($pjax) {
+        $pjax.on('click', 'a.wk-btn-customizeDialog', function (event) {
+            var $dialog = $pjax.children('.wk-customizeDialog');
+            event.preventDefault();
+            $dialog.modal();
+        });
+
+        $pjax.on('click', 'button.wk-customizeDialog-btn-save', function (event) {
+            var $dialog = $pjax.children('.wk-customizeDialog');
+            var $grid = $pjax.find('.grid-view');
+            event.preventDefault();
+            $dialog.modal('hide');
+            $grid.yiiGridView('applyFilter');
+        });
+    };
+
     var methods = {
         init: function (options) {
             return this.each(function () {
@@ -132,6 +149,8 @@
                 makeConfirm($pjax);
 
                 makeButtonUpdateEvent($pjax);
+
+                makeButtonCustomizeDialogEvent($pjax);
             });
         },
         destroy: function () {
