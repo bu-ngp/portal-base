@@ -54,7 +54,7 @@ class AuthItemSearch extends AuthItem
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 3]
+            'pagination' => ['pageSize' => 10]
         ]);
 
         $this->load($params);

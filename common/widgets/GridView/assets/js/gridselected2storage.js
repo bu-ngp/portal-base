@@ -16,139 +16,116 @@
         selectedPanelClass: ''
     };
 
-    var saveToStorageSelectedRow = function ($widget, $checkbox) {
-        var idPjax = $widget[0].id;
-        var idGrid = idPjax.substr(0, idPjax.indexOf('-pjax'));
+    var saveToStorageSelectedRow = function ($pjax, $checkbox) {
+        var iOf;
+        var storage = $pjax.data('gridselected2storage').storage;
 
-        var obj1 = $widget.data('gridselected2storage').storage;
+        var arrayKeys = (storage.checkAll ? storage.excluded : storage.included);
 
-        if (obj1[idGrid].checkAll) {
-            if ($checkbox.prop('checked')) {
-                var ind1 = obj1[idGrid].excluded.indexOf($checkbox.parent('td').parent('tr').attr('data-key'));
-                if (ind1 >= 0) {
-                    obj1[idGrid].excluded.splice(ind1, 1);
-                }
-            } else {
-                obj1[idGrid].excluded.push($checkbox.parent('td').parent('tr').attr('data-key'));
+        if (($checkbox.prop('checked') && storage.checkAll) || !($checkbox.prop('checked') || storage.checkAll)) {
+            iOf = arrayKeys.indexOf($checkbox.parent('td').parent('tr').attr('data-key'));
+            if (iOf >= 0) {
+                arrayKeys.splice(iOf, 1);
             }
         } else {
-            if ($checkbox.prop('checked')) {
-                obj1[idGrid].included.push($checkbox.parent('td').parent('tr').attr('data-key'));
-            } else {
-                var ind2 = obj1[idGrid].included.indexOf($checkbox.parent('td').parent('tr').attr('data-key'));
-                if (ind2 >= 0) {
-                    obj1[idGrid].included.splice(ind2, 1);
-                }
-            }
-
+            arrayKeys.push($checkbox.parent('td').parent('tr').attr('data-key'));
         }
 
-        saveToStorage($widget, $widget.data('gridselected2storage').settings.storage);
+        storage.checkAll ? storage.excluded = arrayKeys : storage.included = arrayKeys;
+
+        $pjax.data('gridselected2storage').storage = storage;
+        saveToStorage($pjax);
     };
 
-    var saveToStorage = function ($widget, obj) {
-        if (typeof obj == 'string') {
-
-            localStorage[obj] = JSON.stringify($widget.data('gridselected2storage').storage);
-        } else if (typeof obj == 'object' && "selector" in obj && obj.is('input')) {
-            obj.val(JSON.stringify($widget.data('gridselected2storage').storage));
-        }
+    var saveToStorage = function ($pjax) {
+        var gridID = $pjax.data('gridselected2storage').gridID;
+        var storageKey = $pjax.data('gridselected2storage').settings.storage + '_' + gridID;
+        localStorage[storageKey] = JSON.stringify($pjax.data('gridselected2storage').storage);
     };
 
-    var readFromStorage = function ($widget, obj) {
-        var idPjax = $widget[0].id;
-        var idGrid = idPjax.substr(0, idPjax.indexOf('-pjax'));
-        var objTmp = {};
-        objTmp[idGrid] = {checkAll: false, included: [], excluded: []};
-        if (typeof obj == 'string') {
-            if (typeof localStorage[obj] == 'undefined') {
-                localStorage[obj] = JSON.stringify(objTmp);
-                $widget.data('gridselected2storage').storage = objTmp;
-            } else {
-                var tmpObj2 = $.parseJSON(localStorage[obj]);
-                if (!(idGrid in tmpObj2)) {
-                    tmpObj2[idGrid] = {checkAll: false, included: [], excluded: []};
-                    localStorage[obj] = JSON.stringify(tmpObj2);
-                    $widget.data('gridselected2storage').storage = tmpObj2;
-                } else {
-                    $widget.data('gridselected2storage').storage = $.parseJSON(localStorage[obj]);
-                }
-            }
-        } else if (typeof obj == 'object' && "selector" in obj && obj.is('input')) {
-            if (obj.val() == '') {
-                obj.val(JSON.stringify(objTmp));
-                $widget.data('gridselected2storage').storage = objTmp;
-            } else {
-                $widget.data('gridselected2storage').storage = $.parseJSON(obj.val());
-            }
+    var readFromStorage = function ($pjax) {
+        var gridID = $pjax.data('gridselected2storage').gridID;
+        var storageKey = $pjax.data('gridselected2storage').settings.storage + '_' + gridID;
+        var initObj = {checkAll: false, included: [], excluded: [], filterValues: []};
+
+        if (typeof localStorage[storageKey] == 'undefined') {
+            $pjax.data('gridselected2storage').storage = initObj;
+            localStorage[storageKey] = JSON.stringify(initObj);
+        } else {
+            $pjax.data('gridselected2storage').storage = $.parseJSON(localStorage[storageKey]);
         }
     };
 
-    var selectRowsFromStorage = function ($widget) {
-        var idPjax = $widget[0].id;
-        var idGrid = idPjax.substr(0, idPjax.indexOf('-pjax'));
-        var obj1 = $widget.data('gridselected2storage').storage;
-        var $checkboxes = $('#' + idGrid).find('input.kv-row-checkbox');
+    var selectRowsFromStorage = function ($pjax) {
+        var gridID = '#' + $pjax.data('gridselected2storage').gridID;
+        var storage = $pjax.data('gridselected2storage').storage;
+        var $checkboxes = $pjax.find('input.kv-row-checkbox');
 
-        if (obj1[idGrid].checkAll) {
-            $checkboxes.parent('td').parent('tr').addClass('info');
+        if (storage.checkAll) {
+            $checkboxes.parentsUntil('tbody', 'tr').addClass('info');
             $checkboxes.prop('checked', true);
             $.each($checkboxes, function () {
-                if (obj1[idGrid].excluded.includes($(this).parent('td').parent('tr').attr('data-key'))) {
-                    $(this).parent('td').parent('tr').removeClass('info');
+                if (storage.excluded.includes($(this).parent('td').parent('tr').attr('data-key'))) {
+                    $(this).parentsUntil('tbody', 'tr').removeClass('info');
                     $(this).prop('checked', false);
                 }
             });
 
             if (($checkboxes.length - $checkboxes.not(':checked').length) == $checkboxes.length) {
-                $('#' + idGrid).find('input.select-on-check-all').prop('checked', true);
+                $(gridID).find('input.select-on-check-all').prop('checked', true);
             }
         } else {
-            $checkboxes.parent('td').parent('tr').removeClass('info');
+            $checkboxes.parentsUntil('tbody', 'tr').removeClass('info');
             $checkboxes.prop('checked', false);
             $.each($checkboxes, function () {
-                if (obj1[idGrid].included.includes($(this).parent('td').parent('tr').attr('data-key'))) {
-                    $(this).parent('td').parent('tr').addClass('info');
+                if (storage.included.includes($(this).parent('td').parent('tr').attr('data-key'))) {
+                    $(this).parentsUntil('tbody', 'tr').addClass('info');
                     $(this).prop('checked', true);
                 }
             });
         }
     };
 
-    var eventsApply = function ($widget) {
-        var idPjax = $widget[0].id;
-        var idGrid = idPjax.substr(0, idPjax.indexOf('-pjax'));
+    var eventsApply = function ($pjax) {
 
-        $('#' + idGrid).parent().on('click', 'input.select-on-check-all', function () {
-            var obj1 = $widget.data('gridselected2storage').storage;
-            obj1[idGrid].checkAll = $(this).prop('checked');
-            obj1[idGrid].included = [];
-            obj1[idGrid].excluded = [];
+        $pjax.on('click', 'input.select-on-check-all', function () {
+            var storage = $pjax.data('gridselected2storage').storage;
+            storage.checkAll = $(this).prop('checked');
+            storage.included = [];
+            storage.excluded = [];
 
-            saveToStorage($widget, $widget.data('gridselected2storage').settings.storage);
-            selectedPanelSet($widget);
+            saveToStorage($pjax);
+            selectedPanelSet($pjax);
         });
 
-        $('#' + idGrid).parent().on('click', 'input.kv-row-checkbox', function () {
-            saveToStorageSelectedRow($widget, $(this));
-            selectedPanelSet($widget);
+        $pjax.on('click', 'input.kv-row-checkbox', function () {
+            saveToStorageSelectedRow($pjax, $(this));
+            selectedPanelSet($pjax);
+        });
+
+        $(document).on('pjax:complete', function (e) {
+            console.debug('pjax:complete');
+            if (e.target.id == $pjax[0].id) {
+                resetSelected($pjax);
+                selectRowsFromStorage($pjax);
+                selectedPanelSet($pjax);
+            }
         });
     };
 
-    var selectedPanelSet = function ($widget) {
-        if ($widget.data('gridselected2storage').settings.selectedPanelClass != '') {
-            var $selectedPanel = $('.' + $widget.data('gridselected2storage').settings.selectedPanelClass);
+    var selectedPanelSet = function ($pjax) {
+        if ($pjax.data('gridselected2storage').settings.selectedPanelClass != '') {
+            var $selectedPanel = $('.' + $pjax.data('gridselected2storage').settings.selectedPanelClass);
             if ($selectedPanel.length == 1) {
-                var idPjax = $widget[0].id;
-                var idGrid = idPjax.substr(0, idPjax.indexOf('-pjax'));
-                var all = parseInt($widget.find('div.summary > b:nth-child(2)').text());
+                var all = parseInt($pjax.find('div.summary > b:nth-child(2)').text());
 
                 var from = 0;
-                var storage = $widget.data('gridselected2storage').storage;
-                if (storage[idGrid].checkAll) {
-                    from = all - storage[idGrid].excluded.length;
+                var storage = $pjax.data('gridselected2storage').storage;
+
+                if (storage.checkAll) {
+                    from = all - storage.excluded.length;
                 } else {
-                    from = storage[idGrid].included.length;
+                    from = storage.included.length;
                 }
 
                 if (from > 0) {
@@ -162,49 +139,39 @@
         }
     };
 
-    var resetSelected = function ($widget) {
-        var idPjax = $widget[0].id;
-        var idGrid = idPjax.substr(0, idPjax.indexOf('-pjax'));
+    var resetSelected = function ($pjax) {
+        var $filter = $pjax.find('.filters').children();
+        var filterFromStorage = $pjax.data('gridselected2storage').storage.filterValues;
 
-        var $filter = $widget.find('.filters').children();
-        var arr2 = [];
-        if (typeof $widget.data('gridselected2storage').storage.filterValues == 'undefined') {
-            $widget.data('gridselected2storage').storage.filterValues = [];
-            saveToStorage($widget, $widget.data('gridselected2storage').settings.storage);
-        } else {
-            arr2 = $widget.data('gridselected2storage').storage.filterValues;
-
-        }
-
-        var arr1 = [];
+        var filterFromGrid = [];
         $.each($filter, function () {
             var $input = $(this).find('input');
             if ($input.length && $input.val() != '') {
-                arr1.push($input.val());
+                var field = {};
+                field[$input.attr("name")] = $input.val();
+                filterFromGrid.push(field);
             }
         });
 
-        var diff = ($.extend([], arr1, arr2).length != Math.min(arr1.length, arr2.length));
+        var diff = ($.extend([], filterFromGrid, filterFromStorage).length != Math.min(filterFromGrid.length, filterFromStorage.length));
 
         if (diff) {
-            $widget.data('gridselected2storage').storage.filterValues = arr1;
-            saveToStorage($widget, $widget.data('gridselected2storage').settings.storage);
+            $pjax.data('gridselected2storage').storage.filterValues = filterFromGrid;
+            $pjax.data('gridselected2storage').storage.checkAll = false;
+            $pjax.data('gridselected2storage').storage.included = [];
+            $pjax.data('gridselected2storage').storage.excluded = [];
 
-            var obj1 = $widget.data('gridselected2storage').storage;
-            obj1[idGrid].checkAll = false;
-            obj1[idGrid].included = [];
-            obj1[idGrid].excluded = [];
-
-            saveToStorage($widget, $widget.data('gridselected2storage').settings.storage);
-            selectedPanelSet($widget);
+            saveToStorage($pjax);
+            selectedPanelSet($pjax);
         }
     };
 
     var methods = {
         init: function (options) {
             return this.each(function () {
-                var $widget = $(this);
-                if ($widget.data('gridselected2storage')) {
+                var $pjax = $(this);
+                var $grid = $pjax.find('.grid-view');
+                if ($pjax.data('gridselected2storage')) {
                     return;
                 }
 
@@ -213,115 +180,49 @@
                     $.error('Settings storage must be passed');
                 }
 
-                $widget.data('gridselected2storage', {
-                    widget: $widget,
+                $pjax.data('gridselected2storage', {
+                    pjax: $pjax,
+                    gridID: $grid[0].id,
                     settings: settings
                 });
 
-                readFromStorage($widget, settings.storage);
-                selectRowsFromStorage($widget);
-                selectedPanelSet($widget);
-                var tmp1 = [];
-                $(document).on('pjax:complete', function (e, xhr, status, response) {
-                    if (e.target.id == $widget[0].id) {
-                        // console.debug(xhr);
-                        //  console.debug(response);
-                        var str1 = '';
-                        $.each(response.data, function () {
-                            if (this.name != '_pjax') {
-                                str1 += this.name + '=' + this.value + ' | ';
-                            }
-                        });
-
-                        console.debug(str1);
-
-                        selectRowsFromStorage($widget);
-                        selectedPanelSet($widget);
-                    }
-                });
-
-                $(document).on('pjax:send', function (e, xhr, response) {
-
-                    if (e.target.id == $widget[0].id) {
-                        // console.debug('--pjax:send--');
-                        //  console.debug(response.data);
-                        /*    var str1 = '';
-                         $.each(response.data, function () {
-                         if (this.name != '_pjax') {
-                         str1 += this.name + '=' + this.value + ' | ';
-                         }
-                         });
-
-                         console.debug('beforeSend: '+str1);
-
-                         selectRowsFromStorage($widget);
-                         selectedPanelSet($widget);*/
-                    }
-                });
-
-                $(document).on('pjax:success', function (e, data, status, xhr, response) {
-
-                    if (e.target.id == $widget[0].id) {
-                        //   console.debug('--pjax:success--');
-                        //  console.debug(response);
-                        /*    var str1 = '';
-                         $.each(response.data, function () {
-                         if (this.name != '_pjax') {
-                         str1 += this.name + '=' + this.value + ' | ';
-                         }
-                         });
-
-                         console.debug('beforeSend: '+str1);
-
-                         selectRowsFromStorage($widget);
-                         selectedPanelSet($widget);*/
-                    }
-                });
-
-                $widget.parent().on('afterFilter', '#' + $widget[0].id, function () {
-                    resetSelected($widget);
-                });
-
-                eventsApply($widget);
+                readFromStorage($pjax);
+                eventsApply($pjax);
             });
         },
         selectedRows: function () {
-            var $widget = $(this);
-            var idPjax = $widget[0].id;
-            var idGrid = idPjax.substr(0, idPjax.indexOf('-pjax'));
-
-            var all = parseInt($widget.find('div.summary > b:nth-child(2)').text());
+            var $pjax = $(this);
+            var all = parseInt($pjax.find('div.summary > b:nth-child(2)').text());
             var selectedRows = 0;
 
-            var storage = $widget.data('gridselected2storage').storage;
+            var storage = $pjax.data('gridselected2storage').storage;
 
-            if (storage[idGrid].checkAll) {
-                selectedRows = all - storage[idGrid].excluded.length;
+            if (storage.checkAll) {
+                selectedRows = all - storage.excluded.length;
             } else {
-                selectedRows = storage[idGrid].included.length;
+                selectedRows = storage.included.length;
             }
 
             return selectedRows;
         },
         selectedRowID: function () {
-            var $widget = $(this);
-            var idPjax = $widget[0].id;
-            var idGrid = idPjax.substr(0, idPjax.indexOf('-pjax'));
+            var $pjax = $(this);
 
-            var all = parseInt($widget.find('div.summary > b:nth-child(2)').text());
+            var all = parseInt($pjax.find('div.summary > b:nth-child(2)').text());
             var selectedRows = 0;
 
-            var storage = $widget.data('gridselected2storage').storage;
+            var storage = $pjax.data('gridselected2storage').storage;
 
-            if (storage[idGrid].checkAll) {
-                selectedRows = all - storage[idGrid].excluded.length;
+            if (storage.checkAll) {
+                selectedRows = all - storage.excluded.length;
                 if (selectedRows == 1) {
-                    // TODO
+                    var $selectedRow = $pjax.find('input.kv-row-checkbox:checked').parentsUntil('tbody', 'tr');
+                    return $selectedRow.length ? $selectedRow.attr('data-key') : false;
                 }
             } else {
-                selectedRows = storage[idGrid].included.length;
+                selectedRows = storage.included.length;
                 if (selectedRows == 1) {
-                    return storage[idGrid].included;
+                    return storage.included;
                 }
             }
 
@@ -329,12 +230,12 @@
         },
         destroy: function () {
             return this.each(function () {
-                var $widget = $(this),
-                    data = $widget.data('gridselected2storage');
+                var $pjax = $(this),
+                    data = $pjax.data('gridselected2storage');
 
                 $(window).unbind('.gridselected2storage');
                 data.tooltip.remove();
-                $widget.removeData('gridselected2storage');
+                $pjax.removeData('gridselected2storage');
             })
         }
     };

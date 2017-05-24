@@ -11,9 +11,7 @@
 
     var LANG = {};
 
-    var defaults = {
-        selectionStorage: false
-    };
+    var defaults = {};
 
     var Localization = function (LANG) {
         if (typeof WK_WIDGET_GRIDVIEW_I18N !== "undefined") {
@@ -21,10 +19,8 @@
         }
     };
 
-    var eventsApply = function (gridid) {
-        var $widget = $('#' + gridid);
-
-        $widget.parent().on('mouseenter', 'td.wk-nowrap', function (e) {
+    var eventsApply = function ($pjax) {
+        $pjax.on('mouseenter', 'td.wk-nowrap', function (e) {
             if (parseInt($(this).children('span').css('max-width')) == $(this).children('span').outerWidth()) {
                 $(this).tooltip({
                     container: $(this).children('span'),
@@ -33,19 +29,20 @@
             }
         });
 
-        $widget.parent().on('click', 'td[data-col-seq]', function (e) {
+        $pjax.on('click', 'td[data-col-seq]', function (e) {
             if (!$(e.target).hasClass('kv-row-checkbox')) {
                 $(e.target).parentsUntil('tbody').find('input.kv-row-checkbox').trigger('click');
             }
         });
 
-        $widget.parent().on('dblclick', 'td[data-col-seq]', function (e) {
+        $pjax.on('dblclick', 'td[data-col-seq]', function (e) {
             //    $(this).css('background-color','red');
         });
     };
 
-    var makeDialog = function ($widget) {
-        var $dialog = $('<div tabindex="-1" class="modal fade ' + $widget[0].id + '-wk-dialog" style="display: none;" aria-hidden="true">' +
+    var makeDialog = function ($pjax) {
+        var gridID = $pjax.data('wkgridview').grid[0].id;
+        var $dialog = $('<div tabindex="-1" class="modal fade ' + gridID + '-wk-dialog" style="display: none;" aria-hidden="true">' +
             '<div class="modal-dialog">' +
             '<div class="modal-content">' +
             '<div class="modal-header">' +
@@ -61,11 +58,12 @@
             '</div>' +
             '</div>');
 
-        $dialog.insertAfter($widget.parent());
+        $dialog.insertAfter($pjax);
     };
 
-    var makeConfirm = function ($widget) {
-        var $dialog = $('<div tabindex="-1" class="modal fade ' + $widget[0].id + '-wk-confirm" style="display: none;" aria-hidden="true">' +
+    var makeConfirm = function ($pjax) {
+        var gridID = $pjax.data('wkgridview').grid[0].id;
+        var $dialog = $('<div tabindex="-1" class="modal fade ' + gridID + '-wk-confirm" style="display: none;" aria-hidden="true">' +
             '<div class="modal-dialog">' +
             '<div class="modal-content">' +
             '<div class="modal-header">' +
@@ -82,14 +80,39 @@
             '</div>' +
             '</div>');
 
-        $dialog.insertAfter($widget.parent());
+        $dialog.insertAfter($pjax);
+    };
+
+    var makeButtonUpdateEvent = function ($pjax) {
+        var gridID = $pjax.data('wkgridview').grid[0].id;
+        $pjax.on('click', 'a.wk-btn-update', function (event) {
+            var selectedRows = $pjax.gridselected2storage('selectedRows');
+            if (selectedRows == 1) {
+                var selectedRowID = $pjax.gridselected2storage('selectedRowID');
+                if (selectedRowID === false) {
+                    event.preventDefault();
+                    $pjax.nextAll('.' + gridID + '-wk-dialog').find('.wk-dialog-title').text('Error');
+                    $pjax.nextAll('.' + gridID + '-wk-dialog').find('.wk-dialog-text').html('<span>Go to the page where you selected the row.</span>');
+                    $pjax.nextAll('.' + gridID + '-wk-dialog').modal();
+                } else {
+                    event.target.href += '?id=' + $pjax.gridselected2storage('selectedRowID');
+                    return true;
+                }
+            } else {
+                event.preventDefault();
+                $pjax.nextAll('.' + gridID + '-wk-dialog').find('.wk-dialog-title').text('Error');
+                $pjax.nextAll('.' + gridID + '-wk-dialog').find('.wk-dialog-text').html('<span>You must select one role. You selected <b>' + selectedRows + '</b>.</span>');
+                $pjax.nextAll('.' + gridID + '-wk-dialog').modal();
+            }
+        });
     };
 
     var methods = {
         init: function (options) {
             return this.each(function () {
-                var $widget = $(this);
-                if ($widget.data('wkgridview')) {
+                var $pjax = $(this);
+                var $grid = $pjax.find('.grid-view');
+                if ($pjax.data('wkgridview')) {
                     return;
                 }
 
@@ -97,45 +120,28 @@
 
                 LANG = Localization(LANG);
 
-                $widget.data('wkgridview', {
-                    widget: $widget,
+                $pjax.data('wkgridview', {
+                    pjax: $pjax,
+                    grid: $grid,
                     settings: settings
                 });
 
-                if (settings.selectionStorage) {
+                eventsApply($pjax);
 
-                }
+                makeDialog($pjax);
+                makeConfirm($pjax);
 
-                var $pjax = $widget.parent();
-
-                eventsApply($widget[0].id);
-
-                makeDialog($widget);
-                makeConfirm($widget);
-
-                $pjax.on('click', 'a.wk-btn-update', function (event) {
-                    event.preventDefault();
-                    var selectedRows = $pjax.gridselected2storage('selectedRows');
-                    if (selectedRows == 1) {
-                        event.target.href += '?id=' + $pjax.gridselected2storage('selectedRowID');
-                        return true;
-                    } else {
-                        event.preventDefault();
-                        $pjax.nextAll('.' + $widget[0].id + '-wk-dialog').find('.wk-dialog-title').text('Error');
-                        $pjax.nextAll('.' + $widget[0].id + '-wk-dialog').find('.wk-dialog-text').html('<span>You must select one role. You selected <b>' + selectedRows + '</b>.</span>');
-                        $pjax.nextAll('.' + $widget[0].id + '-wk-dialog').modal();
-                    }
-                });
+                makeButtonUpdateEvent($pjax);
             });
         },
         destroy: function () {
             return this.each(function () {
-                var $widget = $(this),
-                    data = $widget.data('wkgridview');
+                var $pjax = $(this),
+                    data = $pjax.data('wkgridview');
 
                 $(window).unbind('.wkgridview');
                 data.tooltip.remove();
-                $widget.removeData('wkgridview');
+                $pjax.removeData('wkgridview');
             })
         }
     };

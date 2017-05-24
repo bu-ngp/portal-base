@@ -46,15 +46,6 @@ class GridView extends \kartik\grid\GridView
         parent::run();
     }
 
-    protected function beginPjax()
-    {
-        parent::beginPjax();
-        /*   $view = $this->getView();
-           $a=$this->dataProvider->getModels();
-
-           $view->registerJs("console.debug('nigga');");*/
-    }
-
     protected function setDefaults($config)
     {
         $config['hover'] = isset($config['hover']) ? $config['hover'] : true;
