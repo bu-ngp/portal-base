@@ -19,6 +19,7 @@
     "npm-asset/masonry-layout": "*",
     "npm-asset/imagesloaded": "*",
     "npm-asset/jquery-sortable": "*",
+    "npm-asset/jquery-ui": "*",
     "wartron/yii2-uuid": "@dev",
     "moontoast/math": "~1.1.2",
     "rmrevin/yii2-fontawesome": "~2.17",

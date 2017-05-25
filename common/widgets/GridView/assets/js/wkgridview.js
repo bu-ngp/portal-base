@@ -118,9 +118,36 @@
         $pjax.on('click', 'button.wk-customizeDialog-btn-save', function (event) {
             var $dialog = $pjax.children('.wk-customizeDialog');
             var $grid = $pjax.find('.grid-view');
-            event.preventDefault();
+            var date = new Date(new Date().getTime() + 15552000 * 1000);
+            var obj1 = {
+                visible: $.parseJSON($dialog.find('input.wk-columnsList').val()),
+                pager: $dialog.find('input.wk-per-page').val()
+            };
+
             $dialog.modal('hide');
+            document.cookie = $grid[0].id + "=" + JSON.stringify(obj1) + "; path=/; expires=" + date.toUTCString();
             $grid.yiiGridView('applyFilter');
+        });
+
+        $pjax.on('click', 'button.wk-customizeDialog-btn-reset', function (event) {
+            var $dialog = $pjax.children('.wk-customizeDialog');
+            var $grid = $pjax.find('.grid-view');
+            var gridID = $grid[0].id;
+            var $confirmDialog = $pjax.nextAll('.' + gridID + '-wk-confirm').modal();
+
+
+            $('button.wk-btn-confirm-ok').off('click').on('click', function () {
+                var $dialog = $pjax.children('.wk-customizeDialog');
+                var $grid = $pjax.find('.grid-view');
+                $confirmDialog.modal('hide');
+                $dialog.modal('hide');
+                document.cookie = $grid[0].id + "=; path=/; expires: -1";
+                $grid.yiiGridView('applyFilter');
+            });
+
+            $confirmDialog.find('.wk-confirm-title').text('Confirm');
+            $confirmDialog.find('.wk-confirm-text').html('<span>Reset Columns. Are you sure?</span>');
+            $confirmDialog.modal();
         });
     };
 

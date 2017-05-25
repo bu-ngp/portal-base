@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "faae528b6acf3280cc6bfaf156102895",
+    "content-hash": "7226f7fa3bb9dcf4c0b6320a07fde058",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -1490,6 +1490,61 @@
                 "shasum": ""
             },
             "type": "npm-asset-library"
+        },
+        {
+            "name": "npm-asset/jquery-ui",
+            "version": "1.12.1",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/jquery-ui/-/jquery-ui-1.12.1.tgz",
+                "reference": null,
+                "shasum": "bcb4045c8dd0539c134bc1488cdd3e768a7a9e51"
+            },
+            "require-dev": {
+                "npm-asset/commitplease": "2.3.0",
+                "npm-asset/grunt": "0.4.5",
+                "npm-asset/grunt-bowercopy": "1.2.4",
+                "npm-asset/grunt-cli": "0.1.13",
+                "npm-asset/grunt-compare-size": "0.4.0",
+                "npm-asset/grunt-contrib-concat": "0.5.1",
+                "npm-asset/grunt-contrib-csslint": "0.5.0",
+                "npm-asset/grunt-contrib-jshint": "0.12.0",
+                "npm-asset/grunt-contrib-qunit": "1.0.1",
+                "npm-asset/grunt-contrib-requirejs": "0.4.4",
+                "npm-asset/grunt-contrib-uglify": "0.11.1",
+                "npm-asset/grunt-git-authors": "3.1.0",
+                "npm-asset/grunt-html": "6.0.0",
+                "npm-asset/grunt-jscs": "2.1.0",
+                "npm-asset/load-grunt-tasks": "3.4.0",
+                "npm-asset/rimraf": "2.5.1",
+                "npm-asset/testswarm": "1.1.0"
+            },
+            "type": "npm-asset-library",
+            "extra": {
+                "npm-asset-bugs": {
+                    "url": "https://bugs.jqueryui.com/"
+                },
+                "npm-asset-main": "ui/widget.js",
+                "npm-asset-directories": [],
+                "npm-asset-repository": {
+                    "type": "git",
+                    "url": "git://github.com/jquery/jquery-ui.git"
+                },
+                "npm-asset-scripts": {
+                    "test": "grunt"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "jQuery Foundation and other contributors",
+                    "url": "https://github.com/jquery/jquery-ui/blob/1.12.1/AUTHORS.txt"
+                }
+            ],
+            "description": "A curated set of user interface interactions, effects, widgets, and themes built on top of the jQuery JavaScript Library.",
+            "homepage": "http://jqueryui.com"
         },
         {
             "name": "npm-asset/masonry-layout",

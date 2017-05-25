@@ -5,6 +5,10 @@ namespace common\widgets\GridView;
 use common\widgets\GridView\assets\GridViewAsset;
 use Yii;
 use yii\bootstrap\Html;
+use yii\data\ActiveDataProvider;
+use yii\data\BaseDataProvider;
+use yii\grid\CheckboxColumn;
+use yii\grid\SerialColumn;
 use yii\web\View;
 
 class GridView extends \kartik\grid\GridView
@@ -16,11 +20,17 @@ class GridView extends \kartik\grid\GridView
     public $multipleSelect;
     public $minHeight;
     public $customizeDialog;
+    protected $optionsWidget;
 
     public function __construct(array $config = [])
     {
         $this->registerTranslations();
         $config = $this->setDefaults($config);
+        $this->optionsWidget = $config;
+        if ($this->optionsWidget['customizeDialog']) {
+            $config = $this->customizeColumns($config);
+            $config = $this->customizePager($config);
+        }
         parent::__construct($config);
     }
 
@@ -57,8 +67,48 @@ class GridView extends \kartik\grid\GridView
         return parent::endPjax();
     }
 
+    protected function columnsHTML2CustomizeDialog()
+    {
+        $visible = '';
+        $hidden = '';
+
+        $cookieColumns = $this->CookieColumns();
+
+        foreach ($cookieColumns->visible as $col) {
+            if (isset($col['class']) && !in_array($col['class'], ['\kartik\grid\CheckboxColumn', '\kartik\grid\SerialColumn'])) {
+
+                $attribute = is_string($col) ?: $col['attribute'];
+                $position = array_keys(array_filter($this->optionsWidget['columns'], function ($val) use ($attribute) {
+                    $attr = is_string($val) ?: $val['attribute'];
+                    return $attribute === $attr;
+                }))[0];
+                $id = hash('crc32', $attribute . $position);
+                $visible .= '<li role="option" aria-grabbed="false" draggable="true" style="display: list-item; list-style: none outside none;" class="list-group-item" id="' . $id . '">' . $this->filterModel->getAttributeLabel($attribute) . '</li>';
+            }
+        }
+
+        foreach ($cookieColumns->hidden as $col) {
+            if (isset($col['class']) && !in_array($col['class'], ['\kartik\grid\CheckboxColumn', '\kartik\grid\SerialColumn'])) {
+                $attribute = is_string($col) ?: $col['attribute'];
+                $position = array_keys(array_filter($this->optionsWidget['columns'], function ($val) use ($attribute) {
+                    $attr = is_string($val) ?: $val['attribute'];
+                    return $attribute === $attr;
+                }))[0];
+                $id = hash('crc32', $attribute . $position);
+                $hidden .= '<li role="option" aria-grabbed="false" draggable="true" style="display: list-item; list-style: none outside none;" class="list-group-item" id="' . $id . '">' . $this->filterModel->getAttributeLabel($attribute) . '</li>';
+            }
+        }
+
+        return (object)[
+            'visible' => $visible,
+            'hidden' => $hidden,
+        ];
+    }
+
     protected function createCustomizeDialog()
     {
+        $columnsHTML = $this->columnsHTML2CustomizeDialog();
+        $pagerValue = $this->dataProvider->getPagination()->pageSize;
         echo <<<EOT
                 <div tabindex="-1" class="modal fade wk-customizeDialog" style="display: none;" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
@@ -71,47 +121,58 @@ class GridView extends \kartik\grid\GridView
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <form class="form-horizontal">
-                                            <div class="form-group pmd-textfield pmd-textfield-floating-label">
+                                            <div class="form-group pmd-textfield">
                                                <label for="regular1" class="control-label">
                                                  Rows Per Page
                                                </label>
-                                               <input type="text" id="regular1" class="mat-input form-control" value="">
+                                               <input type="text" id="regular1" class="mat-input form-control wk-per-page" value="$pagerValue">
                                             </div>
                                         </form>
                                     </div>
                                     <div class="col-xs-6">
-                                        <div class="list-group pmd-z-depth pmd-list pmd-card-list">
-                                            <a class="list-group-item" href="javascript:void(0);">Single-line item</a>
-                                            <a class="list-group-item" href="javascript:void(0);">Single-line item</a>
-                                            <a class="list-group-item" href="javascript:void(0);">Single-line item</a>
-                                            <a class="list-group-item" href="javascript:void(0);">Single-line item</a>
-                                            <a class="list-group-item" href="javascript:void(0);">Single-line item</a>
-                                        </div>
+                                        <ul class="list-group pmd-z-depth pmd-list pmd-card-list connectedSortable wk-visible-columns" style="min-height: 50px;">
+                                            {$columnsHTML->visible}
+                                        </ul>
                                     </div>
                                     <div class="col-xs-6">
-                                        <div class="list-group pmd-z-depth pmd-list pmd-card-list">
-                                            <a class="list-group-item" href="javascript:void(0);">Single-line item</a>
-                                            <a class="list-group-item" href="javascript:void(0);">Single-line item</a>
-                                            <a class="list-group-item" href="javascript:void(0);">Single-line item</a>
-                                            <a class="list-group-item" href="javascript:void(0);">Single-line item</a>
-                                            <a class="list-group-item" href="javascript:void(0);">Single-line item</a>
-                                        </div>
+                                        <ul class="list-group pmd-z-depth pmd-list pmd-card-list connectedSortable" style="min-height: 50px;">
+                                            {$columnsHTML->hidden}
+                                        </ul>
                                     </div>
                                 </div>
+                                <input type="hidden" class="wk-columnsList" value="[]">
                             </div>
                             <div class="pmd-modal-action">
                                 <div class="btn-toolbar" role="toolbar" style="display: inline-block;">
-                                    <button data-dismiss="modal"  class="btn pmd-ripple-effect btn-primary wk-customizeDialog-btn-save" type="button">Save changes</button>
+                                    <button class="btn pmd-ripple-effect btn-primary wk-customizeDialog-btn-save" type="button">Save changes</button>
                                     <button data-dismiss="modal"  class="btn pmd-ripple-effect btn-default" type="button">Discard</button>
                                 </div>  
                                 <div class="btn-toolbar" role="toolbar" style="display: inline-block; float: right;">
-                                    <button data-dismiss="modal"  class="btn pmd-ripple-effect btn-danger" type="button">Reset</button>
+                                    <button class="btn pmd-ripple-effect btn-danger wk-customizeDialog-btn-reset" type="button" data-toggle="modal">Reset</button>
                                 </div>    
                             </div>
                         </div>
                     </div>
                 </div>
 EOT;
+        $view = $this->getView();
+        $js = <<<EOT
+        $(".connectedSortable").sortable({
+            connectWith: ".connectedSortable",
+            stop: function( e, ui ) {
+                var \$dialog = $(e.target).parentsUntil('div[data-pjax-container]');
+                var \$grid = \$dialog.prev('div.grid-view');                
+                var keys = [];
+                
+                $.each($('.wk-visible-columns').children(), function() {
+                    keys.push($(this)[0].id);
+                });
+                
+                \$dialog.find('input.wk-columnsList').val(JSON.stringify(keys));                
+            }
+        });
+EOT;
+        $view->registerJs($js);
     }
 
     protected function setDefaults($config)
@@ -413,6 +474,72 @@ EOT;
                     'class' => '\kartik\grid\SerialColumn',
                     'noWrap' => true,
                 ]], $config);
+            }
+        }
+        return $config;
+    }
+
+    protected function CookieColumns()
+    {
+        $newCols = [];
+        $newCols2 = [];
+        $columns = $this->optionsWidget['columns'];
+
+        if ($_COOKIE[$this->id]) {
+            $cookieOptions = json_decode($_COOKIE[$this->id]);
+            $initColumns = [];
+            foreach ($columns as $position => $column) {
+                $attribute = is_string($column) ?: $column['attribute'];
+                $id = hash('crc32', $attribute . $position);
+                $initColumns[] = $id;
+            }
+
+            $becomeCols = $initColumns;
+            foreach ($cookieOptions->visible as $colCookie) {
+                $pos = array_search($colCookie, $initColumns);
+                $columns[$pos]['visible'] = true;
+                $newCols[] = $columns[$pos];
+                $becomeCols = array_diff($becomeCols, [$colCookie]);
+            }
+
+
+            foreach ($becomeCols as $colhash) {
+                $pos = array_search($colhash, $initColumns);
+                $newCols2[] = $columns[$pos];
+            }
+        } else {
+            foreach ($columns as $position => $column) {
+                if (is_array($column) && isset($column['visible']) && $column['visible'] === false) {
+                    $newCols2[] = $column;
+                } else {
+                    $newCols[] = $column;
+                }
+            }
+        }
+
+        return (object)[
+            'visible' => $newCols,
+            'hidden' => $newCols2,
+        ];
+    }
+
+    protected function customizeColumns($config)
+    {
+        if ($_COOKIE[$this->id]) {
+            $cookieColumns = $this->CookieColumns();
+            $config['columns'] = array_merge($cookieColumns->hidden, $cookieColumns->visible);
+        }
+
+        return $config;
+    }
+
+    protected function customizePager($config)
+    {
+        if ($_COOKIE[$this->id]) {
+            $cookieOptions = json_decode($_COOKIE[$this->id]);
+
+            if (property_exists($cookieOptions, 'pager')) {
+                $config['dataProvider']->pagination->pageSize = $cookieOptions->pager;
             }
         }
         return $config;

@@ -25,6 +25,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             'description',
             'name',
+            [
+                'attribute' => 'type',
+                'visible' => false
+            ]
         ],
         'crudSettings' => [
             'create' => \yii\helpers\Url::to(['roles/create']),
