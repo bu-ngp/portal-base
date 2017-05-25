@@ -148,6 +148,7 @@ class GridView extends \kartik\grid\GridView
                                     <button data-dismiss="modal"  class="btn pmd-ripple-effect btn-default" type="button">Discard</button>
                                 </div>  
                                 <div class="btn-toolbar" role="toolbar" style="display: inline-block; float: right;">
+                                    <button class="btn pmd-ripple-effect btn-info wk-customizeDialog-btn-reset-sort" type="button" data-toggle="modal">Reset Sort</button>
                                     <button class="btn pmd-ripple-effect btn-danger wk-customizeDialog-btn-reset" type="button" data-toggle="modal">Reset</button>
                                 </div>    
                             </div>
@@ -180,8 +181,6 @@ EOT;
         $config['hover'] = isset($config['hover']) ? $config['hover'] : true;
         $config['pjax'] = isset($config['pjax']) ? $config['pjax'] : true;
         $config['customizeDialog'] = isset($config['customizeDialog']) ? $config['customizeDialog'] : true;
-        //$config['pjaxSettings']['options']['clientOptions']['type'] = 'POST';
-        //$config['pjaxSettings']['options']['clientOptions']['enablePushState'] = 'true';
         $this->minHeight = isset($config['minHeight']) ? $config['minHeight'] : false;
 
         if (isset($config['minHeight'])) {

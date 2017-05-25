@@ -73,8 +73,7 @@ class CardListHelper
         $popularity = json_decode($_REQUEST['popularity']);
         if (!empty($popularity) && is_array($popularity)) {
             $activeQuery->addOrderBy(new Expression("FIELD(`$popularityIDFieldName`,'" . implode("','", $popularity) . "') DESC"));
+            $activeQuery->addOrderBy($popularityIDFieldName);
         }
-
-        $activeQuery->addOrderBy($popularityIDFieldName);
     }
 }
