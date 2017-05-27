@@ -25,13 +25,31 @@ $(function () {
     var padding = 0;
     var scrollw = 0;
     $(document).on('show.bs.modal', 'div.modal', function (e) {
-        scrollw = window.innerWidth - $('body').width();
-        padding = parseInt(navElem.css('paddingLeft'));
-        navElem.css({paddingLeft: (padding - scrollw) + 'px'});
+        console.debug("Dialogs shows: " + $('.modal:visible').length);
+
+        if ($('.modal:visible').length == 0) {
+            scrollw = window.innerWidth - $('body').width();
+            padding = parseInt(navElem.css('paddingLeft'));
+            navElem.css({paddingLeft: (padding - scrollw) + 'px'});
+        }
+
+        var zIndex = Math.max.apply(null, Array.prototype.map.call(document.querySelectorAll('*'), function (el) {
+                return +el.style.zIndex;
+            })) + 10;
+
+        $(this).css('z-index', zIndex);
+        setTimeout(function () {
+            $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+        }, 0);
+
     }).on('hidden.bs.modal', 'div.modal', function (e) {
-        scrollw = window.innerWidth - $('body').width();
-        padding = parseInt(navElem.css('paddingLeft'));
-        navElem.css({paddingLeft: (padding + scrollw) + 'px'});
+        if ($('.modal:visible').length == 0) {
+            scrollw = window.innerWidth - $('body').width();
+            padding = parseInt(navElem.css('paddingLeft'));
+            navElem.css({paddingLeft: (padding + scrollw) + 'px'});
+        }
+
+        $('.modal:visible').length && $(document.body).addClass('modal-open');
     });
 
     $('div.wrapper').css({opacity: 1});

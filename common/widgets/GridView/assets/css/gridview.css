@@ -1,5 +1,5 @@
 td.wk-nowrap > span {
-    display:inline-block;
+    display: inline-block;
     max-width: 600px;
     overflow: hidden; /* optional */
     white-space: nowrap;
@@ -7,13 +7,65 @@ td.wk-nowrap > span {
 }
 
 div.wk-custom-buttons {
-   /* position: absolute;
-    bottom: 0;
-    right: 0;*/
+    /* position: absolute;
+     bottom: 0;
+     right: 0;*/
     float: right;
 }
 
 div.wk-grid-toolbar {
     position: relative;
     min-height: 35px;
+}
+
+ul.wk-visible-columns, ul.wk-hidden-columns {
+    min-height: 215px;
+}
+
+ul.wk-visible-columns > a, ul.wk-hidden-columns > a {
+    display: list-item;
+    list-style: none outside none;
+    border-top: rgb(204, 204, 204) solid 1px;
+    border-bottom: rgb(204, 204, 204) solid 1px;
+}
+
+h4.wk-customize-dialog-columns-title {
+    text-align: center;
+}
+
+div.wk-customize-dialog-columns-description {
+    margin-top: 5px;
+}
+
+i.wk-customize-dialog-columns-exchange-icon {
+    position: absolute;
+    left: 438px;
+    top: 170px;
+    color: #6d6d6d;
+}
+
+i.wk-customize-dialog-columns-exchange-icon2 {
+    position: absolute;
+    left: 440px;
+    top: 200px;
+    color: #6d6d6d;
+}
+
+div.modal {
+    margin-top: 65px;
+}
+
+a.ui-sortable-placeholder {
+    border: #4a4a4a dashed 1px !important;
+    margin-bottom: 1px;
+    visibility: inherit !important;
+}
+
+div.pmd-modal-action {
+    border-top: 1px solid #e5e5e5;
+    padding: 8px 20px;
+}
+
+div.pmd-modal-action > div.btn-toolbar > button.btn{
+    margin: 8px 4px;
 }

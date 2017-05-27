@@ -20,6 +20,7 @@ class GridView extends \kartik\grid\GridView
     public $multipleSelect;
     public $minHeight;
     public $customizeDialog;
+    public $jsOptions = [];
     protected $optionsWidget;
 
     public function __construct(array $config = [])
@@ -83,7 +84,7 @@ class GridView extends \kartik\grid\GridView
                     return $attribute === $attr;
                 }))[0];
                 $id = hash('crc32', $attribute . $position);
-                $visible .= '<li role="option" aria-grabbed="false" draggable="true" style="display: list-item; list-style: none outside none;" class="list-group-item" id="' . $id . '">' . $this->filterModel->getAttributeLabel($attribute) . '</li>';
+                $visible .= '<a role="option" aria-grabbed="false" draggable="true" class="list-group-item" id="' . $id . '">' . $this->filterModel->getAttributeLabel($attribute) . '</a>';
             }
         }
 
@@ -95,7 +96,7 @@ class GridView extends \kartik\grid\GridView
                     return $attribute === $attr;
                 }))[0];
                 $id = hash('crc32', $attribute . $position);
-                $hidden .= '<li role="option" aria-grabbed="false" draggable="true" style="display: list-item; list-style: none outside none;" class="list-group-item" id="' . $id . '">' . $this->filterModel->getAttributeLabel($attribute) . '</li>';
+                $hidden .= '<a role="option" aria-grabbed="false" draggable="true" class="list-group-item" id="' . $id . '">' . $this->filterModel->getAttributeLabel($attribute) . '</a>';
             }
         }
 
@@ -110,70 +111,12 @@ class GridView extends \kartik\grid\GridView
         $columnsHTML = $this->columnsHTML2CustomizeDialog();
         $pagerValue = $this->dataProvider->getPagination()->pageSize;
         echo <<<EOT
-                <div tabindex="-1" class="modal fade wk-customizeDialog" style="display: none;" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header pmd-modal-bordered">
-                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
-                                <h2 class="pmd-card-title-text">Customize Dialog</h2>                               
-                            </div>
-                            <div class="modal-body wk-customizeDialog-content">
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <form class="form-horizontal">
-                                            <div class="form-group pmd-textfield">
-                                               <label for="regular1" class="control-label">
-                                                 Rows Per Page
-                                               </label>
-                                               <input type="text" id="regular1" class="mat-input form-control wk-per-page" value="$pagerValue">
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <ul class="list-group pmd-z-depth pmd-list pmd-card-list connectedSortable wk-visible-columns" style="min-height: 50px;">
-                                            {$columnsHTML->visible}
-                                        </ul>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <ul class="list-group pmd-z-depth pmd-list pmd-card-list connectedSortable" style="min-height: 50px;">
-                                            {$columnsHTML->hidden}
-                                        </ul>
-                                    </div>
-                                </div>
-                                <input type="hidden" class="wk-columnsList" value="[]">
-                            </div>
-                            <div class="pmd-modal-action">
-                                <div class="btn-toolbar" role="toolbar" style="display: inline-block;">
-                                    <button class="btn pmd-ripple-effect btn-primary wk-customizeDialog-btn-save" type="button">Save changes</button>
-                                    <button data-dismiss="modal"  class="btn pmd-ripple-effect btn-default" type="button">Discard</button>
-                                </div>  
-                                <div class="btn-toolbar" role="toolbar" style="display: inline-block; float: right;">
-                                    <button class="btn pmd-ripple-effect btn-info wk-customizeDialog-btn-reset-sort" type="button" data-toggle="modal">Reset Sort</button>
-                                    <button class="btn pmd-ripple-effect btn-danger wk-customizeDialog-btn-reset" type="button" data-toggle="modal">Reset</button>
-                                </div>    
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="{$this->id}-wk-customize-dialog-content" style="display: none;">
+            <div class="wk-customize-dialog-pagerValue">$pagerValue</div>
+            <div class="wk-customize-dialog-visible-columns">{$columnsHTML->visible}</div>
+            <div class="wk-customize-dialog-hidden-columns">{$columnsHTML->hidden}</div>
+        </div>
 EOT;
-        $view = $this->getView();
-        $js = <<<EOT
-        $(".connectedSortable").sortable({
-            connectWith: ".connectedSortable",
-            stop: function( e, ui ) {
-                var \$dialog = $(e.target).parentsUntil('div[data-pjax-container]');
-                var \$grid = \$dialog.prev('div.grid-view');                
-                var keys = [];
-                
-                $.each($('.wk-visible-columns').children(), function() {
-                    keys.push($(this)[0].id);
-                });
-                
-                \$dialog.find('input.wk-columnsList').val(JSON.stringify(keys));                
-            }
-        });
-EOT;
-        $view->registerJs($js);
     }
 
     protected function setDefaults($config)
@@ -303,6 +246,11 @@ EOT;
     function createCustomizeButtons(&$config)
     {
         $customizeSettings = $config['customizeSettings'];
+
+        if (empty($customizeSettings) || empty($customizeSettings['customizeShow'])) {
+            $customizeSettings['customizeShow'] = ['enable' => true];
+        }
+
         if (is_array($customizeSettings) && count($customizeSettings) > 0) {
             $toolbar = [
                 [
@@ -314,7 +262,35 @@ EOT;
             foreach ($customizeSettings as $key => $option) {
                 switch ($key) {
                     case 'customizeShow':
-                        if ($option) {
+                        if ($option === false) {
+                            $option = ['enable' => false];
+                        }
+
+                        if ($option['enable'] === true) {
+                            $messages = [
+                                'titleDialogMessage' => Yii::t('wk-widget-gridview', 'Customize Dialog'),
+                                'rowsPerPageMessage' => Yii::t('wk-widget-gridview', 'Rows Per Page'),
+                                'visibleColumnsMessage' => Yii::t('wk-widget-gridview', 'Visible Columns'),
+                                'hiddenColumnsMessage' => Yii::t('wk-widget-gridview', 'Hidden Columns'),
+                                'rowsPerPageDescriptionMessage' => Yii::t('wk-widget-gridview', 'Enter the number of records on the grid from 10 to 100'),
+                                'visibleColumnsDescriptionMessage' => Yii::t('wk-widget-gridview', 'Drag to the left of the column that you want to see in the grid in a specific order'),
+                                'saveChangesMessage' => Yii::t('wk-widget-gridview', 'Save changes'),
+                                'cancelMessage' => Yii::t('wk-widget-gridview', 'Cancel'),
+                                'resetSortMessage' => Yii::t('wk-widget-gridview', 'Reset Sort'),
+                                'resetMessage' => Yii::t('wk-widget-gridview', 'Reset'),
+                                'resetConfirmTitleMessage' => Yii::t('wk-widget-gridview', 'Confirm'),
+                                'resetConfirmMessage' => Yii::t('wk-widget-gridview', 'Reset Columns. Are you sure?'),
+                                'resetSortConfirmTitleMessage' => Yii::t('wk-widget-gridview', 'Confirm'),
+                                'resetSortConfirmMessage' => Yii::t('wk-widget-gridview', 'Reset Sort Grid. Are you sure?'),
+                                'confirmCloseMessage' => Yii::t('wk-widget-gridview', 'Close'),
+                                'confirmOKMessage' => Yii::t('wk-widget-gridview', 'OK'),
+                                'alertOKMessage' => Yii::t('wk-widget-gridview', 'OK'),
+                                'validatePagerMessage' => Yii::t('wk-widget-gridview', 'Rows per page must be from 10 to 100'),
+                                'validateColumnsMessage' => Yii::t('wk-widget-gridview', 'Visible columns cannot empty'),
+                            ];
+
+                            $this->jsOptions = array_replace_recursive($this->jsOptions, ['customizeDialog' => $messages], ['customizeDialog' => $option]);
+
                             $toolbar[0]['content'] .= Html::a(Yii::t('wk-widget-gridview', 'Customize'), '#',
                                 [
                                     'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-default wk-btn-customizeDialog',
@@ -387,6 +363,10 @@ EOT;
         $options = [
             'selectionStorage' => true,
         ];
+
+        $this->jsOptions = $this->makeDialogMessages($this->jsOptions);
+
+        $options = array_replace_recursive($options, $this->jsOptions);
 
         $options = (object)array_filter($options);
         $optionsReplaced = str_replace('object', json_encode($options, JSON_UNESCAPED_UNICODE), file_get_contents(__DIR__ . '/assets/js/init.js'));
@@ -493,7 +473,20 @@ EOT;
                 $initColumns[] = $id;
             }
 
+            $initVisibleColumns = [];
+            foreach ($columns as $position => $column) {
+                if (is_string($column) || !isset($column['visible']) || $column['visible'] === true) {
+                    $attribute = is_string($column) ?: $column['attribute'];
+                    $id = hash('crc32', $attribute . $position);
+                    $initVisibleColumns[] = $id;
+                }
+            }
+
             $becomeCols = $initColumns;
+            if (!property_exists($cookieOptions, 'visible') || empty($cookieOptions->visible)) {
+                $cookieOptions->visible = $initVisibleColumns;
+            }
+
             foreach ($cookieOptions->visible as $colCookie) {
                 $pos = array_search($colCookie, $initColumns);
                 $columns[$pos]['visible'] = true;
@@ -504,7 +497,10 @@ EOT;
 
             foreach ($becomeCols as $colhash) {
                 $pos = array_search($colhash, $initColumns);
-                $newCols2[] = $columns[$pos];
+                if (!in_array($columns[$pos]['class'], ['\kartik\grid\SerialColumn', '\kartik\grid\CheckboxColumn'])) {
+                    $columns[$pos]['visible'] = false;
+                    $newCols2[] = $columns[$pos];
+                }
             }
         } else {
             foreach ($columns as $position => $column) {
@@ -537,11 +533,35 @@ EOT;
         if ($_COOKIE[$this->id]) {
             $cookieOptions = json_decode($_COOKIE[$this->id]);
 
-            if (property_exists($cookieOptions, 'pager')) {
+            if (property_exists($cookieOptions, 'pager') && $cookieOptions->pager >= 10 && $cookieOptions->pager <= 100) {
                 $config['dataProvider']->pagination->pageSize = $cookieOptions->pager;
+            }
+
+            if (property_exists($cookieOptions, 'sort')) {
+                if (substr($cookieOptions->sort, 0, 1) === '-') {
+                    $cookieOptions->sort = substr($cookieOptions->sort, 1);
+                    $direction = SORT_DESC;
+                } else {
+                    $direction = SORT_ASC;
+                }
+
+                $config['dataProvider']->sort->defaultOrder = [$cookieOptions->sort => $direction];
             }
         }
         return $config;
+    }
+
+    private function makeDialogMessages($jsOptions)
+    {
+        $messages = [
+            'dialogConfirmTitle' => Yii::t('wk-widget-gridview', 'Confirm'),
+            'dialogAlertTitle' => Yii::t('wk-widget-gridview', 'Information'),
+            'dialogConfirmButtonClose' => Yii::t('wk-widget-gridview', 'No'),
+            'dialogConfirmButtonOK' => Yii::t('wk-widget-gridview', 'Yes'),
+            'dialogAlertButtonClose' => Yii::t('wk-widget-gridview', 'Close'),
+        ];
+
+        return array_replace_recursive($jsOptions, ['messages' => $messages]);
     }
 
 }

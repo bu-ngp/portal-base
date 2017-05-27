@@ -36,7 +36,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'delete' => \yii\helpers\Url::to(['roles/delete']),
         ],
         'customizeSettings' => [
-            'customizeShow' => true,
             'exportShow' => true,
             'filterShow' => true,
         ],
