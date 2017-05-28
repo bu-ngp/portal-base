@@ -8,7 +8,7 @@
         } else if (typeof method === 'object' || !method) {
             return methods.init.apply(this, arguments);
         } else {
-            $.error('Method ' + method + ' not exists in jQuery.wkgridview');
+            $.error('Method ' + method + ' not exists in jQuery.jsplugin');
         }
     };
 

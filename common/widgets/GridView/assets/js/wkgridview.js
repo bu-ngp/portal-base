@@ -33,13 +33,6 @@
             alertOKMessage: 'OK',
             validatePagerMessage: 'Rows per page must be from 10 to 100',
             validateColumnsMessage: 'Visible columns cannot empty'
-        },
-        messages: {
-            dialogConfirmTitle: 'Confirm',
-            dialogAlertTitle: 'Information',
-            dialogConfirmButtonClose: 'Close',
-            dialogConfirmButtonOK: 'OK',
-            dialogAlertButtonClose: 'Close'
         }
     };
 
@@ -61,47 +54,6 @@
         });
     };
 
-    var makeDialog = function ($pjax) {
-        var $dialog = $('<div tabindex="-1" class="modal fade wk-dialog-alert" style="display: none;" aria-hidden="true">' +
-            '<div class="modal-dialog">' +
-            '<div class="modal-content">' +
-            '<div class="modal-header">' +
-            '<h3 class="pmd-card-title-text wk-dialog-title">' + $pjax.data('wkgridview').settings.messages.dialogAlertTitle + '</h3>' +
-            '</div>' +
-            '<div class="modal-body">' +
-            '<p class="wk-dialog-text"></p>' +
-            '</div>' +
-            '<div class="pmd-modal-action pmd-modal-bordered text-right">' +
-            '<button data-dismiss="modal" type="button" class="btn pmd-btn-flat pmd-ripple-effect btn-default">' + $pjax.data('wkgridview').settings.messages.dialogAlertButtonClose + '</button>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '</div>');
-
-        $dialog.appendTo('body');
-    };
-
-    var makeConfirm = function ($pjax) {
-        var $dialog = $('<div tabindex="-1" class="modal fade wk-dialog-confirm" style="display: none;" aria-hidden="true">' +
-            '<div class="modal-dialog">' +
-            '<div class="modal-content">' +
-            '<div class="modal-header">' +
-            '<h3 class="pmd-card-title-text wk-confirm-title">' + $pjax.data('wkgridview').settings.messages.dialogConfirmTitle + '</h3>' +
-            '</div>' +
-            '<div class="modal-body">' +
-            '<p class="wk-confirm-text"></p>' +
-            '</div>' +
-            '<div class="pmd-modal-action pmd-modal-bordered text-right">' +
-            '<button data-dismiss="modal" type="button" class="btn pmd-btn-flat pmd-ripple-effect btn-default">' + $pjax.data('wkgridview').settings.messages.dialogConfirmButtonClose + '</button>' +
-            '<button type="button" class="btn pmd-btn-flat pmd-ripple-effect btn-primary wk-btn-confirm-ok">' + $pjax.data('wkgridview').settings.messages.dialogConfirmButtonOK + '</button>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '</div>');
-
-        $dialog.appendTo('body');
-    };
-
     var makeButtonUpdateEvent = function ($pjax) {
         var gridID = $pjax.data('wkgridview').grid[0].id;
         $pjax.on('click', 'a.wk-btn-update', function (event) {
@@ -110,18 +62,19 @@
                 var selectedRowID = $pjax.gridselected2storage('selectedRowID');
                 if (selectedRowID === false) {
                     event.preventDefault();
-                    $('.wk-dialog-alert').find('.wk-dialog-title').text('Error');
-                    $('.wk-dialog-alert').find('.wk-dialog-text').html('<span>Go to the page where you selected the row.</span>');
-                    $('.wk-dialog-alert').modal();
+                    wkwidget.alert({
+                        message: '<span>Go to the page where you selected the row.</span>'
+                    });
+
                 } else {
                     event.target.href += '?id=' + $pjax.gridselected2storage('selectedRowID');
                     return true;
                 }
             } else {
                 event.preventDefault();
-                $('.wk-dialog-alert').find('.wk-dialog-title').text('Error');
-                $('.wk-dialog-alert').find('.wk-dialog-text').html('<span>You must select one role. You selected <b>' + selectedRows + '</b>.</span>');
-                $('.wk-dialog-alert').modal();
+                wkwidget.alert({
+                    message: '<span>You must select one role. You selected <b>' + selectedRows + '</b>.</span>'
+                });
             }
         });
     };
@@ -263,12 +216,9 @@
         var $dialog = $('.' + gridID + '-wk-customizeDialog');
 
         if (parseInt($dialog.find('.wk-per-page').val()) < 10 || parseInt($dialog.find('.wk-per-page').val()) > 100) {
-            var $alertDialog = $('body').children('.wk-dialog-alert');
-
-            $alertDialog.find('.wk-dialog-title').text($pjax.data('wkgridview').settings.messages.dialogAlertTitle);
-            console.debug($pjax.data('wkgridview').settings.customizeDialog);
-            $alertDialog.find('.wk-dialog-text').html('<span>' + $pjax.data('wkgridview').settings.customizeDialog.validatePagerMessage + '</span>');
-            $alertDialog.modal();
+            wkwidget.alert({
+                message: '<span>' + $pjax.data('wkgridview').settings.customizeDialog.validatePagerMessage + '</span>'
+            });
 
             return false;
         } else {
@@ -280,11 +230,9 @@
         var gridID = $pjax.find('.grid-view')[0].id;
         var $dialog = $('.' + gridID + '-wk-customizeDialog');
         if ($dialog.find('.wk-visible-columns').children().length === 0) {
-            var $alertDialog = $('body').children('.wk-dialog-alert');
-
-            $alertDialog.find('.wk-dialog-title').text($pjax.data('wkgridview').settings.messages.dialogAlertTitle);
-            $alertDialog.find('.wk-dialog-text').html('<span>' + $pjax.data('wkgridview').settings.customizeDialog.validateColumnsMessage + '</span>');
-            $alertDialog.modal();
+            wkwidget.alert({
+                message: '<span>' + $pjax.data('wkgridview').settings.customizeDialog.validateColumnsMessage + '</span>'
+            });
 
             return false;
         } else {
@@ -321,43 +269,34 @@
             };
 
             $dialog.modal('hide');
-
             saveCookie($pjax, obj1);
             $grid.yiiGridView('applyFilter');
         });
 
         $dialog.on('click', 'button.wk-customizeDialog-btn-reset', function (event) {
             var $grid = $pjax.find('.grid-view');
-            var $confirmDialog = $('body').children('.wk-dialog-confirm');
 
-            $('button.wk-btn-confirm-ok').off('click').on('click', function () {
-                $confirmDialog.modal('hide');
-                $dialog.modal('hide');
-                document.cookie = gridID + "=; path=/; expires: -1";
-                $grid.yiiGridView('applyFilter');
+            wkwidget.confirm({
+                message: '<span>' + $pjax.data('wkgridview').settings.customizeDialog.resetConfirmMessage + '</span>',
+                yes: function () {
+                    $dialog.modal('hide');
+                    document.cookie = gridID + "=; path=/; expires: -1";
+                    $grid.yiiGridView('applyFilter');
+                }
             });
-
-            $confirmDialog.find('.wk-confirm-title').text($pjax.data('wkgridview').settings.customizeDialog.resetConfirmTitleMessage);
-            $confirmDialog.find('.wk-confirm-text').html('<span>' + $pjax.data('wkgridview').settings.customizeDialog.resetConfirmMessage + '</span>');
-            $confirmDialog.modal();
         });
 
         $dialog.on('click', 'button.wk-customizeDialog-btn-reset-sort', function (event) {
             var $grid = $pjax.find('.grid-view');
-            var $confirmDialog = $('body').children('.wk-dialog-confirm');
 
-            $('button.wk-btn-confirm-ok').off('click').on('click', function () {
-                $confirmDialog.modal('hide');
-                $dialog.modal('hide');
-
-                removeCookie($pjax, 'sort');
-
-                $grid.yiiGridView('applyFilter');
+            wkwidget.confirm({
+                message: '<span>' + $pjax.data('wkgridview').settings.customizeDialog.resetSortConfirmMessage + '</span>',
+                yes: function () {
+                    $dialog.modal('hide');
+                    removeCookie($pjax, 'sort');
+                    $grid.yiiGridView('applyFilter');
+                }
             });
-
-            $confirmDialog.find('.wk-confirm-title').text($pjax.data('wkgridview').settings.customizeDialog.resetSortConfirmTitleMessage);
-            $confirmDialog.find('.wk-confirm-text').html('<span>' + $pjax.data('wkgridview').settings.customizeDialog.resetSortConfirmMessage + '</span>');
-            $confirmDialog.modal();
         });
 
         $(document).on('pjax:send', function (e) {
@@ -400,7 +339,7 @@
             objCookie = $.parseJSON(getCookie(gridID));
         }
 
-        objCookie = $.extend(true, {}, objCookie, object);
+        objCookie = $.extend({}, objCookie, object);
         document.cookie = gridID + "=" + JSON.stringify(objCookie) + "; path=/; expires=" + date.toUTCString();
     };
 
@@ -437,9 +376,6 @@
                 });
 
                 eventsApply($pjax);
-
-                makeDialog($pjax);
-                makeConfirm($pjax);
 
                 makeButtonUpdateEvent($pjax);
 

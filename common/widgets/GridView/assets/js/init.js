@@ -8,8 +8,10 @@ $(document).ready(function () {
         selectedPanelClass: 'selectedPanel'
     });
 
+    wkwidget.init(wkdialogOptions);
+
     if ($("#id-widget").length) {
-        $("#id-widget").yiiGridView({"filterUrl":  window.location.search});
+        $("#id-widget").yiiGridView({"filterUrl": window.location.search});
         $("#id-widget").yiiGridView('applyFilter');
     }
 });

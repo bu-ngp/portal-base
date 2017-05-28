@@ -30,6 +30,7 @@ class GridViewAsset extends AssetBundle
             'common\widgets\CardList\assets\PropellerAsset',
             'rmrevin\yii\fontawesome\AssetBundle',
             'common\widgets\GridView\assets\SortableAsset',
+            'common\widgets\wkdialog\WkDialogAsset',
         ];
 
         parent::init();

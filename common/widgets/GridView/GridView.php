@@ -364,13 +364,14 @@ EOT;
             'selectionStorage' => true,
         ];
 
-        $this->jsOptions = $this->makeDialogMessages($this->jsOptions);
-
         $options = array_replace_recursive($options, $this->jsOptions);
+        $options2 = $this->makeDialogMessages([]);
 
         $options = (object)array_filter($options);
         $optionsReplaced = str_replace('object', json_encode($options, JSON_UNESCAPED_UNICODE), file_get_contents(__DIR__ . '/assets/js/init.js'));
-        $idReplaced = str_replace('id-widget', $this->id, $optionsReplaced);
+        $options2Replaced = str_replace('wkdialogOptions', json_encode($options2, JSON_UNESCAPED_UNICODE), $optionsReplaced);
+
+        $idReplaced = str_replace('id-widget', $this->id, $options2Replaced);
         $view->registerJs($idReplaced);
     }
 
@@ -473,33 +474,78 @@ EOT;
                 $initColumns[] = $id;
             }
 
-            $initVisibleColumns = [];
-            foreach ($columns as $position => $column) {
-                if (is_string($column) || !isset($column['visible']) || $column['visible'] === true) {
-                    $attribute = is_string($column) ?: $column['attribute'];
-                    $id = hash('crc32', $attribute . $position);
-                    $initVisibleColumns[] = $id;
+
+            $columns = array_map(function ($column) {
+                if (is_string($column)) {
+                    $column = ['attribute' => $column];
+                }
+                return $column;
+            }, $columns);
+
+            $colsKeysReady = [];
+
+            for ($position = 0; $position <= 1; $position++) {
+                if (is_array($columns[$position])
+                    && isset($columns[$position]['class'])
+                    && $columns[$position]['class'] === '\kartik\grid\SerialColumn'
+                    && (!isset($columns[$position]['visible']) || $columns[$position]['visible'] === true)
+                ) {
+                    $columns[$position]['visible'] = true;
+                    $newCols[] = $columns[$position];
+                } elseif (is_array($columns[$position])
+                    && isset($columns[$position]['class'])
+                    && $columns[$position]['class'] === '\kartik\grid\CheckboxColumn'
+                    && (!isset($columns[$position]['visible']) || $columns[$position]['visible'] === true)
+                ) {
+                    $columns[$position]['visible'] = true;
+                    $newCols[] = $columns[$position];
+                } else {
+                    $columns[$position]['visible'] = false;
+                    $newCols2[] = $columns[$position];
+                }
+
+                $colsKeysReady[] = $position;
+            }
+
+            if (property_exists($cookieOptions, 'visible')
+                && !empty($cookieOptions->visible)
+            ) {
+                foreach ($cookieOptions->visible as $colCookie) {
+                    $position = array_search($colCookie, $initColumns);
+                    if ($position !== false) {
+                        $columns[$position]['visible'] = true;
+                        $newCols[] = $columns[$position];
+                        $colsKeysReady[] = $position;
+                    }
                 }
             }
 
-            $becomeCols = $initColumns;
-            if (!property_exists($cookieOptions, 'visible') || empty($cookieOptions->visible)) {
-                $cookieOptions->visible = $initVisibleColumns;
-            }
+            $columns2 = [];
+            array_walk($columns, function ($col, $pos) use (&$columns2, $colsKeysReady) {
+                if (!in_array($pos, $colsKeysReady)) {
+                    $columns2[] = $col;
+                }
+            });
 
-            foreach ($cookieOptions->visible as $colCookie) {
-                $pos = array_search($colCookie, $initColumns);
-                $columns[$pos]['visible'] = true;
-                $newCols[] = $columns[$pos];
-                $becomeCols = array_diff($becomeCols, [$colCookie]);
-            }
+            if (property_exists($cookieOptions, 'visible')
+                && !empty($cookieOptions->visible)
+            ) {
+                foreach ($columns2 as $position => $column) {
+                    if ((!isset($column['visible']) || $column['visible'] === true) && !(property_exists($cookieOptions, 'visible')
+                            && !empty($cookieOptions->visible))
+                    ) {
+                        $isVisible = true;
+                    } else {
+                        $isVisible = false;
+                    }
 
-
-            foreach ($becomeCols as $colhash) {
-                $pos = array_search($colhash, $initColumns);
-                if (!in_array($columns[$pos]['class'], ['\kartik\grid\SerialColumn', '\kartik\grid\CheckboxColumn'])) {
-                    $columns[$pos]['visible'] = false;
-                    $newCols2[] = $columns[$pos];
+                    if ($isVisible) {
+                        $column['visible'] = true;
+                        $newCols[] = $column;
+                    } else {
+                        $column['visible'] = false;
+                        $newCols2[] = $column;
+                    }
                 }
             }
         } else {
@@ -551,7 +597,7 @@ EOT;
         return $config;
     }
 
-    private function makeDialogMessages($jsOptions)
+    protected function makeDialogMessages($jsOptions)
     {
         $messages = [
             'dialogConfirmTitle' => Yii::t('wk-widget-gridview', 'Confirm'),
