@@ -13,6 +13,38 @@ $this->title = 'My Yii Application';
 
     <?= CardList::widget([
         'url' => Url::to(['site/test']),
+        'items' => [
+            [
+                'styleClass' => CardList::RED_STYLE,
+                'preview' => [
+                    'FAIcon' => 'list-alt',
+                ],
+                'title' => 'Роли',
+                'description' => 'Создание и редактирование ролей в системе',
+                'link' => Yii::$app->urlManager->createUrl(['roles']),
+                'popularityID' => 'local-1',
+            ],
+            [
+                'styleClass' => CardList::RED_STYLE,
+                'preview' => [
+                    'FAIcon' => 'list-alt',
+                ],
+                'title' => 'Роли2',
+                'description' => 'Создание и редактирование ролей в системе',
+                'link' => Yii::$app->urlManager->createUrl(['roles']),
+                'popularityID' => 'local-2',
+            ],
+            [
+                'styleClass' => CardList::RED_STYLE,
+                'preview' => [
+                    'FAIcon' => 'list-alt',
+                ],
+                'title' => 'Роли3',
+                'description' => 'Создание и редактирование ролей в системе',
+                'link' => Yii::$app->urlManager->createUrl(['roles']),
+                'popularityID' => 'local-3',
+            ],
+        ],
         'search' => [
             'modelSearch' => $modelSearch,
             'searchAttributeName' => 'description',

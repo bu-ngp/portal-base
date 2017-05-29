@@ -16,7 +16,7 @@ class GridSelected2InputAsset extends AssetBundle
     {
         $this->sourcePath = __DIR__;
         $this->js = [
-            'gridselected2input.js',
+            'gridselected2textinput.js',
         ];
 
         $this->depends = [

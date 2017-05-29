@@ -234,6 +234,11 @@ class SiteController extends Controller
 
     public function actionTest()
     {
-        
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $searchModel = new AuthItemSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return CardListHelper::createAjaxCards($dataProvider, 'name', '', '', 'description', '', 'name');
     }
 }

@@ -3,6 +3,8 @@
 namespace common\widgets\GridView;
 
 use common\widgets\GridView\assets\GridViewAsset;
+use common\widgets\GridView\services\GWCustomizeDialog;
+use common\widgets\GridView\services\GWPrepareColumns;
 use Yii;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
@@ -17,10 +19,12 @@ class GridView extends \kartik\grid\GridView
     public $crudSettings;
     public $customizeSettings;
     public $panelHeading;
-    public $multipleSelect;
+    public $selectColumn;
+    public $serialColumn;
     public $minHeight;
     public $customizeDialog;
     public $jsOptions = [];
+    public $js = [];
     protected $optionsWidget;
 
     public function __construct(array $config = [])
@@ -28,11 +32,12 @@ class GridView extends \kartik\grid\GridView
         $this->registerTranslations();
         $config = $this->setDefaults($config);
         $this->optionsWidget = $config;
-        if ($this->optionsWidget['customizeDialog']) {
-            $config = $this->customizeColumns($config);
-            $config = $this->customizePager($config);
+
+        if ($this->optionsWidget['customizeDialog'] === true) {
+            $this->optionsWidget = GWCustomizeDialog::lets($config)->prepareConfig($this->js);
         }
-        parent::__construct($config);
+
+        parent::__construct($this->optionsWidget);
     }
 
     public function init()
@@ -56,67 +61,16 @@ class GridView extends \kartik\grid\GridView
     public function run()
     {
         parent::run();
-
+        $this->registerAssetsByWk();
     }
 
     protected function endPjax()
     {
-        if ($this->customizeDialog) {
-            $this->createCustomizeDialog();
+        if ($this->customizeDialog === true) {
+            GWCustomizeDialog::lets($this->optionsWidget)->makeColumnsContent($this->dataProvider, $this->filterModel, $this->id);
         }
 
         return parent::endPjax();
-    }
-
-    protected function columnsHTML2CustomizeDialog()
-    {
-        $visible = '';
-        $hidden = '';
-
-        $cookieColumns = $this->CookieColumns();
-
-        foreach ($cookieColumns->visible as $col) {
-            if (isset($col['class']) && !in_array($col['class'], ['\kartik\grid\CheckboxColumn', '\kartik\grid\SerialColumn'])) {
-
-                $attribute = is_string($col) ?: $col['attribute'];
-                $position = array_keys(array_filter($this->optionsWidget['columns'], function ($val) use ($attribute) {
-                    $attr = is_string($val) ?: $val['attribute'];
-                    return $attribute === $attr;
-                }))[0];
-                $id = hash('crc32', $attribute . $position);
-                $visible .= '<a role="option" aria-grabbed="false" draggable="true" class="list-group-item" id="' . $id . '">' . $this->filterModel->getAttributeLabel($attribute) . '</a>';
-            }
-        }
-
-        foreach ($cookieColumns->hidden as $col) {
-            if (isset($col['class']) && !in_array($col['class'], ['\kartik\grid\CheckboxColumn', '\kartik\grid\SerialColumn'])) {
-                $attribute = is_string($col) ?: $col['attribute'];
-                $position = array_keys(array_filter($this->optionsWidget['columns'], function ($val) use ($attribute) {
-                    $attr = is_string($val) ?: $val['attribute'];
-                    return $attribute === $attr;
-                }))[0];
-                $id = hash('crc32', $attribute . $position);
-                $hidden .= '<a role="option" aria-grabbed="false" draggable="true" class="list-group-item" id="' . $id . '">' . $this->filterModel->getAttributeLabel($attribute) . '</a>';
-            }
-        }
-
-        return (object)[
-            'visible' => $visible,
-            'hidden' => $hidden,
-        ];
-    }
-
-    protected function createCustomizeDialog()
-    {
-        $columnsHTML = $this->columnsHTML2CustomizeDialog();
-        $pagerValue = $this->dataProvider->getPagination()->pageSize;
-        echo <<<EOT
-        <div class="{$this->id}-wk-customize-dialog-content" style="display: none;">
-            <div class="wk-customize-dialog-pagerValue">$pagerValue</div>
-            <div class="wk-customize-dialog-visible-columns">{$columnsHTML->visible}</div>
-            <div class="wk-customize-dialog-hidden-columns">{$columnsHTML->hidden}</div>
-        </div>
-EOT;
     }
 
     protected function setDefaults($config)
@@ -124,7 +78,10 @@ EOT;
         $config['hover'] = isset($config['hover']) ? $config['hover'] : true;
         $config['pjax'] = isset($config['pjax']) ? $config['pjax'] : true;
         $config['customizeDialog'] = isset($config['customizeDialog']) ? $config['customizeDialog'] : true;
+        $config['serialColumn'] = isset($config['serialColumn']) ? $config['serialColumn'] : true;
+        $config['selectColumn'] = isset($config['selectColumn']) ? $config['selectColumn'] : true;
         $this->minHeight = isset($config['minHeight']) ? $config['minHeight'] : false;
+        $config['id'] = isset($config['id']) ? $config['id'] : $this->getId();
 
         if (isset($config['minHeight'])) {
             $config['containerOptions'] = array_replace_recursive(
@@ -133,9 +90,10 @@ EOT;
             );
         }
 
-        $this->multipleSelect = isset($config['multipleSelect']) ? $config['multipleSelect'] : true;
+        $this->selectColumn = isset($config['selectColumn']) ? $config['selectColumn'] : true;
         //    $config['pjaxSettings']['loadingCssClass'] = isset($config['pjaxSettings']['loadingCssClass']) ? $config['pjaxSettings']['loadingCssClass'] : false;
         $config['resizableColumns'] = isset($config['resizableColumns']) ? $config['resizableColumns'] : false;
+
         $this->createCustomizeButtons($config);
         $this->createCrudButtons($config);
         if (($key = array_search('{export}', $this->toolbar)) !== false) {
@@ -171,7 +129,7 @@ EOT;
 EOT;
 
         $this->setPanelHeading($config);
-        $config['columns'] = $this->prepareColumns($config['columns']);
+        $config['columns'] = GWPrepareColumns::lets($config)->prepare();
 
         return $config;
     }
@@ -242,8 +200,7 @@ EOT;
         unset($config['crudSettings']);
     }
 
-    protected
-    function createCustomizeButtons(&$config)
+    protected function createCustomizeButtons(&$config)
     {
         $customizeSettings = $config['customizeSettings'];
 
@@ -261,43 +218,6 @@ EOT;
 
             foreach ($customizeSettings as $key => $option) {
                 switch ($key) {
-                    case 'customizeShow':
-                        if ($option === false) {
-                            $option = ['enable' => false];
-                        }
-
-                        if ($option['enable'] === true) {
-                            $messages = [
-                                'titleDialogMessage' => Yii::t('wk-widget-gridview', 'Customize Dialog'),
-                                'rowsPerPageMessage' => Yii::t('wk-widget-gridview', 'Rows Per Page'),
-                                'visibleColumnsMessage' => Yii::t('wk-widget-gridview', 'Visible Columns'),
-                                'hiddenColumnsMessage' => Yii::t('wk-widget-gridview', 'Hidden Columns'),
-                                'rowsPerPageDescriptionMessage' => Yii::t('wk-widget-gridview', 'Enter the number of records on the grid from 10 to 100'),
-                                'visibleColumnsDescriptionMessage' => Yii::t('wk-widget-gridview', 'Drag to the left of the column that you want to see in the grid in a specific order'),
-                                'saveChangesMessage' => Yii::t('wk-widget-gridview', 'Save changes'),
-                                'cancelMessage' => Yii::t('wk-widget-gridview', 'Cancel'),
-                                'resetSortMessage' => Yii::t('wk-widget-gridview', 'Reset Sort'),
-                                'resetMessage' => Yii::t('wk-widget-gridview', 'Reset'),
-                                'resetConfirmTitleMessage' => Yii::t('wk-widget-gridview', 'Confirm'),
-                                'resetConfirmMessage' => Yii::t('wk-widget-gridview', 'Reset Columns. Are you sure?'),
-                                'resetSortConfirmTitleMessage' => Yii::t('wk-widget-gridview', 'Confirm'),
-                                'resetSortConfirmMessage' => Yii::t('wk-widget-gridview', 'Reset Sort Grid. Are you sure?'),
-                                'confirmCloseMessage' => Yii::t('wk-widget-gridview', 'Close'),
-                                'confirmOKMessage' => Yii::t('wk-widget-gridview', 'OK'),
-                                'alertOKMessage' => Yii::t('wk-widget-gridview', 'OK'),
-                                'validatePagerMessage' => Yii::t('wk-widget-gridview', 'Rows per page must be from 10 to 100'),
-                                'validateColumnsMessage' => Yii::t('wk-widget-gridview', 'Visible columns cannot empty'),
-                            ];
-
-                            $this->jsOptions = array_replace_recursive($this->jsOptions, ['customizeDialog' => $messages], ['customizeDialog' => $option]);
-
-                            $toolbar[0]['content'] .= Html::a(Yii::t('wk-widget-gridview', 'Customize'), '#',
-                                [
-                                    'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-default wk-btn-customizeDialog',
-                                    'style' => 'text-align: right;',
-                                ]);
-                        }
-                        break;
                     case 'exportShow':
                         if ($option) {
                             $toolbar[0]['content'] .= Html::a(Yii::t('wk-widget-gridview', 'Export'), '#',
@@ -327,8 +247,7 @@ EOT;
         unset($config['customizeSettings']);
     }
 
-    protected
-    function setPanelHeading(&$config)
+    protected function setPanelHeading(&$config)
     {
         $panelHeading = $config['panelHeading'];
 
@@ -353,251 +272,24 @@ EOT;
         }
     }
 
-    protected
-    function registerAssets()
+    protected function registerAssetsByWk()
     {
-        parent::registerAssets();
         $view = $this->getView();
         GridViewAsset::register($view);
 
-        $options = [
-            'selectionStorage' => true,
-        ];
+        foreach ($this->js as $script) {
+            $view->registerJs($script, View::POS_READY);
+        }
 
-        $options = array_replace_recursive($options, $this->jsOptions);
-        $options2 = $this->makeDialogMessages([]);
+        $options = (object)array_filter($this->makeDialogMessages());
+        $optionsReplaced = str_replace('wkdialogOptions', json_encode($options, JSON_UNESCAPED_UNICODE), file_get_contents(__DIR__ . '/assets/js/init.js'));
 
-        $options = (object)array_filter($options);
-        $optionsReplaced = str_replace('object', json_encode($options, JSON_UNESCAPED_UNICODE), file_get_contents(__DIR__ . '/assets/js/init.js'));
-        $options2Replaced = str_replace('wkdialogOptions', json_encode($options2, JSON_UNESCAPED_UNICODE), $optionsReplaced);
+        $idReplaced = str_replace('id-widget', $this->id, $optionsReplaced);
 
-        $idReplaced = str_replace('id-widget', $this->id, $options2Replaced);
         $view->registerJs($idReplaced);
     }
 
-    protected
-    function prepareColumns($config)
-    {
-        if (is_array($config) && count($config) > 0) {
-            $serialExist = false;
-            foreach ($config as $key => $column) {
-                if (is_array($column)) {
-                    $column['noWrap'] = true;
-                    if (empty($column['class'])) {
-                        $column['class'] = '\kartik\grid\DataColumn';
-                    }
-
-                    if (empty($column['class'])) {
-                        $serialExist = true;
-                    }
-
-                    if (is_callable($column['contentOptions'])) {
-                        $func = $column['contentOptions'];
-
-                        $column['contentOptions'] = function ($model, $key, $index, $column) use ($func) {
-                            $return = $func($model, $key, $index, $column);
-                            $return['class'] .= ' wk-nowrap';
-                            $return['data-toggle'] = 'tooltip';
-                            return $return;
-                        };
-
-                    } elseif (empty($column['contentOptions'])) {
-                        $column['contentOptions'] = function ($model, $key, $index, $column) {
-                            return ['data-toggle' => 'tooltip', 'class' => 'wk-nowrap'];
-                        };
-                    }
-
-                    if ($column['class'] === '\kartik\grid\DataColumn' && (empty($column['format']))) {
-                        $column['format'] = 'html';
-                        if (is_callable($column['value'])) {
-                            $func = $column['value'];
-                            $column['value'] = function ($model, $key, $index, $column) use ($func) {
-                                $return = $func($model, $key, $index, $column);
-                                return '<span>' . Html::encode($return) . '</span>';
-                            };
-
-                        } elseif (empty($column['value'])) {
-                            $column['value'] = function ($model, $key, $index, $column) {
-                                $a = '';
-                                return '<span>' . Html::encode($model->{$column->attribute}) . '</span>';
-                            };
-                        }
-                    }
-                } else {
-                    $column = [
-                        'attribute' => $column,
-                        'class' => '\kartik\grid\DataColumn',
-                        'noWrap' => true,
-                        'contentOptions' => function ($model, $key, $index, $column) {
-                            return ['data-toggle' => 'tooltip', 'class' => 'wk-nowrap'];
-                        },
-                        'format' => 'html',
-                        'value' => function ($model, $key, $index, $column) {
-                            return '<span>' . Html::encode($model->{$column->attribute}) . '</span>';
-                        },
-                    ];
-                }
-
-                $config[$key] = $column;
-            }
-
-            if ($this->multipleSelect) {
-                $config = array_merge_recursive([[
-                    'class' => '\kartik\grid\CheckboxColumn',
-                    'noWrap' => true,
-                    'rowSelectedClass' => GridView::TYPE_INFO,
-                ]], $config);
-            }
-
-            if (!$serialExist) {
-                $config = array_merge_recursive([[
-                    'class' => '\kartik\grid\SerialColumn',
-                    'noWrap' => true,
-                ]], $config);
-            }
-        }
-        return $config;
-    }
-
-    protected function CookieColumns()
-    {
-        $newCols = [];
-        $newCols2 = [];
-        $columns = $this->optionsWidget['columns'];
-
-        if ($_COOKIE[$this->id]) {
-            $cookieOptions = json_decode($_COOKIE[$this->id]);
-            $initColumns = [];
-            foreach ($columns as $position => $column) {
-                $attribute = is_string($column) ?: $column['attribute'];
-                $id = hash('crc32', $attribute . $position);
-                $initColumns[] = $id;
-            }
-
-
-            $columns = array_map(function ($column) {
-                if (is_string($column)) {
-                    $column = ['attribute' => $column];
-                }
-                return $column;
-            }, $columns);
-
-            $colsKeysReady = [];
-
-            for ($position = 0; $position <= 1; $position++) {
-                if (is_array($columns[$position])
-                    && isset($columns[$position]['class'])
-                    && $columns[$position]['class'] === '\kartik\grid\SerialColumn'
-                    && (!isset($columns[$position]['visible']) || $columns[$position]['visible'] === true)
-                ) {
-                    $columns[$position]['visible'] = true;
-                    $newCols[] = $columns[$position];
-                } elseif (is_array($columns[$position])
-                    && isset($columns[$position]['class'])
-                    && $columns[$position]['class'] === '\kartik\grid\CheckboxColumn'
-                    && (!isset($columns[$position]['visible']) || $columns[$position]['visible'] === true)
-                ) {
-                    $columns[$position]['visible'] = true;
-                    $newCols[] = $columns[$position];
-                } else {
-                    $columns[$position]['visible'] = false;
-                    $newCols2[] = $columns[$position];
-                }
-
-                $colsKeysReady[] = $position;
-            }
-
-            if (property_exists($cookieOptions, 'visible')
-                && !empty($cookieOptions->visible)
-            ) {
-                foreach ($cookieOptions->visible as $colCookie) {
-                    $position = array_search($colCookie, $initColumns);
-                    if ($position !== false) {
-                        $columns[$position]['visible'] = true;
-                        $newCols[] = $columns[$position];
-                        $colsKeysReady[] = $position;
-                    }
-                }
-            }
-
-            $columns2 = [];
-            array_walk($columns, function ($col, $pos) use (&$columns2, $colsKeysReady) {
-                if (!in_array($pos, $colsKeysReady)) {
-                    $columns2[] = $col;
-                }
-            });
-
-            if (property_exists($cookieOptions, 'visible')
-                && !empty($cookieOptions->visible)
-            ) {
-                foreach ($columns2 as $position => $column) {
-                    if ((!isset($column['visible']) || $column['visible'] === true) && !(property_exists($cookieOptions, 'visible')
-                            && !empty($cookieOptions->visible))
-                    ) {
-                        $isVisible = true;
-                    } else {
-                        $isVisible = false;
-                    }
-
-                    if ($isVisible) {
-                        $column['visible'] = true;
-                        $newCols[] = $column;
-                    } else {
-                        $column['visible'] = false;
-                        $newCols2[] = $column;
-                    }
-                }
-            }
-        } else {
-            foreach ($columns as $position => $column) {
-                if (is_array($column) && isset($column['visible']) && $column['visible'] === false) {
-                    $newCols2[] = $column;
-                } else {
-                    $newCols[] = $column;
-                }
-            }
-        }
-
-        return (object)[
-            'visible' => $newCols,
-            'hidden' => $newCols2,
-        ];
-    }
-
-    protected function customizeColumns($config)
-    {
-        if ($_COOKIE[$this->id]) {
-            $cookieColumns = $this->CookieColumns();
-            $config['columns'] = array_merge($cookieColumns->hidden, $cookieColumns->visible);
-        }
-
-        return $config;
-    }
-
-    protected function customizePager($config)
-    {
-        if ($_COOKIE[$this->id]) {
-            $cookieOptions = json_decode($_COOKIE[$this->id]);
-
-            if (property_exists($cookieOptions, 'pager') && $cookieOptions->pager >= 10 && $cookieOptions->pager <= 100) {
-                $config['dataProvider']->pagination->pageSize = $cookieOptions->pager;
-            }
-
-            if (property_exists($cookieOptions, 'sort')) {
-                if (substr($cookieOptions->sort, 0, 1) === '-') {
-                    $cookieOptions->sort = substr($cookieOptions->sort, 1);
-                    $direction = SORT_DESC;
-                } else {
-                    $direction = SORT_ASC;
-                }
-
-                $config['dataProvider']->sort->defaultOrder = [$cookieOptions->sort => $direction];
-            }
-        }
-        return $config;
-    }
-
-    protected function makeDialogMessages($jsOptions)
+    protected function makeDialogMessages()
     {
         $messages = [
             'dialogConfirmTitle' => Yii::t('wk-widget-gridview', 'Confirm'),
@@ -606,8 +298,6 @@ EOT;
             'dialogConfirmButtonOK' => Yii::t('wk-widget-gridview', 'Yes'),
             'dialogAlertButtonClose' => Yii::t('wk-widget-gridview', 'Close'),
         ];
-
-        return array_replace_recursive($jsOptions, ['messages' => $messages]);
+        return ['messages' => $messages];
     }
-
 }

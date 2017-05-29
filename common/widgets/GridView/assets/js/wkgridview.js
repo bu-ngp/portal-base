@@ -141,7 +141,7 @@
             stop: function (e, ui) {
                 var keys = [];
                 $.each($('.' + gridID + '-connectedSortable.wk-visible-columns').children(), function () {
-                    keys.push($(this)[0].id);
+                    keys.push($(this).attr('wk-hash'));
                 });
                 $dialog.find('input.wk-columnsList').val(JSON.stringify(keys));
             }
@@ -259,7 +259,7 @@
 
             if (inputColumns.length == 0) {
                 $.each($('.' + gridID + '-connectedSortable.wk-visible-columns').children(), function () {
-                    inputColumns.push($(this)[0].id);
+                    inputColumns.push($(this).attr('wk-hash'));
                 });
             }
 

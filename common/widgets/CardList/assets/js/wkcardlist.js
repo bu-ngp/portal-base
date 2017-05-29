@@ -346,7 +346,56 @@
         return typeof(settings.url) == "string" && settings.url != ''
     };
 
+    var MasonryAppended = function ($widget, afterComplete) {
+        $.each($widget.data('wkcardlist').$cards, function (ind) {
+            setTimeout(function ($this) {
+                if (ind === ($widget.data('wkcardlist').$cards.length - 1)) {
+                    $widget.data('wkcardlist').$masonryContainer.one('layoutComplete', function () {
+                        $widget.data('wkcardlist').$cards = $();
+
+                        if ($widget.data('wkcardlist').settings.search) {
+                            $widget.data('wkcardlist').$searchInput.busy = false;
+                        }
+
+                        if (typeof afterComplete == 'function') {
+                            afterComplete();
+                        }
+                    });
+                }
+
+                $widget.data('wkcardlist').$masonryContainer.append($this);
+                $widget.data('wkcardlist').$masonryContainer.masonry('appended', $this);
+            }, ind * 100 + 1, $(this));
+        });
+    };
+
     var MasonryExecute = function ($widget, afterComplete) {
+        if (typeof $widget != undefined) {
+
+            var isEmptyContainer = $widget.data('wkcardlist').$masonryContainer.masonry('getItemElements').length == 0;
+
+            if (isEmptyContainer) {
+                var $addItem = $widget.data('wkcardlist').$cards.slice(0, 2);
+
+                $widget.data('wkcardlist').$cards = $widget.data('wkcardlist').$cards.slice(2);
+
+                $widget.data('wkcardlist').$masonryContainer.one('layoutComplete', function () {
+                    MasonryAppended($widget, afterComplete);
+                });
+
+                $widget.data('wkcardlist').$masonryContainer.append($addItem);
+                $widget.data('wkcardlist').$masonryContainer.masonry('addItems', $addItem);
+                $widget.data('wkcardlist').$masonryContainer.masonry();
+            } else {
+                MasonryAppended($widget, afterComplete);
+            }
+
+        } else {
+            console.error('MasonryExecute($widget) - $widget undefined');
+        }
+    };
+
+    var MasonryExecute2 = function ($widget, afterComplete) {
         if (typeof $widget != undefined) {
 
             var isEmptyContainer = $widget.data('wkcardlist').$masonryContainer.masonry('getItemElements').length == 0;
@@ -503,7 +552,9 @@
         if (!"popularity" in localStorage
             || !$widget[0].id in (popularity = $.parseJSON(localStorage.popularity))
             || !'local' in popularity[$widget[0].id]
-            || !'ajax' in popularity[$widget[0].id]) {
+            || !'ajax' in popularity[$widget[0].id]
+        //  || ($.isEmptyObject(popularity[$widget[0].id].local) && $.isEmptyObject(popularity[$widget[0].id].ajax))
+        ) {
             return;
         }
 
@@ -516,6 +567,7 @@
         );
 
         var valFirstCard, valSecondCard;
+        console.debug($widget.data('wkcardlist').$cards);
         [].sort.call($widget.data('wkcardlist').$cards, function (firstCard, secondCard) {
             valFirstCard = popularityArray.filter(function (obj) {
                 return (obj.popularityID == $(firstCard).attr('popularity-id'));
@@ -526,7 +578,12 @@
                 return (obj.popularityID == $(secondCard).attr('popularity-id'));
             });
             valSecondCard = valSecondCard.length ? valSecondCard[0].popularityCount : 0;
-
+            /*   console.debug('===============');
+             console.debug($(firstCard).attr('popularity-id'));
+             console.debug(valFirstCard);
+             console.debug($(secondCard).attr('popularity-id'));
+             console.debug(valSecondCard);
+             console.debug('===============');*/
             return +valSecondCard - +valFirstCard;
         });
     };
@@ -578,7 +635,6 @@
                         if (settings.popularity) {
                             makePopularity($widget);
                         }
-
                         addItemsMasonry($widget, function () {
                             //   console.debug('initComplete');
                         });
