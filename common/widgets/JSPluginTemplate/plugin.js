@@ -1,6 +1,3 @@
-/**
- * Created by VOVANCHO on 23.05.2017.
- */
 ;(function ($) {
     jQuery.fn.jsplugin = function (method) {
         if (methods[method]) {

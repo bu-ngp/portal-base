@@ -8,6 +8,7 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $searchModel domain\models\base\search\AuthItemSearch */
+/* @var $filterModel \domain\models\base\filter\AuthItemFilter */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('common/roles', 'Roles');
@@ -21,6 +22,11 @@ $this->params['breadcrumbs'][] = $this->title;
     GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'filterDialog' => [
+            'enable' => true,
+            'filterModel' => $filterModel,
+            'filterView' => '_filter',
+        ],
         'minHeight' => 450,
         'columns' => [
             'description',
@@ -37,7 +43,6 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         'customizeSettings' => [
             'exportShow' => true,
-            'filterShow' => true,
         ],
         'panelHeading' => [
             'icon' => FA::icon(FA::_LIST_ALT),

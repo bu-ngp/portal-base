@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use domain\forms\base\RoleForm;
+use domain\models\base\filter\AuthItemFilter;
 use domain\services\base\RoleService;
 use domain\services\proxyService;
 use Yii;
@@ -60,11 +61,13 @@ class RolesController extends Controller
     public function actionIndex()
     {
         $searchModel = new AuthItemSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $filterModel = new AuthItemFilter();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);        
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'filterModel' => $filterModel,
         ]);
     }
 

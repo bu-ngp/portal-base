@@ -17,16 +17,21 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Additional' => 'Дополнительные',
     'Child' => '',
     'Created At' => '',
     'Data' => '',
-    'Description' => 'Наименование',
     'Item Name' => '',
-    'Name' => 'Идентификатор',
+    'Main' => 'Основные',
     'Parent' => '',
     'Rule Name' => '',
-    'Type' => 'Тип',
     'Updated At' => '',
     'User ID' => '',
+    'Description' => 'Наименование',
+    'Name' => 'Идентификатор',
+    'Role Name' => 'Имя роли',
+    'System Roles Only' => 'Только системные роли',
+    'Type' => 'Тип',
+    'Users Roles Only' => 'Только пользовательские роли',
     'View' => 'Вид',
 ];

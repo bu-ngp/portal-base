@@ -4,8 +4,10 @@ namespace common\widgets\GridView;
 
 use common\widgets\GridView\assets\GridViewAsset;
 use common\widgets\GridView\services\GWCustomizeDialog;
+use common\widgets\GridView\services\GWFilterDialog;
 use common\widgets\GridView\services\GWPrepareColumns;
 use Yii;
+use yii\base\Model;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
 use yii\data\BaseDataProvider;
@@ -15,7 +17,6 @@ use yii\web\View;
 
 class GridView extends \kartik\grid\GridView
 {
-
     public $crudSettings;
     public $customizeSettings;
     public $panelHeading;
@@ -23,6 +24,7 @@ class GridView extends \kartik\grid\GridView
     public $serialColumn;
     public $minHeight;
     public $customizeDialog;
+    public $filterDialog;
     public $jsOptions = [];
     public $js = [];
     protected $optionsWidget;
@@ -35,6 +37,10 @@ class GridView extends \kartik\grid\GridView
 
         if ($this->optionsWidget['customizeDialog'] === true) {
             $this->optionsWidget = GWCustomizeDialog::lets($config)->prepareConfig($this->js);
+        }
+
+        if ($this->optionsWidget['filterDialog']['enable'] === true) {
+            $this->optionsWidget = GWFilterDialog::lets($this->optionsWidget)->prepareConfig($this->js);
         }
 
         parent::__construct($this->optionsWidget);
@@ -68,6 +74,10 @@ class GridView extends \kartik\grid\GridView
     {
         if ($this->customizeDialog === true) {
             GWCustomizeDialog::lets($this->optionsWidget)->makeColumnsContent($this->dataProvider, $this->filterModel, $this->id);
+        }
+
+        if ($this->filterDialog['enable'] === true) {
+            GWFilterDialog::lets($this->optionsWidget)->makeFilterContent($this->filterDialog, $this->getView());
         }
 
         return parent::endPjax();
@@ -130,6 +140,18 @@ EOT;
 
         $this->setPanelHeading($config);
         $config['columns'] = GWPrepareColumns::lets($config)->prepare();
+
+        if (isset($config['filterDialog'])) {
+            if (!is_array($config['filterDialog'])
+                && !is_bool($config['filterDialog']['enable'])
+                && !$config['filterDialog']['filterModel'] instanceof Model
+                && !is_string($config['filterDialog']['filterView'])
+            ) {
+                throw new \Exception('filterDialog configuration error');
+            }
+        }
+
+        $config['filterDialog'] = isset($config['filterDialog']) ? $config['filterDialog'] : ['enable' => false];
 
         return $config;
     }
@@ -218,15 +240,6 @@ EOT;
 
             foreach ($customizeSettings as $key => $option) {
                 switch ($key) {
-                    case 'exportShow':
-                        if ($option) {
-                            $toolbar[0]['content'] .= Html::a(Yii::t('wk-widget-gridview', 'Export'), '#',
-                                [
-                                    'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger',
-                                    'style' => 'text-align: right;',
-                                ]);
-                        }
-                        break;
                     case 'filterShow':
                         if ($option) {
                             $toolbar[0]['content'] .= Html::a(Yii::t('wk-widget-gridview', 'Filter'), '#',
@@ -278,7 +291,7 @@ EOT;
         GridViewAsset::register($view);
 
         foreach ($this->js as $script) {
-            $view->registerJs($script, View::POS_READY);
+            $view->registerJs($script);
         }
 
         $options = (object)array_filter($this->makeDialogMessages());

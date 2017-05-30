@@ -17,11 +17,15 @@ class PropellerAsset extends AssetBundle
         'components/modal/css/modal.css',
         'components/list/css/list.css',
         'components/textfield/css/textfield.css',
+        'components/tab/css/tab.css',
+        'components/checkbox/css/checkbox.css',
     ];
     public $js = [
         'components/button/js/ripple-effect.js',
         'components/modal/js/modal.js',
         'components/textfield/js/textfield.js',
+        'components/tab/js/tab-scrollable.js',
+        'components/checkbox/js/checkbox.js',
     ];
     public $depends = [
         'yii\bootstrap\BootstrapAsset',

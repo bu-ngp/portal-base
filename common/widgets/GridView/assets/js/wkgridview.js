@@ -147,8 +147,8 @@
             }
         });
 
-        $(".pmd-textfield-focused").remove();
-        $(".pmd-textfield .form-control").after('<span class="pmd-textfield-focused"></span>');
+        $dialog.find(".pmd-textfield-focused").remove();
+        $dialog.find(".pmd-textfield .form-control").after('<span class="pmd-textfield-focused"></span>');
 
         makeButtonCustomizeDialogEvent($pjax);
     };
