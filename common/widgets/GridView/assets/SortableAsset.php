@@ -30,6 +30,10 @@ class SortableAsset extends AssetBundle
             'jquery-ui/ui/widgets/mouse.js',
             'jquery-ui/ui/widgets/sortable.js',
             'jquery-ui/ui/disable-selection.js',
+            'jquery-ui/ui/safe-blur.js',
+            'jquery-ui/ui/safe-active-element.js',
+            'jquery-ui/ui/plugin.js',
+            'jquery-ui/ui/widgets/draggable.js',
         ];
 
         $this->depends = [

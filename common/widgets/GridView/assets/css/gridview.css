@@ -75,9 +75,45 @@ div.pmd-modal-action > div.btn-toolbar > button.btn {
 div.wk-filter-output {
     white-space: nowrap;
     background: #ffeebc;
-    padding: 10px 15px;
+    padding: 0 15px;
     font-size: 13px;
     overflow: hidden;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 41px;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+div.wk-filter-output div:nth-child(even) {
+    float: right;
+    position: absolute;
+    right: 0;
+    height: 100%;
+    top: 0;
+    width: 30px;
+    background: #ffeebc;
+    text-align: center;
+}
+
+div.wk-filter-output div:nth-child(odd) {
+    float: left;
+    height: 100%;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+button.wk-filter-output-close {
+    width: 100%;
+    height: 100%;
 }
 
 div.wk-filter-output > span > b {

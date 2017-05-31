@@ -72,18 +72,17 @@
         $dialog.on('click', 'button.wk-filterDialog-btn-apply', function (event) {
             var $grid = $pjax.find('.grid-view');
 
-        //    console.debug($dialog.find("form").not($dialog.find('input[type="hidden"]')));
+            //    console.debug($dialog.find("form").not($dialog.find('input[type="hidden"]')));
             var _filter = $dialog.find("form :input[value!='']").serializeJSON();
-         //   var _filter = {};
-           /* $.each(form, function () {
-                if ((this.name).substr(0, 5) !== '_csrf'
-                    && this.value !== ''
-                    && !((this.name).substr((this.name).length - 6) === '_mark]' && this.value === '0')
-                ) {
-                    _filter[this.name] = this.value;
-                }
-            });*/
-
+            //   var _filter = {};
+            /* $.each(form, function () {
+             if ((this.name).substr(0, 5) !== '_csrf'
+             && this.value !== ''
+             && !((this.name).substr((this.name).length - 6) === '_mark]' && this.value === '0')
+             ) {
+             _filter[this.name] = this.value;
+             }
+             });*/
 
 
             if ($.isEmptyObject(_filter)) {
@@ -109,10 +108,43 @@
             });
         });
 
+        $pjax.on('click', 'button.wk-filter-output-close', function (event) {
+            var $grid = $pjax.find('.grid-view');
+
+            wkwidget.confirm({
+                message: '<span>' + $pjax.data('wkfilter').settings.resetConfirmMessage + '</span>',
+                yes: function () {
+                    removeCookie($pjax, '_filter');
+                    $pjax.find('div.wk-filter-output').fadeOut().hide(400);
+                    $grid.yiiGridView('applyFilter');
+                }
+            });
+        });
+
         $(document).on('pjax:complete', function (e) {
             var pjaxID = $pjax[0].id;
             if (e.target.id == pjaxID) {
                 $pjax.find('.wk-filter-output').appendTo('div.kv-panel-before');
+                $pjax.find('.wk-filter-output div:first-child').draggable({
+                    cursor: "pointer",
+                    containment: "wk-filter-output",
+                    revert: true,
+                    drag: function (event, ui) {
+                        var widthChild = $('div.wk-filter-output div:first-child').outerWidth();
+                        var containerWidth = $('div.wk-filter-output').outerWidth();
+
+                        ui.position.top = 0;
+                        if (widthChild < containerWidth) {
+                            ui.position.left = 0;
+                        } else {
+                            if (ui.position.left < (containerWidth - widthChild - 40)) {
+                                ui.position.left = containerWidth - widthChild - 40;
+                            } else if (ui.position.left > 0) {
+                                ui.position.left = 0;
+                            }
+                        }
+                    }
+                });
 
                 $dialog.find('.wk-filterDialog-content').html($pjax.find('.wk-filter-dialog-content').html());
                 $pjax.find('.wk-filter-dialog-content').html('');
@@ -122,7 +154,7 @@
                 $dialog.find(".pmd-textfield .form-control").after('<span class="pmd-textfield-focused"></span>');
 
                 $dialog.find('.pmd-textfield input.form-control').each(function () {
-                    if($(this).val() !== ""){
+                    if ($(this).val() !== "") {
                         $(this).closest('.pmd-textfield').addClass("pmd-textfield-floating-label-completed");
                     }
                 });
