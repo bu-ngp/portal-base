@@ -66,6 +66,32 @@ div.pmd-modal-action {
     padding: 8px 20px;
 }
 
-div.pmd-modal-action > div.btn-toolbar > button.btn{
+div.pmd-modal-action > div.btn-toolbar > button.btn {
     margin: 8px 4px;
 }
+
+/*-\/----Filter----\/-*/
+
+div.wk-filter-output {
+    white-space: nowrap;
+    background: #ffeebc;
+    padding: 10px 15px;
+    font-size: 13px;
+    overflow: hidden;
+}
+
+div.wk-filter-output > span > b {
+    font-weight: bold;
+}
+
+span.wk-filter-output-name {
+    color: #661fa5;
+    font-style: italic;
+}
+
+span.wk-filter-output-value {
+    color: #d40909;
+    font-style: italic;
+}
+
+/*-/\----Filter----/\-*/

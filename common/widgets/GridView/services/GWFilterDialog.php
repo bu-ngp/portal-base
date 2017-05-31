@@ -10,6 +10,7 @@ namespace common\widgets\GridView\services;
 
 
 use Yii;
+use yii\base\Model;
 use yii\bootstrap\Html;
 use yii\web\View;
 
@@ -44,12 +45,26 @@ class GWFilterDialog
      */
     public function makeFilterContent(array $filterOptions, $view)
     {
+        if (Yii::$app->request->isAjax) {
+            $panelBefore = '';
 
-        echo <<<EOT
+            if ($_COOKIE[$this->config['id']]) {
+                $cookieOptions = json_decode($_COOKIE[$this->config['id']], true);
+
+                if (!empty($cookieOptions['_filter'])) {
+                    $filterOptions['filterModel']->load($cookieOptions['_filter']);
+
+                    $panelBefore = $this->getOutputString($filterOptions['filterModel']);
+                }
+            }
+
+            echo <<<EOT
         <div class="wk-filter-dialog-content" style="display: none;>
             {$view->render($filterOptions['filterView'], ['filterModel' => $filterOptions['filterModel']])}
         </div>
+        $panelBefore
 EOT;
+        }
     }
 
     protected function prepareJS(&$jsScripts)
@@ -78,5 +93,23 @@ EOT;
             ]);
 
         $this->config['toolbar'][1]['content'] .= $toolbar;
+    }
+
+    protected function getOutputString(Model $filterModel)
+    {
+        $output = '';
+        foreach ($filterModel->attributes as $attr => $value) {
+            if (substr($attr, strlen($attr) - 5) === '_mark' && $value === '1') {
+                $output .= '<span class="wk-filter-output-value">' . $filterModel->getAttributeLabel($attr) . '</span>; ';
+            } elseif (!empty($value)) {
+                $output .= '<span class="wk-filter-output-name">' . $filterModel->getAttributeLabel($attr) . '</span> = "<span class="wk-filter-output-value">' . $value . '</span>; ';
+            }
+        }
+
+        if (!empty($output)) {
+            $output = '<div class="wk-filter-output"><div><span><b>Доп. фильтр: </b>' . $output . '</span></div><div><button aria-label="Close" data-dismiss="alert" class="close wk-filter-output-close" type="button"><span aria-hidden="true">×</span></button></div></div>';
+        }
+
+        return $output;
     }
 }

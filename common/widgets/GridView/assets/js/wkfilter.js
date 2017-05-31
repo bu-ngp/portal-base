@@ -59,6 +59,7 @@
         $dialog.appendTo('body');
     };
 
+
     var eventsApply = function ($pjax) {
         var gridID = $pjax.data('wkfilter').gridID;
         var $dialog = $('.' + gridID + '-wk-filterDialog');
@@ -69,7 +70,30 @@
         });
 
         $dialog.on('click', 'button.wk-filterDialog-btn-apply', function (event) {
-            event.preventDefault();
+            var $grid = $pjax.find('.grid-view');
+
+        //    console.debug($dialog.find("form").not($dialog.find('input[type="hidden"]')));
+            var _filter = $dialog.find("form :input[value!='']").serializeJSON();
+         //   var _filter = {};
+           /* $.each(form, function () {
+                if ((this.name).substr(0, 5) !== '_csrf'
+                    && this.value !== ''
+                    && !((this.name).substr((this.name).length - 6) === '_mark]' && this.value === '0')
+                ) {
+                    _filter[this.name] = this.value;
+                }
+            });*/
+
+
+
+            if ($.isEmptyObject(_filter)) {
+                removeCookie($pjax, '_filter');
+            } else {
+                saveCookie($pjax, {_filter: _filter});
+            }
+
+            $dialog.modal('hide');
+            $grid.yiiGridView('applyFilter');
         });
 
         $dialog.on('click', 'button.wk-filterDialog-btn-reset', function (event) {
@@ -78,7 +102,9 @@
             wkwidget.confirm({
                 message: '<span>' + $pjax.data('wkfilter').settings.resetConfirmMessage + '</span>',
                 yes: function () {
+                    removeCookie($pjax, '_filter');
                     $dialog.modal('hide');
+                    $grid.yiiGridView('applyFilter');
                 }
             });
         });
@@ -86,6 +112,8 @@
         $(document).on('pjax:complete', function (e) {
             var pjaxID = $pjax[0].id;
             if (e.target.id == pjaxID) {
+                $pjax.find('.wk-filter-output').appendTo('div.kv-panel-before');
+
                 $dialog.find('.wk-filterDialog-content').html($pjax.find('.wk-filter-dialog-content').html());
                 $pjax.find('.wk-filter-dialog-content').html('');
                 $dialog.find('.pmd-tabs').pmdTab();
@@ -93,9 +121,48 @@
                 $dialog.find(".pmd-textfield-focused").remove();
                 $dialog.find(".pmd-textfield .form-control").after('<span class="pmd-textfield-focused"></span>');
 
+                $dialog.find('.pmd-textfield input.form-control').each(function () {
+                    if($(this).val() !== ""){
+                        $(this).closest('.pmd-textfield').addClass("pmd-textfield-floating-label-completed");
+                    }
+                });
+
                 $dialog.find('.pmd-checkbox input').after('<span class="pmd-checkbox-label">&nbsp;</span>');
             }
         });
+    };
+
+    var getCookie = function (name) {
+        var matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    };
+
+    var saveCookie = function ($pjax, object) {
+        var date = new Date(new Date().getTime() + 15552000 * 1000);
+        var gridID = $pjax.find('.grid-view')[0].id;
+        var objCookie = {};
+
+        if (typeof getCookie(gridID) != 'undefined' && getCookie(gridID) != '') {
+            objCookie = $.parseJSON(getCookie(gridID));
+        }
+
+        objCookie = $.extend({}, objCookie, object);
+        document.cookie = gridID + "=" + JSON.stringify(objCookie) + "; path=/; expires=" + date.toUTCString();
+    };
+
+    var removeCookie = function ($pjax, name) {
+        var date = new Date(new Date().getTime() + 15552000 * 1000);
+        var gridID = $pjax.find('.grid-view')[0].id;
+        var objCookie = {};
+
+        if (typeof getCookie(gridID) != 'undefined') {
+            objCookie = $.parseJSON(getCookie(gridID));
+        }
+
+        delete objCookie[name];
+        document.cookie = gridID + "=" + JSON.stringify(objCookie) + "; path=/; expires=" + date.toUTCString();
     };
 
     var methods = {

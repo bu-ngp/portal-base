@@ -48,6 +48,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'icon' => FA::icon(FA::_LIST_ALT),
             'title' => Yii::t('common/roles', 'Roles'),
         ],
+       /* 'panel' => [
+            'before' => '<div class="wk-filter-output"><div><span><b>Доп. фильтр: </b><span class="wk-filter-output-value">Только пользовательские роли</span>; <span class="wk-filter-output-name">Имя роли</span> = "<span class="wk-filter-output-value">hgfhg</span>"; <span class="wk-filter-output-value">Только пользовательские роли</span>; <span class="wk-filter-output-name">Имя роли</span> = "<span class="wk-filter-output-value">hgfhg</span>"; <span class="wk-filter-output-value">Только пользовательские роли</span>; <span class="wk-filter-output-name">Имя роли</span> = "<span class="wk-filter-output-value">hgfhg</span>"; <span class="wk-filter-output-value">Только пользовательские роли</span>; <span class="wk-filter-output-name">Имя роли</span> = "<span class="wk-filter-output-value">hgfhg</span>";</span></div><div><button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button></div></div>'
+        ],*/
     ]);
     ?>
 </div>

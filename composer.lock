@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7226f7fa3bb9dcf4c0b6320a07fde058",
+    "content-hash": "2aa94b27a91afa440a147153748a15eb",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -196,6 +196,49 @@
                 "jquery",
                 "mask",
                 "plugins"
+            ]
+        },
+        {
+            "name": "bower-asset/jquery.serializeJSON",
+            "version": "2.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marioizquierdo/jquery.serializeJSON.git",
+                "reference": "4abbb4d2ee0c4f29d52f2201e6db7a661b83251b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marioizquierdo/jquery.serializeJSON/zipball/4abbb4d2ee0c4f29d52f2201e6db7a661b83251b",
+                "reference": "4abbb4d2ee0c4f29d52f2201e6db7a661b83251b",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery": "*"
+            },
+            "require-dev": {
+                "bower-asset/jasmine": "2.0.0"
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": "jquery.serializejson.js",
+                "bower-asset-ignore": [
+                    "**/.*",
+                    "node_modules",
+                    "bower_components",
+                    "test",
+                    "tests"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "jQuery or Zepto plugin to serialize a form into a JavaScript Object, using the same format as the default Ruby on Rails request params",
+            "keywords": [
+                "form",
+                "helper",
+                "jquery",
+                "json",
+                "serialize"
             ]
         },
         {

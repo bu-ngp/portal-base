@@ -3,12 +3,14 @@
 namespace domain\models\base\search;
 
 use common\widgets\CardList\CardListHelper;
+use domain\models\base\filter\AuthItemFilter;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use domain\models\base\AuthItem;
 use yii\data\ArrayDataProvider;
 use yii\db\Expression;
+use yii\db\Query;
 
 /**
  * AuthItemSearch represents the model behind the search form about `domain\models\base\AuthItem`.
@@ -80,6 +82,39 @@ class AuthItemSearch extends AuthItem
             ->andFilterWhere(['like', 'data', $this->data]);
 
         CardListHelper::applyPopularityOrder($query, 'name');
+
+        if ($_COOKIE['w0']) {
+            $cookieOptions = json_decode($_COOKIE['w0'], true);
+
+            if (!empty($cookieOptions['_filter'])) {
+                $filterModel = new AuthItemFilter();
+                $filterModel->load($cookieOptions['_filter']);
+
+                if (!empty($filterModel->authitem_name)) {
+                    $query->andWhere(['exists', (new Query())
+                        ->select('wk_auth_item.name')
+                        ->from('wk_auth_item ai')
+                        ->andWhere('ai.name = wk_auth_item.name')
+                        ->andFilterWhere(['LIKE', 'ai.name', $filterModel->authitem_name])]);
+                }
+
+                if (!empty($filterModel->authitem_system_roles_mark)) {
+                    $query->andWhere(['exists', (new Query())
+                        ->select('wk_auth_item.name')
+                        ->from('wk_auth_item ai')
+                        ->andWhere('ai.name = wk_auth_item.name')
+                        ->andFilterWhere(['ai.view' => '1'])]);
+                }
+
+                if (!empty($filterModel->authitem_users_roles_mark)) {
+                    $query->andWhere(['exists', (new Query())
+                        ->select('wk_auth_item.name')
+                        ->from('wk_auth_item ai')
+                        ->andWhere('ai.name = wk_auth_item.name')
+                        ->andFilterWhere(['ai.view' => '0'])]);
+                }
+            }
+        }
 
         return $dataProvider;
     }
