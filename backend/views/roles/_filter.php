@@ -1,5 +1,5 @@
 <?php
-use yii\bootstrap\ActiveForm;
+use common\widgets\ActiveForm\ActiveFilterForm;
 
 /**
  * @var \yii\base\Model $filterModel
@@ -19,20 +19,35 @@ use yii\bootstrap\ActiveForm;
         </ul>
     </div>
     <div class="pmd-card-body">
-        <?php $form = ActiveForm::begin(); ?>
+        <?php $form = ActiveFilterForm::begin(); ?>
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="main">
+            <div role="tabpanel" class="tab-pane fade in active" id="main">
+                <div class="panel panel-default pmd-z-depth">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Системные</h3>
+                    </div>
+                    <div class="panel-body">
 
-                <?= $form->field($filterModel, 'authitem_system_roles_mark')->checkbox(['label' => "<span>{$filterModel->getAttributeLabel('authitem_system_roles_mark')}</span>", 'labelOptions' => ['class' => 'pmd-checkbox'], 'template' => "<div class=\"checkbox pmd-default-theme\">\n{beginLabel}\n{input}\n{labelTitle}\n{endLabel}\n{error}\n{hint}\n</div>"]) ?>
+                        <?php // $form->field($filterModel, 'authitem_system_roles_mark', ['options' => ['class' => empty($filterModel->authitem_system_roles_mark) ? 'form-group' : 'form-group filter-marked']])->checkbox() ?>
 
-                <?= $form->field($filterModel, 'authitem_users_roles_mark')->checkbox(['label' => "<span>{$filterModel->getAttributeLabel('authitem_users_roles_mark')}</span>", 'labelOptions' => ['class' => 'pmd-checkbox'], 'template' => "<div class=\"checkbox pmd-default-theme\">\n{beginLabel}\n{input}\n{labelTitle}\n{endLabel}\n{error}\n{hint}\n</div>"]) ?>
+                    </div>
+                </div>
+                <div class="panel panel-default pmd-z-depth">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Пользовательские</h3>
+                    </div>
+                    <div class="panel-body">
 
+                        <?php // $form->field($filterModel, 'authitem_users_roles_mark', ['options' => ['class' => empty($filterModel->authitem_users_roles_mark) ? 'form-group' : 'form-group filter-marked']])->checkbox() ?>
+
+                    </div>
+                </div>
             </div>
-            <div role="tabpanel" class="tab-pane" id="additional">
-                <?= $form->field($filterModel, 'authitem_name', ['options' => ['class' => 'form-group pmd-textfield pmd-textfield-floating-label']])->textInput() ?>
+            <div role="tabpanel" class="tab-pane fade" id="additional">
+                <?= $form->field($filterModel, 'authitem_name')->textInput() ?>
             </div>
 
         </div>
-        <?php ActiveForm::end(); ?>
+        <?php ActiveFilterForm::end(); ?>
     </div>
 </div>

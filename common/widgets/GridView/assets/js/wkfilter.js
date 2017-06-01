@@ -71,25 +71,13 @@
 
         $dialog.on('click', 'button.wk-filterDialog-btn-apply', function (event) {
             var $grid = $pjax.find('.grid-view');
+            var form = $dialog.find("form");
+            var _filter = form.find(":input").filter(function () {
+                return $.trim(this.value).length > 0
+                    && !(this.name.substr(0, 5) === '_csrf' || this.type === 'hidden')
+            }).serialize();
 
-            //    console.debug($dialog.find("form").not($dialog.find('input[type="hidden"]')));
-            var _filter = $dialog.find("form :input[value!='']").serializeJSON();
-            //   var _filter = {};
-            /* $.each(form, function () {
-             if ((this.name).substr(0, 5) !== '_csrf'
-             && this.value !== ''
-             && !((this.name).substr((this.name).length - 6) === '_mark]' && this.value === '0')
-             ) {
-             _filter[this.name] = this.value;
-             }
-             });*/
-
-
-            if ($.isEmptyObject(_filter)) {
-                removeCookie($pjax, '_filter');
-            } else {
-                saveCookie($pjax, {_filter: _filter});
-            }
+            _filter === '' ? removeCookie($pjax, '_filter') : saveCookie($pjax, {_filter: _filter});
 
             $dialog.modal('hide');
             $grid.yiiGridView('applyFilter');
@@ -124,7 +112,6 @@
         $(document).on('pjax:complete', function (e) {
             var pjaxID = $pjax[0].id;
             if (e.target.id == pjaxID) {
-                $pjax.find('.wk-filter-output').appendTo('div.kv-panel-before');
                 $pjax.find('.wk-filter-output div:first-child').draggable({
                     cursor: "pointer",
                     containment: "wk-filter-output",
@@ -161,6 +148,53 @@
 
                 $dialog.find('.pmd-checkbox input').after('<span class="pmd-checkbox-label">&nbsp;</span>');
             }
+        });
+
+        var unique = function (xs) {
+            var seen = {}
+            return xs.filter(function (x) {
+                if (seen[x])
+                    return
+                seen[x] = true
+                return x
+            })
+        };
+
+        $dialog.on("keyup", "input.wk-filter-search-input", function () {
+            var searchInput = $(this).val();
+            console.debug(searchInput);
+            $dialog.find('.wk-filterDialog-content').children().hide();
+
+            var tabs = [];
+            $dialog.find('div.wk-filterDialog-content').find("label.control-label, span.control-label, .panel-title").each(function (key, value) {
+                var labelInput = $(this).text();
+
+
+                if (labelInput.toLowerCase().indexOf(searchInput) != -1) {
+                    console.debug(labelInput);
+                    console.debug($(this).parentsUntil(".wk-filterDialog-content"));
+                    $(this).parentsUntil(".wk-filterDialog-content").show();
+                    tabs.push($(this).parentsUntil(".wk-filterDialog-content", ".tab-pane")[0].id);
+                } else {
+                    $(this).parentsUntil(".wk-filterDialog-content").hide();
+                }
+            });
+
+            tabs = unique(tabs);
+
+            if (tabs.length > 0) {
+                console.debug(tabs[0]);
+                $('a[href="#' + tabs[0] + '"]').tab('show');
+                $dialog.find('.pmd-tabs').pmdTab();
+
+            //    $dialog.find('.wk-filterDialog-content').find('ul.nav.nav-tabs').children('li').show();
+              /*  $.each($dialog.find('.wk-filterDialog-content').find('ul.nav.nav-tabs').children('li'), function () {
+                    if (tabs.indexOf($(this).children('a').attr('aria-controls')) == -1) {
+                        $(this).hide();
+                    }
+                })*/
+            }
+            // console.debug(unique(tabs));
         });
     };
 

@@ -9,9 +9,12 @@
 namespace common\widgets\GridView\services;
 
 
+use common\widgets\GridView\GridView;
 use Yii;
 use yii\base\Model;
 use yii\bootstrap\Html;
+use yii\data\ActiveDataProvider;
+use yii\db\ActiveQuery;
 use yii\web\View;
 
 class GWFilterDialog
@@ -37,34 +40,6 @@ class GWFilterDialog
         $this->prepareJS($jsScripts);
         $this->makeButtonOnToolbar();
         return $this->config;
-    }
-
-    /**
-     * @param array $filterOptions
-     * @param View $view
-     */
-    public function makeFilterContent(array $filterOptions, $view)
-    {
-        if (Yii::$app->request->isAjax) {
-            $panelBefore = '';
-
-            if ($_COOKIE[$this->config['id']]) {
-                $cookieOptions = json_decode($_COOKIE[$this->config['id']], true);
-
-                if (!empty($cookieOptions['_filter'])) {
-                    $filterOptions['filterModel']->load($cookieOptions['_filter']);
-
-                    $panelBefore = $this->getOutputString($filterOptions['filterModel']);
-                }
-            }
-
-            echo <<<EOT
-        <div class="wk-filter-dialog-content" style="display: none;>
-            {$view->render($filterOptions['filterView'], ['filterModel' => $filterOptions['filterModel']])}
-        </div>
-        $panelBefore
-EOT;
-        }
     }
 
     protected function prepareJS(&$jsScripts)
@@ -111,5 +86,59 @@ EOT;
         }
 
         return $output;
+    }
+
+    public function makeFilter(GridView $gridView)
+    {
+        if (Yii::$app->request->isAjax && $this->config['dataProvider'] instanceof ActiveDataProvider) {
+            $filterMessage = '';
+
+            /** @var Model $filterModel */
+            $filterModel = $gridView->filterDialog['filterModel'];
+
+            if ($_COOKIE[$this->config['id']]) {
+                $cookieOptions = json_decode($_COOKIE[$this->config['id']], true);
+
+                parse_str($cookieOptions['_filter'], $filterParams);
+
+                if (is_array($filterParams)
+                    && count($filterParams) > 0
+                    && $filterModel->load($filterParams)
+                ) {
+                    $filterMessage = $this->getOutputString($filterModel);
+                    $this->applyQueryConditions($filterModel);
+                }
+            }
+
+            $gridView->panel['before'] .= $this->makeFilterContent($gridView->getView(), $gridView->filterDialog['filterView'], $filterModel) . $filterMessage;
+        }
+    }
+
+    protected function makeFilterContent(View $view, $filterView, Model $filterModel)
+    {
+        return <<<EOT
+                <div class="wk-filter-dialog-content" style="display: none;">
+                    {$view->render($filterView, ['filterModel' => $filterModel])}
+                </div>
+EOT;
+    }
+
+    protected function applyQueryConditions(Model $filterModel)
+    {
+        /** @var ActiveQuery $query */
+        $query = $this->config['dataProvider']->query;
+
+        $alias = 't' . time();
+
+        $query->alias($alias);
+
+        foreach (array_keys(get_object_vars($filterModel)) as $propertyFilter) {
+            $methodFilter = 'filter_' . $propertyFilter;
+            if (!empty($filterModel->$propertyFilter) && method_exists($filterModel, $methodFilter)) {
+                $query->andWhere(['exists',
+                    $filterModel->$methodFilter($alias)
+                ]);
+            }
+        }
     }
 }

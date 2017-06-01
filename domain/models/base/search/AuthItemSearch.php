@@ -83,39 +83,6 @@ class AuthItemSearch extends AuthItem
 
         CardListHelper::applyPopularityOrder($query, 'name');
 
-        if ($_COOKIE['w0']) {
-            $cookieOptions = json_decode($_COOKIE['w0'], true);
-
-            if (!empty($cookieOptions['_filter'])) {
-                $filterModel = new AuthItemFilter();
-                $filterModel->load($cookieOptions['_filter']);
-
-                if (!empty($filterModel->authitem_name)) {
-                    $query->andWhere(['exists', (new Query())
-                        ->select('wk_auth_item.name')
-                        ->from('wk_auth_item ai')
-                        ->andWhere('ai.name = wk_auth_item.name')
-                        ->andFilterWhere(['LIKE', 'ai.name', $filterModel->authitem_name])]);
-                }
-
-                if (!empty($filterModel->authitem_system_roles_mark)) {
-                    $query->andWhere(['exists', (new Query())
-                        ->select('wk_auth_item.name')
-                        ->from('wk_auth_item ai')
-                        ->andWhere('ai.name = wk_auth_item.name')
-                        ->andFilterWhere(['ai.view' => '1'])]);
-                }
-
-                if (!empty($filterModel->authitem_users_roles_mark)) {
-                    $query->andWhere(['exists', (new Query())
-                        ->select('wk_auth_item.name')
-                        ->from('wk_auth_item ai')
-                        ->andWhere('ai.name = wk_auth_item.name')
-                        ->andFilterWhere(['ai.view' => '0'])]);
-                }
-            }
-        }
-
         return $dataProvider;
     }
 

@@ -8,8 +8,11 @@
 
 namespace domain\models\base\filter;
 
+use domain\models\base\AuthItem;
 use Yii;
 use yii\base\Model;
+use yii\db\ActiveQuery;
+use yii\db\Expression;
 
 class AuthItemFilter extends Model
 {
@@ -35,5 +38,26 @@ class AuthItemFilter extends Model
             'authitem_users_roles_mark' => Yii::t('domain/authitem', 'Users Roles Only'),
             'authitem_name' => Yii::t('domain/authitem', 'Role Name'),
         ];
+    }
+
+    public function filter_authitem_system_roles_mark($alias)
+    {
+        return AuthItem::find()
+            ->andWhere(['name' => new Expression("[[$alias.name]]")])
+            ->andWhere(['view' => '1']);
+    }
+
+    public function filter_authitem_users_roles_mark($alias)
+    {
+        return AuthItem::find()
+            ->andWhere(['name' => new Expression("[[$alias.name]]")])
+            ->andWhere(['view' => '0']);
+    }
+
+    public function filter_authitem_name($alias)
+    {
+        return AuthItem::find()
+            ->andWhere(['name' => new Expression("[[$alias.name]]")])
+            ->andWhere(['LIKE', 'name', $this->authitem_name]);
     }
 }

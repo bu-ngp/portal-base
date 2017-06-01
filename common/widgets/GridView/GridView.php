@@ -11,6 +11,7 @@ use yii\base\Model;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
 use yii\data\BaseDataProvider;
+use yii\db\ActiveQuery;
 use yii\grid\CheckboxColumn;
 use yii\grid\SerialColumn;
 use yii\web\View;
@@ -66,6 +67,10 @@ class GridView extends \kartik\grid\GridView
      */
     public function run()
     {
+        if ($this->filterDialog['enable'] === true) {
+            GWFilterDialog::lets($this->optionsWidget)->makeFilter($this);
+        }
+
         parent::run();
         $this->registerAssetsByWk();
     }
@@ -74,10 +79,6 @@ class GridView extends \kartik\grid\GridView
     {
         if ($this->customizeDialog === true) {
             GWCustomizeDialog::lets($this->optionsWidget)->makeColumnsContent($this->dataProvider, $this->filterModel, $this->id);
-        }
-
-        if ($this->filterDialog['enable'] === true) {
-            GWFilterDialog::lets($this->optionsWidget)->makeFilterContent($this->filterDialog, $this->getView());
         }
 
         return parent::endPjax();
