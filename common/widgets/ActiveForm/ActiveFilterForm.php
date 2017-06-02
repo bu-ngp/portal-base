@@ -11,15 +11,15 @@ namespace common\widgets\ActiveForm;
 
 class ActiveFilterForm extends ActiveForm
 {
-    public $fieldClass = 'common\widgets\ActiveForm\ActiveFilterField';
+    public $fieldClass = 'common\widgets\ActiveForm\ActiveField';
 
     public function field($model, $attribute, $options = [])
     {
-   /*    if (isset($options['class'])) {
-            $options['class'] .= empty($model->$attribute) ? 'form-group' : 'form-group filter-marked';
+       if (isset($options['options']['class'])) {
+            $options['options']['class'] .= empty($model->$attribute) ? 'form-group' : 'form-group filter-marked';
         } else {
-            $options['class'] = empty($model->$attribute) ? 'form-group' : 'form-group filter-marked';
-        }*/
+            $options['options']['class'] = empty($model->$attribute) ? 'form-group' : 'form-group filter-marked';
+        }
 
         return parent::field($model, $attribute, $options);
     }

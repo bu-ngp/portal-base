@@ -28,7 +28,7 @@ use common\widgets\ActiveForm\ActiveFilterForm;
                     </div>
                     <div class="panel-body">
 
-                        <?php // $form->field($filterModel, 'authitem_system_roles_mark', ['options' => ['class' => empty($filterModel->authitem_system_roles_mark) ? 'form-group' : 'form-group filter-marked']])->checkbox() ?>
+                        <?= $form->field($filterModel, 'authitem_system_roles_mark')->checkbox() ?>
 
                     </div>
                 </div>
@@ -38,7 +38,7 @@ use common\widgets\ActiveForm\ActiveFilterForm;
                     </div>
                     <div class="panel-body">
 
-                        <?php // $form->field($filterModel, 'authitem_users_roles_mark', ['options' => ['class' => empty($filterModel->authitem_users_roles_mark) ? 'form-group' : 'form-group filter-marked']])->checkbox() ?>
+                        <?= $form->field($filterModel, 'authitem_users_roles_mark')->checkbox() ?>
 
                     </div>
                 </div>

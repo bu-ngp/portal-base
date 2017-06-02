@@ -52,6 +52,10 @@
         $pjax.on('dblclick', 'td[data-col-seq]', function (e) {
             //    $(this).css('background-color','red');
         });
+
+        $(document).on('pjax:error', function (e) {
+            e.preventDefault();
+        });
     };
 
     var makeButtonUpdateEvent = function ($pjax) {

@@ -11,6 +11,7 @@ namespace common\widgets\ActiveForm;
 
 class ActiveField extends \yii\bootstrap\ActiveField
 {
+    public $checkboxTemplate = "<div class=\"checkbox pmd-default-theme\">\n{beginLabel}\n{input}\n{labelTitle}\n{endLabel}\n{error}\n{hint}\n</div>";
 
     public function checkbox($options = [], $enclosedByLabel = true)
     {
@@ -20,7 +21,6 @@ class ActiveField extends \yii\bootstrap\ActiveField
         $options = empty($options) ? [
             'label' => "<span class=\"control-label\">{$model->getAttributeLabel($attribute)}</span>",
             'labelOptions' => ['class' => 'pmd-checkbox'],
-            'template' => "<div class=\"checkbox pmd-default-theme\">\n{beginLabel}\n{input}\n{labelTitle}\n{endLabel}\n{error}\n{hint}\n</div>",
         ] : $options;
 
         return parent::checkbox($options, $enclosedByLabel);
@@ -28,7 +28,7 @@ class ActiveField extends \yii\bootstrap\ActiveField
 
     public function textInput($options = [])
     {
-        $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield pmd-textfield-floating-label' : 'form-group pmd-textfield pmd-textfield-floating-label' ;
+        $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield pmd-textfield-floating-label' : 'form-group pmd-textfield pmd-textfield-floating-label';
 
         return parent::textInput($options);
     }
