@@ -228,6 +228,16 @@
 
             return selectedRows;
         },
+        clearSelected: function () {
+            var $pjax = $(this);
+            $pjax.data('gridselected2storage').storage.filterValues = [];
+            $pjax.data('gridselected2storage').storage.checkAll = false;
+            $pjax.data('gridselected2storage').storage.included = [];
+            $pjax.data('gridselected2storage').storage.excluded = [];
+
+            saveToStorage($pjax);
+            selectedPanelSet($pjax);
+        },
         destroy: function () {
             return this.each(function () {
                 var $pjax = $(this),

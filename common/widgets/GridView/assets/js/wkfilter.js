@@ -59,16 +59,17 @@
         $dialog.appendTo('body');
     };
 
-
     var eventsApply = function ($pjax) {
         var gridID = $pjax.data('wkfilter').gridID;
         var $dialog = $('.' + gridID + '-wk-filterDialog');
 
+        // Open Filter Dialog
         $pjax.on('click', 'a.wk-btn-filterDialog', function (event) {
             event.preventDefault();
             $dialog.modal();
         });
 
+        // Apply Button
         $dialog.on('click', 'button.wk-filterDialog-btn-apply', function (event) {
             var $grid = $pjax.find('.grid-view');
             var form = $dialog.find("form");
@@ -80,9 +81,11 @@
             _filter === '' ? removeCookie($pjax, '_filter') : saveCookie($pjax, {_filter: _filter});
 
             $dialog.modal('hide');
+            $pjax.gridselected2storage('clearSelected');
             $grid.yiiGridView('applyFilter');
         });
 
+        // Reset Button By Dialog
         $dialog.on('click', 'button.wk-filterDialog-btn-reset', function (event) {
             var $grid = $pjax.find('.grid-view');
 
@@ -91,19 +94,21 @@
                 yes: function () {
                     removeCookie($pjax, '_filter');
                     $dialog.modal('hide');
+                    $pjax.gridselected2storage('clearSelected');
                     $grid.yiiGridView('applyFilter');
                 }
             });
         });
 
-        $pjax.on('click', 'button.wk-filter-output-close', function (event) {
+        // Reset Button By Grid
+        $pjax.on('click', 'button.wk-filterDialog-btn-close', function (event) {
             var $grid = $pjax.find('.grid-view');
 
             wkwidget.confirm({
                 message: '<span>' + $pjax.data('wkfilter').settings.resetConfirmMessage + '</span>',
                 yes: function () {
                     removeCookie($pjax, '_filter');
-                    $pjax.find('div.wk-filter-output').fadeOut().hide(400);
+                    $pjax.gridselected2storage('clearSelected');
                     $grid.yiiGridView('applyFilter');
                 }
             });
@@ -116,26 +121,11 @@
                     cursor: "pointer",
                     containment: "wk-filter-output",
                     revert: true,
-                    drag: function (event, ui) {
-                        var widthChild = $('div.wk-filter-output div:first-child').outerWidth();
-                        var containerWidth = $('div.wk-filter-output').outerWidth();
-
-                        ui.position.top = 0;
-                        if (widthChild < containerWidth) {
-                            ui.position.left = 0;
-                        } else {
-                            if (ui.position.left < (containerWidth - widthChild - 40)) {
-                                ui.position.left = containerWidth - widthChild - 40;
-                            } else if (ui.position.left > 0) {
-                                ui.position.left = 0;
-                            }
-                        }
-                    }
+                    drag: dragOutputFilter
                 });
 
                 $dialog.find('.wk-filterDialog-content').html($pjax.find('.wk-filter-dialog-content').html());
                 $pjax.find('.wk-filter-dialog-content').html('');
-                $dialog.find('.pmd-tabs').pmdTab();
 
                 $dialog.find(".pmd-textfield-focused").remove();
                 $dialog.find(".pmd-textfield .form-control").after('<span class="pmd-textfield-focused"></span>');
@@ -150,52 +140,87 @@
             }
         });
 
-        var unique = function (xs) {
-            var seen = {}
-            return xs.filter(function (x) {
-                if (seen[x])
-                    return
-                seen[x] = true
-                return x
-            })
-        };
+        $dialog.on('shown.bs.modal', function (e) {
+            $dialog.find('.pmd-tabs').pmdTab();
+        });
 
         $dialog.on("keyup", "input.wk-filter-search-input", function () {
             var searchInput = $(this).val();
-            console.debug(searchInput);
-            $dialog.find('.wk-filterDialog-content').children().hide();
-
             var tabs = [];
+            var labels = [];
+
             $dialog.find('div.wk-filterDialog-content').find("label.control-label, span.control-label, .panel-title").each(function (key, value) {
                 var labelInput = $(this).text();
 
-
                 if (labelInput.toLowerCase().indexOf(searchInput) != -1) {
-                    console.debug(labelInput);
-                    console.debug($(this).parentsUntil(".wk-filterDialog-content"));
-                    $(this).parentsUntil(".wk-filterDialog-content").show();
+                    labels.push($(this));
                     tabs.push($(this).parentsUntil(".wk-filterDialog-content", ".tab-pane")[0].id);
                 } else {
-                    $(this).parentsUntil(".wk-filterDialog-content").hide();
+                    $(this).parentsUntil(".wk-filterDialog-content").not(".tab-content").not(".tab-pane").hide();
                 }
             });
 
-            tabs = unique(tabs);
+            $.each(labels, function () {
+                $(this).parentsUntil(".wk-filterDialog-content").not(".tab-content").not(".tab-pane").show();
+            });
+
+            tabs = uniqueArray(tabs);
 
             if (tabs.length > 0) {
-                console.debug(tabs[0]);
+                $dialog.find('.wk-filterDialog-content').find('ul.nav.nav-tabs').children('li').show();
                 $('a[href="#' + tabs[0] + '"]').tab('show');
-                $dialog.find('.pmd-tabs').pmdTab();
 
-            //    $dialog.find('.wk-filterDialog-content').find('ul.nav.nav-tabs').children('li').show();
-              /*  $.each($dialog.find('.wk-filterDialog-content').find('ul.nav.nav-tabs').children('li'), function () {
+                $.each($dialog.find('.wk-filterDialog-content').find('ul.nav.nav-tabs').children('li'), function () {
                     if (tabs.indexOf($(this).children('a').attr('aria-controls')) == -1) {
                         $(this).hide();
                     }
-                })*/
+                });
+
+                $dialog.find('.pmd-tabs').pmdTab();
             }
-            // console.debug(unique(tabs));
         });
+
+        $dialog.on('change', 'input:not(.wk-filter-search-input)', function () {
+            var empty;
+
+            if ($(this).attr('type') === 'checkbox') {
+                empty = !$(this).prop('checked');
+            } else {
+                empty = !$(this).val();
+            }
+
+            if (empty) {
+                $(this).parents('.form-group').removeClass('filter-marked');
+            } else {
+                $(this).parents('.form-group').addClass('filter-marked');
+            }
+        });
+    };
+
+    var dragOutputFilter = function (event, ui) {
+        var widthChild = $('div.wk-filter-output div:first-child').outerWidth();
+        var containerWidth = $('div.wk-filter-output').outerWidth();
+
+        ui.position.top = 0;
+        if (widthChild < containerWidth) {
+            ui.position.left = 0;
+        } else {
+            if (ui.position.left < (containerWidth - widthChild - 40)) {
+                ui.position.left = containerWidth - widthChild - 40;
+            } else if (ui.position.left > 0) {
+                ui.position.left = 0;
+            }
+        }
+    };
+
+    var uniqueArray = function (xs) {
+        var seen = {};
+        return xs.filter(function (x) {
+            if (seen[x])
+                return;
+            seen[x] = true;
+            return x
+        })
     };
 
     var getCookie = function (name) {
