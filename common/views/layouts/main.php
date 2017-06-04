@@ -42,6 +42,28 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
         ]);
         $menuItems = [
             ['label' => 'Главная', 'url' => Yii::$app->urlManagerFrontend->createUrl(['/']), 'linkOptions' => ['class' => 'pmd-ripple-effect']],
+            [
+                'label' => 'Система',
+                'url' => '#',
+                'linkOptions' => [
+                    'class' => 'pmd-ripple-effect dropdown-toggle',
+                    'data-sidebar' => 'true',
+                ],
+                'options' => ['class' => 'dropdown pmd-dropdown'],
+                'items' => [
+                    [
+                        'label' => 'Затребованные отчеты',
+                        'url' => '#',
+                        'linkOptions' => ['class' => 'pmd-ripple-effect wk-widget-reports-loader',],
+                    ],
+                    [
+                        'label' => 'Обновления',
+                        'url' => '#',
+                        'linkOptions' => ['class' => 'pmd-ripple-effect'],
+                    ],
+                ],
+            ],
+
         ];
         if (Yii::$app->user->isGuest) {
             $menuItems[] = ['label' => 'Войти', 'url' => ['/login'], 'linkOptions' => ['class' => 'pmd-ripple-effect']];
