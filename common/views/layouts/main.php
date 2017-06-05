@@ -3,6 +3,8 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use common\widgets\ReportLoader\assets\ReportLoaderAsset;
+use common\widgets\ReportLoader\ReportLoader;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
@@ -54,7 +56,11 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
                     [
                         'label' => 'Затребованные отчеты',
                         'url' => '#',
-                        'linkOptions' => ['class' => 'pmd-ripple-effect wk-widget-reports-loader',],
+                        'linkOptions' => [
+                            'class' => 'pmd-ripple-effect wk-widget-reports-loader',
+                            'data-target' => '#wk-Report-Loader',
+                            'data-toggle' => 'modal',
+                        ],
                     ],
                     [
                         'label' => 'Обновления',
@@ -102,6 +108,7 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
     </footer>
 
 </div>
+<?= ReportLoader::widget(['id' => 'wk-Report-Loader']); ?>
 <?php $this->endBody() ?>
 </body>
 </html>

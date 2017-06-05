@@ -1,13 +1,17 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: VOVANCHO
+ * Date: 05.06.2017
+ * Time: 9:38
+ */
 
-namespace common\widgets\GridView\assets;
+namespace common\widgets\ReportLoader\assets;
+
 
 use yii\web\AssetBundle;
 
-/**
- * Main backend application asset bundle.
- */
-class GridViewAsset extends AssetBundle
+class ReportLoaderAsset extends AssetBundle
 {
     /**
      * @inheritdoc
@@ -16,13 +20,11 @@ class GridViewAsset extends AssetBundle
     {
         $this->sourcePath = __DIR__;
         $this->css = [
-            'css/gridview.css',
+            'css/reportloader.css',
         ];
 
         $this->js = [
-            'js/wkgridview.js',
-            'js/gridselected2storage.js',
-            'js/wkfilter.js',
+            'js/wkreportloader.js',
         ];
 
         $this->depends = [
@@ -30,9 +32,7 @@ class GridViewAsset extends AssetBundle
             'yii\bootstrap\BootstrapAsset',
             'common\widgets\CardList\assets\PropellerAsset',
             'rmrevin\yii\fontawesome\AssetBundle',
-            'common\widgets\GridView\assets\SortableAsset',
-            'common\widgets\wkdialog\WkDialogAsset',
-       //   'common\widgets\GridView\assets\SerializeJSONAsset'
+            'common\widgets\ReportLoader\assets\ProgressbarAsset',
         ];
 
         parent::init();

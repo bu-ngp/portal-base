@@ -1,0 +1,8 @@
+.wk-ReportLoaderDialog > .modal-dialog > .modal-content > .pmd-modal-action {
+    text-align: center;
+}
+
+.wk-ReportLoaderDialog-content {
+    height: 500px;
+    overflow: auto;
+}
