@@ -17,6 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Cancel Operation' => 'Отменить формирование отчета',
+    'Download File' => 'Скачать файл отчета',
+    'Remove File' => 'Удалить файл отчета',
     'Close' => 'Закрыть',
     'Report Loader' => 'Загрузчик отчетов',
 ];

@@ -6,3 +6,53 @@
     height: 500px;
     overflow: auto;
 }
+
+.wk-report-loader-content > li {
+    display: table;
+    width: 100%;
+}
+
+.wk-report-loader-content > li:hover {
+    text-decoration: none;
+    background-color: #f5f5f5;
+}
+
+.wk-report-loader-content > li > i {
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 15px;
+}
+
+.wk-report-loader-content > li > i.wk-excel {
+    color: #6eb36e;
+}
+
+.wk-report-loader-content > li > i.wk-pdf {
+    color: #ff6161;
+}
+
+.wk-report-loader-content > li > div.media-body {
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 15px;
+    width: 100%;
+}
+
+.wk-report-loader-content > li > button {
+    float: right;
+}
+
+.wk-report-loader-item-action {
+    width: 60px;
+    height: 60px;
+    display: inline-block;
+}
+
+.wk-report-loader-item-action.wk-report-loader-item-complete {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.wk-report-loader-download {
+    color: #6e9aff;
+}

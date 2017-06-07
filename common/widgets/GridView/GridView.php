@@ -4,6 +4,7 @@ namespace common\widgets\GridView;
 
 use common\widgets\GridView\assets\GridViewAsset;
 use common\widgets\GridView\services\GWCustomizeDialog;
+use common\widgets\GridView\services\GWExportGrid;
 use common\widgets\GridView\services\GWFilterDialog;
 use common\widgets\GridView\services\GWPrepareColumns;
 use Yii;
@@ -19,13 +20,13 @@ use yii\web\View;
 class GridView extends \kartik\grid\GridView
 {
     public $crudSettings;
-    public $customizeSettings;
     public $panelHeading;
     public $selectColumn;
     public $serialColumn;
     public $minHeight;
     public $customizeDialog;
     public $filterDialog;
+    public $exportGrid;
     public $jsOptions = [];
     public $js = [];
     protected $optionsWidget;
@@ -44,11 +45,16 @@ class GridView extends \kartik\grid\GridView
             $this->optionsWidget = GWFilterDialog::lets($this->optionsWidget)->prepareConfig($this->js);
         }
 
+        if ($this->optionsWidget['exportGrid']['enable'] === true) {
+            $this->optionsWidget = GWExportGrid::lets($this->optionsWidget)->prepareConfig($this->js);
+        }
+
         parent::__construct($this->optionsWidget);
     }
 
     public function init()
     {
+        
         parent::init();
     }
 
@@ -105,7 +111,6 @@ class GridView extends \kartik\grid\GridView
         //    $config['pjaxSettings']['loadingCssClass'] = isset($config['pjaxSettings']['loadingCssClass']) ? $config['pjaxSettings']['loadingCssClass'] : false;
         $config['resizableColumns'] = isset($config['resizableColumns']) ? $config['resizableColumns'] : false;
 
-        $this->createCustomizeButtons($config);
         $this->createCrudButtons($config);
         if (($key = array_search('{export}', $this->toolbar)) !== false) {
             unset($this->toolbar[$key]);
@@ -139,6 +144,11 @@ EOT;
                     </div>
 EOT;
 
+        $config['toolbar'][] = [
+            'content' => '',
+            'options' => ['class' => 'btn-group-vertical btn-group-xs wk-custom-buttons'],
+        ];
+
         $this->setPanelHeading($config);
         $config['columns'] = GWPrepareColumns::lets($config)->prepare();
 
@@ -153,6 +163,7 @@ EOT;
         }
 
         $config['filterDialog'] = isset($config['filterDialog']) ? $config['filterDialog'] : ['enable' => false];
+        $config['exportGrid'] = isset($config['exportGrid']) ? $config['exportGrid'] : ['enable' => false];
 
         return $config;
     }
@@ -221,44 +232,6 @@ EOT;
         }
 
         unset($config['crudSettings']);
-    }
-
-    protected function createCustomizeButtons(&$config)
-    {
-        $customizeSettings = $config['customizeSettings'];
-
-        if (empty($customizeSettings) || empty($customizeSettings['customizeShow'])) {
-            $customizeSettings['customizeShow'] = ['enable' => true];
-        }
-
-        if (is_array($customizeSettings) && count($customizeSettings) > 0) {
-            $toolbar = [
-                [
-                    'content' => '',
-                    'options' => ['class' => 'btn-group-vertical btn-group-xs wk-custom-buttons'],
-                ],
-            ];
-
-            foreach ($customizeSettings as $key => $option) {
-                switch ($key) {
-                    case 'filterShow':
-                        if ($option) {
-                            $toolbar[0]['content'] .= Html::a(Yii::t('wk-widget-gridview', 'Filter'), '#',
-                                [
-                                    'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary',
-                                    'style' => 'text-align: right;',
-                                ]);
-                        }
-                        break;
-                    default:
-                        new \Exception(Yii::t('wk-widget-gridview', "In 'customizeSettings' array must be only this keys ['filterShow', 'exportShow', 'customizeShow']. Passed '{key}'", [
-                            'key' => $key,
-                        ]));
-                }
-            }
-            $config['toolbar'] = array_merge_recursive($toolbar, isset($config['toolbar']) ? $config['toolbar'] : []);
-        }
-        unset($config['customizeSettings']);
     }
 
     protected function setPanelHeading(&$config)

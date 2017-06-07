@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use domain\forms\base\RoleForm;
 use domain\models\base\filter\AuthItemFilter;
+use domain\proc\ReportByModel;
 use domain\services\base\RoleService;
 use domain\services\proxyService;
 use Yii;
@@ -62,13 +63,26 @@ class RolesController extends Controller
     {
         $searchModel = new AuthItemSearch();
         $filterModel = new AuthItemFilter();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);        
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'filterModel' => $filterModel,
         ]);
+    }
+
+    public function actionReport()
+    {
+        $searchModel = new AuthItemSearch();
+        $filterModel = new AuthItemFilter();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $report = new ReportByModel($dataProvider);
+        $report->reportDisplayName = 'Роли';
+        $report->reportid = $searchModel->formName();
+        $report->reportType = ReportByModel::EXCEL;
+        $report->report();
     }
 
     /**

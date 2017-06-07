@@ -89,7 +89,7 @@ return [
             'csrfParam' => '_csrf-wk-portal',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'common\models\base\Person',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-wk-portal', 'httpOnly' => true],
         ],
@@ -124,7 +124,7 @@ return [
             // 'downloadAction' => 'gridview/export/download',
             // 'i18n' => []
         ],
-        'reportLoader' => [
+        'report-loader' => [
             'class' => '\common\widgets\ReportLoader\Module',
 
         ],

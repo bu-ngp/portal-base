@@ -46,9 +46,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'update' => \yii\helpers\Url::to(['roles/update']),
             'delete' => \yii\helpers\Url::to(['roles/delete']),
         ],
-        'customizeSettings' => [
-            'exportShow' => true,
-        ],
         'panelHeading' => [
             'icon' => FA::icon(FA::_LIST_ALT),
             'title' => Yii::t('common/roles', 'Roles'),

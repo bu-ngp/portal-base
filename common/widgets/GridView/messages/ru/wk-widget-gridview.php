@@ -21,7 +21,7 @@ return [
     'In \'customizeSettings\' array must be only this keys [\'filterShow\', \'exportShow\', \'customizeShow\']. Passed \'{key}\'' => '',
     'In \'setPanelHeading\' array must be only this keys [\'icon\', \'title\']. Passed \'{key}\'' => '',
     'Reset Filter' => 'Сброс фильтра',
-    'Export' => '@@Экспорт@@',
+    'Export' => 'Экспорт',
     'Additional Filter' => 'Дополнительный фильтр',
     'Apply' => 'Применить',
     'Cancel' => 'Отмена',

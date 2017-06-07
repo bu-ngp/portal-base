@@ -1,3 +1,28 @@
+## 0.2.4 - (2017-06-07)
+
+_Дополнения_:
+
+  - Доработка виджета `GridView`:
+    - Добавлен плагин `wkexport.js` для экспорта грида
+    - Добавлен служебный класс `GWExportGrid` для экспорта грида
+    - Добавлено свойство `exportGrid`:
+        ```php
+        'exportGrid' => [
+            'enable' => true, // Добавить возможность экспортировать грид
+            'format' => GridView::EXCEL, // GridView::EXCEL - Экспорт в Excel; GridView::PDF - Экспорт в PDF
+            'idReportLoader' => 'wk-Report-Loader', // Id HTML элемента Загрузчика отчетов
+        ],
+        ```
+  - Доработка виджета `ReportLoader`:
+    - Добавлены контроллеры `ReportController`, `WkloaderController`
+  - Сервисный слой:
+    - Добавлено поведение `BlameableBehavior` расширенное поведение `Yii`, в случае, если пользователь гость, возвращает id сессии.
+    - Модели:
+      - Добавлено поле `rl_report_type` в модель `ReportLoader`
+
+ _Исправления_:
+  - Изменен класс `identityClass` компонента `user` на `common\models\base\Person`
+
 ## 0.2.3 - (2017-06-05)
 
 _Дополнения_:

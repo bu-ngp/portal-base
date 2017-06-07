@@ -10,21 +10,23 @@ namespace domain\proc;
 
 
 use domain\proc\models\ReportLoader;
+use Yii;
 
 class ReportProcess
 {
     private $loader;
 
-    public static function start($reportId, $reportDisplayName)
+    public static function start($reportId, $reportDisplayName, $reportType = '')
     {
-        return new self($reportId, $reportDisplayName);
+        return new self($reportId, $reportDisplayName, $reportType);
     }
 
-    public function __construct($reportId, $reportDisplayName)
+    public function __construct($reportId, $reportDisplayName, $reportType = '')
     {
         $this->loader = new ReportLoader([
             'rl_report_id' => $reportId,
             'rl_report_displayname' => $reportDisplayName,
+            'rl_report_type' => $reportType,
         ]);
 
         $this->loader->save(false);
@@ -58,7 +60,7 @@ class ReportProcess
 
     public function isActive()
     {
-        return $this->loader->rl_status == 2;
+        return !$this->loader->rl_status == 1;
     }
 
     public function getFileName()

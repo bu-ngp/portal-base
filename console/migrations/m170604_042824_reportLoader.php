@@ -18,9 +18,10 @@ class m170604_042824_reportLoader extends Migration
             'rl_report_id' => $this->string(64)->notNull(),
             'rl_report_filename' => $this->string()->notNull(),
             'rl_report_displayname' => $this->string()->notNull(),
+            'rl_report_type' => $this->string(10),
             'rl_status' => $this->boolean()->unsigned()->defaultValue(1)->notNull(),
             'rl_percent' => $this->boolean()->unsigned()->defaultValue(0)->notNull(),
-            'rl_start' => $this->integer()->notNull(),
+            'rl_start' => $this->dateTime()->notNull(),
         ], $tableOptions);
 
     }

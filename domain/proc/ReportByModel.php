@@ -46,14 +46,21 @@ class ReportByModel
         ]
     ];
 
-    public static function execute(ActiveDataProvider $dataProvider, $type = 2)
+    public static function execute(ActiveDataProvider $dataProvider, $type = 'Excel2007')
     {
         return new self($dataProvider, $type);
     }
 
-    public function __construct(ActiveDataProvider $dataProvider, $type = 2)
+    public function __construct(ActiveDataProvider $dataProvider, $type = 'Excel2007')
     {
         $this->prepare($dataProvider, $type);
+        return $this;
+    }
+
+    public function report()
+    {
+        $this->loader = ReportProcess::start($this->reportid, $this->reportDisplayName, $this->type);
+        $this->objPHPExcel = new PHPExcel();
         $this->make();
         $this->createFile();
     }
@@ -68,9 +75,6 @@ class ReportByModel
         $this->type = $type;
         $this->reportid = 'test'; //** formName() */
         $this->reportDisplayName = 'Report_' . date('Y-m-d');
-        $this->loader = ReportProcess::start($this->reportid, $this->reportDisplayName);
-        $this->objPHPExcel = new PHPExcel();
-
     }
 
     private function make()

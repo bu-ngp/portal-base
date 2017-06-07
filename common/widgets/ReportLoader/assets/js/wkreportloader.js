@@ -14,7 +14,10 @@
 
     var defaults = {
         titleDialogMessage: 'Report Loader',
-        closeButtonMessage: 'Close'
+        closeButtonMessage: 'Close',
+        cancelButtonMessage: 'Cancel Operation',
+        deleteButtonMessage: 'Remove File',
+        downloadButtonMessage: 'Download File'
     };
 
     var makeReportLoaderDialog = function ($widget) {
@@ -32,10 +35,9 @@
             '<div class="modal-body">' +
             '<div class="row">' +
             '<div class="col-xs-12 wk-ReportLoaderDialog-content">' +
-            '<div class="list-group pmd-z-depth pmd-list pmd-card-list">' +
-            '<a class="list-group-item" id="t1" href="javascript:void(0);"></a>' +
-            '<a class="list-group-item" id="t2" href="javascript:void(0);"></a>' +
-            '</div>' +
+            '<ul class="list-group pmd-z-depth pmd-list pmd-card-list wk-report-loader-content" style="display: none;">' +
+            '</ul>' +
+            '<div class="wk-report-loader-wait" style="width: 100%; height: 100%; text-align: center;">wait</div>' +
             '</div>' +
             '</div>' +
             '</div>' +
@@ -47,6 +49,108 @@
             '</div>' +
             '</div>'
         );
+    };
+
+    var makeItem = function ($widget, item) {
+        var type = item.type === 'Excel2007' ? 'fa-file-excel-o' : 'fa-file-pdf-o';
+        var typeClass = item.type === 'Excel2007' ? 'wk-excel' : 'wk-pdf';
+
+        var button = item.status == '1'
+            ? '<button title="' + $widget.data('wkreportloader').settings.cancelButtonMessage + '" class="btn pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-danger"><i class="fa fa-2x fa-close"></i></button>'
+            : '<button title="' + $widget.data('wkreportloader').settings.deleteButtonMessage + '" class="btn pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-danger"><i class="fa fa-2x fa-trash"></i></button>';
+
+        var downloadButton = item.status == '2' ? '<button title="' + $widget.data('wkreportloader').settings.downloadButtonMessage + '" class="btn pmd-btn-fab pmd-ripple-effect btn-default wk-report-loader-download" type="button"><i class="fa fa-2x fa-download"></i></button>' : '';
+
+        $('.wk-report-loader-content').append(
+            '<li class="list-group-item" report-id="' + item.id + '">' +
+            '<div class="wk-report-loader-item-action' + (item.status == '1' ? '' : ' wk-report-loader-item-complete') + '">' +
+            downloadButton +
+            '</div>' +
+            '<i class="' + typeClass + ' fa fa-2x ' + type + '"></i>' +
+            '<div class="media-body">' +
+            '<h4 class="list-group-item-heading">' +
+            item.displayName +
+            '</h4>' +
+            '<span class="list-group-item-text">' +
+            item.start +
+            '</span>' +
+            '</div>' +
+            button +
+            '</li>'
+        );
+
+        if (item.status == '1') {
+            var circle = new ProgressBar.Circle('.wk-report-loader-content > li:last-child > div.wk-report-loader-item-action', {
+                color: '#FCB03C',
+                strokeWidth: 3,
+                trailWidth: 1,
+                text: {
+                    value: item.percent + '%'
+                },
+                step: function (state, circle) {
+                    var value = Math.round(circle.value() * 100);
+                    if (value === 0) {
+                        circle.setText('');
+                    } else {
+                        circle.setText(value + '%');
+                    }
+                }
+            });
+            $widget.data('wkreportloader').circles.push({id: item.id, circle: circle});
+
+            circle.animate(item.percent / 100);
+        }
+
+    };
+
+    var clearItems = function ($widget) {
+        $('.wk-report-loader-content').hide();
+        $('.wk-report-loader-wait').show();
+        $.each($widget.data('wkreportloader').circles, function () {
+            this.circle.destroy();
+        });
+        $('.wk-report-loader-content').html('');
+        $widget.data('wkreportloader').circles = [];
+    };
+
+    var loadItems = function ($widget) {
+        $.ajax({
+            url: 'report-loader/report/items',
+            success: function (items) {
+                var loadAgain = false;
+
+                if (items.length > 0) {
+                    $.each(items, function () {
+                        if ($('li[report-id="' + this.id + '"]').length) {
+                            if (this.status == '1') {
+                                var filtered = $widget.data('wkreportloader').circles.filter(function (elem) {
+                                    return elem.id = this.id;
+                                }, this);
+
+                                filtered[0].circle.animate(this.percent / 100);
+                            }
+
+                        } else {
+                            makeItem($widget, this);
+                        }
+
+
+                        if (this.status == '1') {
+                            loadAgain = true;
+                        }
+                    });
+
+                    $('.wk-report-loader-content').show();
+                    $('.wk-report-loader-wait').hide();
+                }
+
+                if (loadAgain && $("#wk-Report-Loader").data('bs.modal').isShown) {
+                    setTimeout(function () {
+                        loadItems($widget);
+                    }, 2000);
+                }
+            }
+        });
     };
 
     var methods = {
@@ -61,48 +165,20 @@
 
                 $widget.data('wkreportloader', {
                     widget: $widget,
-                    settings: settings
+                    settings: settings,
+                    circles: []
                 });
 
                 makeReportLoaderDialog($widget);
 
+                $widget.on('shown.bs.modal', function (e) {
+                    loadItems($widget);
 
-                $('#t1').append('<div class="t1" style="width: 60px; height: 60px; display: inline-block;"></div>');
-                $('#t2').append('<div class="t2" style="width: 60px; height: 60px; display: table-cell; vertical-align: middle;"></div>');
-
-                $('#t1, #t2').css("display", "table");
-                $('#t1, #t2').css("width", "100%");
-
-                $('#t1').append('<i class="fa fa-2x fa-file-excel-o" style="display: table-cell; vertical-align: middle; padding-left: 15px; color: #6eb36e;"></i><div class="media-body" style="display: table-cell; vertical-align: middle; padding-left: 15px; width: 100%;"><h4 class="list-group-item-heading">Отчет 1</h4><span class="list-group-item-text">от 05.06.2017 14:00</span></div>');
-                $('#t2').append('<i class="fa fa-2x fa-file-pdf-o" style="display: table-cell; vertical-align: middle; padding-left: 15px; color: #ff6161;"></i><div class="media-body" style="display: table-cell; vertical-align: middle; padding-left: 15px; width: 100%;"><h4 class="list-group-item-heading">Отчет 2 (Дополнительный)</h4><span class="list-group-item-text">от 05.06.2017 14:12</span></div>');
-                $('#t1').append('<button title="Отменить операцию" class="btn pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-danger" style="float: right;"><i class="fa fa-2x fa-close"></i></button>');
-                $('#t2').append('<button title="Удалить файл" class="btn pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-danger" style="float: right;"><i class="fa fa-2x fa-trash"></i></button>');
-
-                var circle = new ProgressBar.Circle('.t1', {
-                    color: '#FCB03C',
-                    strokeWidth: 3,
-                    trailWidth: 1,
-                    text: {
-                        value: '50%'
-                    }
                 });
 
-                var circle2 = new ProgressBar.Circle('.t2', {
-                    color: '#FCB03C',
-                    strokeWidth: 3,
-                    trailWidth: 1,
-                    text: {
-                        value: '<button title="Скачать файл" class="btn pmd-btn-fab pmd-ripple-effect btn-default" type="button"><i class="fa fa-2x fa-download" style="color: #6e9aff;"></i></button>'
-                    }
+                $widget.on('hide.bs.modal', function (e) {
+                    clearItems($widget);
                 });
-
-                $(document).on('shown.bs.modal', function (e) {
-                    circle.animate(0.5);
-                    circle2.destroy();
-                    $('.t2').html('<button title="Скачать файл" class="btn pmd-btn-fab pmd-ripple-effect btn-primary" type="button"><i class="fa fa-2x fa-download"></i></button>');
-                });
-
-
             });
         },
         destroy: function () {

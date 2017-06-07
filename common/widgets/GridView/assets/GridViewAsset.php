@@ -23,6 +23,7 @@ class GridViewAsset extends AssetBundle
             'js/wkgridview.js',
             'js/gridselected2storage.js',
             'js/wkfilter.js',
+            'js/wkexport.js',
         ];
 
         $this->depends = [

@@ -57,7 +57,11 @@ class ReportLoader extends Widget
         $messages = [
             'titleDialogMessage' => Yii::t('wk-widget-report-loader', 'Report Loader'),
             'closeButtonMessage' => Yii::t('wk-widget-report-loader', 'Close'),
+            'cancelButtonMessage' => Yii::t('wk-widget-report-loader', 'Cancel Operation'),
+            'deleteButtonMessage' => Yii::t('wk-widget-report-loader', 'Remove File'),
+            'downloadButtonMessage' => Yii::t('wk-widget-report-loader', 'Download File'),
         ];
+        
         return $messages;
     }
 }

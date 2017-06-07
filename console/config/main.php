@@ -20,6 +20,10 @@ return [
             'class' => 'yii\console\controllers\MigrateController',
             'interactive' => false,
         ],
+        'wkloader' => [
+            'class' => 'common\widgets\ReportLoader\controllers\WkloaderController',
+            'interactive' => false,
+        ],
     ],
     'components' => [
         'log' => [
