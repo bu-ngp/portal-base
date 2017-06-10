@@ -60,8 +60,13 @@ class ReportLoader extends Widget
             'cancelButtonMessage' => Yii::t('wk-widget-report-loader', 'Cancel Operation'),
             'deleteButtonMessage' => Yii::t('wk-widget-report-loader', 'Remove File'),
             'downloadButtonMessage' => Yii::t('wk-widget-report-loader', 'Download File'),
+            'clearButtonMessage' => Yii::t('wk-widget-report-loader', 'Clear'),
+            'deleteConfirmMessage' => Yii::t('wk-widget-report-loader', 'Delete Report. Are you sure?'),
+            'cancelConfirmMessage' => Yii::t('wk-widget-report-loader', 'Cancel Report. Are you sure?'),
+            'clearConfirmMessage' => Yii::t('wk-widget-report-loader', 'Delete All Reports. Are you sure?'),
+            'errorAlertMessage' => Yii::t('wk-widget-report-loader', 'Error'),
         ];
-        
+
         return $messages;
     }
 }

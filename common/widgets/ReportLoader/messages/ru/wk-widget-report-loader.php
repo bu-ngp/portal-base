@@ -17,9 +17,19 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Cancel Report. Are you sure?' => 'Вы уверены, что хотите отменить формирование отчета?',
+    'Clear' => 'Очистить',
+    'Delete All Reports. Are you sure?' => 'Вы уверены, что хотите удалить все отчеты?',
+    'Delete Report. Are you sure?' => 'Вы уверены, что хотите удалить отчет?',
+    'Error' => 'Ошибка',
+    'Error. File of report not found on server ({file})' => 'Ошибка. Файл отчета не найден на сервере ({file})',
+    'Error. File remove error (({file}))' => 'Ошибка. Ошибка удаления файла (({file}))',
+    'Error. Only Ajax Request Access' => 'Ошибка. Доступны только Ajax запросы',
+    'Error. Report with id = "{id}" not found in database' => 'Ошибка. Отчет с id = "{id}" не найден в базе данных',
+    'Error. id Variable Only Integer Access, Your Passed "{id}"' => 'Ошибка. В переданной переменной id могут быть только целые числа, Вы отправили "{id}"',
     'Cancel Operation' => 'Отменить формирование отчета',
+    'Close' => 'Закрыть',
     'Download File' => 'Скачать файл отчета',
     'Remove File' => 'Удалить файл отчета',
-    'Close' => 'Закрыть',
     'Report Loader' => 'Загрузчик отчетов',
 ];

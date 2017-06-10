@@ -19,6 +19,7 @@ use yii\db\Expression;
  * @property integer $rl_status
  * @property integer $rl_percent
  * @property integer $rl_start
+ * @property string $extension
  */
 class ReportLoader extends \yii\db\ActiveRecord
 {
@@ -36,12 +37,12 @@ class ReportLoader extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rl_process_id', 'rl_report_id', 'rl_report_filename', 'rl_report_displayname', 'rl_report_type'], 'required'],
+            [['rl_report_filename'], 'default', 'value' => Yii::getAlias('@common') . '/tmpfiles/report' . time() . '.xlsx'],
+            [['rl_report_id', 'rl_report_filename', 'rl_report_displayname', 'rl_report_type'], 'required'],
             [['rl_status', 'rl_percent', 'rl_start'], 'integer'],
             [['rl_process_id', 'rl_report_id'], 'string', 'max' => 64],
             [['rl_report_filename', 'rl_report_displayname'], 'string', 'max' => 255],
             [['rl_report_type'], 'string', 'max' => 10],
-            [['rl_report_filename', 'default', 'value' => Yii::getAlias('@common') . '/tmpfiles/report' . time() . '.xlsx']],
         ];
     }
 
@@ -56,19 +57,22 @@ class ReportLoader extends \yii\db\ActiveRecord
             ],
             [
                 'class' => BlameableBehavior::className(),
-                'createdAtAttribute' => 'rl_process_id',
-                'updatedAtAttribute' => false,
+                'createdByAttribute' => 'rl_process_id',
+                'updatedByAttribute' => false,
             ],
         ];
     }
 
-    /*  public function beforeSave($insert)
-   {
-    if ($insert) {
-           $this->rl_process_id = Yii::$app->user->isGuest ? Yii::$app->session->getId() : Yii::$app->user->getId();
-           $this->rl_report_filename = Yii::getAlias('@common') . '/tmpfiles/report' . time() . '.xlsx';
-       }
+    public function getExtension()
+    {
+        switch ($this->rl_report_type) {
+            case 'Excel2007':
+                return '.xlsx';
+            case 'PDF':
+                return '.pdf';
+        }
 
-       return parent::beforeSave($insert);
-   }*/
+        return false;
+    }
+
 }

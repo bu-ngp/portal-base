@@ -110,16 +110,24 @@ class ReportByModel
 
             /** @var array $models */
             /** @var ActiveRecord $ar */
-            foreach ($models as $row => $ar) {
-                if ($row % 50 === 0 && !$this->loader->isActive()) {
-                    return false;
-                }
+            for ($i = 1; $i <= 300; $i++) {
+                foreach ($models as $row => $ar) {
+                    if ($row % 100 === 0 && !$this->loader->isActive()) {
+                        return false;
+                    }
 
-                $c = 0;
-                $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($c, $r, $r - 5);
-                foreach ($ar->attributes as $attr) {
-                    $c++;
-                    $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($c, $r, $attr);
+                    if ($row % 100 === 0) {
+                        $this->loader->set(round(100 * $i / 300));
+                    }
+
+                    $c = 0;
+                    $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($c, $r, $r - 5);
+
+                    foreach ($ar->attributes as $attr) {
+                        $c++;
+                        $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($c, $r, $attr);
+                    }
+                    $r++;
                 }
             }
         }

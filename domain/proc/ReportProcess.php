@@ -11,6 +11,7 @@ namespace domain\proc;
 
 use domain\proc\models\ReportLoader;
 use Yii;
+use yii\web\HttpException;
 
 class ReportProcess
 {
@@ -29,12 +30,14 @@ class ReportProcess
             'rl_report_type' => $reportType,
         ]);
 
-        $this->loader->save(false);
+        if (!$this->loader->save()) {
+            throw new HttpException(500, print_r($this->loader->getErrors(), true));
+        }
     }
 
     public function set($percent)
     {
-        if (is_int($percent) && $percent > 0) {
+        if (filter_var($percent, FILTER_VALIDATE_INT) && $percent > 0) {
             $this->loader->load(['ReportLoader' => [
                 'rl_percent' => $percent,
             ]]);
@@ -42,20 +45,20 @@ class ReportProcess
         }
     }
 
-    public static function cancel($processId, $reportId)
+    public static function cancel($rl_id)
     {
-        $model = ReportLoader::find()->where([
-            'rl_processId' => $processId,
-            'rl_reportId' => $reportId,
-        ])->one();
+        $model = ReportLoader::findOne($rl_id);
 
         if ($model) {
             $model->load(['ReportLoader' => [
                 'rl_status' => 3,
                 'rl_percent' => 0,
             ]]);
-            $model->save(false);
+
+            return $model->save(false);
         }
+
+        return false;
     }
 
     public function isActive()

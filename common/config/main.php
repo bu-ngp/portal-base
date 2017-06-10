@@ -94,6 +94,7 @@ return [
             'identityCookie' => ['name' => '_identity-wk-portal', 'httpOnly' => true],
         ],
         'session' => [
+            'class' => 'yii\web\DbSession',
             // this is the name of the session cookie used for login
             'name' => 'wk-portal',
         ],

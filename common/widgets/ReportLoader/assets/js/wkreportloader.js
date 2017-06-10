@@ -17,7 +17,12 @@
         closeButtonMessage: 'Close',
         cancelButtonMessage: 'Cancel Operation',
         deleteButtonMessage: 'Remove File',
-        downloadButtonMessage: 'Download File'
+        clearButtonMessage: 'Clear',
+        downloadButtonMessage: 'Download File',
+        deleteConfirmMessage: 'Delete Report. Are you sure?',
+        cancelConfirmMessage: 'Cancel Report. Are you sure?',
+        clearConfirmMessage: 'Delete All Reports. Are you sure?',
+        errorAlertMessage: 'Error'
     };
 
     var makeReportLoaderDialog = function ($widget) {
@@ -45,6 +50,9 @@
             '<div class="btn-toolbar" role="toolbar" style="display: inline-block;">' +
             '<button data-dismiss="modal"  class="btn pmd-ripple-effect btn-default" type="button">' + $widget.data('wkreportloader').settings.closeButtonMessage + '</button>' +
             '</div>' +
+            '<div class="btn-toolbar" role="toolbar" style="display: inline-block; float: right;">' +
+            '<button class="btn pmd-btn-flat pmd-ripple-effect btn-danger wk-report-loader-clear" type="button">' + $widget.data('wkreportloader').settings.clearButtonMessage + '</button>' +
+            '</div>' +
             '</div>' +
             '</div>' +
             '</div>'
@@ -56,10 +64,10 @@
         var typeClass = item.type === 'Excel2007' ? 'wk-excel' : 'wk-pdf';
 
         var button = item.status == '1'
-            ? '<button title="' + $widget.data('wkreportloader').settings.cancelButtonMessage + '" class="btn pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-danger"><i class="fa fa-2x fa-close"></i></button>'
-            : '<button title="' + $widget.data('wkreportloader').settings.deleteButtonMessage + '" class="btn pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-danger"><i class="fa fa-2x fa-trash"></i></button>';
+            ? '<button title="' + $widget.data('wkreportloader').settings.cancelButtonMessage + '" class="btn pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-danger wk-report-loader-cancel"><i class="fa fa-2x fa-close"></i></button>'
+            : '<button title="' + $widget.data('wkreportloader').settings.deleteButtonMessage + '" class="btn pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-danger wk-report-loader-delete"><i class="fa fa-2x fa-trash"></i></button>';
 
-        var downloadButton = item.status == '2' ? '<button title="' + $widget.data('wkreportloader').settings.downloadButtonMessage + '" class="btn pmd-btn-fab pmd-ripple-effect btn-default wk-report-loader-download" type="button"><i class="fa fa-2x fa-download"></i></button>' : '';
+        var downloadButton = item.status == '2' ? '<a href="report-loader/report/download?id=' + item.id + '" target="_blank" title="' + $widget.data('wkreportloader').settings.downloadButtonMessage + '" class="btn pmd-btn-fab pmd-ripple-effect btn-default wk-report-loader-download"><i class="fa fa-2x fa-download"></i></a>' : '';
 
         $('.wk-report-loader-content').append(
             '<li class="list-group-item" report-id="' + item.id + '">' +
@@ -121,13 +129,22 @@
 
                 if (items.length > 0) {
                     $.each(items, function () {
-                        if ($('li[report-id="' + this.id + '"]').length) {
-                            if (this.status == '1') {
-                                var filtered = $widget.data('wkreportloader').circles.filter(function (elem) {
-                                    return elem.id = this.id;
-                                }, this);
+                        var $li = $('li[report-id="' + this.id + '"]');
+                        if ($li.length) {
+                            var filtered = $widget.data('wkreportloader').circles.filter(function (elem) {
+                                return elem.id = this.id;
+                            }, this);
 
+                            if (this.status == '1') {
                                 filtered[0].circle.animate(this.percent / 100);
+                            }
+
+                            if (this.status != '1' && !$li.children('div.wk-report-loader-item-action.wk-report-loader-item-complete').length) {
+                                filtered[0].circle.destroy();
+                                $li.children('div.wk-report-loader-item-action').addClass('wk-report-loader-item-complete');
+                                $li.children('div.wk-report-loader-item-action.wk-report-loader-item-complete').append('<a href="report-loader/report/download?id=' + this.id + '" target="_blank" title="' + $widget.data('wkreportloader').settings.downloadButtonMessage + '" class="btn pmd-btn-fab pmd-ripple-effect btn-default wk-report-loader-download"><i class="fa fa-2x fa-download"></i></a>');
+                                $li.find('.wk-report-loader-cancel').remove();
+                                $li.append('<button title="' + $widget.data('wkreportloader').settings.deleteButtonMessage + '" class="btn pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-danger wk-report-loader-delete"><i class="fa fa-2x fa-trash"></i></button>');
                             }
 
                         } else {
@@ -141,8 +158,9 @@
                     });
 
                     $('.wk-report-loader-content').show();
-                    $('.wk-report-loader-wait').hide();
                 }
+
+                $('.wk-report-loader-wait').hide();
 
                 if (loadAgain && $("#wk-Report-Loader").data('bs.modal').isShown) {
                     setTimeout(function () {
@@ -176,9 +194,134 @@
 
                 });
 
-                $widget.on('hide.bs.modal', function (e) {
+                $widget.on('hidden.bs.modal', function (e) {
                     clearItems($widget);
                 });
+
+                $widget.on('click', 'button.wk-report-loader-delete', function (e) {
+                    var $li = $(this).parent('li');
+                    wkwidget.confirm({
+                        message: '<span>' + $widget.data('wkreportloader').settings.deleteConfirmMessage + '</span>',
+                        yes: function () {
+                            $('.wk-report-loader-content').hide();
+                            $('.wk-report-loader-wait').show();
+                            $.ajax({
+                                url: 'report-loader/report/delete',
+                                data: {id: $li.attr('report-id')},
+                                success: function (response) {
+                                    $('.wk-report-loader-wait').hide();
+                                    $('.wk-report-loader-content').show();
+                                    if (response) {
+                                        if ($('.wk-report-loader-content').children().length === 1) {
+                                            $('.wk-report-loader-content').fadeOut(function () {
+                                                $.each($widget.data('wkreportloader').circles, function () {
+                                                    this.circle.destroy();
+                                                });
+                                                $('.wk-report-loader-content').html('');
+                                                $widget.data('wkreportloader').circles = [];
+                                            });
+                                        } else {
+                                            $li.fadeOut(function () {
+                                                $li.remove();
+                                            });
+                                        }
+                                    }
+                                },
+                                error: function (jqXHR) {
+                                    $('.wk-report-loader-wait').hide();
+                                    $('.wk-report-loader-content').show();
+                                    wkwidget.alert({
+                                        title: $widget.data('wkreportloader').settings.errorAlertMessage,
+                                        message: '<span>' + jqXHR.responseJSON.message + '</span>'
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
+
+                $widget.on('click', 'button.wk-report-loader-clear', function (e) {
+                    var $li = $(this).parent('li');
+                    wkwidget.confirm({
+                        message: '<span>' + $widget.data('wkreportloader').settings.clearConfirmMessage + '</span>',
+                        yes: function () {
+                            $('.wk-report-loader-content').hide();
+                            $('.wk-report-loader-wait').show();
+                            $.ajax({
+                                url: 'report-loader/report/delete-all',
+                                success: function (response) {
+                                    $('.wk-report-loader-wait').hide();
+                                    $('.wk-report-loader-content').show();
+                                    if (response) {
+                                        $('.wk-report-loader-content').fadeOut(function () {
+                                            $('.wk-report-loader-content').html('');
+                                            $widget.data('wkreportloader').circles = [];
+                                        });
+                                    }
+                                },
+                                error: function (jqXHR) {
+                                    $('.wk-report-loader-wait').hide();
+                                    $('.wk-report-loader-content').show();
+                                    wkwidget.alert({
+                                        title: $widget.data('wkreportloader').settings.errorAlertMessage,
+                                        message: '<span>' + jqXHR.responseJSON.message + '</span>'
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
+
+                $widget.on('click', 'button.wk-report-loader-cancel', function (e) {
+                    var $li = $(this).parent('li');
+                    wkwidget.confirm({
+                        message: '<span>' + $widget.data('wkreportloader').settings.cancelConfirmMessage + '</span>',
+                        yes: function () {
+                            $('.wk-report-loader-content').hide();
+                            $('.wk-report-loader-wait').show();
+                            $.ajax({
+                                url: 'report-loader/report/cancel',
+                                data: {id: $li.attr('report-id')},
+                                success: function (response) {
+                                    $('.wk-report-loader-wait').hide();
+                                    $('.wk-report-loader-content').show();
+                                    if (response) {
+
+                                        if ($('.wk-report-loader-content').children().length === 1) {
+                                            $('.wk-report-loader-content').fadeOut(function () {
+                                                $.each($widget.data('wkreportloader').circles, function () {
+                                                    this.circle.destroy();
+                                                });
+                                                $('.wk-report-loader-content').html('');
+                                                $widget.data('wkreportloader').circles = [];
+                                            });
+                                        } else {
+                                            $li.fadeOut(function () {
+                                                var filtered = $widget.data('wkreportloader').circles.filter(function (elem) {
+                                                    return elem.id = this.id;
+                                                }, this);
+
+                                                if (filtered.length) {
+                                                    filtered[0].circle.destroy();
+                                                }
+                                                $li.remove();
+                                            });
+                                        }
+                                    }
+                                },
+                                error: function (jqXHR) {
+                                    $('.wk-report-loader-wait').hide();
+                                    $('.wk-report-loader-content').show();
+                                    wkwidget.alert({
+                                        title: $widget.data('wkreportloader').settings.errorAlertMessage,
+                                        message: '<span>' + jqXHR.responseJSON.message + '</span>'
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
+
             });
         },
         destroy: function () {
