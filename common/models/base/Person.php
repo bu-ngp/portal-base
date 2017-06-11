@@ -101,7 +101,15 @@ class Person extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return static::findOne($id);
+        return static::findOne(Uuid::str2uuid($id));
+    }
+
+    /**
+     * Generates "remember me" authentication key
+     */
+    public function generateAuthKey()
+    {
+        $this->person_auth_key = Yii::$app->security->generateRandomString();
     }
 
     public static function findIdentityByAccessToken($token, $type = null)

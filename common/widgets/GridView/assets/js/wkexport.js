@@ -30,14 +30,30 @@
                 });
 
                 $pjax.on('click', 'a.wk-btn-exportGrid', function () {
+                    var $button = $(this);
+
+                    if (typeof $(this).data('buttonHTML') == 'undefined') {
+                        $(this).data('buttonHTML', $(this).html());
+                    }
+
+                    $(this).html($(this).data('buttonHTML') + '<div class="wk-widget-loading-block"><div></div></div>');
+
                     $.ajax({
                         url: 'roles/report',
                         data: {},
                         method: 'post',
                         success: function (response) {
-
+                            $button.find('.wk-widget-loading-block').remove();
+                            if (!$("#wk-Report-Loader").data('bs.modal').isShown) {
+                                window.location.href = response;
+                            }
                         }
                     });
+                });
+
+                $pjax.on('click', 'a.wk-btn-exportGrid div.wk-widget-loading-block', function (event) {
+                    $('#wk-Report-Loader').modal();
+                    event.stopPropagation();
                 });
             });
         },

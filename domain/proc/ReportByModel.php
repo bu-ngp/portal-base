@@ -63,6 +63,7 @@ class ReportByModel
         $this->objPHPExcel = new PHPExcel();
         $this->make();
         $this->createFile();
+        return 'report-loader/report/download?id=' . $this->loader->getId();
     }
 
     private function prepare(ActiveDataProvider $dataProvider, $type)
@@ -110,14 +111,14 @@ class ReportByModel
 
             /** @var array $models */
             /** @var ActiveRecord $ar */
-            for ($i = 1; $i <= 300; $i++) {
+            for ($i = 1; $i <= 50; $i++) {
                 foreach ($models as $row => $ar) {
                     if ($row % 100 === 0 && !$this->loader->isActive()) {
                         return false;
                     }
 
                     if ($row % 100 === 0) {
-                        $this->loader->set(round(100 * $i / 300));
+                        $this->loader->set(round(95 * $i / 300));
                     }
 
                     $c = 0;
@@ -127,6 +128,7 @@ class ReportByModel
                         $c++;
                         $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($c, $r, $attr);
                     }
+
                     $r++;
                 }
             }
@@ -153,12 +155,18 @@ class ReportByModel
         $FileName = DIRECTORY_SEPARATOR === '/' ? $FileName : mb_convert_encoding($FileName, 'Windows-1251', 'UTF-8');
         // Сохраняем файл в папку "files"
         $objWriter->save($this->loader->getFileName());
+
+        if ($this->loader->isActive()) {
+            $this->loader->end();
+        } else {
+            unlink($this->loader->getFileName());
+            return false;
+        }
+
         // Возвращаем имя файла Excel
-        if (DIRECTORY_SEPARATOR === '/')
+     /*   if (DIRECTORY_SEPARATOR === '/')
             echo $FileName;
         else
-            echo mb_convert_encoding($FileName, 'UTF-8', 'Windows-1251');
-
-        $this->loader->end();
+            echo mb_convert_encoding($FileName, 'UTF-8', 'Windows-1251');*/
     }
 }

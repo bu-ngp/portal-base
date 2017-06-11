@@ -7,6 +7,10 @@
     overflow: auto;
 }
 
+.wk-report-loader-content {
+    display: none;
+}
+
 .wk-report-loader-content > li {
     display: table;
     width: 100%;
@@ -23,11 +27,11 @@
     padding-left: 15px;
 }
 
-.wk-report-loader-content > li > i.wk-excel {
+.wk-report-loader-content > li > i.fa-file-excel-o {
     color: #6eb36e;
 }
 
-.wk-report-loader-content > li > i.wk-pdf {
+.wk-report-loader-content > li > i.fa-file-pdf-o {
     color: #ff6161;
 }
 
@@ -38,13 +42,17 @@
     width: 100%;
 }
 
+.wk-report-loader-content > li > div.media-body > span.list-group-item-text {
+    font-size: 1em;
+}
+
 .wk-report-loader-content > li > button {
     float: right;
 }
 
 .wk-report-loader-item-action {
-    width: 60px;
-    height: 60px;
+    min-width: 60px;
+    min-height: 60px;
     display: inline-block;
 }
 
@@ -54,5 +62,55 @@
 }
 
 .wk-report-loader-download {
-    color: #6e9aff;
+    width: 100%;
+    color: #6ddc4a;
+}
+
+.wk-report-loader-download:hover, .wk-report-loader-download:focus, .wk-report-loader-download:active, .wk-report-loader-download:active:hover {
+    color: #407130;
+}
+
+.wk-report-loader-wait {
+    width: 100%;
+    height: 100%;
+    background: url("../svg/bars.svg") rgba(255, 255, 255, 0.81) no-repeat center;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.wk-report-loader-toolbar-main {
+    display: inline-block;
+}
+
+.wk-report-loader-toolbar-right {
+    display: inline-block;
+    position: absolute;
+    right: 10px;
+}
+
+.wk-widget-loading-block {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #F1F1F1;
+    padding: 4px;
+}
+
+.wk-widget-loading-block > div {
+    width: 100%;
+    height: 100%;
+    background: url("../svg/loading.svg") no-repeat center;
+    margin-left: 4px;
+}
+
+.wk-widget-loading-block:hover {
+    background-color: #dcdcdc;
+    transition: background-color 0.2s;
+}
+
+.wk-widget-loading-block:active:hover {
+    background-color: #b3b3b3;
 }

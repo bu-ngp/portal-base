@@ -1,3 +1,19 @@
+## 0.2.6 - (2017-06-11)
+
+_Дополнения_:
+
+  - Доработка виджета `ReportLoader`:
+    - Добавлен метод `getId` в класс `ReportProcess`
+
+ _Исправления_:
+  - Рефакторинг виджета `ReportLoader`:
+    - Рефакторинг плагина `wkreportloader.js`
+    - Исправлено действие `actionItems` контроллера `ReportController`
+    - Исправлен метод `createFile` класса `ReportByModel`
+    - Исправлены методы `set`,`isActive`,`end` и конструктор класса `ReportProcess`
+    - Внесены изменения в модель `ReportLoader`
+  - Исправлена модель `Person` и форма авторизации `LoginForm`
+
 ## 0.2.5 - (2017-06-10)
 
 _Дополнения_:

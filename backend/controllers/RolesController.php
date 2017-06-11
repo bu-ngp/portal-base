@@ -14,6 +14,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * AuthItemController implements the CRUD actions for AuthItem model.
@@ -74,6 +75,8 @@ class RolesController extends Controller
 
     public function actionReport()
     {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
         $searchModel = new AuthItemSearch();
         $filterModel = new AuthItemFilter();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -82,7 +85,7 @@ class RolesController extends Controller
         $report->reportDisplayName = 'Роли';
         $report->reportid = $searchModel->formName();
         $report->reportType = ReportByModel::EXCEL;
-        $report->report();
+        return $report->report();
     }
 
     /**

@@ -28,6 +28,7 @@ class ReportProcess
             'rl_report_id' => $reportId,
             'rl_report_displayname' => $reportDisplayName,
             'rl_report_type' => $reportType,
+            'rl_status' => 1,
         ]);
 
         if (!$this->loader->save()) {
@@ -38,10 +39,17 @@ class ReportProcess
     public function set($percent)
     {
         if (filter_var($percent, FILTER_VALIDATE_INT) && $percent > 0) {
-            $this->loader->load(['ReportLoader' => [
-                'rl_percent' => $percent,
-            ]]);
-            $this->loader->save(false);
+            $model = ReportLoader::findOne($this->loader->primaryKey);
+
+            if ($model) {
+                $model->load(['ReportLoader' => [
+                    'rl_percent' => $percent,
+                ]]);
+
+                return $model->save(false);
+            }
+
+            return false;
         }
     }
 
@@ -63,7 +71,13 @@ class ReportProcess
 
     public function isActive()
     {
-        return !$this->loader->rl_status == 1;
+        $model = ReportLoader::findOne($this->loader->primaryKey);
+
+        if ($model) {
+            return $model->rl_status == 1;
+        }
+
+        return false;
     }
 
     public function getFileName()
@@ -71,12 +85,29 @@ class ReportProcess
         return $this->loader->rl_report_filename;
     }
 
+    public function getId()
+    {
+        return $this->loader->primaryKey;
+    }
+
     public function end()
     {
-        $this->loader->load(['ReportLoader' => [
-            'rl_status' => 2,
-            'rl_percent' => 100,
-        ]]);
-        $this->loader->save(false);
+        $model = ReportLoader::find()
+            ->andWhere([
+                'rl_id' => $this->loader->primaryKey,
+            ])
+            ->andWhere(['not', ['rl_status' => 3]])
+            ->one();
+
+        if ($model) {
+            $model->load(['ReportLoader' => [
+                'rl_status' => 2,
+                'rl_percent' => 100,
+            ]]);
+
+            return $model->save(false);
+        }
+
+        return false;
     }
 }

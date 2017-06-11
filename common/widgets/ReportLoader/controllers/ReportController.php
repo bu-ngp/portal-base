@@ -5,6 +5,7 @@ namespace common\widgets\ReportLoader\controllers;
 use domain\proc\models\ReportLoader;
 use domain\proc\ReportProcess;
 use Yii;
+use yii\db\Expression;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\Response;
@@ -28,9 +29,13 @@ class ReportController extends Controller
                 'rl_report_type as type',
                 'rl_report_displayname as displayName',
                 'rl_percent as percent',
-                'rl_start as start',
+                new Expression('DATE_FORMAT(rl_start,\'%d.%m.%Y %H:%i:%s\') as start'),
             ])
-            ->andWhere(['rl_process_id' => Yii::$app->user->isGuest ? Yii::$app->session->getId() : Yii::$app->user->getId()])
+            ->andWhere([
+                'rl_process_id' => Yii::$app->user->isGuest ? Yii::$app->session->getId() : Yii::$app->user->getId(),
+            ])
+            ->andWhere(['not', ['rl_status' => 3]])
+            ->orderBy(['rl_id' => SORT_DESC])
             ->asArray()
             ->all();
     }

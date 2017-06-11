@@ -5,6 +5,7 @@ namespace domain\proc\models;
 use domain\proc\BlameableBehavior;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 use yii\db\Expression;
 
 /**
@@ -37,9 +38,10 @@ class ReportLoader extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rl_report_filename'], 'default', 'value' => Yii::getAlias('@common') . '/tmpfiles/report' . time() . '.xlsx'],
+            [['rl_report_filename'], 'default', 'value' => Yii::getAlias('@common') . '/tmpfiles/report' . time() . '_' . rand(1000, 9999) . '.xlsx'],
             [['rl_report_id', 'rl_report_filename', 'rl_report_displayname', 'rl_report_type'], 'required'],
             [['rl_status', 'rl_percent', 'rl_start'], 'integer'],
+            [['rl_report_id'], 'unique', 'targetAttribute' => ['rl_process_id', 'rl_report_id', 'rl_status'], 'message' => Yii::t('wk-widget-report-loader', 'Report with id = "{value}" is formed')],
             [['rl_process_id', 'rl_report_id'], 'string', 'max' => 64],
             [['rl_report_filename', 'rl_report_displayname'], 'string', 'max' => 255],
             [['rl_report_type'], 'string', 'max' => 10],
@@ -59,6 +61,9 @@ class ReportLoader extends \yii\db\ActiveRecord
                 'class' => BlameableBehavior::className(),
                 'createdByAttribute' => 'rl_process_id',
                 'updatedByAttribute' => false,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_VALIDATE => ['rl_process_id']
+                ],
             ],
         ];
     }
