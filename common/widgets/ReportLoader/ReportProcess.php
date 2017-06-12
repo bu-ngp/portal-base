@@ -6,10 +6,10 @@
  * Time: 10:07
  */
 
-namespace domain\proc;
+namespace common\widgets\ReportLoader;
 
 
-use domain\proc\models\ReportLoader;
+use common\widgets\ReportLoader\models\ReportLoader;
 use Yii;
 use yii\web\HttpException;
 

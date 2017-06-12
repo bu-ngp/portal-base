@@ -4,7 +4,7 @@ namespace backend\controllers;
 
 use domain\forms\base\RoleForm;
 use domain\models\base\filter\AuthItemFilter;
-use domain\proc\ReportByModel;
+use common\widgets\ReportLoader\ReportByModel;
 use domain\services\base\RoleService;
 use domain\services\proxyService;
 use Yii;

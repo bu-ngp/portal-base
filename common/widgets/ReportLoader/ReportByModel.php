@@ -6,7 +6,7 @@
  * Time: 10:43
  */
 
-namespace domain\proc;
+namespace common\widgets\ReportLoader;
 
 
 use PHPExcel;

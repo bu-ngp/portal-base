@@ -1,6 +1,6 @@
 <?php
 
-namespace domain\proc;
+namespace common\widgets\ReportLoader;
 
 use Yii;
 use yii\behaviors\AttributeBehavior;

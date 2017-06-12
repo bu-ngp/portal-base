@@ -2,8 +2,8 @@
 
 namespace common\widgets\ReportLoader\controllers;
 
-use domain\proc\models\ReportLoader;
-use domain\proc\ReportProcess;
+use common\widgets\ReportLoader\models\ReportLoader;
+use common\widgets\ReportLoader\ReportProcess;
 use Yii;
 use yii\db\Expression;
 use yii\web\Controller;

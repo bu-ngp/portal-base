@@ -1,8 +1,8 @@
 <?php
 
-namespace domain\proc\models;
+namespace common\widgets\ReportLoader\models;
 
-use domain\proc\BlameableBehavior;
+use common\widgets\ReportLoader\BlameableBehavior;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
