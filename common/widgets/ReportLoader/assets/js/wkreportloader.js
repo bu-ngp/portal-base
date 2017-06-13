@@ -358,6 +358,45 @@
                 }
             });
         });
+
+        $(document).on("ajaxSend", function (event, jqXHR) {
+            try {
+                var $el = $(event.target.activeElement);
+                var isButtonLoading = $el.is("button[wk-loading]") || $el.is("a[wk-loading]");
+
+                if (!isButtonLoading) {
+                    return;
+                }
+
+                if (typeof $el.data('buttonHTML') == 'undefined') {
+                    $el.data('buttonHTML', $el.html());
+                }
+
+                if (!("$buttonLoading" in jqXHR)) {
+                    jqXHR.$buttonLoading = $el;
+                }
+
+                $el.html($el.data('buttonHTML') + '<div class="wk-widget-loading-block"><div></div></div>');
+
+                $el.find('div.wk-widget-loading-block').one('click', function (event) {
+                    $('#wk-Report-Loader').modal();
+                    event.stopPropagation();
+                });
+
+            } catch (ex) {
+                console.error(ex);
+            }
+        }).on("ajaxComplete", function (event, jqXHR) {
+            try {
+                if ("$buttonLoading" in jqXHR) {
+                    jqXHR.$buttonLoading.find('.wk-widget-loading-block').remove();
+                    delete jqXHR["$buttonLoading"];
+                }
+            } catch (ex) {
+                console.error(ex);
+            }
+        });
+
     };
 
     var methods = {

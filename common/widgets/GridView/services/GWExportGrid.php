@@ -52,7 +52,8 @@ class GWExportGrid
     {
         $toolbar = Html::a(Yii::t('wk-widget-gridview', 'Export'), '#',
             [
-                'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger wk-btn-exportGrid',
+                'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger wk-loading wk-btn-exportGrid',
+                'wk-loading' => true,
                 'style' => 'text-align: right;',
             ]);
 
