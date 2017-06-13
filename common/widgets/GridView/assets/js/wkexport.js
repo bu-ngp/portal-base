@@ -31,7 +31,7 @@
 
                 $pjax.on('click', 'a.wk-btn-exportGrid', function () {
                     $.ajax({
-                        url: 'roles/report',
+                        url: 'roles/report' + window.location.search,
                         data: {},
                         method: 'post',
                         success: function (response) {

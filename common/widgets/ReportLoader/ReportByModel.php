@@ -111,7 +111,7 @@ class ReportByModel
 
             /** @var array $models */
             /** @var ActiveRecord $ar */
-            for ($i = 1; $i <= 50; $i++) {
+            for ($i = 1; $i <= 1; $i++) {
                 foreach ($models as $row => $ar) {
                     if ($row % 100 === 0 && !$this->loader->isActive()) {
                         return false;

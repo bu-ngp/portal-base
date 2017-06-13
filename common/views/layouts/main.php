@@ -28,6 +28,7 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <link rel="shortcut icon" href="<?= Yii::$app->request->baseUrl ?>/favicon.ico" type="image/x-icon"/>
+    <base href="<?=  Yii::$app->request->getBaseUrl().'/' ?>">
     <?php $this->head() ?>
 </head>
 <body>

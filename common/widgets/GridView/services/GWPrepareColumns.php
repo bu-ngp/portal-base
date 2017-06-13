@@ -50,7 +50,10 @@ class GWPrepareColumns
             }
 
             foreach ($this->columns as $key => $column) {
-                $this->columns[$key]['headerOptions'] = array_replace_recursive(['wk-hash' => hash('crc32', $column['attribute'] . $key)], isset($this->columns[$key]['headerOptions']) ?: []);
+                $this->columns[$key]['headerOptions'] = array_replace_recursive([
+                    'wk-hash' => hash('crc32', $column['attribute'] . $key),
+                    'wk-attribute' => $column['attribute'],
+                ], isset($this->columns[$key]['headerOptions']) ?: []);
             }
         }
 
