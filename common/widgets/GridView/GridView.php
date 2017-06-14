@@ -30,6 +30,7 @@ class GridView extends \kartik\grid\GridView
     public $jsOptions = [];
     public $js = [];
     protected $optionsWidget;
+    protected $GWExportGrid;
 
     public function __construct(array $config = [])
     {
@@ -46,7 +47,8 @@ class GridView extends \kartik\grid\GridView
         }
 
         if ($this->optionsWidget['exportGrid']['enable'] === true) {
-            $this->optionsWidget = GWExportGrid::lets($this->optionsWidget)->prepareConfig($this->js);
+            $this->GWExportGrid = GWExportGrid::lets($this->optionsWidget);
+            $this->optionsWidget = $this->GWExportGrid->prepareConfig($this->js);
         }
 
         parent::__construct($this->optionsWidget);
@@ -54,7 +56,6 @@ class GridView extends \kartik\grid\GridView
 
     public function init()
     {
-        
         parent::init();
     }
 
@@ -74,7 +75,12 @@ class GridView extends \kartik\grid\GridView
     public function run()
     {
         if ($this->filterDialog['enable'] === true) {
-            GWFilterDialog::lets($this->optionsWidget)->makeFilter($this);
+            $GWFilterDialog = GWFilterDialog::lets($this->optionsWidget);
+            $GWFilterDialog->makeFilter($this);
+        }
+
+        if ($this->optionsWidget['exportGrid']['enable'] === true) {
+           $this->GWExportGrid->export($GWFilterDialog);
         }
 
         parent::run();

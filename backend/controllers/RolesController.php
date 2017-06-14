@@ -73,21 +73,6 @@ class RolesController extends Controller
         ]);
     }
 
-    public function actionReport()
-    {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $searchModel = new AuthItemSearch();
-        $filterModel = new AuthItemFilter();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        $report = new ReportByModel($dataProvider);
-        $report->reportDisplayName = 'Роли';
-        $report->reportid = $searchModel->formName();
-        $report->reportType = ReportByModel::EXCEL;
-        return $report->report();
-    }
-
     /**
      * Creates a new AuthItem model.
      * If creation is successful, the browser will be redirected to the 'view' page.

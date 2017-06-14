@@ -141,6 +141,10 @@ div.wk-filterDialog-content {
     overflow: auto;
 }
 
+.wk-filter-close:after {
+    content: "×";
+}
+
 /*-/\----Filter----/\-*/
 
 .panel.pmd-z-depth {

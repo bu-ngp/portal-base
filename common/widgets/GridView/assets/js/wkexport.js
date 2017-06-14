@@ -29,10 +29,10 @@
                     settings: settings
                 });
 
-                $pjax.on('click', 'a.wk-btn-exportGrid', function () {
+                $pjax.on('click', 'a.wk-btn-exportGrid', function (e) {
                     $.ajax({
-                        url: 'roles/report' + window.location.search,
-                        data: {},
+                        url: 'roles/index' + window.location.search,
+                        data: {_report: true},
                         method: 'post',
                         success: function (response) {
                             if (typeof $("#wk-Report-Loader").data('bs.modal') == 'undefined' || !$("#wk-Report-Loader").data('bs.modal').isShown) {
@@ -40,6 +40,7 @@
                             }
                         }
                     });
+                    e.preventDefault();
                 });
 
             });

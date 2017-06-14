@@ -45,6 +45,7 @@ class ReportByModel
             'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER
         ]
     ];
+    private $additionalFilter;
 
     public static function execute(ActiveDataProvider $dataProvider, $type = 'Excel2007')
     {
@@ -64,6 +65,13 @@ class ReportByModel
         $this->make();
         $this->createFile();
         return 'report-loader/report/download?id=' . $this->loader->getId();
+    }
+
+    public function setAdditionalFilterString($additionalFilterString = null)
+    {
+        if (is_string($additionalFilterString)) {
+            $this->additionalFilter = $additionalFilterString;
+        }
     }
 
     private function prepare(ActiveDataProvider $dataProvider, $type)
@@ -94,6 +102,8 @@ class ReportByModel
                 'italic' => true
             ]
         ]);
+
+        $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 3, $this->additionalFilter);
 
         /* Filter */
 
@@ -164,9 +174,9 @@ class ReportByModel
         }
 
         // Возвращаем имя файла Excel
-     /*   if (DIRECTORY_SEPARATOR === '/')
-            echo $FileName;
-        else
-            echo mb_convert_encoding($FileName, 'UTF-8', 'Windows-1251');*/
+        /*   if (DIRECTORY_SEPARATOR === '/')
+               echo $FileName;
+           else
+               echo mb_convert_encoding($FileName, 'UTF-8', 'Windows-1251');*/
     }
 }
