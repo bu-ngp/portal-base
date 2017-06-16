@@ -2,7 +2,25 @@
 
 _Дополнения_:
 
-  - Добавлен тег `<base>` в `<head>`
+  - Доработка виджета `ReportLoader`:
+    - убрано действие `actionReport` контроллера `RolesController`, теперь виджет использует действие вывода грида
+  - Доработка виджета `GridView`:
+    - Изменена опция `filterDialog`, теперь это не массив, а класс конфигурации `GWFilterDialogConfig`
+    - Изменена опция `exportGrid`, теперь это не массив, а класс конфигурации `GWExportGridConfig`
+    - Добавлены переводы `i18n`
+    - Доработка класса `GWExportGrid`:
+      - Добавлена работа с классом конфигурации `GWExportGridConfig`
+      - Добавлен метод `export`
+    - Доработка класса `GWFilterDialog`:
+      - Добавлена работа с классом конфигурации `GWFilterDialogConfig`
+      - Добавлен метод `getAdditionFilterString`
+    - Доработка класса `GWPrepareColumns`:
+      - Добавлен метод `addFilterProperties`
+    - Добавлены системные классы:
+      - Класс конфигурации диалога дополнительного фильтра `GWFilterDialogConfig`
+      - Класс конфигурации экспорта грида `GWExportGridConfig`
+      - Трейт для вывода значений по заданным индификаторам в модели `GWItemsTrait`
+    - Доработка класса `ReportByModel` для вывода модели грида в excel или pdf
 
  _Исправления_:
 

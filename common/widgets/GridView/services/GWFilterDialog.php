@@ -99,7 +99,7 @@ class GWFilterDialog
         }
 
         if (!empty($output)) {
-            $output = '<div class="wk-filter-output"><div><span><b>' . Yii::t('wk-widget-gridview', 'Add. filter: ') . '</b>' . $output . '</span></div><div><button aria-label="Close" data-dismiss="alert" class="close wk-filterDialog-btn-close" type="button"><span class="wk-filter-close" aria-hidden="true"></span></button></div></div>';
+            $output = '<div class="wk-filter-output"><div><span><b>' . Yii::t('wk-widget-gridview', 'Add. filter: ') . '</b>' . $output . '</span></div><div><button aria-label="Close" data-dismiss="alert" class="close wk-filterDialog-btn-close" type="button"><span aria-hidden="true"><i class="fa fa-close"></i></span></button></div></div>';
         }
 
         $this->additionalFilter = mb_substr(strip_tags($output), mb_strlen(Yii::t('wk-widget-gridview', 'Add. filter: '), 'UTF-8'), null, 'UTF-8');
