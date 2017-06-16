@@ -23,9 +23,19 @@ class GWFilterDialog
     private $configColumns;
     private $columns;
     private $additionalFilter = '';
+    /** @var GWFilterDialogConfig */
+    private $filterDialogConfig;
 
     public static function lets($config)
     {
+        if (!($config['filterDialog'] instanceof GWFilterDialogConfig)) {
+            throw new \Exception('filterDialog must be GWFilterDialogConfig class');
+        }
+
+        if ($config['filterDialog']->enable === false) {
+            throw new \Exception('GWFilterDialogConfig->enable must be true');
+        }
+
         return new self($config);
     }
 
@@ -33,6 +43,7 @@ class GWFilterDialog
     {
         $this->config = $config;
         $this->configColumns = $config['columns'];
+        $this->filterDialogConfig = $config['filterDialog'];
         $this->columns = [];
     }
 
@@ -102,7 +113,7 @@ class GWFilterDialog
             $filterMessage = '';
 
             /** @var Model $filterModel */
-            $filterModel = $gridView->filterDialog['filterModel'];
+            $filterModel = $this->filterDialogConfig->filterModel;
 
             if ($_COOKIE[$this->config['id']]) {
                 $cookieOptions = json_decode($_COOKIE[$this->config['id']], true);
@@ -118,7 +129,7 @@ class GWFilterDialog
                 }
             }
 
-            $gridView->panel['before'] .= $this->makeFilterContent($gridView->getView(), $gridView->filterDialog['filterView'], $filterModel) . $filterMessage;
+            $gridView->panel['before'] .= $this->makeFilterContent($gridView->getView(), $this->filterDialogConfig->filterView, $filterModel) . $filterMessage;
         }
     }
 

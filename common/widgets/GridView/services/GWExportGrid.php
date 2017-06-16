@@ -25,15 +25,26 @@ class GWExportGrid
     private $config;
     /** @var GWFilterDialog */
     private $GWFilterDialog;
+    /** @var GWExportGridConfig */
+    private $exportGridConfig;
 
     public static function lets($config)
     {
+        if (!($config['exportGrid'] instanceof GWExportGridConfig)) {
+            throw new \Exception('exportGrid must be GWExportGridConfig class');
+        }
+
+        if ($config['exportGrid']->enable === false) {
+            throw new \Exception('GWExportGridConfig->enable must be true');
+        }
+
         return new self($config);
     }
 
     public function __construct($config)
     {
         $this->config = $config;
+        $this->exportGridConfig = $config['exportGrid'];
     }
 
     public function prepareConfig(array &$jsScripts)
@@ -44,6 +55,9 @@ class GWExportGrid
         return $this->config;
     }
 
+    /**
+     * @param GWFilterDialog|null $GWFilterDialog
+     */
     public function export(GWFilterDialog $GWFilterDialog = null)
     {
         $this->GWFilterDialog = $GWFilterDialog;

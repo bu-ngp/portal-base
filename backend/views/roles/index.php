@@ -1,6 +1,8 @@
 <?php
 
 use common\widgets\GridView\GridView;
+use common\widgets\GridView\services\GWExportGridConfig;
+use common\widgets\GridView\services\GWFilterDialogConfig;
 use rmrevin\yii\fontawesome\FA;
 use yii\data\ArrayDataProvider;
 use yii\helpers\Html;
@@ -22,16 +24,8 @@ $this->params['breadcrumbs'][] = $this->title;
     GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'filterDialog' => [
-            'enable' => true,
-            'filterModel' => $filterModel,
-            'filterView' => '_filter',
-        ],
-        'exportGrid' => [
-            'enable' => true,
-            'format' => GridView::EXCEL,
-            'idReportLoader' => 'wk-Report-Loader',
-        ],
+        'filterDialog' => GWFilterDialogConfig::set()->filterModel($filterModel),
+        'exportGrid' => GWExportGridConfig::set()->idReportLoader('wk-Report-Loader'),
         'minHeight' => 450,
         'columns' => [
             'description',
@@ -50,9 +44,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'icon' => FA::icon(FA::_LIST_ALT),
             'title' => Yii::t('common/roles', 'Roles'),
         ],
-        /* 'panel' => [
-             'before' => '<div class="wk-filter-output"><div><span><b>Доп. фильтр: </b><span class="wk-filter-output-value">Только пользовательские роли</span>; <span class="wk-filter-output-name">Имя роли</span> = "<span class="wk-filter-output-value">hgfhg</span>"; <span class="wk-filter-output-value">Только пользовательские роли</span>; <span class="wk-filter-output-name">Имя роли</span> = "<span class="wk-filter-output-value">hgfhg</span>"; <span class="wk-filter-output-value">Только пользовательские роли</span>; <span class="wk-filter-output-name">Имя роли</span> = "<span class="wk-filter-output-value">hgfhg</span>"; <span class="wk-filter-output-value">Только пользовательские роли</span>; <span class="wk-filter-output-name">Имя роли</span> = "<span class="wk-filter-output-value">hgfhg</span>";</span></div><div><button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button></div></div>'
-         ],*/
     ]);
     ?>
 </div>

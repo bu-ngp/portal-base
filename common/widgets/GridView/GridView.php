@@ -5,7 +5,9 @@ namespace common\widgets\GridView;
 use common\widgets\GridView\assets\GridViewAsset;
 use common\widgets\GridView\services\GWCustomizeDialog;
 use common\widgets\GridView\services\GWExportGrid;
+use common\widgets\GridView\services\GWExportGridConfig;
 use common\widgets\GridView\services\GWFilterDialog;
+use common\widgets\GridView\services\GWFilterDialogConfig;
 use common\widgets\GridView\services\GWPrepareColumns;
 use Yii;
 use yii\base\Model;
@@ -25,7 +27,9 @@ class GridView extends \kartik\grid\GridView
     public $serialColumn;
     public $minHeight;
     public $customizeDialog;
+    /** @var  GWFilterDialogConfig|null */
     public $filterDialog;
+    /** @var  GWExportGridConfig|null */
     public $exportGrid;
     public $jsOptions = [];
     public $js = [];
@@ -42,11 +46,11 @@ class GridView extends \kartik\grid\GridView
             $this->optionsWidget = GWCustomizeDialog::lets($config)->prepareConfig($this->js);
         }
 
-        if ($this->optionsWidget['filterDialog']['enable'] === true) {
+        if ($this->optionsWidget['filterDialog']->enable) {
             $this->optionsWidget = GWFilterDialog::lets($this->optionsWidget)->prepareConfig($this->js);
         }
 
-        if ($this->optionsWidget['exportGrid']['enable'] === true) {
+        if ($this->optionsWidget['exportGrid']->enable) {
             $this->GWExportGrid = GWExportGrid::lets($this->optionsWidget);
             $this->optionsWidget = $this->GWExportGrid->prepareConfig($this->js);
         }
@@ -74,13 +78,13 @@ class GridView extends \kartik\grid\GridView
      */
     public function run()
     {
-        if ($this->filterDialog['enable'] === true) {
+        if ($this->filterDialog->enable) {
             $GWFilterDialog = GWFilterDialog::lets($this->optionsWidget);
             $GWFilterDialog->makeFilter($this);
         }
 
-        if ($this->optionsWidget['exportGrid']['enable'] === true) {
-           $this->GWExportGrid->export($GWFilterDialog);
+        if ($this->exportGrid->enable) {
+            $this->GWExportGrid->export($GWFilterDialog);
         }
 
         parent::run();
@@ -158,18 +162,13 @@ EOT;
         $this->setPanelHeading($config);
         $config['columns'] = GWPrepareColumns::lets($config)->prepare();
 
-        if (isset($config['filterDialog'])) {
-            if (!is_array($config['filterDialog'])
-                && !is_bool($config['filterDialog']['enable'])
-                && !$config['filterDialog']['filterModel'] instanceof Model
-                && !is_string($config['filterDialog']['filterView'])
-            ) {
-                throw new \Exception('filterDialog configuration error');
-            }
-        }
+        $config['filterDialog'] = $config['filterDialog'] instanceof GWFilterDialogConfig
+            ? $config['filterDialog']->build()
+            : GWFilterDialogConfig::set()->enable(false)->build();
 
-        $config['filterDialog'] = isset($config['filterDialog']) ? $config['filterDialog'] : ['enable' => false];
-        $config['exportGrid'] = isset($config['exportGrid']) ? $config['exportGrid'] : ['enable' => false];
+        $config['exportGrid'] = $config['exportGrid'] instanceof GWExportGridConfig
+            ? $config['exportGrid']->build()
+            : GWExportGridConfig::set()->enable(false)->build();
 
         return $config;
     }
