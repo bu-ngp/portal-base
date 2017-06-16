@@ -17,7 +17,7 @@ trait GWItemsTrait
             $items = self::items();
             return $items[$attribute];
         } else {
-            throw new \Exception('Static Method "itemsValues" not exists in class ' . get_class($class));
+            throw new \Exception('Static Method "items" not exists in class ' . get_class($class));
         }
     }
 }

@@ -3,7 +3,6 @@
 namespace domain\models\base;
 
 use common\widgets\GridView\services\GWItemsTrait;
-use common\widgets\GridView\services\GWItemsValueInterface;
 use Yii;
 
 /**
