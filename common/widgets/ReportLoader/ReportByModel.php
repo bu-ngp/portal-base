@@ -10,6 +10,11 @@ namespace common\widgets\ReportLoader;
 
 
 use PHPExcel;
+use PHPExcel_Cell;
+use PHPExcel_Style_Alignment;
+use PHPExcel_Worksheet_PageMargins;
+use PHPExcel_Worksheet_PageSetup;
+use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
 
@@ -46,6 +51,8 @@ class ReportByModel
         ]
     ];
     private $additionalFilter;
+    private $filterString;
+    private $columnsFromGrid;
 
     public static function execute(ActiveDataProvider $dataProvider, $type = 'Excel2007')
     {
@@ -71,6 +78,13 @@ class ReportByModel
     {
         if (is_string($additionalFilterString)) {
             $this->additionalFilter = $additionalFilterString;
+        }
+    }
+
+    public function setFilterString($filterString = null)
+    {
+        if (is_string($filterString)) {
+            $this->filterString = $filterString;
         }
     }
 
@@ -103,21 +117,38 @@ class ReportByModel
             ]
         ]);
 
-        $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 3, $this->additionalFilter);
+        $r = 5;
+        if (!empty($this->filterString . $this->additionalFilter)) {
+            $filter = Yii::t('wk-widget-gridview', 'Add. filter: ') . $this->filterString . $this->additionalFilter;
+            $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 3, $filter);
+            $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 3)->applyFromArray([
+                'font' => [
+                    'italic' => true
+                ]
+            ]);
+            $r++;
+        }
 
-        /* Filter */
+        $rowGridBegin = $r - 1;
 
         $models = $this->dataProvider->getModels();
 
-        $r = 6;
         if (count($models) > 0) {
+            $this->columnsFromGrid = empty($this->columnsFromGrid) ? array_walk(array_keys($models[0]->getAttributes()), function (&$column) {
+                return ['attribute' => $column];
+            }) : $this->columnsFromGrid;
+
             $c = 0;
             $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $r - 1, '№');
-            /** @var ActiveRecord $models */
-            foreach ($models[0]->attributeLabels() as $label) {
+
+            foreach ($this->columnsFromGrid as $column) {
                 $c++;
-                $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($c, $r - 1, $label);
+                $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($c, $r - 1, $models[0]->getAttributeLabel($column['attribute']));
             }
+
+            $highestColumn = $this->objPHPExcel->getActiveSheet()->getHighestColumn();
+            $this->objPHPExcel->getActiveSheet()->getStyle('A' . $rowGridBegin . ':' . $highestColumn . $rowGridBegin)->applyFromArray($this->font);
+
 
             /** @var array $models */
             /** @var ActiveRecord $ar */
@@ -132,16 +163,63 @@ class ReportByModel
                     }
 
                     $c = 0;
-                    $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($c, $r, $r - 5);
+                    $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($c, $r, $r - $rowGridBegin);
 
-                    foreach ($ar->attributes as $attr) {
+                    foreach ($this->columnsFromGrid as $column) {
                         $c++;
-                        $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($c, $r, $attr);
+
+                        $value = $this->itemsValueExists($ar, $column['attribute']);
+                        $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($c, $r, $value);
                     }
 
                     $r++;
                 }
             }
+        }
+
+        $highestRow = $this->objPHPExcel->getActiveSheet()->getHighestRow();
+
+        $this->objPHPExcel->getActiveSheet()->mergeCellsByColumnAndRow(0, 1, PHPExcel_Cell::columnIndexFromString($highestColumn) - 1, 1);
+        $this->objPHPExcel->getActiveSheet()->getStyle("A1:B1")->applyFromArray(['alignment' => [
+            'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+        ]]);
+        foreach (range('A', $highestColumn) as $columnID) {
+            $this->objPHPExcel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+        }
+
+        $this->objPHPExcel->getActiveSheet()->getStyle('A' . $rowGridBegin . ':' . $highestColumn . $highestRow)->applyFromArray($this->ramka);
+        $this->objPHPExcel->getActiveSheet()->getStyle('A2:' . $highestColumn . $highestRow)->applyFromArray(['font' => [
+            'size' => 8
+        ],]);
+
+        $pageMargins = new PHPExcel_Worksheet_PageMargins;
+        $pageMargins->setBottom(0.393700787401575);
+        $pageMargins->setFooter(0.196850393700787);
+        $pageMargins->setHeader(0.196850393700787);
+        $pageMargins->setLeft(0.196850393700787);
+        $pageMargins->setRight(0.196850393700787);
+        $pageMargins->setTop(0.196850393700787);
+        $this->objPHPExcel->getActiveSheet()->setPageMargins($pageMargins);
+        $this->objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddFooter('&P');
+        $this->objPHPExcel->getActiveSheet()->getHeaderFooter()->setEvenFooter('&P');
+        $this->objPHPExcel->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd($rowGridBegin, $rowGridBegin);
+
+        $this->objPHPExcel->getActiveSheet()->getColumnDimension()->setAutoSize(false);
+        $this->objPHPExcel->getActiveSheet()->getColumnDimension()->setWidth(6);
+        $this->objPHPExcel->getActiveSheet()->calculateColumnWidths();
+        $widthPage = 0;
+        for ($i = 0; $i < PHPExcel_Cell::columnIndexFromString($highestColumn); $i++) {
+            $ColumnAddress = PHPExcel_Cell::stringFromColumnIndex($i);
+            $widthPage += $this->objPHPExcel->getActiveSheet()->getColumnDimension($ColumnAddress)->getWidth();
+            if ($this->objPHPExcel->getActiveSheet()->getColumnDimension($ColumnAddress)->getWidth() > 70) {
+                $this->objPHPExcel->getActiveSheet()->getColumnDimension($ColumnAddress)->setAutoSize(false);
+                $this->objPHPExcel->getActiveSheet()->getColumnDimension($ColumnAddress)->setWidth(70);
+                $this->objPHPExcel->getActiveSheet()->getStyle($ColumnAddress . '1' . ':' . $ColumnAddress . $highestRow)->getAlignment()->setWrapText(true);
+            }
+        }
+
+        if ($widthPage > 116) {
+            $this->objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
         }
 
     }
@@ -156,7 +234,7 @@ class ReportByModel
         $FileName = $this->reportDisplayName;
 
         // Устанавливаем имя листа
-        // $objPHPExcel->getActiveSheet()->setTitle($FileName);
+        $this->objPHPExcel->getActiveSheet()->setTitle(mb_substr($this->reportDisplayName, 0, 32, 'UTF-8'));
 
         // Выбираем первый лист
         $this->objPHPExcel->setActiveSheetIndex(0);
@@ -178,5 +256,19 @@ class ReportByModel
                echo $FileName;
            else
                echo mb_convert_encoding($FileName, 'UTF-8', 'Windows-1251');*/
+    }
+
+    public function columnsFromGrid(array $columns)
+    {
+        $this->columnsFromGrid = $columns;
+    }
+
+    protected function itemsValueExists(ActiveRecord $model, $attribute)
+    {
+        if (method_exists($model, 'itemsValues') && $items = $model::itemsValues($attribute)) {
+            return $items[$model[$attribute]];
+        }
+
+        return $model[$attribute];
     }
 }

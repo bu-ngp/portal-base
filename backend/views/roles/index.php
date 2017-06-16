@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             [
                 'attribute' => 'type',
-                'visible' => false
+                'visible' => true,
             ]
         ],
         'crudSettings' => [

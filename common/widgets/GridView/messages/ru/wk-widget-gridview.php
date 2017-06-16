@@ -17,11 +17,11 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Add. filter: ' => 'Доп. фильтр: ',
     'In \'crudOptions\' array must be only this keys [\'create\', \'update\', \'delete\']. Passed \'{key}\'' => '',
-    'In \'customizeSettings\' array must be only this keys [\'filterShow\', \'exportShow\', \'customizeShow\']. Passed \'{key}\'' => '',
     'In \'setPanelHeading\' array must be only this keys [\'icon\', \'title\']. Passed \'{key}\'' => '',
-    'Reset Filter' => 'Сброс фильтра',
-    'Export' => 'Экспорт',
+    'Report' => 'Отчет',
+    'In \'customizeSettings\' array must be only this keys [\'filterShow\', \'exportShow\', \'customizeShow\']. Passed \'{key}\'' => '@@@@',
     'Additional Filter' => 'Дополнительный фильтр',
     'Apply' => 'Применить',
     'Cancel' => 'Отмена',
@@ -33,6 +33,7 @@ return [
     'Delete' => 'Удалить',
     'Drag to the left of the column that you want to see in the grid in a specific order' => '* Перенесите имена колонок, которые Вы хотите видеть в таблице, в левый список о определенном порядке',
     'Enter the number of records on the grid from 10 to 100' => 'Введите количество записей, отображаемых в таблице. От 10 до 100',
+    'Export' => 'Экспорт',
     'Filter' => 'Фильтр',
     'Hidden Columns' => 'Скрытые колонки',
     'Information' => 'Информация',
@@ -40,6 +41,7 @@ return [
     'OK' => 'ОК',
     'Reset' => 'Сброс настроек',
     'Reset Columns. Are you sure?' => 'Вы уверены, что хотите сбросить настройки?',
+    'Reset Filter' => 'Сброс фильтра',
     'Reset Filter. Are you sure?' => 'Вы уверены, что хотите сбросить дополнительный фильтр?',
     'Reset Sort' => 'Сброс сортировки',
     'Reset Sort Grid. Are you sure?' => 'Вы уверены, что хотите сбросить сортировку на настройки по умолчанию?',

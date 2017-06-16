@@ -16,6 +16,7 @@ use yii\base\Model;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 use yii\web\Response;
 use yii\web\View;
 
@@ -74,15 +75,46 @@ class GWExportGrid
         $this->config['toolbar'][1]['content'] .= $toolbar;
     }
 
-    private function letsExport()
+    protected function letsExport()
     {
         $report = new ReportByModel($this->config['dataProvider']);
         if ($this->GWFilterDialog instanceof GWFilterDialog) {
             $report->setAdditionalFilterString($this->GWFilterDialog->getAdditionFilterString());
         }
+        $report->setFilterString($this->getFilterString());
         $report->reportDisplayName = isset($this->config['panelHeading']['title']) ? $this->config['panelHeading']['title'] : Yii::t('wk-widget-gridview', 'Report');
         $report->reportid = $this->config['filterModel']->formName();
         $report->reportType = ReportByModel::EXCEL;
+        $report->columnsFromGrid($this->getDataColumns());
         return $report->report();
+    }
+
+    protected function getFilterString()
+    {
+        $output = '';
+        if ($filter = $_GET[$this->config['filterModel']->formName()]) {
+            foreach ($filter as $attr => $value) {
+                $value = $this->itemsValueExists($this->config['filterModel'], $attr);
+                $output .= $this->config['filterModel']->getAttributeLabel($attr) . ' = "' . $value . '"; ';
+            }
+        }
+
+        return $output;
+    }
+
+    protected function getDataColumns()
+    {
+        return array_filter($this->config['columns'], function ($column) {
+            return $column['class'] === '\kartik\grid\DataColumn' && (!isset($column['visible']) || $column['visible'] === true);
+        });
+    }
+
+    protected function itemsValueExists(ActiveRecord $model, $attribute)
+    {
+        if (method_exists($model, 'itemsValues') && $items = $model::itemsValues($attribute)) {
+            return $items[$model[$attribute]];
+        }
+
+        return $model[$attribute];
     }
 }

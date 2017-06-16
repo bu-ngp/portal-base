@@ -2,6 +2,8 @@
 
 namespace domain\models\base;
 
+use common\widgets\GridView\services\GWItemsTrait;
+use common\widgets\GridView\services\GWItemsValueInterface;
 use Yii;
 
 /**
@@ -26,6 +28,8 @@ use Yii;
  */
 class AuthItem extends \yii\db\ActiveRecord
 {
+    use GWItemsTrait;
+
     /**
      * @inheritdoc
      */
@@ -129,5 +133,15 @@ class AuthItem extends \yii\db\ActiveRecord
     public function getChildren()
     {
         return $this->hasMany(AuthItem::className(), ['name' => 'child'])->viaTable('{{%auth_item_child}}', ['parent' => 'name']);
+    }
+
+    public static function items()
+    {
+        return [
+            'type' => [
+                1 => 'Роль',
+                2 => 'Разрешение',
+            ],
+        ];
     }
 }

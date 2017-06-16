@@ -11,6 +11,7 @@ namespace common\widgets\GridView\services;
 
 use common\widgets\GridView\GridView;
 use yii\bootstrap\Html;
+use yii\db\ActiveRecord;
 
 class GWPrepareColumns
 {
@@ -45,6 +46,8 @@ class GWPrepareColumns
                 } else {
                     $this->addDataColumn($column);
                 }
+
+                $this->addFilterProperties($column);
 
                 $this->columns[] = $column;
             }
@@ -153,6 +156,18 @@ class GWPrepareColumns
 
         if (empty($column['noWrap'])) {
             $column['noWrap'] = true;
+        }
+    }
+
+    protected function addFilterProperties(&$column)
+    {
+        /** @var ActiveRecord $model */
+        $model = $this->config['filterModel'];
+        if (method_exists($model, 'itemsValues') && $items = $model::itemsValues($column['attribute'])) {
+            $column['filter'] = $items;
+            $column['value'] = function ($model, $key, $index, $column) use ($items) {
+                return '<span>' . isset($model->{$column->attribute}) ? $items[$model->{$column->attribute}] : '' . '</span>';
+            };
         }
     }
 
