@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'filterDialog' => GWFilterDialogConfig::set()->filterModel($filterModel),
-        'exportGrid' => GWExportGridConfig::set()->idReportLoader('wk-Report-Loader'),
+        'exportGrid' => GWExportGridConfig::set()->idReportLoader('wk-Report-Loader')->format(GridView::PDF),
         'minHeight' => 450,
         'columns' => [
             'description',

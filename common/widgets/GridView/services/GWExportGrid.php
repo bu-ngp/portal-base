@@ -9,16 +9,11 @@
 namespace common\widgets\GridView\services;
 
 
-use common\widgets\GridView\GridView;
 use common\widgets\ReportLoader\ReportByModel;
 use Yii;
-use yii\base\Model;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
-use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use yii\web\Response;
-use yii\web\View;
 
 class GWExportGrid
 {
@@ -27,6 +22,11 @@ class GWExportGrid
     private $GWFilterDialog;
     /** @var GWExportGridConfig */
     private $exportGridConfig;
+    /** @var  ActiveRecord */
+    private $filterModel;
+    private $formName;
+    /** @var  ActiveDataProvider */
+    private $dataProvider;
 
     public static function lets($config)
     {
@@ -45,6 +45,9 @@ class GWExportGrid
     {
         $this->config = $config;
         $this->exportGridConfig = $config['exportGrid'];
+        $this->filterModel = $config['filterModel'];
+        $this->formName = $this->filterModel->formName();
+        $this->dataProvider = $config['dataProvider'];
     }
 
     public function prepareConfig(array &$jsScripts)
@@ -61,7 +64,7 @@ class GWExportGrid
     public function export(GWFilterDialog $GWFilterDialog = null)
     {
         $this->GWFilterDialog = $GWFilterDialog;
-        if (Yii::$app->request->isAjax && $_POST['_report']) {
+        if (Yii::$app->request->isAjax && Yii::$app->request->post('_report', false)) {
             Yii::$app->response->clearOutputBuffers();
             exit($this->letsExport());
         }
@@ -89,27 +92,41 @@ class GWExportGrid
         $this->config['toolbar'][1]['content'] .= $toolbar;
     }
 
+    protected function filterString()
+    {
+        $output = $this->getFilterString();
+        if ($this->GWFilterDialog instanceof GWFilterDialog) {
+            $output .= $this->GWFilterDialog->getAdditionFilterString();
+        }
+
+        return $output;
+    }
+
+    protected function getReportDisplayName()
+    {
+        if (isset($this->config['panelHeading']['title'])) {
+            return $this->config['panelHeading']['title'];
+        }
+
+        return Yii::t('wk-widget-gridview', 'Report');
+    }
+
     protected function letsExport()
     {
-        $report = new ReportByModel($this->config['dataProvider']);
-        if ($this->GWFilterDialog instanceof GWFilterDialog) {
-            $report->setAdditionalFilterString($this->GWFilterDialog->getAdditionFilterString());
-        }
-        $report->setFilterString($this->getFilterString());
-        $report->reportDisplayName = isset($this->config['panelHeading']['title']) ? $this->config['panelHeading']['title'] : Yii::t('wk-widget-gridview', 'Report');
-        $report->reportid = $this->config['filterModel']->formName();
-        $report->reportType = ReportByModel::EXCEL;
-        $report->columnsFromGrid($this->getDataColumns());
+        $report = new ReportByModel($this->dataProvider, $this->exportGridConfig->format, $this->getDataColumns());
+        $report->setFilterString($this->filterString());
+        $report->reportDisplayName = $this->getReportDisplayName();
+        $report->reportid = $this->formName;
         return $report->report();
     }
 
     protected function getFilterString()
     {
         $output = '';
-        if ($filter = $_GET[$this->config['filterModel']->formName()]) {
+        if ($filter = Yii::$app->request->get($this->formName, false)) {
             foreach ($filter as $attr => $value) {
-                $value = $this->itemsValueExists($this->config['filterModel'], $attr);
-                $output .= $this->config['filterModel']->getAttributeLabel($attr) . ' = "' . $value . '"; ';
+                $value = $this->itemsValueExists($this->filterModel, $attr);
+                $output .= $this->filterModel->getAttributeLabel($attr) . ' = "' . $value . '"; ';
             }
         }
 

@@ -31,12 +31,12 @@
 
                 $pjax.on('click', 'a.wk-btn-exportGrid', function (e) {
                     $.ajax({
-                        url: 'roles/index' + window.location.search,
+                        url: window.location.href,
                         data: {_report: true},
                         method: 'post',
                         success: function (response) {
                             if (typeof $("#wk-Report-Loader").data('bs.modal') == 'undefined' || !$("#wk-Report-Loader").data('bs.modal').isShown) {
-                                window.location.href = response;
+                                window.open(response, '_blank');
                             }
                         }
                     });
