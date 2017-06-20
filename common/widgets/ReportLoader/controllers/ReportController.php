@@ -110,10 +110,7 @@ class ReportController extends Controller
             throw new HttpException(500, Yii::t('wk-widget-report-loader', 'Error. File of report not found on server ({file})', ['file' => $ReportLoader->rl_report_filename]));
         }
 
-        \Yii::$app->response->sendFile($ReportLoader->rl_report_filename, $ReportLoader->rl_report_displayname . $ReportLoader->extension, [
-            'mimeType' => mime_content_type($ReportLoader->rl_report_filename),
-            'inline' => true,
-        ]);
+        \Yii::$app->response->sendFile($ReportLoader->rl_report_filename, $ReportLoader->rl_report_displayname . $ReportLoader->extension, ['inline' => true]);
     }
 
     public function actionCancel($id)

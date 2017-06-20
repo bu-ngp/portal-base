@@ -36,7 +36,7 @@
                         method: 'post',
                         success: function (response) {
                             if (typeof $("#wk-Report-Loader").data('bs.modal') == 'undefined' || !$("#wk-Report-Loader").data('bs.modal').isShown) {
-                                window.open(response, '_blank');
+                                window.open(response);
                             }
                         }
                     });

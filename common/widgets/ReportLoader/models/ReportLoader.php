@@ -38,7 +38,7 @@ class ReportLoader extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rl_report_filename'], 'default', 'value' => Yii::getAlias('@common') . '/tmpfiles/report' . time() . '_' . rand(1000, 9999) . '.xlsx'],
+            [['rl_report_filename'], 'default', 'value' => Yii::getAlias('@common') . '/tmpfiles/report' . time() . '_' . rand(1000, 9999) . $this->getExtension()],
             [['rl_report_id', 'rl_report_filename', 'rl_report_displayname', 'rl_report_type'], 'required'],
             [['rl_status', 'rl_percent', 'rl_start'], 'integer'],
             [['rl_report_id'], 'unique', 'targetAttribute' => ['rl_process_id', 'rl_report_id', 'rl_status'], 'message' => Yii::t('wk-widget-report-loader', 'Report with id = "{value}" is formed')],

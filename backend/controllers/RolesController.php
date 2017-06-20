@@ -7,6 +7,7 @@ use domain\models\base\filter\AuthItemFilter;
 use common\widgets\ReportLoader\ReportByModel;
 use domain\services\base\RoleService;
 use domain\services\proxyService;
+use common\reports\RolesReport;
 use Yii;
 use domain\models\base\AuthItem;
 use domain\models\base\search\AuthItemSearch;
@@ -134,6 +135,16 @@ class RolesController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionReport()
+    {
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return RolesReport::lets()->assignTemplate('rolesTemplate.xlsx')->save();
+        } else {
+            throw new \Exception('Only Ajax Requests');
+        }
     }
 
     /**

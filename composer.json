@@ -27,7 +27,7 @@
     "kartik-v/yii2-mpdf": "~1.0.1",
     "bower-asset/jquery.serializeJSON": "^2.8",
     "npm-asset/progressbar.js": "^1.0",
-    "mpdf/mpdf": "^6.1",
+    "mpdf/mpdf": "^6.1"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",

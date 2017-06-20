@@ -214,8 +214,9 @@ class ReportByModel
         $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 1, $this->reportDisplayName);
         $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 1)->applyFromArray($this->title);
         $this->objPHPExcel->getActiveSheet()->mergeCellsByColumnAndRow(0, 1, $this->highestColumn, 1);
-        // Устанавливаем имя листа
+        // Устанавливаем имя листа и книги
         $this->objPHPExcel->getActiveSheet()->setTitle(mb_substr($this->reportDisplayName, 0, 32, 'UTF-8'));
+        $this->objPHPExcel->getProperties()->setTitle($this->reportDisplayName);
     }
 
     private function makeDate()

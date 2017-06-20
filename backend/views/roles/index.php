@@ -6,6 +6,7 @@ use common\widgets\GridView\services\GWFilterDialogConfig;
 use rmrevin\yii\fontawesome\FA;
 use yii\data\ArrayDataProvider;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 
 /* @var $this yii\web\View */
@@ -44,6 +45,23 @@ $this->params['breadcrumbs'][] = $this->title;
             'icon' => FA::icon(FA::_LIST_ALT),
             'title' => Yii::t('common/roles', 'Roles'),
         ],
+        'panel' => [
+            'after' => <<<EOT
+                    <div class="btn-toolbar kv-grid-toolbar" role="toolbar">
+                        <div class="btn-group pull-right">
+EOT
+                . Html::button(Yii::t('wk-widget-gridview', 'Отчет'),
+                    [
+                        'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-default wk-report',
+                        'data-pjax' => '0',
+                        'wk-loading' => true,
+                        'link' => Url::to('roles/report'),
+                    ]) .
+                <<<EOT
+                        </div>
+                    </div>
+EOT
+        ]
     ]);
     ?>
 </div>
