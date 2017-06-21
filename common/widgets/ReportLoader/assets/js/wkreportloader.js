@@ -381,6 +381,7 @@
                 $el.find('div.wk-widget-loading-block').one('click', function (event) {
                     $('#wk-Report-Loader').modal();
                     event.stopPropagation();
+                    event.preventDefault();
                 });
 
             } catch (ex) {

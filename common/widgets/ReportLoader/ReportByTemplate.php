@@ -26,6 +26,7 @@ abstract class ReportByTemplate
     protected $PHPExcel;
     /** @var ReportProcess */
     protected $loader;
+    protected $params;
 
     public static function lets()
     {
@@ -63,6 +64,15 @@ abstract class ReportByTemplate
         if (in_array($type, [ReportByTemplate::EXCEL, ReportByTemplate::PDF])) {
             $this->type = $this->convertType($type);
         }
+
+        return $this;
+    }
+
+    public function params(array $params)
+    {
+        $this->params = $params;
+
+        return $this;
     }
 
     public function save()
@@ -96,6 +106,8 @@ abstract class ReportByTemplate
         if ($this->type === 'PDF' && !PHPExcel_Settings::setPdfRenderer(PHPExcel_Settings::PDF_RENDERER_MPDF, Yii::getAlias('@vendor') . '/mpdf/mpdf')) {
             throw new \Exception('NOTICE PHPExcel: Please set the $rendererName and $rendererLibraryPath values');
         }
+
+        $this->PHPExcel->getProperties()->setTitle($this->loader->getDisplayName());
 
         /** @var \PHPExcel_Writer_PDF_mPDF $objWriter */
         $objWriter = \PHPExcel_IOFactory::createWriter($this->PHPExcel, $this->type);

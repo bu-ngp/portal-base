@@ -395,36 +395,6 @@
         }
     };
 
-    var MasonryExecute2 = function ($widget, afterComplete) {
-        if (typeof $widget != undefined) {
-
-            var isEmptyContainer = $widget.data('wkcardlist').$masonryContainer.masonry('getItemElements').length == 0;
-            $widget.data('wkcardlist').$masonryContainer.append($widget.data('wkcardlist').$cards);
-
-            $widget.data('wkcardlist').$masonryContainer.one('layoutComplete', function () {
-                $widget.data('wkcardlist').$cards = $();
-
-                if ($widget.data('wkcardlist').settings.search) {
-                    $widget.data('wkcardlist').$searchInput.busy = false;
-                }
-
-                if (typeof afterComplete == 'function') {
-                    afterComplete();
-                }
-            });
-
-            if (isEmptyContainer) {
-                $widget.data('wkcardlist').$masonryContainer.masonry('addItems', $widget.data('wkcardlist').$cards);
-                $widget.data('wkcardlist').$masonryContainer.masonry();
-            } else {
-                $widget.data('wkcardlist').$masonryContainer.masonry('appended', $widget.data('wkcardlist').$cards);
-            }
-
-        } else {
-            console.error('MasonryExecute($widget) - $widget undefined');
-        }
-    };
-
     var removeAllandAddItemsMasonry = function ($widget, afterComplete) {
         if (typeof $widget != undefined) {
 
@@ -462,7 +432,7 @@
                 afterComplete();
             }
         } else {
-            console.error('initScrollPager($widget) - $widget undefined');
+            console.error('makeLocalCards($widget) - $widget undefined');
         }
     };
 
@@ -567,25 +537,33 @@
         );
 
         var valFirstCard, valSecondCard;
-        console.debug($widget.data('wkcardlist').$cards);
+        var buf1 = $widget.data('wkcardlist').$cards.clone();
+
         [].sort.call($widget.data('wkcardlist').$cards, function (firstCard, secondCard) {
             valFirstCard = popularityArray.filter(function (obj) {
                 return (obj.popularityID == $(firstCard).attr('popularity-id'));
             });
-            valFirstCard = valFirstCard.length ? valFirstCard[0].popularityCount : 0;
+            valFirstCard = (valFirstCard.length ? valFirstCard[0].popularityCount : 0);
 
-            valSecondCard = popularityArray.filter(function (obj) {
-                return (obj.popularityID == $(secondCard).attr('popularity-id'));
+            valSecondCard = popularityArray.filter(function (obj2) {
+                return (obj2.popularityID == $(secondCard).attr('popularity-id'));
             });
-            valSecondCard = valSecondCard.length ? valSecondCard[0].popularityCount : 0;
-            /*   console.debug('===============');
-             console.debug($(firstCard).attr('popularity-id'));
-             console.debug(valFirstCard);
-             console.debug($(secondCard).attr('popularity-id'));
-             console.debug(valSecondCard);
-             console.debug('===============');*/
-            return +valSecondCard - +valFirstCard;
+            valSecondCard = (valSecondCard.length ? valSecondCard[0].popularityCount : 0);
+
+            return (+valSecondCard - +valFirstCard) || findIndexCard(buf1, firstCard) - findIndexCard(buf1, secondCard);
         });
+    };
+
+    var findIndexCard = function (elements, findElement) {
+        var index = 0;
+        $.each(elements, function (ind) {
+            if ($(this).attr('popularity-id') == $(findElement).attr('popularity-id')) {
+                index = ind;
+                return false;
+            }
+        });
+
+        return index;
     };
 
     var methods = {

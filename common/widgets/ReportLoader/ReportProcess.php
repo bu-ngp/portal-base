@@ -85,6 +85,11 @@ class ReportProcess
         return $this->loader->rl_report_filename;
     }
 
+    public function getDisplayName()
+    {
+        return $this->loader->rl_report_displayname;
+    }
+
     public function getId()
     {
         return $this->loader->primaryKey;

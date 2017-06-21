@@ -139,3 +139,7 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+.pmd-btn-flat:focus:not(:hover):not(:active) {
+    background-color: transparent !important;
+}

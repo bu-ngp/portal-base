@@ -47,10 +47,10 @@ class GWFilterDialog
         $this->columns = [];
     }
 
-    public function prepareConfig(array &$jsScripts)
+    public function prepareConfig(array &$jsScripts, &$panelBeforeTemplate)
     {
         $this->prepareJS($jsScripts);
-        $this->makeButtonOnToolbar();
+        $this->makeButtonOnToolbar($panelBeforeTemplate);
         return $this->config;
     }
 
@@ -76,15 +76,15 @@ class GWFilterDialog
     }
 
 
-    protected function makeButtonOnToolbar()
+    protected function makeButtonOnToolbar(&$panelBeforeTemplate)
     {
-        $toolbar = Html::a(Yii::t('wk-widget-gridview', 'Filter'), '#',
+        $button = Html::a(Yii::t('wk-widget-gridview', 'Filter'), '#',
             [
                 'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary wk-btn-filterDialog',
                 'style' => 'text-align: right;',
             ]);
-
-        $this->config['toolbar'][1]['content'] .= $toolbar;
+        
+        $panelBeforeTemplate = strtr($panelBeforeTemplate, ['{filterDialog}' => $button]);
     }
 
     protected function getOutputString(Model $filterModel)

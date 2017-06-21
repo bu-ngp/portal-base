@@ -34,10 +34,10 @@ class GWCustomizeDialog
         $this->columns = [];
     }
 
-    public function prepareConfig(array &$jsScripts)
+    public function prepareConfig(array &$jsScripts, &$panelBeforeTemplate)
     {
         $this->prepareJS($jsScripts);
-        $this->makeButtonOnToolbar();
+        $this->makeButtonOnToolbar($panelBeforeTemplate);
         $this->prepareColumns();
         $this->preparePager();
         return $this->config;
@@ -99,15 +99,15 @@ EOT;
         $jsScripts[] = "$('#{$this->config['id']}-pjax').wkgridview($json_options)";
     }
 
-    protected function makeButtonOnToolbar()
+    protected function makeButtonOnToolbar(&$panelBeforeTemplate)
     {
-        $toolbar = Html::a(Yii::t('wk-widget-gridview', 'Customize'), '#',
+        $button = Html::a(Yii::t('wk-widget-gridview', 'Customize'), '#',
             [
                 'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-default wk-btn-customizeDialog',
                 'style' => 'text-align: right;',
             ]);
 
-        $this->config['toolbar'][1]['content'] .= $toolbar;
+        $panelBeforeTemplate = strtr($panelBeforeTemplate, ['{customizeDialog}' => $button]);
     }
 
     protected function prepareColumns()

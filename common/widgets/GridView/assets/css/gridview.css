@@ -10,12 +10,21 @@ div.wk-custom-buttons {
     /* position: absolute;
      bottom: 0;
      right: 0;*/
-    float: right;
+    /*float: right;*/
 }
 
 div.wk-grid-toolbar {
-    position: relative;
-    min-height: 35px;
+ /*   position: relative;
+    min-height: 35px;*/
+}
+
+div.kv-panel-after {
+    display: flex;
+    justify-content: space-between;
+}
+
+div.kv-panel-after > div.btn-toolbar {
+    display: flex;
 }
 
 ul.wk-visible-columns, ul.wk-hidden-columns {

@@ -27,6 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'filterDialog' => GWFilterDialogConfig::set()->filterModel($filterModel),
         'exportGrid' => GWExportGridConfig::set()->idReportLoader('wk-Report-Loader')->format(GridView::PDF),
+        //'customizeDialog' => false,
         'minHeight' => 450,
         'columns' => [
             'description',
@@ -45,23 +46,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'icon' => FA::icon(FA::_LIST_ALT),
             'title' => Yii::t('common/roles', 'Roles'),
         ],
-        'panel' => [
-            'after' => <<<EOT
-                    <div class="btn-toolbar kv-grid-toolbar" role="toolbar">
-                        <div class="btn-group pull-right">
-EOT
-                . Html::button(Yii::t('wk-widget-gridview', 'Отчет'),
-                    [
-                        'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-default wk-report',
-                        'data-pjax' => '0',
-                        'wk-loading' => true,
-                        'link' => Url::to('roles/report'),
-                    ]) .
-                <<<EOT
-                        </div>
-                    </div>
-EOT
-        ]
+        'rightBottomToolbar' => Html::a(Yii::t('wk-widget-gridview', 'Отчет'), 'roles/report',
+            [
+                'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-default wk-report',
+                'data-pjax' => '0',
+                'wk-loading' => true,
+            ]),
     ]);
     ?>
 </div>

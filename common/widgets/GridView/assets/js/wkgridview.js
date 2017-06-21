@@ -195,12 +195,7 @@
         // Convert ObjectUrl to StringUrl
         var UrlCleaned = $.param(UrlParams);
         UrlCleaned = UrlCleaned == '' ? UrlCleaned : '?' + UrlCleaned;
-
-        var url = window.location.href;
-        url = url.substring(url.lastIndexOf('/') + 1);
-        url = url.split("?")[0];
-
-        window.history.pushState("wk-widget", "", url + UrlCleaned);
+        window.history.pushState("wk-widget", "", window.location.pathname + UrlCleaned);
     };
 
     var makeTooltips = function () {

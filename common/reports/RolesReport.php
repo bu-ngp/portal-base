@@ -19,7 +19,7 @@ class RolesReport extends ReportByTemplate
         $PHPExcel = $this->PHPExcel;
         $PHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 2, 'Дата: ' . date('d.m.Y'));
 
-        $roles = AuthItem::find()->all();
+        $roles = AuthItem::find()->andWhere(['view' => $this->params['view']])->all();
 
         $row = 5;
         /** @var AuthItem $ar */

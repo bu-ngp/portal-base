@@ -33,6 +33,52 @@ class GridView extends \kartik\grid\GridView
     public $exportGrid;
     public $jsOptions = [];
     public $js = [];
+    public $toolbar = [];
+    public $rightBottomToolbar = '';
+    public $panelAfterTemplate = <<< HTML
+        <div class="btn-toolbar kv-grid-toolbar" role="toolbar" style="display: inline-block;">
+            <div class="btn-group">
+                {crudButtons}
+            </div>
+        </div>
+        {after}
+        <div class="btn-toolbar kv-grid-toolbar" role="toolbar">
+            <div class="btn-group">
+                {rightBottomToolbar}
+            </div>
+        </div>
+HTML;
+    public $panelBeforeTemplate = <<< HTML
+        <div>
+            <div class="btn-toolbar pull-left kv-grid-toolbar wk-grid-toolbar" role="toolbar">
+                <div class="btn-group">
+                    {crudToolbar}
+                </div>                
+            </div>    
+            <div class="btn-toolbar pull-left kv-grid-toolbar" role="toolbar">
+                {toolbar}
+            </div>
+            <div class="btn-toolbar pull-right kv-grid-toolbar" role="toolbar">
+                <div class="btn-group-vertical btn-group-xs wk-custom-buttons">
+                    {customizeDialog}
+                    {filterDialog}
+                    {exportGrid}
+                </div>               
+            </div>
+        </div>
+        {before}
+        <div class="clearfix"></div>
+HTML;
+    public $panelFooterTemplate = <<< HTML
+        <div class="kv-panel-pager pull-left">
+            {pager}
+        </div>
+        <div class="selectedPanel pull-right" style="display: none;">
+           
+        </div>
+        {footer}
+        <div class="clearfix"></div>
+HTML;
     protected $optionsWidget;
     protected $GWExportGrid;
 
@@ -43,17 +89,19 @@ class GridView extends \kartik\grid\GridView
         $this->optionsWidget = $config;
 
         if ($this->optionsWidget['customizeDialog'] === true) {
-            $this->optionsWidget = GWCustomizeDialog::lets($config)->prepareConfig($this->js);
+            $this->optionsWidget = GWCustomizeDialog::lets($config)->prepareConfig($this->js, $this->panelBeforeTemplate);
         }
 
         if ($this->optionsWidget['filterDialog']->enable) {
-            $this->optionsWidget = GWFilterDialog::lets($this->optionsWidget)->prepareConfig($this->js);
+            $this->optionsWidget = GWFilterDialog::lets($this->optionsWidget)->prepareConfig($this->js, $this->panelBeforeTemplate);
         }
 
         if ($this->optionsWidget['exportGrid']->enable) {
             $this->GWExportGrid = GWExportGrid::lets($this->optionsWidget);
-            $this->optionsWidget = $this->GWExportGrid->prepareConfig($this->js);
+            $this->optionsWidget = $this->GWExportGrid->prepareConfig($this->js, $this->panelBeforeTemplate);
         }
+
+        $this->templatesPrepare();
 
         parent::__construct($this->optionsWidget);
     }
@@ -107,6 +155,7 @@ class GridView extends \kartik\grid\GridView
         $config['customizeDialog'] = isset($config['customizeDialog']) ? $config['customizeDialog'] : true;
         $config['serialColumn'] = isset($config['serialColumn']) ? $config['serialColumn'] : true;
         $config['selectColumn'] = isset($config['selectColumn']) ? $config['selectColumn'] : true;
+        $config['rightBottomToolbar'] = isset($config['rightBottomToolbar']) ? $config['rightBottomToolbar'] : $this->rightBottomToolbar;
         $this->minHeight = isset($config['minHeight']) ? $config['minHeight'] : false;
         $config['id'] = isset($config['id']) ? $config['id'] : $this->getId();
 
@@ -122,44 +171,8 @@ class GridView extends \kartik\grid\GridView
         $config['resizableColumns'] = isset($config['resizableColumns']) ? $config['resizableColumns'] : false;
 
         $this->createCrudButtons($config);
-        if (($key = array_search('{export}', $this->toolbar)) !== false) {
-            unset($this->toolbar[$key]);
-        }
-        if (($key = array_search('{toggleData}', $this->toolbar)) !== false) {
-            unset($this->toolbar[$key]);
-        }
-
-        //$config['panel']['beforeOptions'] = array_merge_recursive(isset($config['panel']['beforeOptions']) ? $config['panel']['beforeOptions'] : [], ['style' => 'position: relative;']);
-        $config['panelBeforeTemplate'] = isset($config['panelBeforeTemplate']) ? $config['panelBeforeTemplate'] : <<<EOT
-            <div>
-                <div class="btn-toolbar kv-grid-toolbar wk-grid-toolbar" role="toolbar">
-                    {toolbar}
-                </div>    
-            </div>
-            {before}
-            <div class="clearfix"></div>
-EOT;
-
-        $config['panelFooterTemplate'] = isset($config['panelFooterTemplate']) ? $config['panelFooterTemplate'] : <<<EOT
-                    <div class="kv-panel-pager pull-left">
-                        {pager}
-                    </div>
-                    {footer}
-                    <div class="clearfix"></div>
-EOT;
-
-        $config['panel']['footer'] = $config['panel']['footer'] . <<<EOT
-                    <div class="selectedPanel pull-right" style="display: none;">
-                       
-                    </div>
-EOT;
-
-        $config['toolbar'][] = [
-            'content' => '',
-            'options' => ['class' => 'btn-group-vertical btn-group-xs wk-custom-buttons'],
-        ];
-
         $this->setPanelHeading($config);
+
         $config['columns'] = GWPrepareColumns::lets($config)->prepare();
 
         $config['filterDialog'] = $config['filterDialog'] instanceof GWFilterDialogConfig
@@ -176,46 +189,30 @@ EOT;
     protected function createCrudButtons(&$config)
     {
         $crudSettings = $config['crudSettings'];
-
+        $crudButtons = '';
         if (is_array($crudSettings) && count($crudSettings) > 0) {
-            $toolbar = [
-                [
-                    'content' => '',
-                    'options' => ['class' => 'btn-group pull-left', 'style' => 'position: absolute; bottom: 0;'],
-                ],
-            ];
-
-            $panelButtons = '';
-
             foreach ($crudSettings as $key => $crudUrl) {
                 switch ($key) {
                     case 'create':
-                        $button = Html::a(Yii::t('wk-widget-gridview', 'Create'), $crudUrl,
+                        $crudButtons .= Html::a(Yii::t('wk-widget-gridview', 'Create'), $crudUrl,
                             [
                                 'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-success',
                                 'data-pjax' => '0'
                             ]);
-
-                        $toolbar[0]['content'] .= $button;
-                        $panelButtons .= $button;
                         break;
                     case 'update':
-                        $button = Html::a(Yii::t('wk-widget-gridview', 'Update'), $crudUrl,
+                        $crudButtons .= Html::a(Yii::t('wk-widget-gridview', 'Update'), $crudUrl,
                             [
                                 'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary wk-btn-update',
                                 'data-pjax' => '0'
                             ]);
-                        $toolbar[0]['content'] .= $button;
-                        $panelButtons .= $button;
                         break;
                     case 'delete':
-                        $button = Html::a(Yii::t('wk-widget-gridview', 'Delete'), $crudUrl,
+                        $crudButtons .= Html::a(Yii::t('wk-widget-gridview', 'Delete'), $crudUrl,
                             [
                                 'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger',
                                 'data-pjax' => '0'
                             ]);
-                        $toolbar[0]['content'] .= $button;
-                        $panelButtons .= $button;
                         break;
                     default:
                         new \Exception(Yii::t('wk-widget-gridview', "In 'crudOptions' array must be only this keys ['create', 'update', 'delete']. Passed '{key}'", [
@@ -223,20 +220,17 @@ EOT;
                         ]));
                 }
             }
-
-            $panel = <<<EOT
-                    <div class="btn-toolbar kv-grid-toolbar" role="toolbar">
-                        <div class="btn-group pull-left">
-                            $panelButtons
-                        </div>
-                    </div>
-EOT;
-
-            $config['toolbar'] = array_merge_recursive($toolbar, isset($config['toolbar']) ? $config['toolbar'] : []);
-            $config['panel']['after'] = $panel . (isset($config['panel']['after']) ? $config['panel']['after'] : '');
         }
+        $this->panelBeforeTemplate = strtr($this->panelBeforeTemplate, ['{crudToolbar}' => $crudButtons]);
+        $this->panelAfterTemplate = strtr($this->panelAfterTemplate, ['{crudButtons}' => $crudButtons]);
 
         unset($config['crudSettings']);
+    }
+
+    protected function templatesPrepare()
+    {
+        $this->panelBeforeTemplate = strtr($this->panelBeforeTemplate, ['{customizeDialog}' => '', '{filterDialog}' => '', '{exportGrid}' => '']);
+        $this->panelAfterTemplate = strtr($this->panelAfterTemplate, ['{rightBottomToolbar}' => $this->optionsWidget['rightBottomToolbar']]);
     }
 
     protected function setPanelHeading(&$config)

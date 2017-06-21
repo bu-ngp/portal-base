@@ -50,10 +50,10 @@ class GWExportGrid
         $this->dataProvider = $config['dataProvider'];
     }
 
-    public function prepareConfig(array &$jsScripts)
+    public function prepareConfig(array &$jsScripts, &$panelBeforeTemplate)
     {
         $this->prepareJS($jsScripts);
-        $this->makeButtonOnToolbar();
+        $this->makeButtonOnToolbar($panelBeforeTemplate);
 
         return $this->config;
     }
@@ -79,17 +79,17 @@ class GWExportGrid
         $jsScripts[] = "$('#{$this->config['id']}-pjax').wkexport($json_options);";
     }
 
-    protected function makeButtonOnToolbar()
+    protected function makeButtonOnToolbar(&$panelBeforeTemplate)
     {
-        $toolbar = Html::a(Yii::t('wk-widget-gridview', 'Export'), '#',
+        $button = Html::a(Yii::t('wk-widget-gridview', 'Export'), '#',
             [
                 'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger wk-loading wk-btn-exportGrid',
                 'wk-loading' => true,
                 'style' => 'text-align: right;',
                 'data-pjax' => '0',
             ]);
-
-        $this->config['toolbar'][1]['content'] .= $toolbar;
+        
+        $panelBeforeTemplate = strtr($panelBeforeTemplate, ['{exportGrid}' => $button]);
     }
 
     protected function filterString()

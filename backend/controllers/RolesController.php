@@ -141,7 +141,11 @@ class RolesController extends Controller
     {
         if (Yii::$app->request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return RolesReport::lets()->assignTemplate('rolesTemplate.xlsx')->save();
+            return RolesReport::lets()
+                ->assignTemplate('rolesTemplate.xlsx')
+                ->params(['view' => 1])
+                ->type('pdf')
+                ->save();
         } else {
             throw new \Exception('Only Ajax Requests');
         }
