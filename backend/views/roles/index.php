@@ -4,9 +4,7 @@ use common\widgets\GridView\GridView;
 use common\widgets\GridView\services\GWExportGridConfig;
 use common\widgets\GridView\services\GWFilterDialogConfig;
 use rmrevin\yii\fontawesome\FA;
-use yii\data\ArrayDataProvider;
 use yii\helpers\Html;
-use yii\helpers\Url;
 
 
 /* @var $this yii\web\View */
