@@ -151,9 +151,6 @@
             }
         });
 
-        $dialog.find(".pmd-textfield-focused").remove();
-        $dialog.find(".pmd-textfield .form-control").after('<span class="pmd-textfield-focused"></span>');
-
         makeButtonCustomizeDialogEvent($pjax);
     };
 
@@ -179,7 +176,7 @@
         if (window.location.search.length > 1) {
             for (var aItKey, nKeyId = 0, aCouples = window.location.search.substr(1).split("&"); nKeyId < aCouples.length; nKeyId++) {
                 aItKey = aCouples[nKeyId].split("=");
-                UrlParams[decodeURIComponent(aItKey[0])] = aItKey.length > 1 ? decodeURIComponent(aItKey[1]) : "";
+                UrlParams[decodeURI(aItKey[0])] = aItKey.length > 1 ? decodeURI(aItKey[1]) : "";
             }
         }
 
@@ -189,6 +186,9 @@
             var propName = propNames[i];
             if (UrlParams[propName] === null || UrlParams[propName] === undefined || UrlParams[propName] === '') {
                 delete UrlParams[propName];
+            } else {
+                UrlParams[propName] = UrlParams[propName].replace(/\+/g, ' ');
+                UrlParams[propName] = UrlParams[propName].replace(/%2B/g, '+');
             }
         }
 

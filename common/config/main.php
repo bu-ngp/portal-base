@@ -112,6 +112,13 @@ return [
                 ],
             ],
         ],
+        'formatter' => [
+            'class' => 'yii\i18n\Formatter',
+            'dateFormat' => 'dd.MM.yyyy',
+            'timeFormat' => 'HH:mm:ss',
+            'datetimeFormat' => 'dd.MM.yyyy HH:mm:ss',
+            'nullDisplay' => '',
+        ],
     ],
     'modules' => [
         /*  'wkcardlist' => [

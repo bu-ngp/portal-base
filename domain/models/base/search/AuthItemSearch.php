@@ -3,6 +3,7 @@
 namespace domain\models\base\search;
 
 use common\widgets\CardList\CardListHelper;
+use DateTime;
 use domain\models\base\filter\AuthItemFilter;
 use Yii;
 use yii\base\Model;
@@ -23,8 +24,8 @@ class AuthItemSearch extends AuthItem
     public function rules()
     {
         return [
-            [['name', 'description', 'rule_name', 'data'], 'safe'],
-            [['type', 'view', 'created_at', 'updated_at'], 'integer'],
+            [['name', 'description', 'rule_name', 'data', 'updated_at'], 'safe'],
+            [['type', 'view', 'created_at'], 'integer'],
         ];
     }
 
@@ -72,14 +73,24 @@ class AuthItemSearch extends AuthItem
             //   'type' => 1,
             //   'view' => 0,
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
 
         ]);
+
+
+        list($updated_at_begin, $updated_at_end) = explode('---', $this->updated_at);;
 
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'rule_name', $this->rule_name])
             ->andFilterWhere(['like', 'data', $this->data]);
+
+        if ($updated_at_begin && $updated_at_end) {
+
+            $updated_at_begin = DateTime::createFromFormat('d.m.Y', $updated_at_begin);
+            $updated_at_end = DateTime::createFromFormat('d.m.Y', $updated_at_end);
+
+            $query->andWhere(['between', 'updated_at', $updated_at_begin->format('U'), $updated_at_end->format('U')]);
+        }
 
         CardListHelper::applyPopularityOrder($query, 'name');
 

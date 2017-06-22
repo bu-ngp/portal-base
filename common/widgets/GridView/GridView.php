@@ -3,6 +3,7 @@
 namespace common\widgets\GridView;
 
 use common\widgets\GridView\assets\GridViewAsset;
+use common\widgets\GridView\assets\TextFieldPropellerAsset;
 use common\widgets\GridView\services\GWCustomizeDialog;
 use common\widgets\GridView\services\GWExportGrid;
 use common\widgets\GridView\services\GWExportGridConfig;
@@ -53,8 +54,8 @@ HTML;
             <div class="btn-toolbar pull-left kv-grid-toolbar wk-grid-toolbar" role="toolbar">
                 <div class="btn-group">
                     {crudToolbar}
-                </div>                
-            </div>    
+                </div>
+            </div>
             <div class="btn-toolbar pull-left kv-grid-toolbar" role="toolbar">
                 {toolbar}
             </div>
@@ -63,7 +64,7 @@ HTML;
                     {customizeDialog}
                     {filterDialog}
                     {exportGrid}
-                </div>               
+                </div>
             </div>
         </div>
         {before}
@@ -73,9 +74,7 @@ HTML;
         <div class="kv-panel-pager pull-left">
             {pager}
         </div>
-        <div class="selectedPanel pull-right" style="display: none;">
-           
-        </div>
+        <div class="selectedPanel pull-right" style="display: none;"></div>
         {footer}
         <div class="clearfix"></div>
 HTML;
@@ -135,6 +134,10 @@ HTML;
             $this->GWExportGrid->export($GWFilterDialog);
         }
 
+        $this->makeGridSelected2StorageJs();
+        $this->makeDialogMessagesJs();
+        $this->loadDataJs();
+
         parent::run();
         $this->registerAssetsByWk();
     }
@@ -144,6 +147,10 @@ HTML;
         if ($this->customizeDialog === true) {
             GWCustomizeDialog::lets($this->optionsWidget)->makeColumnsContent($this->dataProvider, $this->filterModel, $this->id);
         }
+
+        $view = $this->getView();
+        $view->registerJs(file_get_contents(Yii::getAlias('@npm') . '/propellerkit/components/textfield/js/textfield.js'));
+        $view->registerJs(file_get_contents(Yii::getAlias('@npm') . '/propellerkit/components/checkbox/js/checkbox.js'));
 
         return parent::endPjax();
     }
@@ -266,24 +273,46 @@ HTML;
         foreach ($this->js as $script) {
             $view->registerJs($script);
         }
-
-        $options = (object)array_filter($this->makeDialogMessages());
-        $optionsReplaced = str_replace('wkdialogOptions', json_encode($options, JSON_UNESCAPED_UNICODE), file_get_contents(__DIR__ . '/assets/js/init.js'));
-
-        $idReplaced = str_replace('id-widget', $this->id, $optionsReplaced);
-
-        $view->registerJs($idReplaced);
     }
 
-    protected function makeDialogMessages()
+    protected function makeDialogMessagesJs()
     {
-        $messages = [
-            'dialogConfirmTitle' => Yii::t('wk-widget-gridview', 'Confirm'),
-            'dialogAlertTitle' => Yii::t('wk-widget-gridview', 'Information'),
-            'dialogConfirmButtonClose' => Yii::t('wk-widget-gridview', 'No'),
-            'dialogConfirmButtonOK' => Yii::t('wk-widget-gridview', 'Yes'),
-            'dialogAlertButtonClose' => Yii::t('wk-widget-gridview', 'Close'),
+        $options = [
+            'messages' => [
+                'dialogConfirmTitle' => Yii::t('wk-widget-gridview', 'Confirm'),
+                'dialogAlertTitle' => Yii::t('wk-widget-gridview', 'Information'),
+                'dialogConfirmButtonClose' => Yii::t('wk-widget-gridview', 'No'),
+                'dialogConfirmButtonOK' => Yii::t('wk-widget-gridview', 'Yes'),
+                'dialogAlertButtonClose' => Yii::t('wk-widget-gridview', 'Close'),
+            ],
         ];
-        return ['messages' => $messages];
+
+        $options = json_encode(array_filter($options), JSON_UNESCAPED_UNICODE);
+
+        $this->js[] = "wkwidget.init($options);";
+    }
+
+    protected function makeGridSelected2StorageJs()
+    {
+        $options = [
+            'storage' => 'selectedRows',
+            'selectedPanelClass' => 'selectedPanel',
+            'recordsSelectedMessage' => Yii::t('wk-widget-gridview', 'Records selected <b>{from}</b> from <b>{all}</b>'),
+        ];
+
+        $options = json_encode(array_filter($options), JSON_UNESCAPED_UNICODE);
+
+        $this->js[] = "$('#{$this->id}-pjax').gridselected2storage($options);";
+    }
+
+    protected function loadDataJs()
+    {
+        $id = $this->id;
+        $this->js[] = <<<EOT
+            if ($("#$id").length) {
+                $("#$id").yiiGridView({"filterUrl": window.location.search});
+                $("#$id").yiiGridView('applyFilter');
+            }
+EOT;
     }
 }

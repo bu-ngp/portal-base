@@ -12,9 +12,7 @@ namespace common\widgets\GridView\services;
 use Yii;
 use yii\base\Model;
 use yii\bootstrap\Html;
-use yii\data\BaseDataProvider;
 use yii\data\DataProviderInterface;
-use yii\db\ActiveRecord;
 
 class GWCustomizeDialog
 {

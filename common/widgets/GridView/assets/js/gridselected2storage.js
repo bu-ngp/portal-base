@@ -13,7 +13,8 @@
     };
 
     var defaults = {
-        selectedPanelClass: ''
+        selectedPanelClass: '',
+        recordsSelectedMessage: 'Records selected <b>{from}</b> from <b>{all}</b>'
     };
 
     var saveToStorageSelectedRow = function ($pjax, $checkbox) {
@@ -129,7 +130,11 @@
                 }
 
                 if (from > 0) {
-                    $selectedPanel.html('<div>Records selected <b>' + from + '</b> from <b>' + all + '</b></div>');
+                    var recordSelected = $pjax.data('gridselected2storage').settings.recordsSelectedMessage;
+                    recordSelected = recordSelected.replace('{from}', from);
+                    recordSelected = recordSelected.replace('{all}', all);
+
+                    $selectedPanel.html('<div>' + recordSelected + '</div>');
                     $selectedPanel.show();
                 } else {
                     $selectedPanel.html('');
