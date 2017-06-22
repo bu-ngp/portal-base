@@ -41,7 +41,7 @@
                 '</div>');
 
             if (typeof props.popularityID != 'undefined') {
-                $card.not($card.children()).bind('click', function () {
+                $card.not($card.children()).on('click', function () {
                     var popularity = $.parseJSON(localStorage.popularity);
                     var popularity2 = popularity[props.widgetID];
                     var popularitylocal = popularity2.local;
@@ -201,13 +201,13 @@
         $widget.data('wkcardlist').currentPage = 1;
         $widget.data('wkcardlist').scrollHandler = scrollHandler;
 
-        initScrollPager($widget);
+        //  initScrollPager($widget);
         triggerNextPage($widget, scrollHandler);
     };
 
     var initScrollPager = function ($widget) {
-        if (typeof $widget != undefined) {
-            $(window).unbind().bind('scroll', function () {
+        if (typeof $widget != undefined && itemsUrlExists($widget.data('wkcardlist').settings)) {
+            $(window).off().on('scroll', function () {
                 if ($(window).scrollTop() + 5 >= $(document).height() - $(window).height()) {
                     triggerNextPage($widget, $widget.data('wkcardlist').scrollHandler);
                 }
@@ -255,7 +255,7 @@
 
     var triggerNextPage = function ($widget, afterComplete) {
         if (typeof $widget != undefined) {
-            if (!$widget.data('wkcardlist').$masonryContainer.ajaxSended || typeof $widget.data('wkcardlist').$masonryContainer.ajaxSended == undefined) {
+            if (!$widget.data('wkcardlist').$masonryContainer.ajaxSended || typeof $widget.data('wkcardlist').$masonryContainer.ajaxSended == 'undefined') {
 
                 $widget.data('wkcardlist').pager.show();
                 var data = {
@@ -282,7 +282,7 @@
                             $widget.data('wkcardlist').pager.hide();
 
                             if (items.length == 0) {
-                                $(window).unbind('scroll');
+                                $(window).off('scroll');
                             } else {
                                 $widget.data('wkcardlist').currentPage = ++$widget.data('wkcardlist').currentPage;
                             }
@@ -297,7 +297,6 @@
                                 afterComplete();
                             }
                         }
-                        $widget.data('wkcardlist').$masonryContainer.ajaxSended = false;
                     }
                 });
             }
@@ -356,6 +355,9 @@
                         if ($widget.data('wkcardlist').settings.search) {
                             $widget.data('wkcardlist').$searchInput.busy = false;
                         }
+
+                        initScrollPager($widget);
+                        $widget.data('wkcardlist').$masonryContainer.ajaxSended = false;
 
                         if (typeof afterComplete == 'function') {
                             afterComplete();
@@ -492,7 +494,7 @@
             $widget.data('wkcardlist').$searchInput.busy = true;
             $widget.data('wkcardlist').searchString = $widget.data('wkcardlist').$searchInput.val().toLowerCase();
             $widget.data('wkcardlist').currentPage = 1;
-            initScrollPager($widget);
+            // initScrollPager($widget);
             triggerNextPage($widget, afterComplete);
         } else {
             console.error('localSearch($widget) - $widget undefined');

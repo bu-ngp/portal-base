@@ -92,16 +92,11 @@ class CardList extends Widget
             ]);
         }
 
-        $options = (object)array_filter($options);
+        $language = substr($options['language'], 0, 2);
+        $options = json_encode(array_filter($options), JSON_UNESCAPED_UNICODE);
 
-        $optionsReplaced = str_replace('object', json_encode($options, JSON_UNESCAPED_UNICODE), file_get_contents(__DIR__ . '/assets/js/init.js'));
-
-        $idReplaced = str_replace('id-widget', $this->id, $optionsReplaced);
-
-        $language = substr($options->language, 0, 2);
-
-        $view->registerJs(file_get_contents(__DIR__ . "/assets/js/wkcardlist.$language.js"), View::POS_END);
-        $view->registerJs($idReplaced, View::POS_END);
+        $view->registerJs(file_get_contents(__DIR__ . "/assets/js/wkcardlist.$language.js"), View::POS_HEAD);
+        $view->registerJs("$('#{$this->id}').wkcardlist($options);");
     }
 
     protected function registerAssets()
