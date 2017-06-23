@@ -65,6 +65,7 @@ class ReportLoader extends Widget
             'cancelConfirmMessage' => Yii::t('wk-widget-report-loader', 'Cancel Report. Are you sure?'),
             'clearConfirmMessage' => Yii::t('wk-widget-report-loader', 'Delete All Reports. Are you sure?'),
             'errorAlertMessage' => Yii::t('wk-widget-report-loader', 'Error'),
+            'emptyMessage' =>  Yii::t('wk-widget-report-loader', 'Empty'),
         ];
 
         return $messages;

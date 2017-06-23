@@ -176,7 +176,7 @@ HTML;
         }
 
         $this->selectColumn = isset($config['selectColumn']) ? $config['selectColumn'] : true;
-        //    $config['pjaxSettings']['loadingCssClass'] = isset($config['pjaxSettings']['loadingCssClass']) ? $config['pjaxSettings']['loadingCssClass'] : false;
+     //   $config['pjaxSettings']['loadingCssClass'] = isset($config['pjaxSettings']['loadingCssClass']) ? $config['pjaxSettings']['loadingCssClass'] : 'wk-widget-grid-loading';
         $config['resizableColumns'] = isset($config['resizableColumns']) ? $config['resizableColumns'] : false;
 
         $this->createCrudButtons($config);

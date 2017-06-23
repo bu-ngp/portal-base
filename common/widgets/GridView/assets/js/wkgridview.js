@@ -32,7 +32,7 @@
 
         $(document).on('pjax:complete', function (e) {
             var pjaxID = $pjax[0].id;
-            if (e.target.id == pjaxID) {
+            if (e.target.id == pjaxID) {                
                 purifyingUrl();
             }
         });

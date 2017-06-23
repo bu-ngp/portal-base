@@ -22,7 +22,8 @@
         deleteConfirmMessage: 'Delete Report. Are you sure?',
         cancelConfirmMessage: 'Cancel Report. Are you sure?',
         clearConfirmMessage: 'Delete All Reports. Are you sure?',
-        errorAlertMessage: 'Error'
+        errorAlertMessage: 'Error',
+        emptyMessage: 'Empty'
     };
 
     var makeReportLoaderDialog = function ($widget) {
@@ -40,6 +41,7 @@
             '<div class="row">' +
             '<div class="col-xs-12 wk-ReportLoaderDialog-content">' +
             '<ul class="list-group pmd-z-depth pmd-list pmd-card-list wk-report-loader-content"></ul>' +
+            '<div class="wk-report-loader-empty">' + $widget.data('wkreportloader').settings.emptyMessage + '</div>' +
             '<div class="wk-report-loader-wait"></div>' +
             '</div>' +
             '</div>' +
@@ -226,7 +228,11 @@
                 }
 
                 disableClearButton(false);
-                $('.wk-report-loader-wait').fadeOut(200);
+                $('.wk-report-loader-wait').fadeOut(200, function () {
+                    if (!items.length) {
+                        $('.wk-report-loader-empty').fadeIn(200);
+                    }
+                });
 
                 if (loadAgain && $("#wk-Report-Loader").data('bs.modal').isShown) {
                     setTimeout(function () {
@@ -241,6 +247,7 @@
         if ($('.wk-report-loader-content').children().length === 1) {
             $('.wk-report-loader-content').fadeOut(function () {
                 clearItems($widget);
+                $('.wk-report-loader-empty').fadeIn(200);
             });
         } else {
             $li.fadeOut(function () {
@@ -252,6 +259,7 @@
     var removeItems = function ($widget) {
         $('.wk-report-loader-content').fadeOut(function () {
             clearItems($widget);
+            $('.wk-report-loader-empty').fadeIn(200);
         });
     };
 
@@ -259,6 +267,7 @@
         if ($('.wk-report-loader-content').children().length === 1) {
             $('.wk-report-loader-content').fadeOut(function () {
                 clearItems($widget);
+                $('.wk-report-loader-empty').fadeIn(200);
             });
         } else {
             $li.fadeOut(function () {
@@ -288,6 +297,7 @@
 
         $widget.on('hidden.bs.modal', function (e) {
             $('.wk-report-loader-wait').show();
+            $('.wk-report-loader-empty').hide();
             disableClearButton(true);
             clearItems($widget);
         });

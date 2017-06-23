@@ -17,7 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Report with id = "{value}" is formed' => 'Отчет с id = "{value}" уже формируется',
+    'Add. filter: ' => 'Доп. фильтр: ',
     'Cancel Operation' => 'Отменить формирование отчета',
     'Cancel Report. Are you sure?' => 'Вы уверены, что хотите отменить формирование отчета?',
     'Clear' => 'Очистить',
@@ -25,6 +25,7 @@ return [
     'Delete All Reports. Are you sure?' => 'Вы уверены, что хотите удалить все отчеты?',
     'Delete Report. Are you sure?' => 'Вы уверены, что хотите удалить отчет?',
     'Download File' => 'Скачать файл отчета',
+    'Empty' => 'Пусто',
     'Error' => 'Ошибка',
     'Error. File of report not found on server ({file})' => 'Ошибка. Файл отчета не найден на сервере ({file})',
     'Error. File remove error (({file}))' => 'Ошибка. Ошибка удаления файла (({file}))',
@@ -33,4 +34,5 @@ return [
     'Error. id Variable Only Integer Access, Your Passed "{id}"' => 'Ошибка. В переданной переменной id могут быть только целые числа, Вы отправили "{id}"',
     'Remove File' => 'Удалить файл отчета',
     'Report Loader' => 'Загрузчик отчетов',
+    'Report with id = "{value}" is formed' => 'Отчет с id = "{value}" уже формируется',
 ];
