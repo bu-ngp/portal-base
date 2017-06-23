@@ -9,53 +9,45 @@
 namespace common\widgets\GridView\services;
 
 
+use common\widgets\GridView\GridView;
 use common\widgets\ReportLoader\ReportByModel;
+use kartik\grid\DataColumn;
 use Yii;
+use yii\base\Model;
 use yii\bootstrap\Html;
-use yii\data\ActiveDataProvider;
-use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 class GWExportGrid
 {
-    private $config;
+    /** @var GridView */
+    private $gridView;
     /** @var GWFilterDialog */
     private $GWFilterDialog;
-    /** @var GWExportGridConfig */
-    private $exportGridConfig;
-    /** @var  ActiveRecord */
-    private $filterModel;
     private $formName;
-    /** @var  ActiveDataProvider */
-    private $dataProvider;
 
-    public static function lets($config)
+    public static function lets(GridView $gridView)
     {
-        if (!($config['exportGrid'] instanceof GWExportGridConfig)) {
+        if (!($gridView->exportGrid instanceof GWExportGridConfig)) {
             throw new \Exception('exportGrid must be GWExportGridConfig class');
         }
 
-        if ($config['exportGrid']->enable === false) {
+        if ($gridView->exportGrid->enable === false) {
             throw new \Exception('GWExportGridConfig->enable must be true');
         }
 
-        return new self($config);
+        return new self($gridView);
     }
 
-    public function __construct($config)
+    public function __construct(GridView $gridView)
     {
-        $this->config = $config;
-        $this->exportGridConfig = $config['exportGrid'];
-        $this->filterModel = $config['filterModel'];
-        $this->formName = $this->filterModel->formName();
-        $this->dataProvider = $config['dataProvider'];
+        $this->gridView = $gridView;
+        $this->formName = $gridView->filterModel->formName();
     }
 
-    public function prepareConfig(array &$jsScripts, &$panelBeforeTemplate)
+    public function prepareConfig()
     {
-        $this->prepareJS($jsScripts);
-        $this->makeButtonOnToolbar($panelBeforeTemplate);
-
-        return $this->config;
+        $this->prepareJS();
+        $this->makeButtonOnToolbar();
     }
 
     /**
@@ -70,16 +62,12 @@ class GWExportGrid
         }
     }
 
-    protected function prepareJS(&$jsScripts)
+    protected function prepareJS()
     {
-        $options = [];
-
-        $json_options = json_encode($options, JSON_UNESCAPED_UNICODE);
-
-        $jsScripts[] = "$('#{$this->config['id']}-pjax').wkexport($json_options);";
+        $this->gridView->js[] = "$('#{$this->gridView->id}-pjax').wkexport();";
     }
 
-    protected function makeButtonOnToolbar(&$panelBeforeTemplate)
+    protected function makeButtonOnToolbar()
     {
         $button = Html::a(Yii::t('wk-widget-gridview', 'Export'), '#',
             [
@@ -88,8 +76,8 @@ class GWExportGrid
                 'style' => 'text-align: right;',
                 'data-pjax' => '0',
             ]);
-        
-        $panelBeforeTemplate = strtr($panelBeforeTemplate, ['{exportGrid}' => $button]);
+
+        $this->gridView->panelBeforeTemplate = strtr($this->gridView->panelBeforeTemplate, ['{exportGrid}' => $button]);
     }
 
     protected function filterString()
@@ -104,16 +92,12 @@ class GWExportGrid
 
     protected function getReportDisplayName()
     {
-        if (isset($this->config['panelHeading']['title'])) {
-            return $this->config['panelHeading']['title'];
-        }
-
-        return Yii::t('wk-widget-gridview', 'Report');
+        return ArrayHelper::getValue($this->gridView->panelHeading, 'title', Yii::t('wk-widget-gridView', 'Report'));
     }
 
     protected function letsExport()
     {
-        $report = new ReportByModel($this->dataProvider, $this->exportGridConfig->format, $this->getDataColumns());
+        $report = new ReportByModel($this->gridView->dataProvider, $this->gridView->exportGrid->format, $this->getDataColumns());
         $report->setFilterString($this->filterString());
         $report->reportDisplayName = $this->getReportDisplayName();
         $report->reportid = $this->formName;
@@ -125,8 +109,8 @@ class GWExportGrid
         $output = '';
         if ($filter = Yii::$app->request->get($this->formName, false)) {
             foreach ($filter as $attr => $value) {
-                $value = $this->itemsValueExists($this->filterModel, $attr);
-                $output .= $this->filterModel->getAttributeLabel($attr) . ' = "' . $value . '"; ';
+                $value = $this->itemsValueExists($this->gridView->filterModel, $attr);
+                $output .= $this->gridView->filterModel->getAttributeLabel($attr) . ' = "' . $value . '"; ';
             }
         }
 
@@ -135,12 +119,12 @@ class GWExportGrid
 
     protected function getDataColumns()
     {
-        return array_filter($this->config['columns'], function ($column) {
-            return $column['class'] === '\kartik\grid\DataColumn' && (!isset($column['visible']) || $column['visible'] === true);
+        return array_filter($this->gridView->columns, function ($column) {
+            return $column instanceof DataColumn && $column->visible;
         });
     }
 
-    protected function itemsValueExists(ActiveRecord $model, $attribute)
+    protected function itemsValueExists(Model $model, $attribute)
     {
         if (method_exists($model, 'itemsValues') && $items = $model::itemsValues($attribute)) {
             return $items[$model[$attribute]];

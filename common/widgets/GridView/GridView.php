@@ -18,16 +18,17 @@ use yii\data\BaseDataProvider;
 use yii\db\ActiveQuery;
 use yii\grid\CheckboxColumn;
 use yii\grid\SerialColumn;
+use yii\helpers\ArrayHelper;
 use yii\web\View;
 
 class GridView extends \kartik\grid\GridView
 {
     public $crudSettings;
-    public $panelHeading;
-    public $selectColumn;
-    public $serialColumn;
-    public $minHeight;
-    public $customizeDialog;
+    public $panelHeading = [];
+    public $selectColumn = true;
+    public $serialColumn = true;
+    public $minHeight = false;
+    public $customizeDialog = true;
     /** @var  GWFilterDialogConfig|null */
     public $filterDialog;
     /** @var  GWExportGridConfig|null */
@@ -79,6 +80,9 @@ HTML;
         <div class="clearfix"></div>
 HTML;
     protected $optionsWidget;
+    /** @var GWFilterDialog */
+    protected $GWFilterDialog;
+    /** @var GWExportGrid */
     protected $GWExportGrid;
 
     public function __construct(array $config = [])
@@ -91,22 +95,21 @@ HTML;
             $this->optionsWidget = GWCustomizeDialog::lets($config)->prepareConfig($this->js, $this->panelBeforeTemplate);
         }
 
-        if ($this->optionsWidget['filterDialog']->enable) {
-            $this->optionsWidget = GWFilterDialog::lets($this->optionsWidget)->prepareConfig($this->js, $this->panelBeforeTemplate);
-        }
-
-        if ($this->optionsWidget['exportGrid']->enable) {
-            $this->GWExportGrid = GWExportGrid::lets($this->optionsWidget);
-            $this->optionsWidget = $this->GWExportGrid->prepareConfig($this->js, $this->panelBeforeTemplate);
-        }
-
-        $this->templatesPrepare();
-
         parent::__construct($this->optionsWidget);
     }
 
     public function init()
     {
+        if ($this->filterDialog->enable) {
+            $this->GWFilterDialog = GWFilterDialog::lets($this)->prepareConfig();
+        }
+
+        if ($this->exportGrid->enable) {
+            $this->GWExportGrid = GWExportGrid::lets($this);
+            $this->GWExportGrid->prepareConfig();
+        }
+
+        $this->templatesPrepare();
         parent::init();
     }
 
@@ -126,14 +129,14 @@ HTML;
     public function run()
     {
         if ($this->filterDialog->enable) {
-            $GWFilterDialog = GWFilterDialog::lets($this->optionsWidget);
-            $GWFilterDialog->makeFilter($this);
+            $this->GWFilterDialog->makeFilter();
         }
 
         if ($this->exportGrid->enable) {
-            $this->GWExportGrid->export($GWFilterDialog);
+            $this->GWExportGrid->export($this->GWFilterDialog);
         }
 
+        $this->initGridJs();
         $this->makeGridSelected2StorageJs();
         $this->makeDialogMessagesJs();
         $this->loadDataJs();
@@ -157,14 +160,13 @@ HTML;
 
     protected function setDefaults($config)
     {
-        $config['hover'] = isset($config['hover']) ? $config['hover'] : true;
-        $config['pjax'] = isset($config['pjax']) ? $config['pjax'] : true;
-        $config['customizeDialog'] = isset($config['customizeDialog']) ? $config['customizeDialog'] : true;
-        $config['serialColumn'] = isset($config['serialColumn']) ? $config['serialColumn'] : true;
-        $config['selectColumn'] = isset($config['selectColumn']) ? $config['selectColumn'] : true;
-        $config['rightBottomToolbar'] = isset($config['rightBottomToolbar']) ? $config['rightBottomToolbar'] : $this->rightBottomToolbar;
-        $this->minHeight = isset($config['minHeight']) ? $config['minHeight'] : false;
-        $config['id'] = isset($config['id']) ? $config['id'] : $this->getId();
+        $config['hover'] = ArrayHelper::getValue($config, 'hover', true);
+        $config['pjax'] = ArrayHelper::getValue($config, 'pjax', true);
+        $config['customizeDialog'] = ArrayHelper::getValue($config, 'customizeDialog', true);
+        $config['serialColumn'] = ArrayHelper::getValue($config, 'serialColumn', true);
+        $config['selectColumn'] = ArrayHelper::getValue($config, 'selectColumn', true);
+        $config['rightBottomToolbar'] = ArrayHelper::getValue($config, 'rightBottomToolbar', $this->rightBottomToolbar);
+        $config['id'] = ArrayHelper::getValue($config, 'id', $this->getId());
 
         if (isset($config['minHeight'])) {
             $config['containerOptions'] = array_replace_recursive(
@@ -245,23 +247,9 @@ HTML;
         $panelHeading = $config['panelHeading'];
 
         if (is_array($panelHeading) && count($panelHeading) > 0) {
-            $icon = '';
-            $title = '';
-            foreach ($panelHeading as $key => $option) {
-                switch ($key) {
-                    case 'icon':
-                        $icon = $option . ' ';
-                        break;
-                    case 'title':
-                        $title = $option;
-                        break;
-                    default:
-                        new \Exception(Yii::t('wk-widget-gridview', "In 'setPanelHeading' array must be only this keys ['icon', 'title']. Passed '{key}'", [
-                            'key' => $key,
-                        ]));
-                }
-            }
-            $config['panel']['heading'] = isset($config['panel']['heading']) ? $config['panel']['heading'] : '<h3 class="panel-title">' . $icon . $title . '</h3>';
+            $icon = ArrayHelper::getValue($panelHeading, 'icon', '');
+            $title = ArrayHelper::getValue($panelHeading, 'title', '');
+            $config['panel']['heading'] = ArrayHelper::getValue($config, 'panel.heading', '<h3 class="panel-title">' . $icon . ' ' . $title . '</h3>');
         }
     }
 
@@ -314,5 +302,10 @@ HTML;
                 $("#$id").yiiGridView('applyFilter');
             }
 EOT;
+    }
+
+    protected function initGridJs()
+    {
+        $this->js[] = "$('#{$this->id}-pjax').wkgridview();";
     }
 }

@@ -22,6 +22,7 @@ class GridViewAsset extends AssetBundle
         $this->js = [
             'js/wkgridview.js',
             'js/gridselected2storage.js',
+            'js/wkcustomize.js',
             'js/wkfilter.js',
             'js/wkexport.js',
         ];
@@ -33,7 +34,6 @@ class GridViewAsset extends AssetBundle
             'rmrevin\yii\fontawesome\AssetBundle',
             'common\widgets\GridView\assets\SortableAsset',
             'common\widgets\wkdialog\WkDialogAsset',
-       //   'common\widgets\GridView\assets\SerializeJSONAsset'
         ];
 
         parent::init();

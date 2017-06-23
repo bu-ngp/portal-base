@@ -19,39 +19,35 @@ use yii\web\View;
 
 class GWFilterDialog
 {
-    private $config;
-    private $configColumns;
+    /** @var GridView */
+    private $gridView;
     private $columns;
     private $additionalFilter = '';
-    /** @var GWFilterDialogConfig */
-    private $filterDialogConfig;
 
-    public static function lets($config)
+    public static function lets(GridView $gridView)
     {
-        if (!($config['filterDialog'] instanceof GWFilterDialogConfig)) {
+        if (!($gridView->filterDialog instanceof GWFilterDialogConfig)) {
             throw new \Exception('filterDialog must be GWFilterDialogConfig class');
         }
 
-        if ($config['filterDialog']->enable === false) {
+        if ($gridView->filterDialog->enable === false) {
             throw new \Exception('GWFilterDialogConfig->enable must be true');
         }
 
-        return new self($config);
+        return new self($gridView);
     }
 
-    public function __construct($config)
+    public function __construct(GridView $gridView)
     {
-        $this->config = $config;
-        $this->configColumns = $config['columns'];
-        $this->filterDialogConfig = $config['filterDialog'];
+        $this->gridView = $gridView;
         $this->columns = [];
     }
 
-    public function prepareConfig(array &$jsScripts, &$panelBeforeTemplate)
+    public function prepareConfig()
     {
-        $this->prepareJS($jsScripts);
-        $this->makeButtonOnToolbar($panelBeforeTemplate);
-        return $this->config;
+        $this->prepareJS();
+        $this->makeButtonOnToolbar();
+        return $this;
     }
 
     public function getAdditionFilterString()
@@ -59,7 +55,7 @@ class GWFilterDialog
         return $this->additionalFilter;
     }
 
-    protected function prepareJS(&$jsScripts)
+    protected function prepareJS()
     {
         $options = [
             'titleDialogMessage' => Yii::t('wk-widget-gridview', 'Additional Filter'),
@@ -72,19 +68,19 @@ class GWFilterDialog
 
         $json_options = json_encode($options, JSON_UNESCAPED_UNICODE);
 
-        $jsScripts[] = "$('#{$this->config['id']}-pjax').wkfilter($json_options);";
+        $this->gridView->js[] = "$('#{$this->gridView->id}-pjax').wkfilter($json_options);";
     }
 
 
-    protected function makeButtonOnToolbar(&$panelBeforeTemplate)
+    protected function makeButtonOnToolbar()
     {
         $button = Html::a(Yii::t('wk-widget-gridview', 'Filter'), '#',
             [
                 'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary wk-btn-filterDialog',
                 'style' => 'text-align: right;',
             ]);
-        
-        $panelBeforeTemplate = strtr($panelBeforeTemplate, ['{filterDialog}' => $button]);
+
+        $this->gridView->panelBeforeTemplate = strtr($this->gridView->panelBeforeTemplate, ['{filterDialog}' => $button]);
     }
 
     protected function getOutputString(Model $filterModel)
@@ -107,16 +103,16 @@ class GWFilterDialog
         return $output;
     }
 
-    public function makeFilter(GridView $gridView)
+    public function makeFilter()
     {
-        if (Yii::$app->request->isAjax && $this->config['dataProvider'] instanceof ActiveDataProvider) {
+        if (Yii::$app->request->isAjax) {
             $filterMessage = '';
 
             /** @var Model $filterModel */
-            $filterModel = $this->filterDialogConfig->filterModel;
+            $filterModel = $this->gridView->filterDialog->filterModel;
 
-            if ($_COOKIE[$this->config['id']]) {
-                $cookieOptions = json_decode($_COOKIE[$this->config['id']], true);
+            if ($_COOKIE[$this->gridView->id]) {
+                $cookieOptions = json_decode($_COOKIE[$this->gridView->id], true);
 
                 parse_str($cookieOptions['_filter'], $filterParams);
 
@@ -129,7 +125,7 @@ class GWFilterDialog
                 }
             }
 
-            $gridView->panel['before'] .= $this->makeFilterContent($gridView->getView(), $this->filterDialogConfig->filterView, $filterModel) . $filterMessage;
+            $this->gridView->panel['before'] .= $this->makeFilterContent($this->gridView->getView(), $this->gridView->filterDialog->filterView, $filterModel) . $filterMessage;
         }
     }
 
@@ -145,7 +141,7 @@ EOT;
     protected function applyQueryConditions(Model $filterModel)
     {
         /** @var ActiveQuery $query */
-        $query = $this->config['dataProvider']->query;
+        $query = $this->gridView->dataProvider->query;
 
         $alias = 't' . time();
 

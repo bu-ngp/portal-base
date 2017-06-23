@@ -159,7 +159,7 @@ class ReportByModel
                     $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $this->row, $this->row - $rowGridBegin);
 
                     foreach ($this->columnsFromGrid as $index => $column) {
-                        $value = $this->itemsValueExists($ar, $column['attribute']);
+                        $value = $this->itemsValueExists($ar, $column->attribute);
                         $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($index + 1, $this->row, $value);
                     }
 
@@ -256,7 +256,7 @@ class ReportByModel
         $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $this->row, '№');
 
         foreach ($this->columnsFromGrid as $index => $column) {
-            $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($index + 1, $this->row, $this->activeRecord->getAttributeLabel($column['attribute']));
+            $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($index + 1, $this->row, $this->activeRecord->getAttributeLabel($column->attribute));
         }
 
         $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $this->row, $this->highestColumn, $this->row)->applyFromArray($this->fontCaption);

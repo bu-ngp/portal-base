@@ -68,33 +68,30 @@ EOT;
     protected function prepareJS(&$jsScripts)
     {
         $options = [
-            'customizeDialog' => [
-                'enable' => true,
-                'titleDialogMessage' => Yii::t('wk-widget-gridview', 'Customize Dialog'),
-                'rowsPerPageMessage' => Yii::t('wk-widget-gridview', 'Rows Per Page'),
-                'visibleColumnsMessage' => Yii::t('wk-widget-gridview', 'Visible Columns'),
-                'hiddenColumnsMessage' => Yii::t('wk-widget-gridview', 'Hidden Columns'),
-                'rowsPerPageDescriptionMessage' => Yii::t('wk-widget-gridview', 'Enter the number of records on the grid from 10 to 100'),
-                'visibleColumnsDescriptionMessage' => Yii::t('wk-widget-gridview', 'Drag to the left of the column that you want to see in the grid in a specific order'),
-                'saveChangesMessage' => Yii::t('wk-widget-gridview', 'Save changes'),
-                'cancelMessage' => Yii::t('wk-widget-gridview', 'Cancel'),
-                'resetSortMessage' => Yii::t('wk-widget-gridview', 'Reset Sort'),
-                'resetMessage' => Yii::t('wk-widget-gridview', 'Reset'),
-                'resetConfirmTitleMessage' => Yii::t('wk-widget-gridview', 'Confirm'),
-                'resetConfirmMessage' => Yii::t('wk-widget-gridview', 'Reset Columns. Are you sure?'),
-                'resetSortConfirmTitleMessage' => Yii::t('wk-widget-gridview', 'Confirm'),
-                'resetSortConfirmMessage' => Yii::t('wk-widget-gridview', 'Reset Sort Grid. Are you sure?'),
-                'confirmCloseMessage' => Yii::t('wk-widget-gridview', 'Close'),
-                'confirmOKMessage' => Yii::t('wk-widget-gridview', 'OK'),
-                'alertOKMessage' => Yii::t('wk-widget-gridview', 'OK'),
-                'validatePagerMessage' => Yii::t('wk-widget-gridview', 'Rows per page must be from 10 to 100'),
-                'validateColumnsMessage' => Yii::t('wk-widget-gridview', 'Visible columns cannot empty'),
-            ],
+            'titleDialogMessage' => Yii::t('wk-widget-gridview', 'Customize Dialog'),
+            'rowsPerPageMessage' => Yii::t('wk-widget-gridview', 'Rows Per Page'),
+            'visibleColumnsMessage' => Yii::t('wk-widget-gridview', 'Visible Columns'),
+            'hiddenColumnsMessage' => Yii::t('wk-widget-gridview', 'Hidden Columns'),
+            'rowsPerPageDescriptionMessage' => Yii::t('wk-widget-gridview', 'Enter the number of records on the grid from 10 to 100'),
+            'visibleColumnsDescriptionMessage' => Yii::t('wk-widget-gridview', 'Drag to the left of the column that you want to see in the grid in a specific order'),
+            'saveChangesMessage' => Yii::t('wk-widget-gridview', 'Save changes'),
+            'cancelMessage' => Yii::t('wk-widget-gridview', 'Cancel'),
+            'resetSortMessage' => Yii::t('wk-widget-gridview', 'Reset Sort'),
+            'resetMessage' => Yii::t('wk-widget-gridview', 'Reset'),
+            'resetConfirmTitleMessage' => Yii::t('wk-widget-gridview', 'Confirm'),
+            'resetConfirmMessage' => Yii::t('wk-widget-gridview', 'Reset Columns. Are you sure?'),
+            'resetSortConfirmTitleMessage' => Yii::t('wk-widget-gridview', 'Confirm'),
+            'resetSortConfirmMessage' => Yii::t('wk-widget-gridview', 'Reset Sort Grid. Are you sure?'),
+            'confirmCloseMessage' => Yii::t('wk-widget-gridview', 'Close'),
+            'confirmOKMessage' => Yii::t('wk-widget-gridview', 'OK'),
+            'alertOKMessage' => Yii::t('wk-widget-gridview', 'OK'),
+            'validatePagerMessage' => Yii::t('wk-widget-gridview', 'Rows per page must be from 10 to 100'),
+            'validateColumnsMessage' => Yii::t('wk-widget-gridview', 'Visible columns cannot empty'),
         ];
 
         $json_options = json_encode($options, JSON_UNESCAPED_UNICODE);
 
-        $jsScripts[] = "$('#{$this->config['id']}-pjax').wkgridview($json_options)";
+        $jsScripts[] = "$('#{$this->config['id']}-pjax').wkcustomize($json_options)";
     }
 
     protected function makeButtonOnToolbar(&$panelBeforeTemplate)
