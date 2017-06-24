@@ -11,10 +11,7 @@ namespace common\widgets\GridView\services;
 
 use common\widgets\GridView\GridView;
 use Yii;
-use yii\base\Model;
 use yii\bootstrap\Html;
-use yii\data\ActiveDataProvider;
-use yii\data\DataProviderInterface;
 use yii\grid\Column;
 use yii\grid\DataColumn;
 
@@ -22,7 +19,6 @@ class GWCustomizeDialog
 {
     /** @var GridView */
     private $gridView;
-    private $columns;
 
     public static function lets($gridView)
     {
@@ -32,7 +28,6 @@ class GWCustomizeDialog
     public function __construct($gridView)
     {
         $this->gridView = $gridView;
-        $this->columns = [];
     }
 
     public function prepareConfig()
@@ -101,7 +96,7 @@ EOT;
 
         $json_options = json_encode($options, JSON_UNESCAPED_UNICODE);
 
-        $this->gridView->js[] = "$('#{$this->gridView->id}-pjax').wkcustomize($json_options)";
+        $this->gridView->registerJs("$('#{$this->gridView->id}-pjax').wkcustomize($json_options)");
     }
 
     protected function makeButtonOnToolbar()

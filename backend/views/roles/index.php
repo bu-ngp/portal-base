@@ -55,15 +55,14 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
         'crudSettings' => [
-            'create' => \yii\helpers\Url::to(['roles/create']),
-            'update' => \yii\helpers\Url::to(['roles/update']),
-            'delete' => \yii\helpers\Url::to(['roles/delete']),
+            'create' => ['roles/create'],
+            'update' => ['roles/update'],
+            'delete' => ['roles/delete'],
         ],
-        'panelHeading' => [
-            'icon' => FA::icon(FA::_LIST_ALT),
+        'panelHeading' => ['icon' => FA::icon(FA::_LIST_ALT),
             'title' => Yii::t('common/roles', 'Roles'),
         ],
-        'rightBottomToolbar' => Html::a(Yii::t('wk-widget-gridview', 'Отчет'), 'roles/report',
+        'rightBottomToolbar' => Html::a('Отчет', 'roles/report',
             [
                 'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-default wk-report',
                 'data-pjax' => '0',

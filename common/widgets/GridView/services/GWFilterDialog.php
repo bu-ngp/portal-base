@@ -68,7 +68,7 @@ class GWFilterDialog
 
         $json_options = json_encode($options, JSON_UNESCAPED_UNICODE);
 
-        $this->gridView->js[] = "$('#{$this->gridView->id}-pjax').wkfilter($json_options);";
+        $this->gridView->registerJs("$('#{$this->gridView->id}-pjax').wkfilter($json_options);");
     }
 
 

@@ -48,7 +48,7 @@ class GWExportGrid
         $this->prepareJS();
         $this->makeButtonOnToolbar();
         $this->additionFilterString = $additionFilterString;
-        
+
         return $this;
     }
 
@@ -62,7 +62,7 @@ class GWExportGrid
 
     protected function prepareJS()
     {
-        $this->gridView->js[] = "$('#{$this->gridView->id}-pjax').wkexport();";
+        $this->gridView->registerJs("$('#{$this->gridView->id}-pjax').wkexport();");
     }
 
     protected function makeButtonOnToolbar()
@@ -80,12 +80,13 @@ class GWExportGrid
 
     protected function filterString()
     {
-        return $this->getFilterString() . $this->additionFilterString;
+        $filter = $this->getFilterString() . $this->additionFilterString;
+        return empty($filter) ? '' : Yii::t('wk-widget-gridview', 'Add. filter: ') . $filter;
     }
 
     protected function getReportDisplayName()
     {
-        return ArrayHelper::getValue($this->gridView->panelHeading, 'title', Yii::t('wk-widget-gridView', 'Report'));
+        return ArrayHelper::getValue($this->gridView->panelHeading, 'title', Yii::t('wk-widget-gridview', 'Report'));
     }
 
     protected function letsExport()

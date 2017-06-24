@@ -18,9 +18,6 @@
  */
 return [
     'In \'crudOptions\' array must be only this keys [\'create\', \'update\', \'delete\']. Passed \'{key}\'' => '',
-    'In \'setPanelHeading\' array must be only this keys [\'icon\', \'title\']. Passed \'{key}\'' => '',
-    'Records selected <b>{from}</b> from <b>{all}</b>' => 'Выбраны записи <b>{from}</b> из <b>{all}</b>',
-    'In \'customizeSettings\' array must be only this keys [\'filterShow\', \'exportShow\', \'customizeShow\']. Passed \'{key}\'' => '@@@@',
     'Add. filter: ' => 'Доп. фильтр: ',
     'Additional Filter' => 'Дополнительный фильтр',
     'Apply' => 'Применить',
@@ -39,6 +36,7 @@ return [
     'Information' => 'Информация',
     'No' => 'Нет',
     'OK' => 'ОК',
+    'Records selected <b>{from}</b> from <b>{all}</b>' => 'Выбраны записи <b>{from}</b> из <b>{all}</b>',
     'Report' => 'Отчет',
     'Reset' => 'Сброс настроек',
     'Reset Columns. Are you sure?' => 'Вы уверены, что хотите сбросить настройки?',

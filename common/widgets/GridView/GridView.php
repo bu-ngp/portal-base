@@ -12,10 +12,15 @@ use common\widgets\GridView\services\GWPrepareColumns;
 use Yii;
 use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 class GridView extends \kartik\grid\GridView
 {
-    public $crudSettings;
+    public $hover = true;
+    public $pjax = true;
+    public $resizableColumns = false;
+
+    public $crudSettings = [];
     public $panelHeading = [];
     public $selectColumn = true;
     public $serialColumn = true;
@@ -25,8 +30,6 @@ class GridView extends \kartik\grid\GridView
     public $filterDialog;
     /** @var  GWExportGridConfig|null */
     public $exportGrid;
-    public $jsOptions = [];
-    public $js = [];
     public $toolbar = [];
     public $rightBottomToolbar = '';
     public $panelAfterTemplate = <<< HTML
@@ -71,22 +74,13 @@ HTML;
         {footer}
         <div class="clearfix"></div>
 HTML;
-    protected $optionsWidget;
+    protected $js = [];
     /** @var  GWCustomizeDialog */
     protected $GWCustomizeDialog;
     /** @var GWFilterDialog */
     protected $GWFilterDialog;
     /** @var GWExportGrid */
     protected $GWExportGrid;
-
-    public function __construct(array $config = [])
-    {
-        $this->registerTranslations();
-        $config = $this->setDefaults($config);
-        $this->optionsWidget = $config;
-
-        parent::__construct($this->optionsWidget);
-    }
 
     public function registerTranslations()
     {
@@ -98,6 +92,14 @@ HTML;
         ];
     }
 
+    public function init()
+    {
+        $this->registerTranslations();
+        $this->setDefaults();
+
+        return parent::init();
+    }
+
     /**
      * @return string
      */
@@ -107,9 +109,10 @@ HTML;
             GWCustomizeDialog::lets($this)->prepareConfig()->makeColumnsContent();
         }
 
-        $filterString = $this->filterDialog->enable
-            ? GWFilterDialog::lets($this)->prepareConfig()->makeFilter()
-            : '';
+        $filterString = '';
+        if ($this->filterDialog->enable) {
+            $filterString = GWFilterDialog::lets($this)->prepareConfig()->makeFilter();
+        }
 
         if ($this->exportGrid->enable) {
             GWExportGrid::lets($this)->prepareConfig($filterString)->export();
@@ -117,7 +120,6 @@ HTML;
 
         $this->templatesPrepare();
         $this->initGridJs();
-        $this->makeGridSelected2StorageJs();
         $this->makeDialogMessagesJs();
         $this->loadPropellerJS();
         $this->loadDataJs();
@@ -126,49 +128,38 @@ HTML;
         $this->registerAssetsByWk();
     }
 
-    protected function setDefaults($config)
+    public function registerJs($script)
     {
-        $config['hover'] = ArrayHelper::getValue($config, 'hover', true);
-        $config['pjax'] = ArrayHelper::getValue($config, 'pjax', true);
-        $config['customizeDialog'] = ArrayHelper::getValue($config, 'customizeDialog', true);
-        $config['serialColumn'] = ArrayHelper::getValue($config, 'serialColumn', true);
-        $config['selectColumn'] = ArrayHelper::getValue($config, 'selectColumn', true);
-        $config['rightBottomToolbar'] = ArrayHelper::getValue($config, 'rightBottomToolbar', $this->rightBottomToolbar);
-        $config['id'] = ArrayHelper::getValue($config, 'id', $this->getId());
-
-        if (isset($config['minHeight'])) {
-            $config['containerOptions'] = array_replace_recursive(
-                is_array($config['containerOptions']) ? $config['containerOptions'] : [],
-                ['style' => "min-height: {$config['minHeight']}px;"]
-            );
-        }
-
-        $this->selectColumn = isset($config['selectColumn']) ? $config['selectColumn'] : true;
-        //   $config['pjaxSettings']['loadingCssClass'] = isset($config['pjaxSettings']['loadingCssClass']) ? $config['pjaxSettings']['loadingCssClass'] : 'wk-widget-grid-loading';
-        $config['resizableColumns'] = isset($config['resizableColumns']) ? $config['resizableColumns'] : false;
-
-        $this->createCrudButtons($config);
-        $this->setPanelHeading($config);
-
-        $config['columns'] = GWPrepareColumns::lets($config)->prepare();
-
-        $config['filterDialog'] = $config['filterDialog'] instanceof GWFilterDialogConfig
-            ? $config['filterDialog']->build()
-            : GWFilterDialogConfig::set()->enable(false)->build();
-
-        $config['exportGrid'] = $config['exportGrid'] instanceof GWExportGridConfig
-            ? $config['exportGrid']->build()
-            : GWExportGridConfig::set()->enable(false)->build();
-
-        return $config;
+        $this->js[] = $script;
     }
 
-    protected function createCrudButtons(&$config)
+    protected function setDefaults()
     {
-        $crudSettings = $config['crudSettings'];
+        if ($this->minHeight) {
+            $this->containerOptions['style'] = "min-height: {$this->minHeight}px;";
+        }
+
+        //  $this->pjaxSettings = ArrayHelper::getValue($this->pjaxSettings, 'loadingCssClass', 'wk-widget-grid-loading');
+
+        $this->createCrudButtons();
+        $this->setPanelHeading();
+
+        GWPrepareColumns::lets($this)->prepare();
+
+        $GWFilterDialogConfig = ArrayHelper::getValue($this, 'filterDialog', GWFilterDialogConfig::set()->enable(false));
+        $this->filterDialog = $GWFilterDialogConfig->build();
+
+        $GWExportGridConfig = ArrayHelper::getValue($this, 'exportGrid', GWExportGridConfig::set()->enable(false));
+        $this->exportGrid = $GWExportGridConfig->build();
+    }
+
+    protected function createCrudButtons()
+    {
         $crudButtons = '';
-        if (is_array($crudSettings) && count($crudSettings) > 0) {
-            foreach ($crudSettings as $key => $crudUrl) {
+        if (is_array($this->crudSettings) && count($this->crudSettings) > 0) {
+            foreach ($this->crudSettings as $key => $crudUrl) {
+                $crudUrl = is_array($crudUrl) ? Url::to($crudUrl) : $crudUrl;
+
                 switch ($key) {
                     case 'create':
                         $crudButtons .= Html::a(Yii::t('wk-widget-gridview', 'Create'), $crudUrl,
@@ -198,26 +189,23 @@ HTML;
                 }
             }
         }
+
         $this->panelBeforeTemplate = strtr($this->panelBeforeTemplate, ['{crudToolbar}' => $crudButtons]);
         $this->panelAfterTemplate = strtr($this->panelAfterTemplate, ['{crudButtons}' => $crudButtons]);
-
-        unset($config['crudSettings']);
     }
 
     protected function templatesPrepare()
     {
         $this->panelBeforeTemplate = strtr($this->panelBeforeTemplate, ['{customizeDialog}' => '', '{filterDialog}' => '', '{exportGrid}' => '']);
-        $this->panelAfterTemplate = strtr($this->panelAfterTemplate, ['{rightBottomToolbar}' => $this->optionsWidget['rightBottomToolbar']]);
+        $this->panelAfterTemplate = strtr($this->panelAfterTemplate, ['{rightBottomToolbar}' => $this->rightBottomToolbar]);
     }
 
-    protected function setPanelHeading(&$config)
+    protected function setPanelHeading()
     {
-        $panelHeading = $config['panelHeading'];
-
-        if (is_array($panelHeading) && count($panelHeading) > 0) {
-            $icon = ArrayHelper::getValue($panelHeading, 'icon', '');
-            $title = ArrayHelper::getValue($panelHeading, 'title', '');
-            $config['panel']['heading'] = ArrayHelper::getValue($config, 'panel.heading', '<h3 class="panel-title">' . $icon . ' ' . $title . '</h3>');
+        if (is_array($this->panelHeading) && count($this->panelHeading) > 0) {
+            $icon = ArrayHelper::getValue($this->panelHeading, 'icon', '');
+            $title = ArrayHelper::getValue($this->panelHeading, 'title', '');
+            $this->panel['heading'] = ArrayHelper::getValue($this->panel, 'heading', '<h3 class="panel-title">' . $icon . ' ' . $title . '</h3>');
         }
     }
 
@@ -246,19 +234,6 @@ HTML;
         $options = json_encode(array_filter($options), JSON_UNESCAPED_UNICODE);
 
         $this->js[] = "wkwidget.init($options);";
-    }
-
-    protected function makeGridSelected2StorageJs()
-    {
-        $options = [
-            'storage' => 'selectedRows',
-            'selectedPanelClass' => 'selectedPanel',
-            'recordsSelectedMessage' => Yii::t('wk-widget-gridview', 'Records selected <b>{from}</b> from <b>{all}</b>'),
-        ];
-
-        $options = json_encode(array_filter($options), JSON_UNESCAPED_UNICODE);
-
-        $this->js[] = "$('#{$this->id}-pjax').gridselected2storage($options);";
     }
 
     protected function loadDataJs()

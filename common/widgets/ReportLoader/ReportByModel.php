@@ -229,7 +229,7 @@ class ReportByModel
     private function makeFilter()
     {
         if (!empty($this->filterString)) {
-            $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $this->row, Yii::t('wk-widget-report-loader', 'Add. filter: ') . $this->filterString);
+            $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $this->row, $this->filterString);
             $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $this->row)->applyFromArray($this->subTitle);
             $this->objPHPExcel->getActiveSheet()->mergeCellsByColumnAndRow(0, $this->row, $this->highestColumn, $this->row);
             $this->row++;

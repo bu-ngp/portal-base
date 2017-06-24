@@ -88,8 +88,13 @@
     };
 
     var eventsApply = function ($pjax) {
+        $pjax.on('click', 'td[data-col-seq]', function (e) {
+            if (!$(e.target).hasClass('wk-widget-row-checkbox')) {
+                $(e.target).parentsUntil('tbody').find('input.kv-row-checkbox').trigger('click');
+            }
+        });
 
-        $pjax.on('click', 'input.select-on-check-all', function () {
+        $pjax.on('click', '.wk-widget-all-select input.select-on-check-all', function () {
             var storage = $pjax.data('gridselected2storage').storage;
             storage.checkAll = $(this).prop('checked');
             storage.included = [];
@@ -99,7 +104,7 @@
             selectedPanelSet($pjax);
         });
 
-        $pjax.on('click', 'input.kv-row-checkbox', function () {
+        $pjax.on('click', 'input.kv-row-checkbox.wk-widget-row-checkbox', function () {
             saveToStorageSelectedRow($pjax, $(this));
             selectedPanelSet($pjax);
         });
@@ -221,7 +226,7 @@
             if (storage.checkAll) {
                 selectedRows = all - storage.excluded.length;
                 if (selectedRows == 1) {
-                    var $selectedRow = $pjax.find('input.kv-row-checkbox:checked').parentsUntil('tbody', 'tr');
+                    var $selectedRow = $pjax.find('input.kv-row-checkbox.wk-widget-row-checkbox:checked').parentsUntil('tbody', 'tr');
                     return $selectedRow.length ? $selectedRow.attr('data-key') : false;
                 }
             } else {

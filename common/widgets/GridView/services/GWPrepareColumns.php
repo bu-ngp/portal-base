@@ -15,30 +15,29 @@ use yii\db\ActiveRecord;
 
 class GWPrepareColumns
 {
-    private $config;
-    private $configColumns;
+    /** @var GridView */
+    private $gridView;
     private $columns;
 
-    public static function lets($config)
+    public static function lets($gridView)
     {
-        return new self($config);
+        return new self($gridView);
     }
 
-    public function __construct($config)
+    public function __construct($gridView)
     {
-        $this->config = $config;
-        $this->configColumns = $config['columns'];
+        $this->gridView = $gridView;
         $this->columns = [];
     }
 
     public function prepare()
     {
         $this->columns = [];
-        if (is_array($this->configColumns) && count($this->configColumns) > 0) {
+        if (is_array($this->gridView->columns) && count($this->gridView->columns) > 0) {
             $this->serialColumn();
             $this->selectColumn();
 
-            foreach ($this->configColumns as $key => $column) {
+            foreach ($this->gridView->columns as $key => $column) {
                 if (is_array($column)) {
                     $this->addRequiredProperties($column);
                     $this->addTooltip($column);
@@ -57,14 +56,14 @@ class GWPrepareColumns
                     'wk-hash' => hash('crc32', $column['attribute'] . $key),
                 ], isset($this->columns[$key]['headerOptions']) ?: []);
             }
-        }
 
-        return $this->columns;
+            $this->gridView->columns = $this->columns;
+        }
     }
 
     protected function serialColumn()
     {
-        $serialColumn = array_filter($this->configColumns, function ($column) {
+        $serialColumn = array_filter($this->gridView->columns, function ($column) {
             return is_array($column) && isset($column['class']) && $column['class'] === '\kartik\grid\SerialColumn' && isset($column['options']['wk-widget']) && $column['options']['wk-widget'];
         });
 
@@ -79,14 +78,14 @@ class GWPrepareColumns
 
     protected function selectColumn()
     {
-        if ($this->config['selectColumn']) {
-            $selectColumn = array_filter($this->configColumns, function ($column) {
-                return is_array($column) && isset($column['class']) && $column['class'] === '\kartik\grid\CheckboxColumn' && isset($column['options']['wk-widget']) && $column['options']['wk-widget'];
+        if ($this->gridView->selectColumn) {
+            $selectColumn = array_filter($this->gridView->columns, function ($column) {
+                return is_array($column) && isset($column['class']) && $column['class'] === 'common\widgets\GridView\services\CheckboxStorageColumn' && isset($column['options']['wk-widget']) && $column['options']['wk-widget'];
             });
 
             if (empty($selectColumn)) {
                 $this->columns[] = [
-                    'class' => '\kartik\grid\CheckboxColumn',
+                    'class' => 'common\widgets\GridView\services\CheckboxStorageColumn',
                     'noWrap' => true,
                     'rowSelectedClass' => GridView::TYPE_INFO,
                     'options' => ['wk-widget' => true],
@@ -162,7 +161,7 @@ class GWPrepareColumns
     protected function addFilterProperties(&$column)
     {
         /** @var ActiveRecord $model */
-        $model = $this->config['filterModel'];
+        $model = $this->gridView->filterModel;
         if (method_exists($model, 'itemsValues') && $items = $model::itemsValues($column['attribute'])) {
             $column['filter'] = $items;
             $column['value'] = function ($model, $key, $index, $column) use ($items) {

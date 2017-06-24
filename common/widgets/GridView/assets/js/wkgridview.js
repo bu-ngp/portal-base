@@ -12,11 +12,6 @@
     var defaults = {};
 
     var eventsApply = function ($pjax) {
-        $pjax.on('click', 'td[data-col-seq]', function (e) {
-            if (!$(e.target).hasClass('kv-row-checkbox')) {
-                $(e.target).parentsUntil('tbody').find('input.kv-row-checkbox').trigger('click');
-            }
-        });
 
         $pjax.on('dblclick', 'td[data-col-seq]', function (e) {
             //    $(this).css('background-color','red');
