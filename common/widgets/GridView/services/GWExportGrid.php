@@ -21,9 +21,8 @@ class GWExportGrid
 {
     /** @var GridView */
     private $gridView;
-    /** @var GWFilterDialog */
-    private $GWFilterDialog;
     private $formName;
+    private $additionFilterString = '';
 
     public static function lets(GridView $gridView)
     {
@@ -44,18 +43,17 @@ class GWExportGrid
         $this->formName = $gridView->filterModel->formName();
     }
 
-    public function prepareConfig()
+    public function prepareConfig($additionFilterString = '')
     {
         $this->prepareJS();
         $this->makeButtonOnToolbar();
+        $this->additionFilterString = $additionFilterString;
+        
+        return $this;
     }
 
-    /**
-     * @param GWFilterDialog|null $GWFilterDialog
-     */
-    public function export(GWFilterDialog $GWFilterDialog = null)
+    public function export()
     {
-        $this->GWFilterDialog = $GWFilterDialog;
         if (Yii::$app->request->isAjax && Yii::$app->request->post('_report', false)) {
             Yii::$app->response->clearOutputBuffers();
             exit($this->letsExport());
@@ -82,12 +80,7 @@ class GWExportGrid
 
     protected function filterString()
     {
-        $output = $this->getFilterString();
-        if ($this->GWFilterDialog instanceof GWFilterDialog) {
-            $output .= $this->GWFilterDialog->getAdditionFilterString();
-        }
-
-        return $output;
+        return $this->getFilterString() . $this->additionFilterString;
     }
 
     protected function getReportDisplayName()

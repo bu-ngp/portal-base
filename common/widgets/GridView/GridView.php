@@ -3,7 +3,6 @@
 namespace common\widgets\GridView;
 
 use common\widgets\GridView\assets\GridViewAsset;
-use common\widgets\GridView\assets\TextFieldPropellerAsset;
 use common\widgets\GridView\services\GWCustomizeDialog;
 use common\widgets\GridView\services\GWExportGrid;
 use common\widgets\GridView\services\GWExportGridConfig;
@@ -11,15 +10,8 @@ use common\widgets\GridView\services\GWFilterDialog;
 use common\widgets\GridView\services\GWFilterDialogConfig;
 use common\widgets\GridView\services\GWPrepareColumns;
 use Yii;
-use yii\base\Model;
 use yii\bootstrap\Html;
-use yii\data\ActiveDataProvider;
-use yii\data\BaseDataProvider;
-use yii\db\ActiveQuery;
-use yii\grid\CheckboxColumn;
-use yii\grid\SerialColumn;
 use yii\helpers\ArrayHelper;
-use yii\web\View;
 
 class GridView extends \kartik\grid\GridView
 {
@@ -80,6 +72,8 @@ HTML;
         <div class="clearfix"></div>
 HTML;
     protected $optionsWidget;
+    /** @var  GWCustomizeDialog */
+    protected $GWCustomizeDialog;
     /** @var GWFilterDialog */
     protected $GWFilterDialog;
     /** @var GWExportGrid */
@@ -91,26 +85,7 @@ HTML;
         $config = $this->setDefaults($config);
         $this->optionsWidget = $config;
 
-        if ($this->optionsWidget['customizeDialog'] === true) {
-            $this->optionsWidget = GWCustomizeDialog::lets($config)->prepareConfig($this->js, $this->panelBeforeTemplate);
-        }
-
         parent::__construct($this->optionsWidget);
-    }
-
-    public function init()
-    {
-        if ($this->filterDialog->enable) {
-            $this->GWFilterDialog = GWFilterDialog::lets($this)->prepareConfig();
-        }
-
-        if ($this->exportGrid->enable) {
-            $this->GWExportGrid = GWExportGrid::lets($this);
-            $this->GWExportGrid->prepareConfig();
-        }
-
-        $this->templatesPrepare();
-        parent::init();
     }
 
     public function registerTranslations()
@@ -128,34 +103,27 @@ HTML;
      */
     public function run()
     {
-        if ($this->filterDialog->enable) {
-            $this->GWFilterDialog->makeFilter();
+        if ($this->customizeDialog) {
+            GWCustomizeDialog::lets($this)->prepareConfig()->makeColumnsContent();
         }
+
+        $filterString = $this->filterDialog->enable
+            ? GWFilterDialog::lets($this)->prepareConfig()->makeFilter()
+            : '';
 
         if ($this->exportGrid->enable) {
-            $this->GWExportGrid->export($this->GWFilterDialog);
+            GWExportGrid::lets($this)->prepareConfig($filterString)->export();
         }
 
+        $this->templatesPrepare();
         $this->initGridJs();
         $this->makeGridSelected2StorageJs();
         $this->makeDialogMessagesJs();
+        $this->loadPropellerJS();
         $this->loadDataJs();
 
         parent::run();
         $this->registerAssetsByWk();
-    }
-
-    protected function endPjax()
-    {
-        if ($this->customizeDialog === true) {
-            GWCustomizeDialog::lets($this->optionsWidget)->makeColumnsContent($this->dataProvider, $this->filterModel, $this->id);
-        }
-
-        $view = $this->getView();
-        $view->registerJs(file_get_contents(Yii::getAlias('@npm') . '/propellerkit/components/textfield/js/textfield.js'));
-        $view->registerJs(file_get_contents(Yii::getAlias('@npm') . '/propellerkit/components/checkbox/js/checkbox.js'));
-
-        return parent::endPjax();
     }
 
     protected function setDefaults($config)
@@ -176,7 +144,7 @@ HTML;
         }
 
         $this->selectColumn = isset($config['selectColumn']) ? $config['selectColumn'] : true;
-     //   $config['pjaxSettings']['loadingCssClass'] = isset($config['pjaxSettings']['loadingCssClass']) ? $config['pjaxSettings']['loadingCssClass'] : 'wk-widget-grid-loading';
+        //   $config['pjaxSettings']['loadingCssClass'] = isset($config['pjaxSettings']['loadingCssClass']) ? $config['pjaxSettings']['loadingCssClass'] : 'wk-widget-grid-loading';
         $config['resizableColumns'] = isset($config['resizableColumns']) ? $config['resizableColumns'] : false;
 
         $this->createCrudButtons($config);
@@ -307,5 +275,18 @@ EOT;
     protected function initGridJs()
     {
         $this->js[] = "$('#{$this->id}-pjax').wkgridview();";
+    }
+
+    protected function loadPropellerJS()
+    {
+        $textfieldJsPath = Yii::getAlias('@npm') . '/propellerkit/components/textfield/js/textfield.js';
+        if (file_exists($textfieldJsPath)) {
+            $this->js[] = file_get_contents($textfieldJsPath);
+        }
+
+        $checkboxJsPath = Yii::getAlias('@npm') . '/propellerkit/components/checkbox/js/checkbox.js';
+        if (file_exists($checkboxJsPath)) {
+            $this->js[] = file_get_contents($checkboxJsPath);
+        }
     }
 }

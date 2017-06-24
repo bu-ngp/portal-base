@@ -127,6 +127,8 @@ class GWFilterDialog
 
             $this->gridView->panel['before'] .= $this->makeFilterContent($this->gridView->getView(), $this->gridView->filterDialog->filterView, $filterModel) . $filterMessage;
         }
+
+        return $this->additionalFilter;
     }
 
     protected function makeFilterContent(View $view, $filterView, Model $filterModel)

@@ -9,55 +9,65 @@
 namespace common\widgets\GridView\services;
 
 
+use common\widgets\GridView\GridView;
 use Yii;
 use yii\base\Model;
 use yii\bootstrap\Html;
+use yii\data\ActiveDataProvider;
 use yii\data\DataProviderInterface;
+use yii\grid\Column;
+use yii\grid\DataColumn;
 
 class GWCustomizeDialog
 {
-    private $config;
-    private $configColumns;
+    /** @var GridView */
+    private $gridView;
     private $columns;
 
-    public static function lets($config)
+    public static function lets($gridView)
     {
-        return new self($config);
+        return new self($gridView);
     }
 
-    public function __construct($config)
+    public function __construct($gridView)
     {
-        $this->config = $config;
-        $this->configColumns = $config['columns'];
+        $this->gridView = $gridView;
         $this->columns = [];
     }
 
-    public function prepareConfig(array &$jsScripts, &$panelBeforeTemplate)
+    public function prepareConfig()
     {
-        $this->prepareJS($jsScripts);
-        $this->makeButtonOnToolbar($panelBeforeTemplate);
+        $this->prepareJS();
+        $this->makeButtonOnToolbar();
         $this->prepareColumns();
         $this->preparePager();
-        return $this->config;
+        return $this;
     }
 
-    public function makeColumnsContent(DataProviderInterface $dataProvider, Model $filterModel, $id)
+    public function makeColumnsContent()
     {
         $visible = '';
         $hidden = '';
-        array_walk($this->configColumns, function ($column) use (&$visible, &$hidden, $filterModel) {
-            if (isset($column['visible']) && $column['visible'] === false) {
-                $hidden .= '<a role="option" aria-grabbed="false" draggable="true" class="list-group-item" wk-hash="' . $column['headerOptions']['wk-hash'] . '">' . $filterModel->getAttributeLabel($column['attribute']) . '</a>';
-            } else {
-                if (empty($column['options']['wk-widget'])) {
-                    $visible .= '<a role="option" aria-grabbed="false" draggable="true" class="list-group-item" wk-hash="' . $column['headerOptions']['wk-hash'] . '">' . $filterModel->getAttributeLabel($column['attribute']) . '</a>';
+        array_walk($this->gridView->columns, function ($column) use (&$visible, &$hidden) {
+            /** @var $column DataColumn */
+            if ($column->visible) {
+                if (empty($column->options['wk-widget'])) {
+                    $visible .= '<a role="option" aria-grabbed="false" draggable="true" class="list-group-item" wk-hash="' . $column->headerOptions['wk-hash'] . '">' . $this->gridView->filterModel->getAttributeLabel($column->attribute) . '</a>';
                 }
+            } else {
+                $hidden .= '<a role="option" aria-grabbed="false" draggable="true" class="list-group-item" wk-hash="' . $column->headerOptions['wk-hash'] . '">' . $this->gridView->filterModel->getAttributeLabel($column->attribute) . '</a>';
             }
         });
 
-        $pagerValue = $dataProvider->getPagination()->pageSize;
-        echo <<<EOT
-        <div class="$id-wk-customize-dialog-content" style="display: none;">
+        $pagerValue = $this->gridView->dataProvider->getPagination()->pageSize;
+
+        $this->gridView->columns = array_filter($this->gridView->columns, function ($column) {
+            /** @var $column Column */
+            return $column->visible;
+        });
+
+        $this->gridView->panel['before'] .= <<<EOT
+        <div class="{$this->gridView->id}-wk-customize-dialog-content" style="display: none;">
             <div class="wk-customize-dialog-pagerValue">$pagerValue</div>
             <div class="wk-customize-dialog-visible-columns">$visible</div>
             <div class="wk-customize-dialog-hidden-columns">$hidden</div>
@@ -65,7 +75,7 @@ class GWCustomizeDialog
 EOT;
     }
 
-    protected function prepareJS(&$jsScripts)
+    protected function prepareJS()
     {
         $options = [
             'titleDialogMessage' => Yii::t('wk-widget-gridview', 'Customize Dialog'),
@@ -91,10 +101,10 @@ EOT;
 
         $json_options = json_encode($options, JSON_UNESCAPED_UNICODE);
 
-        $jsScripts[] = "$('#{$this->config['id']}-pjax').wkcustomize($json_options)";
+        $this->gridView->js[] = "$('#{$this->gridView->id}-pjax').wkcustomize($json_options)";
     }
 
-    protected function makeButtonOnToolbar(&$panelBeforeTemplate)
+    protected function makeButtonOnToolbar()
     {
         $button = Html::a(Yii::t('wk-widget-gridview', 'Customize'), '#',
             [
@@ -102,14 +112,14 @@ EOT;
                 'style' => 'text-align: right;',
             ]);
 
-        $panelBeforeTemplate = strtr($panelBeforeTemplate, ['{customizeDialog}' => $button]);
+        $this->gridView->panelBeforeTemplate = strtr($this->gridView->panelBeforeTemplate, ['{customizeDialog}' => $button]);
     }
 
     protected function prepareColumns()
     {
-        if ($_COOKIE[$this->config['id']]) {
+        if ($_COOKIE[$this->gridView->id]) {
             $cookieColumns = $this->CookieColumns();
-            $this->config['columns'] = array_merge($cookieColumns->hidden, $cookieColumns->visible);
+            $this->gridView->columns = array_merge($cookieColumns->hidden, $cookieColumns->visible);
         }
     }
 
@@ -117,55 +127,47 @@ EOT;
     {
         $visible = [];
         $hidden = [];
-        $columns = $this->configColumns;
+        $columns = $this->gridView->columns;
 
         $process = [];
 
         array_map(function ($column) use (&$visible, &$process) {
-            if (isset($column['options']['wk-widget'])) {
-                $visible[] = $column;
-            } else {
-                $process[] = $column;
-            }
-
+            /** @var $column Column */
+            array_push(isset($column->options['wk-widget']) ? $visible : $process, $column);
         }, $columns);
 
-        if ($_COOKIE[$this->config['id']]) {
-            $cookieOptions = json_decode($_COOKIE[$this->config['id']]);
+        if ($_COOKIE[$this->gridView->id]) {
+            $cookieOptions = json_decode($_COOKIE[$this->gridView->id]);
 
             if (property_exists($cookieOptions, 'visible')
                 && !empty($cookieOptions->visible)
             ) {
                 foreach ($cookieOptions->visible as $colCookie) {
                     $filterCol = array_filter($process, function ($col) use ($colCookie) {
-                        return $col['headerOptions']['wk-hash'] === $colCookie;
+                        /** @var $col Column */
+                        return $col->headerOptions['wk-hash'] === $colCookie;
                     });
 
                     $keyFilterCol = array_keys($filterCol)[0];
 
                     if (!empty($filterCol)) {
-                        $filterCol[$keyFilterCol]['visible'] = true;
+                        $filterCol[$keyFilterCol]->visible = true;
                         $visible[] = $filterCol[$keyFilterCol];
                         unset($process[array_keys($filterCol)[0]]);
                     }
                 }
 
                 array_walk($process, function (&$column) {
-                    $column['visible'] = false;
+                    /** @var $column Column */
+                    $column->visible = false;
                 });
             }
-
         }
 
         array_map(function ($column) use (&$visible, &$hidden) {
-            if (isset($column['visible']) && $column['visible'] === false) {
-                $hidden[] = $column;
-            } else {
-                $visible[] = $column;
-            }
-
+            /** @var $column Column */
+            array_push($column->visible ? $visible : $hidden, $column);
         }, $process);
-
 
         return (object)[
             'visible' => $visible,
@@ -175,11 +177,11 @@ EOT;
 
     protected function preparePager()
     {
-        if ($_COOKIE[$this->config['id']]) {
-            $cookieOptions = json_decode($_COOKIE[$this->config['id']]);
+        if ($_COOKIE[$this->gridView->id]) {
+            $cookieOptions = json_decode($_COOKIE[$this->gridView->id]);
 
             if (property_exists($cookieOptions, 'pager') && $cookieOptions->pager >= 10 && $cookieOptions->pager <= 100) {
-                $this->config['dataProvider']->pagination->pageSize = $cookieOptions->pager;
+                $this->gridView->dataProvider->getPagination()->pageSize = $cookieOptions->pager;
             }
 
             if (property_exists($cookieOptions, 'sort')) {
@@ -190,7 +192,7 @@ EOT;
                     $direction = SORT_ASC;
                 }
 
-                $this->config['dataProvider']->sort->defaultOrder = [$cookieOptions->sort => $direction];
+                $this->gridView->dataProvider->getSort()->defaultOrder = [$cookieOptions->sort => $direction];
             }
         }
     }
