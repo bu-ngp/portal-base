@@ -1,3 +1,14 @@
+## 0.3.3 - (2017-06-24)
+
+_Дополнения_:
+
+  - Доработка виджета `GridView`:
+    - Рефакторинг плагинов `wkgridview.js`, `gridselected2storage.js`
+    - Добавлен класс `CheckboxStorageColumn`, колонка для выделения строк и хранения выделенных строк в хранилище браузера
+    - Рефакторинг классов `GWCustomizeDialog`, `GWFilterDialog`, `GWExportGrid`, `GWPrepareColumns`
+    - Для выделения строк теперь используется класс `CheckboxStorageColumn` вместо `CheckboxColumn`
+    - Убран конструктор и метод `endPjax`
+
 ## 0.3.2 - (2017-06-23)
 
 _Дополнения_:
