@@ -56,10 +56,8 @@ HTML;
                 {toolbar}
             </div>
             <div class="btn-toolbar pull-right kv-grid-toolbar" role="toolbar">
-                <div class="btn-group-vertical btn-group-xs wk-custom-buttons">
-                    {customizeDialog}
-                    {filterDialog}
-                    {exportGrid}
+                <div class="btn-group wk-custom-buttons">
+                    {customButtons}
                 </div>
             </div>
         </div>
@@ -74,6 +72,7 @@ HTML;
         {footer}
         <div class="clearfix"></div>
 HTML;
+    public $customButtons = [];
     protected $js = [];
     /** @var  GWCustomizeDialog */
     protected $GWCustomizeDialog;
@@ -118,6 +117,7 @@ HTML;
             GWExportGrid::lets($this)->prepareConfig($filterString)->export();
         }
 
+        $this->makeCustomButtons();
         $this->templatesPrepare();
         $this->initGridJs();
         $this->makeDialogMessagesJs();
@@ -126,6 +126,12 @@ HTML;
 
         parent::run();
         $this->registerAssetsByWk();
+    }
+
+    protected function initLayout()
+    {
+        parent::initLayout();
+        $this->layout = strtr($this->layout, ['{items}' => '{items}<div class="wk-widget-grid-loading-container"></div>']);
     }
 
     public function registerJs($script)
@@ -139,7 +145,7 @@ HTML;
             $this->containerOptions['style'] = "min-height: {$this->minHeight}px;";
         }
 
-        //  $this->pjaxSettings = ArrayHelper::getValue($this->pjaxSettings, 'loadingCssClass', 'wk-widget-grid-loading');
+        $this->pjaxSettings['loadingCssClass'] = ArrayHelper::getValue($this->pjaxSettings, 'loadingCssClass', 'wk-widget-grid-loading');
 
         $this->createCrudButtons();
         $this->setPanelHeading();
@@ -196,7 +202,7 @@ HTML;
 
     protected function templatesPrepare()
     {
-        $this->panelBeforeTemplate = strtr($this->panelBeforeTemplate, ['{customizeDialog}' => '', '{filterDialog}' => '', '{exportGrid}' => '']);
+        $this->panelBeforeTemplate = strtr($this->panelBeforeTemplate, ['{customButtons}' => '']);
         $this->panelAfterTemplate = strtr($this->panelAfterTemplate, ['{rightBottomToolbar}' => $this->rightBottomToolbar]);
     }
 
@@ -262,6 +268,30 @@ EOT;
         $checkboxJsPath = Yii::getAlias('@npm') . '/propellerkit/components/checkbox/js/checkbox.js';
         if (file_exists($checkboxJsPath)) {
             $this->js[] = file_get_contents($checkboxJsPath);
+        }
+    }
+
+    protected function makeCustomButtons()
+    {
+        if ($this->customButtons) {
+            $buttons = '';
+            array_map(function ($liContent) use (&$buttons) {
+                if ($liContent === '{divider}') {
+                    $buttons .= '<li role="separator" class="divider"></li>';
+                } else {
+                    $buttons .= "<li>$liContent</li>";
+                }
+            }, $this->customButtons);
+
+            $this->panelBeforeTemplate = strtr($this->panelBeforeTemplate, ['{customButtons}' => <<<EOT
+                <div class="btn-group wk-widget-grid-custom-button">
+                    <button type="button" class="btn pmd-btn-flat pmd-ripple-effect btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-option-vertical"></i></button>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        $buttons
+                    </ul>
+                </div>
+EOT
+            ]);
         }
     }
 }

@@ -25,10 +25,19 @@
             purifyingUrl();
         });
 
+
         $(document).on('pjax:complete', function (e) {
             var pjaxID = $pjax[0].id;
-            if (e.target.id == pjaxID) {                
+            if (e.target.id == pjaxID) {
                 purifyingUrl();
+
+                $('.wk-widget-grid-custom-button').off('show.bs.dropdown').on('show.bs.dropdown', function () {
+                    $(this).find('.dropdown-menu').first().stop(true, true).slideDown(200);
+                });
+
+                $('.wk-widget-grid-custom-button').off('hide.bs.dropdown').on('hide.bs.dropdown', function () {
+                    $(this).find('.dropdown-menu').first().stop(true, true).slideUp(200);
+                });
             }
         });
     };

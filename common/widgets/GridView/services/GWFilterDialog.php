@@ -76,11 +76,10 @@ class GWFilterDialog
     {
         $button = Html::a(Yii::t('wk-widget-gridview', 'Filter'), '#',
             [
-                'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary wk-btn-filterDialog',
-                'style' => 'text-align: right;',
+                'class' => 'btn btn-xs pmd-btn-flat pmd-ripple-effect btn-primary wk-btn-filterDialog',
             ]);
 
-        $this->gridView->panelBeforeTemplate = strtr($this->gridView->panelBeforeTemplate, ['{filterDialog}' => $button]);
+        $this->gridView->customButtons[] = $button;
     }
 
     protected function getOutputString(Model $filterModel)

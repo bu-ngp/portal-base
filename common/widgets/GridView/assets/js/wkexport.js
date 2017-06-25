@@ -30,9 +30,12 @@
                 });
 
                 $pjax.on('click', 'a.wk-btn-exportGrid', function (e) {
+                    e.preventDefault();
+                    var type = $(this).is('[wk-export]') ? $(this).attr('wk-export') : 'pdf';
+
                     $.ajax({
                         url: window.location.href,
-                        data: {_report: true},
+                        data: {_report: true, type: type},
                         method: 'post',
                         success: function (response) {
                             if (typeof $("#wk-Report-Loader").data('bs.modal') == 'undefined' || !$("#wk-Report-Loader").data('bs.modal').isShown) {

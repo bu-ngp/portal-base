@@ -14,7 +14,7 @@ use common\widgets\GridView\GridView;
 class GWExportGridConfig
 {
     public $enable = true;
-    public $format = GridView::EXCEL;
+    public $format = [GridView::EXCEL, GridView::PDF];
     public $idReportLoader;
 
     public static function set()
@@ -30,6 +30,10 @@ class GWExportGridConfig
 
     public function format($format)
     {
+        if (!is_array($format)) {
+            $format = [$format];
+        }
+
         $this->format = $format;
         return $this;
     }
@@ -46,8 +50,10 @@ class GWExportGridConfig
             throw new \Exception('enable() must be Boolean');
         }
 
-        if (!(in_array($this->format, [GridView::EXCEL, GridView::PDF]))) {
-            throw new \Exception('format() must be only "xls" or "pdf"');
+        foreach ($this->format as $format) {
+            if (!(in_array($format, [GridView::EXCEL, GridView::PDF]))) {
+                throw new \Exception('format() must be only "xls" or "pdf" in array parameter');
+            }
         }
 
         if ($this->enable && (!is_string($this->idReportLoader) || empty($this->idReportLoader))) {

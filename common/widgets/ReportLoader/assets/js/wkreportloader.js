@@ -390,6 +390,9 @@
 
                 $el.find('div.wk-widget-loading-block').one('click', function (event) {
                     $('#wk-Report-Loader').modal();
+               /*     if ($(event.currentTarget).parent().parent().parent('.dropdown-menu').length) {
+                        $(event.currentTarget).parent().parent().parent().parent().dropdown('toggle');
+                    }*/
                     event.stopPropagation();
                     event.preventDefault();
                 });

@@ -103,11 +103,10 @@ EOT;
     {
         $button = Html::a(Yii::t('wk-widget-gridview', 'Customize'), '#',
             [
-                'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-default wk-btn-customizeDialog',
-                'style' => 'text-align: right;',
+                'class' => 'btn btn-xs pmd-btn-flat pmd-ripple-effect btn-default wk-btn-customizeDialog',
             ]);
 
-        $this->gridView->panelBeforeTemplate = strtr($this->gridView->panelBeforeTemplate, ['{customizeDialog}' => $button]);
+        $this->gridView->customButtons[] = $button;
     }
 
     protected function prepareColumns()

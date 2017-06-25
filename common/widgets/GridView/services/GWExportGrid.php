@@ -55,8 +55,10 @@ class GWExportGrid
     public function export()
     {
         if (Yii::$app->request->isAjax && Yii::$app->request->post('_report', false)) {
+            $format = Yii::$app->request->post('type', 'pdf');
+
             Yii::$app->response->clearOutputBuffers();
-            exit($this->letsExport());
+            exit($this->letsExport($format));
         }
     }
 
@@ -67,15 +69,45 @@ class GWExportGrid
 
     protected function makeButtonOnToolbar()
     {
-        $button = Html::a(Yii::t('wk-widget-gridview', 'Export'), '#',
-            [
-                'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger wk-loading wk-btn-exportGrid',
-                'wk-loading' => true,
-                'style' => 'text-align: right;',
-                'data-pjax' => '0',
-            ]);
+        if (!$this->gridView->exportGrid->format) {
+            $this->gridView->exportGrid->format[] = GridView::PDF;
+        }
 
-        $this->gridView->panelBeforeTemplate = strtr($this->gridView->panelBeforeTemplate, ['{exportGrid}' => $button]);
+        if (count($this->gridView->customButtons) > 0) {
+            $this->gridView->customButtons[] = '{divider}';
+        }
+
+        foreach ($this->gridView->exportGrid->format as $format) {
+            $properties = $this->buttonProperties($format);
+
+            $button = Html::a($properties['description'] . ' <i class="fa ' . $properties['icon'] . '"></i>', '#',
+                [
+                    'class' => "btn btn-xs pmd-btn-flat pmd-ripple-effect {$properties['class']} wk-loading wk-btn-exportGrid",
+                    'wk-export' => $format,
+                    'wk-loading' => true,
+                    'data-pjax' => '0',
+                ]);
+
+            $this->gridView->customButtons[] = $button;
+        }
+    }
+
+    protected function buttonProperties($format)
+    {
+        switch ($format) {
+            case GridView::EXCEL:
+                return [
+                    'class' => 'btn-success',
+                    'icon' => 'fa-file-excel-o',
+                    'description' => Yii::t('wk-widget-gridview', 'Export to Excel'),
+                ];
+            default:
+                return [
+                    'class' => 'btn-danger',
+                    'icon' => 'fa-file-pdf-o',
+                    'description' => Yii::t('wk-widget-gridview', 'Export to PDF'),
+                ];
+        }
     }
 
     protected function filterString()
@@ -89,9 +121,9 @@ class GWExportGrid
         return ArrayHelper::getValue($this->gridView->panelHeading, 'title', Yii::t('wk-widget-gridview', 'Report'));
     }
 
-    protected function letsExport()
+    protected function letsExport($format = 'pdf')
     {
-        $report = new ReportByModel($this->gridView->dataProvider, $this->gridView->exportGrid->format, $this->getDataColumns());
+        $report = new ReportByModel($this->gridView->dataProvider, $format, $this->getDataColumns());
         $report->setFilterString($this->filterString());
         $report->reportDisplayName = $this->getReportDisplayName();
         $report->reportid = $this->formName;
