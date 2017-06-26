@@ -19,6 +19,10 @@ class GridView extends \kartik\grid\GridView
     public $hover = true;
     public $pjax = true;
     public $resizableColumns = false;
+    public $pager = [
+        'prevPageLabel' => '<i class="fa fa-angle-left"></i>',
+        'nextPageLabel' => '<i class="fa fa-angle-right"></i>',
+    ];
 
     public $crudSettings = [];
     public $panelHeading = [];
@@ -152,11 +156,8 @@ HTML;
 
         GWPrepareColumns::lets($this)->prepare();
 
-        $GWFilterDialogConfig = ArrayHelper::getValue($this, 'filterDialog', GWFilterDialogConfig::set()->enable(false));
-        $this->filterDialog = $GWFilterDialogConfig->build();
-
-        $GWExportGridConfig = ArrayHelper::getValue($this, 'exportGrid', GWExportGridConfig::set()->enable(false));
-        $this->exportGrid = $GWExportGridConfig->build();
+        $this->filterDialog = empty($this->filterDialog) ? GWFilterDialogConfig::set()->enable(false)->build() : $this->filterDialog->build();
+        $this->exportGrid = empty($this->exportGrid) ? GWExportGridConfig::set()->enable(false)->build() : $this->exportGrid->build();
     }
 
     protected function createCrudButtons()
@@ -260,14 +261,16 @@ EOT;
 
     protected function loadPropellerJS()
     {
-        $textfieldJsPath = Yii::getAlias('@npm') . '/propellerkit/components/textfield/js/textfield.js';
-        if (file_exists($textfieldJsPath)) {
-            $this->js[] = file_get_contents($textfieldJsPath);
-        }
+        $scripts = [
+            Yii::getAlias('@npm') . '/propellerkit/components/textfield/js/textfield.js',
+            Yii::getAlias('@npm') . '/propellerkit/components/checkbox/js/checkbox.js',
+            //  Yii::getAlias('@npm') . '/propellerkit/components/button/js/ripple-effect.js',
+        ];
 
-        $checkboxJsPath = Yii::getAlias('@npm') . '/propellerkit/components/checkbox/js/checkbox.js';
-        if (file_exists($checkboxJsPath)) {
-            $this->js[] = file_get_contents($checkboxJsPath);
+        foreach ($scripts as $script) {
+            if (file_exists($script)) {
+                $this->js[] = file_get_contents($script);
+            }
         }
     }
 

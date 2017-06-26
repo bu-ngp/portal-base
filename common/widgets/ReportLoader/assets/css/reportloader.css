@@ -19,6 +19,7 @@
 .wk-report-loader-content > li:hover {
     text-decoration: none;
     background-color: #f5f5f5;
+    transition: background-color 0.2s;
 }
 
 .wk-report-loader-content > li > i {
@@ -64,10 +65,16 @@
 .wk-report-loader-download {
     width: 100%;
     color: #6ddc4a;
+    text-align: center;
 }
 
-.wk-report-loader-download:hover, .wk-report-loader-download:focus, .wk-report-loader-download:active, .wk-report-loader-download:active:hover {
-    color: #407130;
+.wk-report-loader-item-download {
+    cursor: pointer;
+}
+
+.wk-report-loader-item-download:hover:active {
+    background-color: #e8e8e8;
+    transition: background-color 0.2s;
 }
 
 .wk-report-loader-wait {

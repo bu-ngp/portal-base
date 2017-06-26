@@ -77,7 +77,7 @@ class AuthItemSearch extends AuthItem
         ]);
 
 
-        list($updated_at_begin, $updated_at_end) = explode('---', $this->updated_at);;
+        list($updated_at_begin, $updated_at_end) = explode(' - ', $this->updated_at);;
 
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'description', $this->description])

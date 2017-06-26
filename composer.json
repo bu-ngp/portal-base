@@ -28,7 +28,9 @@
     "bower-asset/jquery.serializeJSON": "^2.8",
     "npm-asset/progressbar.js": "^1.0",
     "mpdf/mpdf": "^6.1",
-    "kartik-v/yii2-date-range": "^1.6"
+    "kartik-v/yii2-date-range": "^1.6",
+    "wemersonjanuario/wkhtmltopdf-windows": "~0.12",
+    "knplabs/knp-snappy": "^0.4.3"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",

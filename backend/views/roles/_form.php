@@ -30,14 +30,9 @@ use yii\widgets\ActiveForm;
         'columns' => [
             'description'
         ],
-        'customizeSettings' => [
-            'filterShow' => true,
-            'exportShow' => true,
-            'customizeShow' => true,
-        ],
         'crudSettings' => [
-            'create' => \yii\helpers\Url::to(['roles/create']),
-            'delete' => \yii\helpers\Url::to(['roles/delete']),
+            'create' => ['roles/create'],
+            'delete' => ['roles/delete'],
         ],
         'panelHeading' => [
             'icon' => FA::icon(FA::_LIST_ALT),

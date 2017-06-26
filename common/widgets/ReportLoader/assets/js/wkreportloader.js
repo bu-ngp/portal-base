@@ -42,8 +42,8 @@
             '<div class="col-xs-12 wk-ReportLoaderDialog-content">' +
             '<ul class="list-group pmd-z-depth pmd-list pmd-card-list wk-report-loader-content"></ul>' +
             '<div class="wk-report-loader-empty">' + $widget.data('wkreportloader').settings.emptyMessage + '</div>' +
-            '<div class="wk-report-loader-wait"></div>' +
             '</div>' +
+            '<div class="wk-report-loader-wait"></div>' +
             '</div>' +
             '</div>' +
             '<div class="pmd-modal-action">' +
@@ -111,30 +111,27 @@
         return '<button title="' + content.message + '" class="btn pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-danger ' + content.styleClass + '"><i class="fa fa-2x ' + content.icon + '"></i></button>';
     };
 
-    var itemDownloadButton = function ($widget, id, status) {
+    var itemDownloadButton = function (status) {
         return itemStatus(status) === 'COMPLETE' ?
-        '<a href="report-loader/report/download?id=' + id + '" target="_blank" title="' + $widget.data('wkreportloader').settings.downloadButtonMessage + '" class="btn pmd-btn-fab pmd-ripple-effect btn-default wk-report-loader-download"><i class="fa fa-3x fa-check-circle"></i></a>'
-            : '';
+            '<i class="wk-report-loader-download fa fa-3x fa-check-circle"></i>' : '';
     };
 
-    var itemDisplayLink = function (displayName, id, status) {
-        return itemStatus(status) === 'COMPLETE' ?
-        '<a href="report-loader/report/download?id=' + id + '" target="_blank">' + displayName + '</a>'
-            : displayName;
+    var itemDownloadClass = function (status) {
+        return itemStatus(status) === 'COMPLETE' ? 'wk-report-loader-item-download' : '';
     };
 
     var makeItem = function ($widget, item) {
         var type = typeItem(item.type);
 
         $('.wk-report-loader-content').append(
-            '<li class="list-group-item" report-id="' + item.id + '">' +
+            '<li class="list-group-item ' + itemDownloadClass(item.status) + '" report-id="' + item.id + '">' +
             '<div class="wk-report-loader-item-action' + (itemStatus(item.status) === 'COMPLETE' ? ' wk-report-loader-item-complete' : '') + '">' +
-            itemDownloadButton($widget, item.id, item.status) +
+            itemDownloadButton(item.status) +
             '</div>' +
             '<i class="fa fa-2x ' + type.classIcon + '"></i>' +
             '<div class="media-body">' +
             '<h4 class="list-group-item-heading">' +
-            itemDisplayLink(item.displayName, item.id, item.status) +
+            item.displayName +
             '</h4>' +
             '<span class="list-group-item-text">' +
             item.start +
@@ -188,9 +185,9 @@
     var convertCompleteItem = function ($widget, id) {
         var $li = $('li[report-id="' + id + '"]');
         destroyCircle($widget, id);
+        $li.addClass('wk-report-loader-item-download');
         $li.children('div.wk-report-loader-item-action').addClass('wk-report-loader-item-complete');
-        $li.children('div.wk-report-loader-item-action.wk-report-loader-item-complete').append('<a href="report-loader/report/download?id=' + id + '" target="_blank" title="' + $widget.data('wkreportloader').settings.downloadButtonMessage + '" class="btn pmd-btn-fab pmd-ripple-effect btn-default wk-report-loader-download"><i class="fa fa-3x fa-check-circle"></i></a>');
-        $li.find('.list-group-item-heading').html(itemDisplayLink($li.find('.list-group-item-heading').text(), id, '2'));
+        $li.children('div.wk-report-loader-item-action.wk-report-loader-item-complete').append('<i class="wk-report-loader-download fa fa-3x fa-check-circle"></i>');
         $li.find('.wk-report-loader-cancel').remove();
         $li.append('<button title="' + $widget.data('wkreportloader').settings.deleteButtonMessage + '" class="btn pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-danger wk-report-loader-delete"><i class="fa fa-2x fa-trash"></i></button>');
         animateDownloadIcon($li);
@@ -303,6 +300,7 @@
         });
 
         $widget.on('click', 'button.wk-report-loader-delete', function (e) {
+            e.stopPropagation();
             var $li = $(this).parent('li');
             wkwidget.confirm({
                 message: $widget.data('wkreportloader').settings.deleteConfirmMessage,
@@ -326,6 +324,7 @@
         });
 
         $widget.on('click', 'button.wk-report-loader-cancel', function (e) {
+            e.stopPropagation();
             var $li = $(this).parent('li');
             wkwidget.confirm({
                 message: $widget.data('wkreportloader').settings.cancelConfirmMessage,
@@ -390,9 +389,11 @@
 
                 $el.find('div.wk-widget-loading-block').one('click', function (event) {
                     $('#wk-Report-Loader').modal();
-               /*     if ($(event.currentTarget).parent().parent().parent('.dropdown-menu').length) {
-                        $(event.currentTarget).parent().parent().parent().parent().dropdown('toggle');
-                    }*/
+
+                    if ($(event.currentTarget).parent().parent().parent('.dropdown-menu').length) {
+                        $('body').click();
+                    }
+
                     event.stopPropagation();
                     event.preventDefault();
                 });
@@ -408,6 +409,12 @@
                 }
             } catch (ex) {
                 console.error(ex);
+            }
+        });
+
+        $widget.on('click', 'li.wk-report-loader-item-download', function (e) {
+            if ($(this).is('[report-id]')) {
+                window.open('report-loader/report/download?id=' + $(this).attr('report-id'));
             }
         });
 

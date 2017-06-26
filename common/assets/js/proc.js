@@ -65,5 +65,11 @@ $(function () {
             }
         });
         e.preventDefault();
-    })
+    });
+/*
+    var data = sessionStorage.getItem('tmp1');
+    if (data == null) {
+        var d = new Date();
+        sessionStorage.setItem('tmp1', d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds());
+    }*/
 });

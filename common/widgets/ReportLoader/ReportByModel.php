@@ -9,8 +9,8 @@
 namespace common\widgets\ReportLoader;
 
 
+use Knp\Snappy\Pdf;
 use PHPExcel;
-use PHPExcel_Settings;
 use PHPExcel_Style_Alignment;
 use PHPExcel_Worksheet_PageMargins;
 use PHPExcel_Worksheet_PageSetup;
@@ -180,19 +180,43 @@ class ReportByModel
         $this->widthSetup();
     }
 
+    private function wkhtmltopdfBinary()
+    {
+        switch (DIRECTORY_SEPARATOR) {
+            case '/':
+                return Yii::getAlias('@vendor') . '/bin/wkhtmltopdf';
+            case '\\':
+                return Yii::getAlias('@vendor') . '/bin/wkhtmltopdf.exe.bat';
+        }
+
+        return '';
+    }
+
     private function createFile()
     {
         if (!$this->loader->isActive()) {
             return false;
         }
 
-        if ($this->type === 'PDF' && !PHPExcel_Settings::setPdfRenderer(PHPExcel_Settings::PDF_RENDERER_MPDF, Yii::getAlias('@vendor') . '/mpdf/mpdf')) {
-            throw new \Exception('NOTICE PHPExcel: Please set the $rendererName and $rendererLibraryPath values');
+        if (!file_exists($binaryPath = $this->wkhtmltopdfBinary())) {
+            throw new \Exception('Need setup "wkhtmltopdf"');
         }
 
-        /** @var \PHPExcel_Writer_PDF_mPDF $objWriter */
-        $objWriter = \PHPExcel_IOFactory::createWriter($this->objPHPExcel, $this->type);
-        $objWriter->save($this->loader->getFileName());
+        if ($this->type === 'PDF') {
+            /** @var \PHPExcel_Writer_HTML $objWriter */
+            $objWriter = \PHPExcel_IOFactory::createWriter($this->objPHPExcel, 'HTML');
+            ob_start();
+            $objWriter->save('php://output');
+            $output = ob_get_clean();
+
+            $output = str_replace('page-break-after:always', 'page-break-after:auto', $output);
+            $snappy = new Pdf($binaryPath);
+            $snappy->generateFromHtml($output, $this->loader->getFileName(), ['footer-right' => '[page] - [toPage]']);
+        } else {
+            /** @var \PHPExcel_Writer_Excel2007 $objWriter */
+            $objWriter = \PHPExcel_IOFactory::createWriter($this->objPHPExcel, $this->type);
+            $objWriter->save($this->loader->getFileName());
+        }
 
         if ($this->loader->isActive()) {
             $this->loader->end();

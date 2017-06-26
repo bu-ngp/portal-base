@@ -186,7 +186,7 @@
 
         if (parseInt($dialog.find('.wk-per-page').val()) < 10 || parseInt($dialog.find('.wk-per-page').val()) > 100) {
             wkwidget.alert({
-                message: $pjax.data('wkcustomize').validatePagerMessage
+                message: $pjax.data('wkcustomize').settings.validatePagerMessage
             });
 
             return false;
@@ -200,7 +200,7 @@
         var $dialog = $('.' + gridID + '-wk-customizeDialog');
         if ($dialog.find('.wk-visible-columns').children().length === 0) {
             wkwidget.alert({
-                message: $pjax.data('wkcustomize').validateColumnsMessage
+                message: $pjax.data('wkcustomize').settings.validateColumnsMessage
             });
 
             return false;
