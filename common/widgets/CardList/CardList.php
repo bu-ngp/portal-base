@@ -15,7 +15,6 @@ use Yii;
 use yii\bootstrap\Html;
 use yii\bootstrap\Widget;
 use yii\db\ActiveRecord;
-use yii\web\View;
 
 class CardList extends Widget
 {
@@ -28,15 +27,13 @@ class CardList extends Widget
     public $url;
     public $items;
     public $cardsPerPage;
-    public $language;
     /** @var  ActiveRecord */
-    public $search;
-    public $popularity;
+    public $search = false;
+    public $popularity = false;
 
     public function init()
     {
-        parent::init();
-        // $this->registerTranslations();
+        $this->registerTranslations();
         if (isset($this->items) && !is_array($this->items)) {
             throw new \Exception(Yii::t('wk-widget', 'items must be Array'));
         }
@@ -45,24 +42,18 @@ class CardList extends Widget
             throw new \Exception(Yii::t('wk-widget', 'url or items must be passed'));
         }
 
-        if (empty($this->search)) {
-            $this->search = false;
-        }
-
-        if (empty($this->popularity)) {
-            $this->popularity = false;
-        }
+        parent::init();
     }
-//
-//    public function registerTranslations()
-//    {
-//        $i18n = Yii::$app->i18n;
-//        $i18n->translations['wk-widget'] = [
-//            'class' => 'yii\i18n\PhpMessageSource',
-//            'sourceLanguage' => 'en-US',
-//            'basePath' => __DIR__ . '/messages',
-//        ];
-//    }
+
+    public function registerTranslations()
+    {
+        $i18n = Yii::$app->i18n;
+        $i18n->translations['wk-widget'] = [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'sourceLanguage' => 'en-US',
+            'basePath' => __DIR__ . '/messages',
+        ];
+    }
 
     /**
      * @return string
@@ -78,25 +69,33 @@ class CardList extends Widget
             'items' => $this->items,
             'popularity' => $this->popularity,
             'cardsPerPage' => 6,
-            'language' => 'ru',
+            'messages' => [
+                'followLinkMessage' => Yii::t('wk-widget', 'Follow the link'),
+                'searchMessage' => Yii::t('wk-widget', 'Search'),
+            ],
         ];
 
-        if ($this->search && !empty($this->search['modelSearch']) && $this->search['modelSearch'] instanceof ActiveRecord && !empty($this->search['searchAttributeName'])) {
+        $this->searchConfig($options);
+
+        $options = json_encode(array_filter($options), JSON_UNESCAPED_UNICODE);
+        $view->registerJs("$('#{$this->id}').wkcardlist($options);");
+    }
+
+    protected function searchConfig(&$options)
+    {
+        if ($this->search === true) {
+            $options = array_replace_recursive($options, [
+                'search' => true,
+            ]);
+        } elseif (isset($this->search['modelSearch'])
+            && $this->search['modelSearch'] instanceof ActiveRecord
+            && isset($this->search['searchAttributeName'])
+        ) {
             $options = array_replace_recursive($options, [
                 'search' => true,
                 'ajaxSearchName' => $this->search['modelSearch']->formName() . '[' . $this->search['searchAttributeName'] . ']',
             ]);
-        } elseif ($this->search === true) {
-            $options = array_replace_recursive($options, [
-                'search' => true,
-            ]);
         }
-
-        $language = substr($options['language'], 0, 2);
-        $options = json_encode(array_filter($options), JSON_UNESCAPED_UNICODE);
-
-        $view->registerJs(file_get_contents(__DIR__ . "/assets/js/wkcardlist.$language.js"), View::POS_HEAD);
-        $view->registerJs("$('#{$this->id}').wkcardlist($options);");
     }
 
     protected function registerAssets()

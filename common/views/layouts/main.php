@@ -3,12 +3,12 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\ReportLoader\assets\ReportLoaderAsset;
 use common\widgets\ReportLoader\ReportLoader;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
 use common\assets\AppCommonAsset;
 use common\widgets\Alert;
 
@@ -92,9 +92,9 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
         ?>
 
         <div class="wrap">
-            <?= Breadcrumbs::widget([
+            <?= Breadcrumbs::widget(/*['defaultShow' => false]*/)  /*Breadcrumbs::widget([
                 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-            ]) ?>
+            ])*/ ?>
             <?= Alert::widget() ?>
             <?= $content ?>
         </div>

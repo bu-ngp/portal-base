@@ -12,10 +12,10 @@
         }
     };
 
-    var LANG = {
+ /*   var LANG = {
         followLink: 'Follow the link',
         search: 'Search'
-    };
+    };*/
 
     var defaults = {
         url: '',
@@ -23,13 +23,17 @@
         items: [],
         search: false,
         popularity: false,
-        ajaxSearchName: 'search'
+        ajaxSearchName: 'search',
+        messages: {
+            followLinkMessage: 'Follow the link',
+            searchMessage: 'Search'
+        }
     };
 
     var cardlistEvents = {};
     var cardlistEventHandlers = {};
 
-    var makeCard = function (props) {
+    var makeCard = function ($widget, props) {
 
         if (typeof props === 'object') {
             props.scroll = (typeof props.scroll === "undefined" || props.scroll == false) ? '' : 'wk-widget-scroll';
@@ -73,7 +77,7 @@
                 description: props.description
             });
 
-            var $actions = makeActions({
+            var $actions = makeActions($widget, {
                 link: props.link
             });
 
@@ -113,10 +117,10 @@
             '</div>');
     };
 
-    var makeActions = function (contentObj) {
+    var makeActions = function ($widget, contentObj) {
         return $('<div class="pmd-card-actions">' +
             '<a href="' + contentObj.link + '" class="btn pmd-btn-flat pmd-ripple-effect btn-primary">' +
-            LANG.followLink +
+            $widget.data('wkcardlist').settings.messages.followLinkMessage +
             '</a>' +
             '</div>');
     };
@@ -134,7 +138,7 @@
             '</div>' +
             '<div class="col-xs-11 wk-widget-search-panel-field">' +
             '<div class="form-group pmd-textfield pmd-textfield-floating-label form-group-lg">' +
-            '<label for="search_cards" class="control-label">' + LANG.search + '</label>' +
+            '<label for="search_cards" class="control-label">' + $widget.data('wkcardlist').settings.messages.searchMessage + '</label>' +
             '<input type="text" id="' + $widget[0].id + '-wk-widget-search-input" class="form-control input-group-lg">' +
             '</div>' +
             '</div>' +
@@ -179,12 +183,12 @@
             }, 500);
         });
     };
-
+/*
     var Localization = function (LANG) {
         if (typeof WK_WIDGET_CARDLIST_I18N !== "undefined") {
             return $.extend(LANG, WK_WIDGET_CARDLIST_I18N);
         }
-    };
+    };*/
 
     var makeID = function ($container) {
         var attr = $container.attr('id');
@@ -287,7 +291,7 @@
                                 $widget.data('wkcardlist').currentPage = ++$widget.data('wkcardlist').currentPage;
                             }
 
-                            $widget.data('wkcardlist').$cards = $widget.data('wkcardlist').$cards.add(getCards({
+                            $widget.data('wkcardlist').$cards = $widget.data('wkcardlist').$cards.add(getCards($widget, {
                                 items: items,
                                 scroll: true,
                                 widgetID: $widget[0].id
@@ -305,7 +309,7 @@
         }
     };
 
-    var getCards = function (props) {
+    var getCards = function ($widget, props) {
         if (typeof props === 'object') {
             if (typeof props.scroll == 'undefined') {
                 props.scroll = false;
@@ -316,7 +320,7 @@
                 var $card;
 
                 $.each(props.items, function () {
-                    $card = makeCard({
+                    $card = makeCard($widget, {
                         preview: this.preview,
                         styleClass: this.styleClass,
                         title: this.title,
@@ -345,23 +349,32 @@
         return typeof(settings.url) == "string" && settings.url != ''
     };
 
+    var finishMasonry = function ($widget, afterComplete) {
+        $widget.data('wkcardlist').$cards = $();
+
+        if ($widget.data('wkcardlist').settings.search) {
+            $widget.data('wkcardlist').$searchInput.busy = false;
+        }
+
+        $widget.data('wkcardlist').$masonryContainer.ajaxSended = false;
+
+        if (typeof afterComplete == 'function') {
+            afterComplete();
+        }
+    };
+
     var MasonryAppended = function ($widget, afterComplete) {
+        if (!$widget.data('wkcardlist').$cards.length) {
+            finishMasonry($widget, afterComplete);
+            return;
+        }
+
         $.each($widget.data('wkcardlist').$cards, function (ind) {
             setTimeout(function ($this) {
                 if (ind === ($widget.data('wkcardlist').$cards.length - 1)) {
                     $widget.data('wkcardlist').$masonryContainer.one('layoutComplete', function () {
-                        $widget.data('wkcardlist').$cards = $();
-
-                        if ($widget.data('wkcardlist').settings.search) {
-                            $widget.data('wkcardlist').$searchInput.busy = false;
-                        }
-
                         initScrollPager($widget);
-                        $widget.data('wkcardlist').$masonryContainer.ajaxSended = false;
-
-                        if (typeof afterComplete == 'function') {
-                            afterComplete();
-                        }
+                        finishMasonry($widget, afterComplete);
                     });
                 }
 
@@ -422,7 +435,7 @@
     var makeLocalCards = function ($widget, afterComplete) {
         if (typeof $widget != undefined) {
             if (itemsExists($widget.data('wkcardlist').settings)) {
-                $widget.data('wkcardlist').$cards = $widget.data('wkcardlist').$cards.add(getCards({
+                $widget.data('wkcardlist').$cards = $widget.data('wkcardlist').$cards.add(getCards($widget, {
                     items: $widget.data('wkcardlist').settings.items,
                     widgetID: $widget[0].id
                 }));
@@ -583,7 +596,7 @@
                     $.error('Settings url or items must be passed');
                 }
 
-                LANG = Localization(LANG);
+              //  LANG = Localization(LANG);
 
                 $widget.data('wkcardlist', {
                     widget: $widget,

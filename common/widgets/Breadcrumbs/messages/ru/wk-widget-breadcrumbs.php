@@ -17,8 +17,5 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Search' => 'Поиск',
-    'items must be Array' => '',
-    'url or items must be passed' => '',
-    'Follow the link' => 'Перейти',
+    'Home' => 'Главная',
 ];
