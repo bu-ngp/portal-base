@@ -12,11 +12,6 @@
         }
     };
 
- /*   var LANG = {
-        followLink: 'Follow the link',
-        search: 'Search'
-    };*/
-
     var defaults = {
         url: '',
         cardsPerPage: 6,
@@ -183,12 +178,6 @@
             }, 500);
         });
     };
-/*
-    var Localization = function (LANG) {
-        if (typeof WK_WIDGET_CARDLIST_I18N !== "undefined") {
-            return $.extend(LANG, WK_WIDGET_CARDLIST_I18N);
-        }
-    };*/
 
     var makeID = function ($container) {
         var attr = $container.attr('id');
@@ -205,7 +194,6 @@
         $widget.data('wkcardlist').currentPage = 1;
         $widget.data('wkcardlist').scrollHandler = scrollHandler;
 
-        //  initScrollPager($widget);
         triggerNextPage($widget, scrollHandler);
     };
 
@@ -507,7 +495,7 @@
             $widget.data('wkcardlist').$searchInput.busy = true;
             $widget.data('wkcardlist').searchString = $widget.data('wkcardlist').$searchInput.val().toLowerCase();
             $widget.data('wkcardlist').currentPage = 1;
-            // initScrollPager($widget);
+
             triggerNextPage($widget, afterComplete);
         } else {
             console.error('localSearch($widget) - $widget undefined');
@@ -595,8 +583,6 @@
                 ) {
                     $.error('Settings url or items must be passed');
                 }
-
-              //  LANG = Localization(LANG);
 
                 $widget.data('wkcardlist', {
                     widget: $widget,
