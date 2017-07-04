@@ -28,13 +28,13 @@ class Breadcrumbs extends Widget
     public function run()
     {
         $a=Yii::$app->id;
-        $this->registerAssets();
         echo Html::tag('div', '', [
             'id' => $this->id,
             'home-crumb-url' => Yii::$app->getHomeUrl(),
             'current-crumb-id' => $this->getCurrentCrumbId(),
             'current-crumb-title' => $this->getView()->title,
         ]);
+        $this->registerAssets();
     }
 
     public function registerTranslations()
