@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\widgets\Breadcrumbs\Breadcrumbs;
 use domain\forms\base\RoleForm;
 use domain\models\base\filter\AuthItemFilter;
 use common\widgets\ReportLoader\ReportByModel;
@@ -71,6 +72,19 @@ class RolesController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'filterModel' => $filterModel,
+        ]);
+    }
+
+    public function actionIndexForRoles()
+    {
+        $searchModel = new AuthItemSearch();
+     //   $filterModel = new AuthItemFilter();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->renderPartial('index_for_roles', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+         //   'filterModel' => $filterModel,
         ]);
     }
 

@@ -16,23 +16,27 @@ use yii\bootstrap\Widget;
 class Breadcrumbs extends Widget
 {
     public static $show;
+    public static $removeLastCrumb;
     public $defaultShow = true;
+    public $defaultRemoveLastCrumb = false;
 
     public function init()
     {
+        $this->id = 'wkbc_' . Yii::$app->id;
         $this->registerTranslations();
         static::$show = static::$show !== null ? static::$show : $this->defaultShow;
+        static::$removeLastCrumb = static::$removeLastCrumb !== null ? static::$removeLastCrumb : $this->defaultRemoveLastCrumb;
         parent::init();
     }
 
     public function run()
     {
-        $a=Yii::$app->id;
         echo Html::tag('div', '', [
             'id' => $this->id,
             'home-crumb-url' => Yii::$app->getHomeUrl(),
             'current-crumb-id' => $this->getCurrentCrumbId(),
             'current-crumb-title' => $this->getView()->title,
+            'remove-last-crumb' => static::$removeLastCrumb ? '1' : '0',
         ]);
         $this->registerAssets();
     }

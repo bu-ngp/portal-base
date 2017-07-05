@@ -66,10 +66,21 @@ $(function () {
         });
         e.preventDefault();
     });
-/*
-    var data = sessionStorage.getItem('tmp1');
-    if (data == null) {
-        var d = new Date();
-        sessionStorage.setItem('tmp1', d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds());
-    }*/
+
+    $(document).on('click', 'a.btn-success', function (e) {
+        $('#large-dialog').modal();
+
+        e.preventDefault();
+    });
+
+    $('#large-dialog').on('shown.bs.modal', function (e) {
+
+        $('.grid-content').load('/wk-portal/manager/roles/index-for-roles');
+        /*$.ajax({
+            url: '/wk-portal/manager/roles/index-for-roles',
+            success: function(response) {
+                $('.grid-content').append(response);
+            }
+        });*/
+    })
 });

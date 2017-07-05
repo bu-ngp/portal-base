@@ -20,7 +20,7 @@
         if (bcJson) {
             var bc = $.parseJSON(bcJson);
 
-            if ("crumbs" in bc) {
+            if ("crumbs" in bc && bc.crumbs.length) {
                 $widget.data('wkbreadcrumbs').crumbs = bc.crumbs;
                 return;
             }
@@ -37,7 +37,7 @@
         if (bcJson) {
             var bc = $.parseJSON(bcJson);
 
-            if ("crumbs" in bc) {
+            if ("crumbs" in bc && bc.crumbs.length) {
                 $widget.data('wkbreadcrumbs').crumbs = bc.crumbs;
                 return;
             }
@@ -52,7 +52,9 @@
         $widget.data('wkbreadcrumbs').crumbs.push({
             id: $widget.attr("home-crumb-url"),
             title: $widget.data('wkbreadcrumbs').settings.homeCrumbMessage,
-            url: $widget.attr("home-crumb-url")
+            url: $widget.attr("home-crumb-url"),
+            visible: true,
+            forms: {}
         });
     };
 
@@ -72,11 +74,17 @@
     };
 
     var constructBreadcrumbs = function ($widget) {
+        if (!$widget.data('wkbreadcrumbs').crumbs.length) {
+            return;
+        }
+
         var items = '';
         $.each($widget.data('wkbreadcrumbs').crumbs, function (index) {
-            var item = index === $widget.data('wkbreadcrumbs').crumbs.length - 1 ? '<li class="active">' + this.title + '</li>' : '<li><a href="' + this.url + '">' + this.title + '</a></li>';
+            if (this.visible) {
+                var item = index === $widget.data('wkbreadcrumbs').crumbs.length - 1 ? '<li class="active">' + this.title + '</li>' : '<li><a href="' + this.url + '">' + this.title + '</a></li>';
 
-            items = items + item;
+                items = items + item;
+            }
         });
 
         return $('<ul class="breadcrumb">' + items + '</ul>');
@@ -84,21 +92,71 @@
 
     var addCurrentBreadcrumb = function ($widget) {
         var bc = [];
-        $.each($widget.data('wkbreadcrumbs').crumbs, function () {
-            if (this.id === $widget.attr("current-crumb-id")) {
+        var addCurrent = true;
+
+        $.each($widget.data('wkbreadcrumbs').crumbs, function (ind) {
+            if (!$widget.attr("current-crumb-id")) {
                 return false;
-            } else {
-                bc.push(this);
+            }
+
+            bc.push(this);
+
+            if (this.id === $widget.attr("current-crumb-id")) {
+                addCurrent = false;
+                return false;
             }
         });
 
-        bc.push({
-            id: $widget.attr("current-crumb-id"),
-            title: $widget.attr("current-crumb-title"),
-            url: window.location.pathname + window.location.search
-        });
+        if (bc.length && addCurrent) {
+            bc.push({
+                id: $widget.attr("current-crumb-id"),
+                title: $widget.attr("current-crumb-title"),
+                url: window.location.pathname + window.location.search,
+                visible: true,
+                forms: {}
+            });
+        }
+
+        if ($widget.attr("remove-last-crumb") === '1' && bc[bc.length - 2]) {
+            bc[bc.length - 2].visible = false;
+        }
 
         $widget.data('wkbreadcrumbs').crumbs = bc;
+    };
+
+    var fillForms = function ($widget) {
+        if ($widget.data('wkbreadcrumbs').crumbs.length) {
+            var lastBC = $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 1];
+
+            $.each(lastBC.forms, function (name, value) {
+                var input = $('[name="' + name + '"]');
+
+                if (input.length && !input.val()) {
+                    input.val(value);
+                }
+            });
+        }
+    };
+
+    var eventsApply = function ($widget) {
+
+        $(document).on('change', 'input[wkkeep]', function () {
+            getFromSessionStorage($widget, {
+                fail: function () {
+                    getFromLocalStorage($widget);
+                }
+            });
+
+            if ($widget.data('wkbreadcrumbs').crumbs.length && $(this).is('[name]')) {
+                var lastBC = $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 1];
+
+                lastBC.forms[$(this).attr("name")] = $(this).val();
+                $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 1] = lastBC;
+
+                saveCrumbs($widget);
+            }
+        });
+
     };
 
     var methods = {
@@ -114,7 +172,7 @@
                 $widget.data('wkbreadcrumbs', {
                     widget: $widget,
                     settings: settings,
-                    id: 'bc_' + $widget[0].id,
+                    id: $widget[0].id,
                     crumbs: []
                 });
 
@@ -133,7 +191,11 @@
 
                 saveCrumbs($widget);
 
-                constructBreadcrumbs($widget).appendTo($widget);
+                $widget.append(constructBreadcrumbs($widget));
+
+                fillForms($widget);
+
+                eventsApply($widget);
 
             });
         },
