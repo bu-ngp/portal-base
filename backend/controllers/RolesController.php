@@ -78,13 +78,13 @@ class RolesController extends Controller
     public function actionIndexForRoles()
     {
         $searchModel = new AuthItemSearch();
-     //   $filterModel = new AuthItemFilter();
+        $filterModel = new AuthItemFilter();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->renderPartial('index_for_roles', [
+        return $this->renderAjax('index_for_roles', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-         //   'filterModel' => $filterModel,
+            'filterModel' => $filterModel,
         ]);
     }
 

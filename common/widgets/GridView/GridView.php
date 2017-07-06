@@ -11,6 +11,7 @@ use common\widgets\GridView\services\GWFilterDialogConfig;
 use common\widgets\GridView\services\GWPrepareColumns;
 use Yii;
 use yii\bootstrap\Html;
+use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
@@ -150,6 +151,10 @@ HTML;
         }
 
         $this->pjaxSettings['loadingCssClass'] = ArrayHelper::getValue($this->pjaxSettings, 'loadingCssClass', 'wk-widget-grid-loading');
+
+        if (!(Yii::$app->request->isAjax && Yii::$app->request->get('_pjax'))) {
+            $this->dataProvider = new ArrayDataProvider();
+        }
 
         $this->createCrudButtons();
         $this->setPanelHeading();

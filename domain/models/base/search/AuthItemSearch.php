@@ -51,10 +51,6 @@ class AuthItemSearch extends AuthItem
 
         // add conditions that should always apply here
 
-        if (!Yii::$app->request->isAjax) {
-            return new ArrayDataProvider();
-        }
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => ['pageSize' => 6]
