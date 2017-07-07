@@ -17,9 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Choose rows' => 'Выберите записи',
+    'Follow to Grid Page' => 'Справочник',
     'In \'crudOptions\' array must be only this keys [\'create\', \'update\', \'delete\']. Passed \'{key}\'' => '',
-    'Export to Excel' => 'Сохранить в Excel',
-    'Export to PDF' => 'Сохранить в PDF',
     'Add. filter: ' => 'Доп. фильтр: ',
     'Additional Filter' => 'Дополнительный фильтр',
     'Apply' => 'Применить',
@@ -32,6 +32,8 @@ return [
     'Delete' => 'Удалить',
     'Drag to the left of the column that you want to see in the grid in a specific order' => '* Перенесите имена колонок, которые Вы хотите видеть в таблице, в левый список о определенном порядке',
     'Enter the number of records on the grid from 10 to 100' => 'Введите количество записей, отображаемых в таблице. От 10 до 100',
+    'Export to Excel' => 'Сохранить в Excel',
+    'Export to PDF' => 'Сохранить в PDF',
     'Filter' => 'Фильтр',
     'Hidden Columns' => 'Скрытые колонки',
     'Information' => 'Информация',

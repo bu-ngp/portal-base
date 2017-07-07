@@ -11,7 +11,7 @@ namespace common\widgets\GridView\services;
 
 use yii\base\Model;
 
-class GWFilterDialogConfig
+class GWFilterDialogConfig implements GWConfigInterface
 {
     public $enable = true;
     /** @var  Model|null */

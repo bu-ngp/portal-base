@@ -9,7 +9,14 @@
         }
     };
 
-    var defaults = {};
+    var defaults = {
+        messages: {
+            titleCrudCreateDialogMessage: 'Choose rows',
+            applyButtonMessage: 'Apply',
+            closeButtonMessage: 'Close',
+            redirectToGridButtonCrudCreateDialogMessage: 'Follow to Grid Page'
+        }
+    };
 
     var eventsApply = function ($pjax) {
 
@@ -23,6 +30,10 @@
 
         $(document).on('pjax:send', function (e) {
             purifyingUrl();
+
+            if ($pjax.find('input[data-krajee-daterangepicker]').data('daterangepicker')) {
+                $pjax.find('input[data-krajee-daterangepicker]').data('daterangepicker').remove();
+            }
         });
 
 
@@ -107,6 +118,61 @@
         });
     };
 
+    var makeButtonCreate = function ($pjax) {
+        if ($pjax.find(".wk-gridview-crud-create").is("[input-name]")
+            && $pjax.find(".wk-gridview-crud-create").is("[url-grid]")) {
+            var $dialog = createCrudCreateDialog($pjax);
+            var inputName = $pjax.find(".wk-gridview-crud-create[input-name]").attr("input-name");
+            var urlGrid = $pjax.find(".wk-gridview-crud-create[url-grid]").attr("url-grid");
+
+            $pjax.on('click', '.wk-gridview-crud-create[input-name]', function (e) {
+                $dialog.modal();
+                e.preventDefault();
+            });
+
+            $dialog.on('shown.bs.modal', function (e) {
+                if ($('.wk-crudCreateDialog-content').html() == "") {
+                    $('.wk-crudCreateDialog-content').load(urlGrid);
+                }
+            });
+
+        }
+    };
+
+    var createCrudCreateDialog = function ($pjax) {
+        var gridID = $pjax.data('wkgridview').grid[0].id;
+
+        var $dialog = $('<div tabindex="-1" class="modal fade ' + gridID + '-wk-crudCreateDialog" style="display: none;" aria-hidden="true">' +
+            '<div class="modal-dialog modal-lg">' +
+            '<div class="modal-content">' +
+            '<div class="modal-header pmd-modal-bordered">' +
+            '<button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>' +
+            '<h3 class="pmd-card-title-text"><i class="fa fa-plus-square-o"></i> ' + $pjax.data('wkgridview').settings.messages.titleCrudCreateDialogMessage + '</h3>' +
+            '</div>' +
+            '<div class="modal-body" style="height: 690px;">' +
+            '<div class="row">' +
+            '<div class="col-xs-12 wk-crudCreateDialog-content">' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="pmd-modal-action">' +
+            '<div class="btn-toolbar" role="toolbar" style="display: inline-block;">' +
+            '<button class="btn pmd-ripple-effect btn-primary wk-crudCreateDialog-btn-apply" type="button">' + $pjax.data('wkgridview').settings.messages.applyButtonMessage + '</button>' +
+            '<button data-dismiss="modal"  class="btn pmd-ripple-effect btn-default" type="button">' + $pjax.data('wkgridview').settings.messages.closeButtonMessage + '</button>' +
+            '</div>' +
+            '<div class="btn-toolbar" role="toolbar" style="display: inline-block; float: right;">' +
+            '<button class="btn pmd-ripple-effect pmd-btn-flat btn-danger wk-crudCreateDialog-btn-redirect-to-grid" type="button" data-toggle="modal">' + $pjax.data('wkgridview').settings.messages.redirectToGridButtonCrudCreateDialogMessage + '</button>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>');
+
+        $dialog.appendTo('body');
+
+        return $dialog;
+    };
+
     var methods = {
         init: function (options) {
             return this.each(function () {
@@ -126,6 +192,7 @@
 
                 eventsApply($pjax);
 
+                makeButtonCreate($pjax);
                 makeButtonUpdateEvent($pjax);
 
                 $(document).on('pjax:complete', function (e) {

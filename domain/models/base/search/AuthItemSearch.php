@@ -93,6 +93,51 @@ class AuthItemSearch extends AuthItem
         return $dataProvider;
     }
 
+    public function searchForRoles($params)
+    {
+        $query = AuthItem::find();
+
+        // add conditions that should always apply here
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            //   'type' => 1,
+            //   'view' => 0,
+            'created_at' => $this->created_at,
+
+        ]);
+
+
+        list($updated_at_begin, $updated_at_end) = explode(' - ', $this->updated_at);;
+
+        $query->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'description', $this->description])
+            ->andFilterWhere(['like', 'rule_name', $this->rule_name])
+            ->andFilterWhere(['like', 'data', $this->data]);
+
+        if ($updated_at_begin && $updated_at_end) {
+
+            $updated_at_begin = DateTime::createFromFormat('d.m.Y', $updated_at_begin);
+            $updated_at_end = DateTime::createFromFormat('d.m.Y', $updated_at_end);
+
+            $query->andWhere(['between', 'updated_at', $updated_at_begin->format('U'), $updated_at_end->format('U')]);
+        }
+
+        return $dataProvider;
+    }
+
     public function searchForCreate($params)
     {
         $query = AuthItem::find();

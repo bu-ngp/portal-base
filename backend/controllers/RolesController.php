@@ -79,7 +79,7 @@ class RolesController extends Controller
     {
         $searchModel = new AuthItemSearch();
         $filterModel = new AuthItemFilter();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->searchForRoles(Yii::$app->request->queryParams);
 
         return $this->renderAjax('index_for_roles', [
             'searchModel' => $searchModel,

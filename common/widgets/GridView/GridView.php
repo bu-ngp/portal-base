@@ -3,6 +3,7 @@
 namespace common\widgets\GridView;
 
 use common\widgets\GridView\assets\GridViewAsset;
+use common\widgets\GridView\services\GWCreateCrudConfig;
 use common\widgets\GridView\services\GWCustomizeDialog;
 use common\widgets\GridView\services\GWExportGrid;
 use common\widgets\GridView\services\GWExportGridConfig;
@@ -85,6 +86,8 @@ HTML;
     protected $GWFilterDialog;
     /** @var GWExportGrid */
     protected $GWExportGrid;
+    /** @var  GWCreateCrudConfig */
+    protected $GWCreateCrud;
 
     public function registerTranslations()
     {
@@ -174,11 +177,22 @@ HTML;
 
                 switch ($key) {
                     case 'create':
-                        $crudButtons .= Html::a(Yii::t('wk-widget-gridview', 'Create'), $crudUrl,
-                            [
-                                'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-success',
-                                'data-pjax' => '0'
+                        $options = [
+                            'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-success wk-gridview-crud-create',
+                            'data-pjax' => '0'
+                        ];
+
+                        if ($crudUrl instanceof GWCreateCrudConfig) {
+                            $GWCreateCrud = $crudUrl->build();
+                            $crudUrl = '#';
+
+                            $options = array_merge($options, [
+                                'input-name' => $GWCreateCrud->inputName,
+                                'url-grid' => is_array($GWCreateCrud->urlGrid) ? Url::to($GWCreateCrud->urlGrid) : $GWCreateCrud->urlGrid,
                             ]);
+                        }
+
+                        $crudButtons .= Html::a(Yii::t('wk-widget-gridview', 'Create'), $crudUrl, $options);
                         break;
                     case 'update':
                         $crudButtons .= Html::a(Yii::t('wk-widget-gridview', 'Update'), $crudUrl,
@@ -261,7 +275,18 @@ EOT;
 
     protected function initGridJs()
     {
-        $this->js[] = "$('#{$this->id}-pjax').wkgridview();";
+        $options = [
+            'messages' => [
+                'titleCrudCreateDialogMessage' => Yii::t('wk-widget-gridview', 'Choose rows'),
+                'applyButtonMessage' => Yii::t('wk-widget-gridview', 'Apply'),
+                'closeButtonMessage' => Yii::t('wk-widget-gridview', 'Close'),
+                'redirectToGridButtonCrudCreateDialogMessage' => Yii::t('wk-widget-gridview', 'Follow to Grid Page'),
+            ],
+        ];
+
+        $options = json_encode(array_filter($options), JSON_UNESCAPED_UNICODE);
+
+        $this->js[] = "$('#{$this->id}-pjax').wkgridview($options);";
     }
 
     protected function loadPropellerJS()

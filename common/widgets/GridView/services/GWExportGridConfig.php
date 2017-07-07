@@ -11,7 +11,7 @@ namespace common\widgets\GridView\services;
 
 use common\widgets\GridView\GridView;
 
-class GWExportGridConfig
+class GWExportGridConfig implements GWConfigInterface
 {
     public $enable = true;
     public $format = [GridView::EXCEL, GridView::PDF];

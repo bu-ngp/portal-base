@@ -121,7 +121,7 @@
 
     var selectedPanelSet = function ($pjax) {
         if ($pjax.data('gridselected2storage').settings.selectedPanelClass != '') {
-            var $selectedPanel = $('.' + $pjax.data('gridselected2storage').settings.selectedPanelClass);
+            var $selectedPanel = $pjax.find('.' + $pjax.data('gridselected2storage').settings.selectedPanelClass);
             if ($selectedPanel.length == 1) {
                 var all = parseInt($pjax.find('div.summary > b:nth-child(2)').text());
 
