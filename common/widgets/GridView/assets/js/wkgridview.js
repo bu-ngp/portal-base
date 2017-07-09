@@ -132,8 +132,15 @@
 
             $dialog.on('shown.bs.modal', function (e) {
                 if ($('.wk-crudCreateDialog-content').html() == "") {
-                    $('.wk-crudCreateDialog-content').load(urlGrid);
+                    $('.wk-crudCreateDialog-content').load(urlGrid, function () {
+                        $('.wk-crudCreateDialog-content').find('div[data-pjax-container]').gridselected2storage('clearSelected');
+                    });
                 }
+            });
+
+            $dialog.find('.wk-crudCreateDialog-btn-apply').on('click', function () {
+                $('input[name="' + inputName + '"]').val($dialog.find('input[name="wk-crudCreate-input"]').val());
+                $dialog.modal('hide');
             });
 
         }
@@ -151,6 +158,7 @@
             '</div>' +
             '<div class="modal-body" style="height: 690px;">' +
             '<div class="row">' +
+            '<input type="text" name="wk-crudCreate-input" >' +
             '<div class="col-xs-12 wk-crudCreateDialog-content">' +
             '</div>' +
             '</div>' +

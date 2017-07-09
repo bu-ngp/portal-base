@@ -1,13 +1,13 @@
 <?php
 
-namespace common\widgets\gridSelected2Input;
+namespace common\widgets\gridSelected2TextInput;
 
 use yii\web\AssetBundle;
 
 /**
  * Main backend application asset bundle.
  */
-class GridSelected2InputAsset extends AssetBundle
+class GridSelected2TextInputAsset extends AssetBundle
 {
     /**
      * @inheritdoc

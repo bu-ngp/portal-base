@@ -46,6 +46,8 @@ class GWPrepareColumns
                     $this->addDataColumn($column);
                 }
 
+                $this->addFilterDateFormat($column);
+
                 $this->addFilterProperties($column);
 
                 $this->columns[] = $column;
@@ -165,8 +167,16 @@ class GWPrepareColumns
         if (method_exists($model, 'itemsValues') && $items = $model::itemsValues($column['attribute'])) {
             $column['filter'] = $items;
             $column['value'] = function ($model, $key, $index, $column) use ($items) {
-                return '<span>' . isset($model->{$column->attribute}) ? $items[$model->{$column->attribute}] : '' . '</span>';
+                return '<span>' . (isset($model->{$column->attribute}) ? $items[$model->{$column->attribute}] : '') . '</span>';
             };
+        }
+    }
+
+    protected function addFilterDateFormat(&$column)
+    {
+        if ($column['format'] === 'datetime') {
+            $column['filterType'] = GridView::FILTER_DATE_RANGE;
+            $column['filterWidgetOptions']['pluginOptions']['locale']['format'] = 'DD.MM.YYYY';
         }
     }
 

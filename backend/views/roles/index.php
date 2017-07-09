@@ -37,14 +37,8 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'updated_at',
                 'format' => 'datetime',
-                'filterType' => GridView::FILTER_DATE_RANGE,
                 'filterWidgetOptions' => [
                     //    'convertFormat' => true,
-                    'pluginOptions' => [
-                        'locale' => [
-                            'format' => 'DD.MM.YYYY',
-                        ],
-                    ],
                     'pluginEvents' => [
                         'apply.daterangepicker' => 'function(event, picker) { 
                           console.debug(picker.startDate.format("YYYY-MM-DD"));

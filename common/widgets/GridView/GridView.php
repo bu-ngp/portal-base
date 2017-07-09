@@ -38,6 +38,9 @@ class GridView extends \kartik\grid\GridView
     public $exportGrid;
     public $toolbar = [];
     public $rightBottomToolbar = '';
+    public $pjaxSettings = [
+        'loadingCssClass' => 'wk-widget-grid-loading',
+    ];
     public $panelAfterTemplate = <<< HTML
         <div class="btn-toolbar kv-grid-toolbar" role="toolbar" style="display: inline-block;">
             <div class="btn-group">
@@ -104,7 +107,7 @@ HTML;
         $this->registerTranslations();
         $this->setDefaults();
 
-        return parent::init();
+        parent::init();
     }
 
     /**
@@ -152,8 +155,6 @@ HTML;
         if ($this->minHeight) {
             $this->containerOptions['style'] = "min-height: {$this->minHeight}px;";
         }
-
-        $this->pjaxSettings['loadingCssClass'] = ArrayHelper::getValue($this->pjaxSettings, 'loadingCssClass', 'wk-widget-grid-loading');
 
         if (!(Yii::$app->request->isAjax && Yii::$app->request->get('_pjax'))) {
             $this->dataProvider = new ArrayDataProvider();

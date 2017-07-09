@@ -99,6 +99,7 @@
             storage.checkAll = $(this).prop('checked');
             storage.included = [];
             storage.excluded = [];
+            storage.filterValues = [];
 
             saveToStorage($pjax);
             selectedPanelSet($pjax);
