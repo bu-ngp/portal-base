@@ -164,8 +164,7 @@ class AuthItemSearch extends AuthItem
         ]);
 
         $query->andFilterWhere(['like', 'description', $this->description]);
-        $query->andWhere('1=2');
-
+        
         return $dataProvider;
     }
 }

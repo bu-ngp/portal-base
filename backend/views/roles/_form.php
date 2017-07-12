@@ -1,10 +1,10 @@
 <?php
 
+use common\widgets\ActiveForm\ActiveForm;
 use common\widgets\GridView\GridView;
 use common\widgets\GridView\services\GWCreateCrudConfig;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $modelForm domain\models\base\AuthItem */

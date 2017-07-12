@@ -126,6 +126,9 @@
             var urlGrid = $pjax.find(".wk-gridview-crud-create[url-grid]").attr("url-grid");
 
             $pjax.on('click', '.wk-gridview-crud-create[input-name]', function (e) {
+                var $grid = $pjax.find('.grid-view');
+                console.debug('beforeDialog');
+                console.debug($grid.yiiGridView('data').settings.filterUrl);
                 $dialog.modal();
                 e.preventDefault();
             });
@@ -133,6 +136,7 @@
             $dialog.on('shown.bs.modal', function (e) {
                 if ($('.wk-crudCreateDialog-content').html() == "") {
                     $('.wk-crudCreateDialog-content').load(urlGrid, function () {
+                        $('.wk-container-loading').hide();
                         $('.wk-crudCreateDialog-content').find('div[data-pjax-container]').gridselected2storage('clearSelected');
                     });
                 }
@@ -140,9 +144,36 @@
 
             $dialog.find('.wk-crudCreateDialog-btn-apply').on('click', function () {
                 $('input[name="' + inputName + '"]').val($dialog.find('input[name="wk-crudCreate-input"]').val());
+                var $grid = $pjax.find('.grid-view');
+                var filterUrl = $grid.yiiGridView('data').settings.filterUrl;
+                console.debug('beforeApplyDialog');
+                console.debug(filterUrl);
+                if (filterUrl.match(/(.*_choose_=)(.*?)(&.*|$)/)) {
+                    filterUrl = filterUrl.replace(/(.*_choose_=)(.*?)(&.*|$)/, "$1" + $dialog.find('input[name="wk-crudCreate-input"]').val()) + "$3";
+                    console.debug("match");
+                } else {
+                    filterUrl = filterUrl + "&_choose_=" + $dialog.find('input[name="wk-crudCreate-input"]').val();
+                    console.debug("no match");
+                }
+                $grid.yiiGridView({filterUrl: filterUrl});
+                console.debug('beforeApplyDialog Changed filterUrl');
+                console.debug($grid.yiiGridView('data').settings.filterUrl);
+                $grid.yiiGridView('applyFilter');
+
                 $dialog.modal('hide');
             });
 
+            $pjax.on('afterFilter', '.grid-view', function () {
+                var $grid = $pjax.find('.grid-view');
+                console.debug('afterFilter');
+                console.debug($grid.yiiGridView('data').settings.filterUrl);
+                var searchUrl = window.location.search;
+                if (searchUrl.match(/(.*_choose_=)(.*?)(&.*|$)/)) {
+                    searchUrl = searchUrl.replace(/(.*_choose_=)(.*?)(&.*|$)/, "$2");
+                    searchUrl = decodeURIComponent(decodeURIComponent(searchUrl));
+                    $('input[name="' + inputName + '"]').val(searchUrl);
+                }
+            });
         }
     };
 
@@ -157,6 +188,7 @@
             '<h3 class="pmd-card-title-text"><i class="fa fa-plus-square-o"></i> ' + $pjax.data('wkgridview').settings.messages.titleCrudCreateDialogMessage + '</h3>' +
             '</div>' +
             '<div class="modal-body" style="height: 690px;">' +
+            '<div class="wk-container-loading"></div>' +
             '<div class="row">' +
             '<input type="text" name="wk-crudCreate-input" >' +
             '<div class="col-xs-12 wk-crudCreateDialog-content">' +

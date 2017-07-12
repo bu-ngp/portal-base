@@ -1,6 +1,5 @@
 <?php
 
-use common\widgets\gridSelected2Input\GridSelected2InputAsset;
 use yii\helpers\Html;
 
 
@@ -9,7 +8,7 @@ use yii\helpers\Html;
 /* @var $searchModel domain\models\base\search\AuthItemSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-GridSelected2InputAsset::register($this);
+//GridSelected2InputAsset::register($this);
 
 $this->title = Yii::t('app', 'Create Auth Item');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('common/authitem', 'Auth Items'), 'url' => ['index']];

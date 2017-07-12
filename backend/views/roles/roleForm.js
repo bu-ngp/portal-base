@@ -5,7 +5,7 @@
 $(document).ready(function () {
     var $widget = $('#RoleFormGrid-pjax');
 
-    $widget.gridselected2textinput({
+  /*  $widget.gridselected2textinput({
         storage: $('#roleform-assignroles')
-    });
+    });*/
 });

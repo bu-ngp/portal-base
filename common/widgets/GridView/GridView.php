@@ -12,6 +12,7 @@ use common\widgets\GridView\services\GWFilterDialogConfig;
 use common\widgets\GridView\services\GWPrepareColumns;
 use Yii;
 use yii\bootstrap\Html;
+use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
@@ -191,6 +192,8 @@ HTML;
                                 'input-name' => $GWCreateCrud->inputName,
                                 'url-grid' => is_array($GWCreateCrud->urlGrid) ? Url::to($GWCreateCrud->urlGrid) : $GWCreateCrud->urlGrid,
                             ]);
+
+                            $this->addCrudCreateSelectedToQuery();
                         }
 
                         $crudButtons .= Html::a(Yii::t('wk-widget-gridview', 'Create'), $crudUrl, $options);
@@ -326,6 +329,21 @@ EOT;
                 </div>
 EOT
             ]);
+        }
+    }
+
+    protected function addCrudCreateSelectedToQuery()
+    {
+        if ($this->dataProvider instanceof ActiveDataProvider) {
+            $_choose = json_decode(urldecode(Yii::$app->request->get('_choose_')));
+
+            if ($_choose->included) {
+                $this->dataProvider->query->andWhere(['in', 'name', $_choose->included]);
+            } elseif ($_choose->excluded) {
+                $this->dataProvider->query->andWhere(['not', ['in', 'name', $_choose->excluded]]);
+            } else {
+                $this->dataProvider->query->andWhere('1=2');
+            }
         }
     }
 }
