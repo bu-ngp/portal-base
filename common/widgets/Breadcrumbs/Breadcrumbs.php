@@ -12,6 +12,7 @@ use common\widgets\Breadcrumbs\assets\BreadcrumbsAsset;
 use Yii;
 use yii\bootstrap\Html;
 use yii\bootstrap\Widget;
+use yii\web\View;
 
 class Breadcrumbs extends Widget
 {
@@ -37,6 +38,7 @@ class Breadcrumbs extends Widget
             'current-crumb-id' => $this->getCurrentCrumbId(),
             'current-crumb-title' => $this->getView()->title,
             'remove-last-crumb' => static::$removeLastCrumb ? '1' : '0',
+            'class' => 'wkbc-breadcrumb',
         ]);
         $this->registerAssets();
     }
@@ -63,6 +65,7 @@ class Breadcrumbs extends Widget
         $options = json_encode(array_filter($options), JSON_UNESCAPED_UNICODE);
 
         $view->registerJs("$('#{$this->id}').wkbreadcrumbs($options);");
+        array_unshift($view->js[View::POS_READY], array_pop($view->js[View::POS_READY]));
     }
 
     private function getCurrentCrumbId()

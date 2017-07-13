@@ -199,6 +199,26 @@
 
             });
         },
+        getLast: function () {
+            var $widget = $(this);
+
+            if ($widget.data('wkbreadcrumbs').crumbs.length > 0) {
+                return $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 1];
+            }
+
+            return false;
+        },
+        setLast: function (bcObj) {
+            var $widget = $(this);
+
+            if ($widget.data('wkbreadcrumbs').crumbs.length > 0) {
+                $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 1] = bcObj;
+                saveCrumbs($widget);
+                return true;
+            }
+
+            return false;
+        },
         destroy: function () {
             return this.each(function () {
                 var $widget = $(this),

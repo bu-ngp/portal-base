@@ -335,15 +335,17 @@ EOT
     protected function addCrudCreateSelectedToQuery()
     {
         if ($this->dataProvider instanceof ActiveDataProvider) {
-            $_choose = json_decode(urldecode(Yii::$app->request->get('_choose_')));
+            $condition = '1=2';
 
-            if ($_choose->included) {
-                $this->dataProvider->query->andWhere(['in', 'name', $_choose->included]);
-            } elseif ($_choose->excluded) {
-                $this->dataProvider->query->andWhere(['not', ['in', 'name', $_choose->excluded]]);
-            } else {
-                $this->dataProvider->query->andWhere('1=2');
+            if (Yii::$app->request->headers['wk-choose']) {
+                $_choose = json_decode(Yii::$app->request->headers['wk-choose']);
+
+                if ($_choose->included || $_choose->excluded) {
+                    $condition = $_choose->included ? ['in', 'name', $_choose->included] : ['not', ['in', 'name', $_choose->excluded]];
+                }
             }
+
+            $this->dataProvider->query->andWhere($condition);
         }
     }
 }
