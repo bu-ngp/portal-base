@@ -220,7 +220,7 @@
             '<div class="modal-body" style="height: 690px;">' +
             '<div class="wk-container-loading"></div>' +
             '<div class="row">' +
-            '<input type="text" name="wk-crudCreate-input" >' +
+            '<input type="hidden" name="wk-crudCreate-input" >' +
             '<div class="col-xs-12 wk-crudCreateDialog-content">' +
             '</div>' +
             '</div>' +
