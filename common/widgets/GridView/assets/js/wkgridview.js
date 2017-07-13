@@ -134,7 +134,10 @@
                 if ($('.wk-crudCreateDialog-content').html() == "") {
                     $('.wk-crudCreateDialog-content').load(urlGrid, function () {
                         $('.wk-container-loading').hide();
-                        $('.wk-crudCreateDialog-content').find('div[data-pjax-container]').gridselected2storage('clearSelected');
+                        var lastCrumb = $(".wkbc-breadcrumb").wkbreadcrumbs('getLast');
+
+                        $dialog.find('input[name="wk-crudCreate-input"]').val(lastCrumb['wk-choose']);
+                        $dialog.find('div[data-pjax-container]').gridselected2textinput("reloadSelected");
                     });
                 }
             });

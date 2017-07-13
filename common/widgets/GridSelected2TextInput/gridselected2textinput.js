@@ -51,7 +51,7 @@
                 $pjax.data('gridselected2textinput').storage = initObj;
                 input.val(JSON.stringify(initObj));
             } else {
-                $pjax.data('gridselected2textinput').storage = $.parseJSON(obj.val());
+                $pjax.data('gridselected2textinput').storage = $.parseJSON(input.val());
             }
         }
     };
@@ -132,6 +132,11 @@
 
                 eventsApply($pjax);
             });
+        },
+        reloadSelected: function () {
+            var $pjax = $(this);
+            readFromStorage($pjax);
+            selectRowsFromStorage($pjax);
         },
         destroy: function () {
             return this.each(function () {

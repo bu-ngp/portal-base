@@ -1,9 +1,20 @@
+## 0.4.1 - (2017-07-14)
+
+_Дополнения_:
+
+  - Доработка виджета `GridSelected2TextInput`:
+    - в плагин `gridselected2textinput.js` добавлен метод `reloadSelected`, применяющий выделение гриду из хранилища
+
+ _Исправления_:
+
+  - Исправлена ошибка в методе `readFromStorage` плагина `gridselected2textinput.js`
+
 ## 0.4.0 - (2017-07-13)
 
 _Дополнения_:
 
   - Доработка виджета `Breadcrumbs`:
-    - в плагин `wkbreadcrumbs.js` добавлены методы `getLast`, `setLast`
+    - в плагин `wkbreadcrumbs.js` добавлены методы `getLast`, `setLast`, получающий и сохраняющий объект последней хлебной крошки
     - в `div` элемент виджета добавлен класс `wkbc-breadcrumb`
     - плагин `wkbreadcrumbs.js` на элементе виджета `div` инициализирован на первой позиции Javascript скриптов Yii2
   - Доработка виджета `GridView`:
