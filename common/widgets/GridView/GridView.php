@@ -5,6 +5,7 @@ namespace common\widgets\GridView;
 use common\widgets\GridView\assets\GridViewAsset;
 use common\widgets\GridView\services\GWCreateCrudConfig;
 use common\widgets\GridView\services\GWCustomizeDialog;
+use common\widgets\GridView\services\GWDeleteCrudConfig;
 use common\widgets\GridView\services\GWExportGrid;
 use common\widgets\GridView\services\GWExportGridConfig;
 use common\widgets\GridView\services\GWFilterDialog;
@@ -206,11 +207,22 @@ HTML;
                             ]);
                         break;
                     case 'delete':
-                        $crudButtons .= Html::a(Yii::t('wk-widget-gridview', 'Delete'), $crudUrl,
-                            [
-                                'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger',
-                                'data-pjax' => '0'
+                        $options = [
+                            'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger wk-gridview-crud-delete',
+                            'data-pjax' => '0'
+                        ];
+
+                        if ($crudUrl instanceof GWDeleteCrudConfig) {
+                            $GWDeleteCrud = $crudUrl->build();
+                            $crudUrl = '#';
+
+                            $options = array_merge($options, [
+                                'input-name' => $GWDeleteCrud->inputName,
+                                // 'url-grid' => is_array($GWDeleteCrud->urlGrid) ? Url::to($GWDeleteCrud->urlGrid) : $GWDeleteCrud->urlGrid,
                             ]);
+                        }
+
+                        $crudButtons .= Html::a(Yii::t('wk-widget-gridview', 'Delete'), $crudUrl, $options);
                         break;
                     default:
                         new \Exception(Yii::t('wk-widget-gridview', "In 'crudOptions' array must be only this keys ['create', 'update', 'delete']. Passed '{key}'", [

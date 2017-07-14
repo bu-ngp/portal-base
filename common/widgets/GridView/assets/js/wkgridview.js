@@ -172,6 +172,16 @@
             });
         }
     };
+    var makeButtonDelete = function ($pjax) {
+        if ($pjax.find(".wk-gridview-crud-create").is("[input-name]")) {
+            var inputName = $pjax.find(".wk-gridview-crud-create[input-name]").attr("input-name");
+
+            $pjax.on('click', '.wk-gridview-crud-delete[input-name]', function (e) {
+
+                e.preventDefault();
+            });
+        }
+    };
 
     var gridSelectedToBreadcrumb = function (opts) {
         if ($(".wkbc-breadcrumb").length === 1) {
@@ -266,6 +276,7 @@
                 eventsApply($pjax);
 
                 makeButtonCreate($pjax);
+                makeButtonDelete($pjax);
                 makeButtonUpdateEvent($pjax);
 
                 $(document).on('pjax:complete', function (e) {

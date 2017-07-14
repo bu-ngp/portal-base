@@ -3,6 +3,7 @@
 use common\widgets\ActiveForm\ActiveForm;
 use common\widgets\GridView\GridView;
 use common\widgets\GridView\services\GWCreateCrudConfig;
+use common\widgets\GridView\services\GWDeleteCrudConfig;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 
@@ -35,7 +36,8 @@ use yii\helpers\Html;
             'create' => GWCreateCrudConfig::set()
                 ->urlGrid(['roles/index-for-roles'])
                 ->inputName('RoleForm[assignRoles]'),
-            'delete' => ['roles/delete'],
+            'delete' => GWDeleteCrudConfig::set()
+                ->inputName('RoleForm[assignRoles]'),
         ],
         'panelHeading' => [
             'icon' => FA::icon(FA::_LIST_ALT),
