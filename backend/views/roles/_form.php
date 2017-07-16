@@ -20,7 +20,7 @@ use yii\helpers\Html;
 
     <?= $form->field($modelForm, 'description')->textInput(['wkkeep' => true]) ?>
 
-    <?= $form->field($modelForm, 'assignRoles', ['enableClientValidation' => false])->hiddenInput()->label(false) ?>
+    <?= $form->field($modelForm, 'assignRoles', ['enableClientValidation' => false])/*->hiddenInput()*/->label(false) ?>
 
     <?php ActiveForm::end(); ?>
 

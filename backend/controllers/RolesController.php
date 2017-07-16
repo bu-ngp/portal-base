@@ -4,8 +4,10 @@ namespace backend\controllers;
 
 use common\widgets\Breadcrumbs\Breadcrumbs;
 use domain\forms\base\RoleForm;
+use domain\forms\base\RoleUpdateForm;
 use domain\models\base\filter\AuthItemFilter;
 use common\widgets\ReportLoader\ReportByModel;
+use domain\models\base\search\AuthItemChildSearch;
 use domain\services\base\RoleService;
 use domain\services\proxyService;
 use common\reports\RolesReport;
@@ -127,15 +129,27 @@ class RolesController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $roleModel = $this->findModel($id);
+        $form = new RoleForm($roleModel);
+        $searchModel = new AuthItemChildSearch();
+        $dataProvider = $searchModel->searchForAuthItemUpdate(Yii::$app->request->queryParams);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->name]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        if ($form->load(Yii::$app->request->post()) && $form->validate()
+            && $this->roleService->update(
+                $form->description,
+                $form->assignRoles
+            )
+        ) {
+            return $this->redirect(['index']);
         }
+
+        $form->addErrors($this->roleService->getErrors());
+
+        return $this->render('update', [
+            'modelForm' => $form,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**
