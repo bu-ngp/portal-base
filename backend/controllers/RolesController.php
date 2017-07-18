@@ -114,7 +114,7 @@ class RolesController extends Controller
 
         $form->addErrors($this->roleService->getErrors());
 
-        return $this->render('create', [
+        return $this->render('_create', [
             'modelForm' => $form,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -130,14 +130,14 @@ class RolesController extends Controller
     public function actionUpdate($id)
     {
         $roleModel = $this->findModel($id);
-        $form = new RoleForm($roleModel);
-        $searchModel = new AuthItemChildSearch();
-        $dataProvider = $searchModel->searchForAuthItemUpdate(Yii::$app->request->queryParams);
+        $form = new RoleUpdateForm($roleModel);
+        $searchModel = new AuthItemSearch();
+        $dataProvider = $searchModel->searchForUpdate(Yii::$app->request->queryParams);
 
         if ($form->load(Yii::$app->request->post()) && $form->validate()
             && $this->roleService->update(
-                $form->description,
-                $form->assignRoles
+                $roleModel->primaryKey,
+                $form->description
             )
         ) {
             return $this->redirect(['index']);
@@ -145,7 +145,7 @@ class RolesController extends Controller
 
         $form->addErrors($this->roleService->getErrors());
 
-        return $this->render('update', [
+        return $this->render('_update', [
             'modelForm' => $form,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

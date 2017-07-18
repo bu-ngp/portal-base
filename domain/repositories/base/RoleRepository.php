@@ -14,10 +14,15 @@ use domain\models\base\AuthItem;
 use domain\repositories\RepositoryInterface;
 use RuntimeException;
 use Yii;
+use yii\rbac\Role;
 
 class RoleRepository implements RepositoryInterface
 {
 
+    /**
+     * @param $id
+     * @return AuthItem
+     */
     public function find($id)
     {
         if (!$authitem = AuthItem::findOne($id)) {
@@ -37,21 +42,23 @@ class RoleRepository implements RepositoryInterface
 
         $role = Yii::$app->authManager->createRole($authitem->name);
         $role->description = $authitem->description;
-        
+
         if (!Yii::$app->authManager->add($role)) {
             throw new RuntimeException('Saving error.');
         }
     }
 
-
     public function save($authitem)
     {
-//        if ($person->getIsNewRecord()) {
-//            throw new \RuntimeException(Yii::t('domain/base', 'Adding existing model.'));
-//        }
-//        if ($person->update(false) === false) {
-//            throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
-//        }
+        if (!($role = Yii::$app->authManager->getRole($authitem->name))) {
+            throw new RuntimeException('Authitem not exists.');
+        }
+
+        $role->description = $authitem->description;
+
+        if (!Yii::$app->authManager->update($authitem->primaryKey, $role)) {
+            throw new RuntimeException('Saving error.');
+        }
     }
 
     public function delete($authitem)

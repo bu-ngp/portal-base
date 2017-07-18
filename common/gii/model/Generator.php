@@ -67,7 +67,9 @@ class Generator extends \yii\gii\Generator
     {
         return array_merge(parent::rules(), [
             [['db', 'ns', 'tableName', 'modelClass', 'baseClass', 'queryNs', 'queryClass', 'queryBaseClass'], 'filter', 'filter' => 'trim'],
-            [['ns', 'queryNs'], 'filter', 'filter' => function($value) { return trim($value, '\\'); }],
+            [['ns', 'queryNs'], 'filter', 'filter' => function ($value) {
+                return trim($value, '\\');
+            }],
 
             [['db', 'ns', 'tableName', 'baseClass', 'queryNs', 'queryBaseClass'], 'required'],
             [['db', 'modelClass', 'queryClass'], 'match', 'pattern' => '/^\w+$/', 'message' => 'Only word characters are allowed.'],
@@ -189,12 +191,12 @@ class Generator extends \yii\gii\Generator
      */
     public function getTablePrefix()
     {
-      $db = $this->getDbConnection();
-      if ($db !== null) {
-          return $db->tablePrefix;
-      } else {
-          return '';
-      }
+        $db = $this->getDbConnection();
+        if ($db !== null) {
+            return $db->tablePrefix;
+        } else {
+            return '';
+        }
     }
 
     /**
@@ -462,8 +464,9 @@ class Generator extends \yii\gii\Generator
                     // Add relation for this table
                     $link = $this->generateRelationLink(array_flip($refs));
                     $relationName = $this->generateRelationName($relations, $table, $fks[0], false);
+                    $relationNameFrom = lcfirst($relationName);
                     $relations[$table->fullName][$relationName] = [
-                        "return \$this->hasOne($refClassName::className(), $link)->from(['$relationName' => $refClassName::tableName()]);",
+                        "return \$this->hasOne($refClassName::className(), $link)->from(['$relationNameFrom' => $refClassName::tableName()]);",
                         $refClassName,
                         false,
                     ];
@@ -472,8 +475,9 @@ class Generator extends \yii\gii\Generator
                     $hasMany = $this->isHasManyRelation($table, $fks);
                     $link = $this->generateRelationLink($refs);
                     $relationName = $this->generateRelationName($relations, $refTableSchema, $className, $hasMany);
+                    $relationNameFrom = lcfirst($relationName);
                     $relations[$refTableSchema->fullName][$relationName] = [
-                        "return \$this->" . ($hasMany ? 'hasMany' : 'hasOne') . "($className::className(), $link)->from(['$relationName' => $className::tableName()]);",
+                        "return \$this->" . ($hasMany ? 'hasMany' : 'hasOne') . "($className::className(), $link)->from(['$relationNameFrom' => $className::tableName()]);",
                         $className,
                         $hasMany,
                     ];
@@ -526,10 +530,10 @@ class Generator extends \yii\gii\Generator
 
                     $relations[$table->fullName][$leftRelationName][0] =
                         rtrim($relations[$table->fullName][$leftRelationName][0], ';')
-                        . "->inverseOf('".lcfirst($rightRelationName)."');";
+                        . "->inverseOf('" . lcfirst($rightRelationName) . "');";
                     $relations[$refTableSchema->fullName][$rightRelationName][0] =
                         rtrim($relations[$refTableSchema->fullName][$rightRelationName][0], ';')
-                        . "->inverseOf('".lcfirst($leftRelationName)."');";
+                        . "->inverseOf('" . lcfirst($leftRelationName) . "');";
                 }
             }
         }
@@ -807,7 +811,7 @@ class Generator extends \yii\gii\Generator
             }
         }
 
-        return $this->classNames[$fullTableName] = Inflector::id2camel($schemaName.$className, '_');
+        return $this->classNames[$fullTableName] = Inflector::id2camel($schemaName . $className, '_');
     }
 
     /**

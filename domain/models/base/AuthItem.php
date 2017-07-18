@@ -78,12 +78,17 @@ class AuthItem extends \yii\db\ActiveRecord
         return $authItem;
     }
 
+    public function rename($description)
+    {
+        $this->description = $description;
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getAuthAssignments()
     {
-        return $this->hasMany(AuthAssignment::className(), ['item_name' => 'name'])->from(['AuthAssignments' => AuthAssignment::tableName()]);
+        return $this->hasMany(AuthAssignment::className(), ['item_name' => 'name'])->from(['authAssignments' => AuthAssignment::tableName()]);
     }
 
     /**
@@ -99,7 +104,7 @@ class AuthItem extends \yii\db\ActiveRecord
      */
     public function getRuleName()
     {
-        return $this->hasOne(AuthRule::className(), ['name' => 'rule_name'])->from(['RuleName' => AuthRule::tableName()]);
+        return $this->hasOne(AuthRule::className(), ['name' => 'rule_name'])->from(['ruleName' => AuthRule::tableName()]);
     }
 
     /**
@@ -107,7 +112,7 @@ class AuthItem extends \yii\db\ActiveRecord
      */
     public function getAuthItemChildren()
     {
-        return $this->hasMany(AuthItemChild::className(), ['child' => 'name'])->from(['AuthItemChildren' => AuthItemChild::tableName()]);
+        return $this->hasMany(AuthItemChild::className(), ['child' => 'name'])->from(['authItemChildren' => AuthItemChild::tableName()]);
     }
 
     /**
@@ -115,7 +120,7 @@ class AuthItem extends \yii\db\ActiveRecord
      */
     public function getAuthItemChildren0()
     {
-        return $this->hasMany(AuthItemChild::className(), ['parent' => 'name'])->from(['AuthItemChildren0' => AuthItemChild::tableName()]);
+        return $this->hasMany(AuthItemChild::className(), ['parent' => 'name'])->from(['authItemChildren0' => AuthItemChild::tableName()]);
     }
 
     /**

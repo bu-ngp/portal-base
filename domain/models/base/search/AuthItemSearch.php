@@ -166,4 +166,39 @@ class AuthItemSearch extends AuthItem
 
         return $dataProvider;
     }
+
+    public function searchForUpdate($params)
+    {
+        $query = AuthItem::find();
+
+        // add conditions that should always apply here
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            //  'pagination' => ['pageSize' => 5]
+        ]);
+
+        $this->load($params);
+
+        $query->joinWith(['authItemChildren']);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        $query->andWhere([
+            'authItemChildren.parent' => $params['id'],
+        ]);
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'type' => 1,
+        ]);
+
+        $query->andFilterWhere(['like', 'description', $this->description]);
+
+        return $dataProvider;
+    }
 }

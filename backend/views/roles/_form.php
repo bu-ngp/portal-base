@@ -8,7 +8,7 @@ use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $modelForm domain\models\base\AuthItem */
+/* @var $modelForm \domain\forms\base\RoleUpdateForm */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $searchModel domain\models\base\search\AuthItemSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -20,7 +20,7 @@ use yii\helpers\Html;
 
     <?= $form->field($modelForm, 'description')->textInput(['wkkeep' => true]) ?>
 
-    <?= $form->field($modelForm, 'assignRoles', ['enableClientValidation' => false])/*->hiddenInput()*/->label(false) ?>
+    <?= ''//$form->field($modelForm, 'assignRoles', ['enableClientValidation' => false])/*->hiddenInput()->label(false)*/ : '' ?>
 
     <?php ActiveForm::end(); ?>
 

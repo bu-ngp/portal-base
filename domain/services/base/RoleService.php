@@ -49,11 +49,18 @@ class RoleService extends BaseService
 
         $this->transactionManager->execute(function () use ($authItem, $authItemChild) {
             $this->roleRepository->add($authItem);
-            $role = \Yii::$app->authManager->getRole($authItem->name);
             $this->authItemChildRepository->add($authItemChild);
         });
 
         return true;
     }
 
+    public function update($id, $description)
+    {
+        $authItem = $this->roleRepository->find($id);
+        $authItem->rename($description);
+        $this->roleRepository->save($authItem);
+
+        return true;
+    }
 }

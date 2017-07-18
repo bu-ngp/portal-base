@@ -194,7 +194,7 @@ HTML;
                                 'url-grid' => is_array($GWCreateCrud->urlGrid) ? Url::to($GWCreateCrud->urlGrid) : $GWCreateCrud->urlGrid,
                             ]);
 
-                            $this->addCrudCreateSelectedToQuery();
+                        //    $this->addCrudCreateSelectedToQuery();
                         }
 
                         $crudButtons .= Html::a(Yii::t('wk-widget-gridview', 'Create'), $crudUrl, $options);

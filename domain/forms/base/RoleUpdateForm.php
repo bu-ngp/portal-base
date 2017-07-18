@@ -8,16 +8,20 @@
 
 namespace domain\forms\base;
 
+use domain\models\base\AuthItem;
 use Yii;
 use yii\base\Model;
 
 class RoleUpdateForm extends Model
 {
     public $description;
-    public $assignRoles;
 
-    public function __construct($config = [])
+    private $authItem;
+
+    public function __construct(AuthItem $authItem = null, $config = [])
     {
+        $this->authItem = $authItem;
+        $this->load($authItem->attributes, '');
         parent::__construct($config);
     }
 
@@ -27,8 +31,7 @@ class RoleUpdateForm extends Model
     public function rules()
     {
         return [
-            [['description', 'assignRoles'], 'required'],
-            [['assignRoles'], 'compare', 'compareValue' => '{"checkAll":false,"included":[],"excluded":[]}', 'operator' => '!=', 'message' => Yii::t('common/roles', 'Select roles')],
+            [['description'], 'required'],
         ];
     }
 
@@ -36,7 +39,6 @@ class RoleUpdateForm extends Model
     {
         return [
             'description' => Yii::t('common/authitem', 'Description'),
-            'assignRoles' => Yii::t('common/authitem', 'Assign Roles'),
         ];
     }
 }
