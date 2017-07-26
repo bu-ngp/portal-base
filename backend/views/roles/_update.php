@@ -1,14 +1,15 @@
 <?php
 
+use common\widgets\GridView\services\GWAddCrudConfigForUpdate;
+use domain\forms\base\RoleUpdateForm;
 use yii\helpers\Html;
 use common\widgets\ActiveForm\ActiveForm;
 use common\widgets\GridView\GridView;
-use common\widgets\GridView\services\GWCreateCrudConfig;
 use common\widgets\GridView\services\GWDeleteCrudConfig;
 use rmrevin\yii\fontawesome\FA;
 
 /* @var $this yii\web\View */
-/* @var $modelForm domain\models\base\AuthItem */
+/* @var $modelForm RoleUpdateForm */
 /* @var $searchModel domain\models\base\search\AuthItemSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
@@ -37,9 +38,9 @@ $this->title = Yii::t('app', 'Update {modelClass}: ', [
                 'description'
             ],
             'crudSettings' => [
-                'create' => GWCreateCrudConfig::set()
-                    ->urlGrid(['roles/index-for-roles'])
-                    ->inputName('RoleForm[assignRoles]'),
+                'create' => GWAddCrudConfigForUpdate::set()
+                    ->urlGrid(['roles/index-for-roles', 'excludeId' => $modelForm->getPrimaryKey()])
+                    ->urlAction(['roles/update-remove-roles', 'id' => $modelForm->getPrimaryKey()]),
                 'delete' => GWDeleteCrudConfig::set()
                     ->inputName('RoleForm[assignRoles]'),
             ],

@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use common\widgets\ActiveForm\ActiveForm;
 use common\widgets\GridView\GridView;
-use common\widgets\GridView\services\GWCreateCrudConfig;
+use common\widgets\GridView\services\GWAddCrudConfigForCreate;
 use common\widgets\GridView\services\GWDeleteCrudConfig;
 use rmrevin\yii\fontawesome\FA;
 
@@ -37,7 +37,7 @@ $this->title = Yii::t('app', 'Create Auth Item');
                     'description'
                 ],
                 'crudSettings' => [
-                    'create' => GWCreateCrudConfig::set()
+                    'create' => GWAddCrudConfigForCreate::set()
                         ->urlGrid(['roles/index-for-roles'])
                         ->inputName('RoleForm[assignRoles]'),
                     'delete' => GWDeleteCrudConfig::set()

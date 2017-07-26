@@ -119,15 +119,24 @@
     };
 
     var makeButtonCreate = function ($pjax) {
-        if ($pjax.find(".wk-gridview-crud-create").is("[input-name]")
-            && $pjax.find(".wk-gridview-crud-create").is("[url-grid]")) {
+        if ($pjax.find(".wk-gridview-crud-create").is("[url-grid]")) {
             var $dialog = createCrudCreateDialog($pjax);
-            var inputName = $pjax.find(".wk-gridview-crud-create[input-name]").attr("input-name");
             var urlGrid = $pjax.find(".wk-gridview-crud-create[url-grid]").attr("url-grid");
 
-            $pjax.on('click', '.wk-gridview-crud-create[input-name]', function (e) {
+            $pjax.on('click', '.wk-gridview-crud-create[url-grid]', function (e) {
                 $dialog.modal();
                 e.preventDefault();
+            });
+
+            $dialog.on('show.bs.modal', function () {
+                if ($('.wk-crudCreateDialog-content').html() != "") {
+                    $dialog.find('div.wk-crudCreateDialog-errorMessage').text('');
+                    $dialog.find('div.wk-crudCreateDialog-errorMessage').hide();
+                    if ($pjax.find(".wk-gridview-crud-create").is("[url-action]")) {
+                        $dialog.find('input[name="wk-crudCreate-input"]').val('');
+                        $dialog.find('div[data-pjax-container]').gridselected2storage("clearSelected");
+                    }
+                }
             });
 
             $dialog.on('shown.bs.modal', function () {
@@ -138,6 +147,11 @@
 
                         $dialog.find('input[name="wk-crudCreate-input"]').val(lastCrumb['wk-choose']);
                         $dialog.find('div[data-pjax-container]').gridselected2textinput("reloadSelected");
+
+                        if ($pjax.find(".wk-gridview-crud-create").is("[url-action]")) {
+                            $dialog.find('input[name="wk-crudCreate-input"]').val('');
+                            $dialog.find('div[data-pjax-container]').gridselected2storage("clearSelected");
+                        }
                     });
                 }
             });
@@ -145,31 +159,66 @@
             $dialog.find('.wk-crudCreateDialog-btn-apply').on('click', function () {
                 var $grid = $pjax.find('.grid-view');
 
-                gridSelectedToBreadcrumb({
-                    selectedJSON: $dialog.find('input[name="wk-crudCreate-input"]').val(),
-                    fail: function () {
-                        gridSelectedToLocalStorage({
-                            selectedJSON: $dialog.find('input[name="wk-crudCreate-input"]').val()
-                        });
-                    }
-                });
+                if ($pjax.find(".wk-gridview-crud-create").is("[input-name]")) {
+                    gridSelectedToBreadcrumb({
+                        selectedJSON: $dialog.find('input[name="wk-crudCreate-input"]').val(),
+                        fail: function () {
+                            gridSelectedToLocalStorage({
+                                selectedJSON: $dialog.find('input[name="wk-crudCreate-input"]').val()
+                            });
+                        }
+                    });
 
-                $grid.yiiGridView('applyFilter');
-                $dialog.modal('hide');
+                    $grid.yiiGridView('applyFilter');
+                    $dialog.modal('hide');
+                }
+
+                if ($pjax.find(".wk-gridview-crud-create").is("[url-action]")) {
+                    var urlAction = $pjax.find(".wk-gridview-crud-create[url-action]").attr("url-action");
+
+                    $.ajax({
+                        url: urlAction,
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("WK-CHOOSE", $dialog.find('input[name="wk-crudCreate-input"]').val());
+                        },
+                        success: function (response) {
+                            console.debug(response);
+                            if (response.result === 'success') {
+                                $grid.yiiGridView('applyFilter');
+                                $dialog.modal('hide');
+                            }
+
+                            if (response.result === 'error') {
+                                $dialog.find('div.wk-crudCreateDialog-errorMessage').text(response.message);
+                                $dialog.find('div.wk-crudCreateDialog-errorMessage').show(200);
+                            }
+                        }
+                    });
+                }
+
             });
 
-            $pjax.on('pjax:beforeSend', function (e, xhr) {
-                gridSelectedFromBreadcrumb({
-                    xhr: xhr,
-                    inputName: inputName,
-                    fail: function () {
-                        gridSelectedFromLocalStorage({
-                            xhr: xhr,
-                            inputName: inputName
-                        });
-                    }
+            if ($pjax.find(".wk-gridview-crud-create").is("[input-name]")) {
+                var inputName = $pjax.find(".wk-gridview-crud-create[input-name]").attr("input-name");
+
+                $pjax.on('pjax:beforeSend', function (e, xhr) {
+                    gridSelectedFromBreadcrumb({
+                        xhr: xhr,
+                        inputName: inputName,
+                        fail: function () {
+                            gridSelectedFromLocalStorage({
+                                xhr: xhr,
+                                inputName: inputName
+                            });
+                        }
+                    });
                 });
-            });
+            }
+
+            if ($pjax.find(".wk-gridview-crud-create").is("[url-action]")) {
+                var urlAction = $pjax.find(".wk-gridview-crud-create[url-action]").attr("url-action");
+
+            }
         }
     };
     var makeButtonDelete = function ($pjax) {
@@ -234,6 +283,8 @@
             '<div class="wk-container-loading"></div>' +
             '<div class="row">' +
             '<input type="hidden" name="wk-crudCreate-input" >' +
+            '<div class="alert alert-danger wk-crudCreateDialog-errorMessage" role="alert" style="display: none;">' +
+            '</div>' +
             '<div class="col-xs-12 wk-crudCreateDialog-content">' +
             '</div>' +
             '</div>' +

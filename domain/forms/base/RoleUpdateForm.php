@@ -41,4 +41,9 @@ class RoleUpdateForm extends Model
             'description' => Yii::t('common/authitem', 'Description'),
         ];
     }
+
+    public function getPrimaryKey()
+    {
+        return $this->authItem->primaryKey;
+    }
 }

@@ -5,6 +5,7 @@ namespace backend\controllers;
 use common\widgets\Breadcrumbs\Breadcrumbs;
 use domain\forms\base\RoleForm;
 use domain\forms\base\RoleUpdateForm;
+use domain\models\base\AuthItemChild;
 use domain\models\base\filter\AuthItemFilter;
 use common\widgets\ReportLoader\ReportByModel;
 use domain\models\base\search\AuthItemChildSearch;
@@ -150,6 +151,44 @@ class RolesController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+
+    public function actionUpdateRemoveRoles($id)
+    {
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+
+            if ($wkchoose = Yii::$app->request->getHeaders()->get('wk-choose')) {
+                $_choose = json_decode($wkchoose);
+
+                $items = AuthItem::find()
+                    ->andWhere($_choose->checkAll ? ['not in', 'name', $_choose->excluded] : ['in', 'name', $_choose->included])
+                    ->all();
+
+                $transaction = Yii::$app->db->beginTransaction();
+                try {
+                    $auth = Yii::$app->authManager;
+
+                    /** @var AuthItem $item */
+                    foreach ($items as $item) {
+                        $auth->addChild($auth->getRole($id), $auth->getRole($item->name));
+                    }
+
+                    $transaction->commit();
+                } catch (\Exception $e) {
+                    $transaction->rollBack();
+                    return (object)[
+                        'result' => 'error',
+                        'message' => 'Ошибка при добавлении записей',
+                    ];
+                }
+
+                return (object)[
+                    'result' => 'success',
+                ];
+            }
+
+        }
     }
 
     /**

@@ -9,7 +9,7 @@
 namespace common\widgets\GridView\services;
 
 
-class GWCreateCrudConfig implements GWConfigInterface
+class GWAddCrudConfigForCreate implements GWConfigInterface
 {
     public $urlGrid;
     public $inputName;

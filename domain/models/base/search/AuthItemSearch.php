@@ -111,6 +111,15 @@ class AuthItemSearch extends AuthItem
             return $dataProvider;
         }
 
+        if ($params['excludeId']) {
+            $query->andWhere(['not exists', (new Query())
+                ->select('{{%auth_item_child}}.child')
+                ->from('{{%auth_item_child}}')
+                ->andWhere(['{{%auth_item_child}}.parent' => $params['excludeId']])
+                ->andWhere('{{%auth_item_child}}.child = {{%auth_item}}.name')
+            ]);
+        }
+
         // grid filtering conditions
         $query->andFilterWhere([
             'type' => 1,

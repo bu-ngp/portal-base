@@ -3,7 +3,8 @@
 namespace common\widgets\GridView;
 
 use common\widgets\GridView\assets\GridViewAsset;
-use common\widgets\GridView\services\GWCreateCrudConfig;
+use common\widgets\GridView\services\GWAddCrudConfigForCreate;
+use common\widgets\GridView\services\GWAddCrudConfigForUpdate;
 use common\widgets\GridView\services\GWCustomizeDialog;
 use common\widgets\GridView\services\GWDeleteCrudConfig;
 use common\widgets\GridView\services\GWExportGrid;
@@ -91,7 +92,7 @@ HTML;
     protected $GWFilterDialog;
     /** @var GWExportGrid */
     protected $GWExportGrid;
-    /** @var  GWCreateCrudConfig */
+    /** @var  GWAddCrudConfigForCreate */
     protected $GWCreateCrud;
 
     public function registerTranslations()
@@ -185,7 +186,7 @@ HTML;
                             'data-pjax' => '0'
                         ];
 
-                        if ($crudUrl instanceof GWCreateCrudConfig) {
+                        if ($crudUrl instanceof GWAddCrudConfigForCreate) {
                             $GWCreateCrud = $crudUrl->build();
                             $crudUrl = '#';
 
@@ -194,7 +195,19 @@ HTML;
                                 'url-grid' => is_array($GWCreateCrud->urlGrid) ? Url::to($GWCreateCrud->urlGrid) : $GWCreateCrud->urlGrid,
                             ]);
 
-                        //    $this->addCrudCreateSelectedToQuery();
+                            $this->addCrudCreateSelectedToQuery();
+                        }
+
+
+                        if ($crudUrl instanceof GWAddCrudConfigForUpdate) {
+                            $GWCreateCrud = $crudUrl->build();
+                            $crudUrl = '#';
+
+                            $options = array_merge($options, [
+                                'url-action' => is_array($GWCreateCrud->urlAction) ? Url::to($GWCreateCrud->urlAction) : $GWCreateCrud->urlAction,
+                                'url-grid' => is_array($GWCreateCrud->urlGrid) ? Url::to($GWCreateCrud->urlGrid) : $GWCreateCrud->urlGrid,
+                            ]);
+
                         }
 
                         $crudButtons .= Html::a(Yii::t('wk-widget-gridview', 'Create'), $crudUrl, $options);
@@ -283,7 +296,7 @@ HTML;
         $id = $this->id;
         $this->js[] = <<<EOT
             if ($("#$id").length) {
-                $("#$id").yiiGridView({"filterUrl": window.location.search});
+                /* $("#$id").yiiGridView({"filterUrl": window.location.search}); */
                 $("#$id").yiiGridView('applyFilter');
             }
 EOT;
