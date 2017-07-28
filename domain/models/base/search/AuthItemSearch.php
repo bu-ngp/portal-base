@@ -93,9 +93,11 @@ class AuthItemSearch extends AuthItem
         return $dataProvider;
     }
 
-    public function searchForRoles($params)
+    public function searchForRoles($params, $_exclude)
     {
-        $query = AuthItem::find();
+        $query = isset($_exclude->excludeFromId)
+            ? AuthItem::excludeForAuthItemChildIfUpdate($_exclude->excludeFromId)
+            : AuthItem::excludeForAuthItemChildIfCreate($_exclude);
 
         // add conditions that should always apply here
 
@@ -109,15 +111,6 @@ class AuthItemSearch extends AuthItem
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
-        }
-
-        if ($params['excludeId']) {
-            $query->andWhere(['not exists', (new Query())
-                ->select('{{%auth_item_child}}.child')
-                ->from('{{%auth_item_child}}')
-                ->andWhere(['{{%auth_item_child}}.parent' => $params['excludeId']])
-                ->andWhere('{{%auth_item_child}}.child = {{%auth_item}}.name')
-            ]);
         }
 
         // grid filtering conditions

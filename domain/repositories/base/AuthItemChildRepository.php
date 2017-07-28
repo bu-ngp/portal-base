@@ -44,7 +44,7 @@ class AuthItemChildRepository implements RepositoryInterface
             if (Yii::$app->authManager->canAddChild($parent, $child)) {
                 Yii::$app->authManager->addChild($parent, $child);
             } else {
-                throw new RuntimeException("Assign Error.");
+                throw new RuntimeException("Can't assign '{$child->description}' to '{$parent->description}'");
             }
         }
     }

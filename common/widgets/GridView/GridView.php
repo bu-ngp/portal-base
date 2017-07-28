@@ -206,6 +206,7 @@ HTML;
                             $options = array_merge($options, [
                                 'url-action' => is_array($GWCreateCrud->urlAction) ? Url::to($GWCreateCrud->urlAction) : $GWCreateCrud->urlAction,
                                 'url-grid' => is_array($GWCreateCrud->urlGrid) ? Url::to($GWCreateCrud->urlGrid) : $GWCreateCrud->urlGrid,
+                                'wk-exclude' => $GWCreateCrud->excludeFromId,
                             ]);
 
                         }

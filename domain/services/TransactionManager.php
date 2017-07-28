@@ -10,7 +10,7 @@ namespace domain\services;
 
 class TransactionManager
 {
-    public function execute(callable $function)
+    public function execute(callable $function, callable $functionError = null)
     {
         $transaction = \Yii::$app->db->beginTransaction();
         try {
@@ -18,7 +18,11 @@ class TransactionManager
             $transaction->commit();
         } catch (\Exception $e) {
             $transaction->rollBack();
-            throw $e;
+            if ($functionError) {
+                call_user_func($functionError, $e);
+            } else {
+                throw $e;
+            }
         }
     }
 }

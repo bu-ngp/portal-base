@@ -110,7 +110,7 @@
             selectedPanelSet($pjax);
         });
 
-        $(document).on('pjax:complete', function (e) {
+        $pjax.on('pjax:complete', function (e) {
             console.debug('pjax:complete');
             if (e.target.id == $pjax[0].id) {
                 resetSelected($pjax);
@@ -255,7 +255,7 @@
                     data = $pjax.data('gridselected2storage');
 
                 $(window).unbind('.gridselected2storage');
-                data.tooltip.remove();
+                //   data.tooltip.remove();
                 $pjax.removeData('gridselected2storage');
             })
         }

@@ -128,30 +128,53 @@
                 e.preventDefault();
             });
 
-            $dialog.on('show.bs.modal', function () {
-                if ($('.wk-crudCreateDialog-content').html() != "") {
-                    $dialog.find('div.wk-crudCreateDialog-errorMessage').text('');
-                    $dialog.find('div.wk-crudCreateDialog-errorMessage').hide();
-                    if ($pjax.find(".wk-gridview-crud-create").is("[url-action]")) {
-                        $dialog.find('input[name="wk-crudCreate-input"]').val('');
-                        $dialog.find('div[data-pjax-container]').gridselected2storage("clearSelected");
-                    }
+            $dialog.on('hidden.bs.modal', function () {
+                $dialog.find('div[data-pjax-container]').gridselected2textinput("destroy");
+                $dialog.find('div[data-pjax-container]').gridselected2storage("destroy");
+                $('.wk-crudCreateDialog-content').html("");
+                $dialog.find('div.wk-crudCreateDialog-errorMessage').text('');
+                $dialog.find('div.wk-crudCreateDialog-errorMessage').hide();
+                if ($pjax.find(".wk-gridview-crud-create").is("[url-action]")) {
+                    $dialog.find('input[name="wk-crudCreate-input"]').val('');
+                    $dialog.find('div[data-pjax-container]').gridselected2storage("clearSelected");
                 }
             });
 
+
+
             $dialog.on('shown.bs.modal', function () {
                 if ($('.wk-crudCreateDialog-content').html() == "") {
+
+                    $dialog.on('pjax:beforeSend', 'div[data-pjax-container]', function (e, xhr) {
+                        gridSelectedFromBreadcrumb({
+                            xhr: xhr,
+                            headerName: 'wk-exclude',
+                            fail: function () {
+                                gridSelectedFromLocalStorage({
+                                    headerName: 'wk-exclude',
+                                    xhr: xhr
+                                });
+                            }
+                        });
+
+                        if ($pjax.find(".wk-gridview-crud-create").is("[wk-exclude]")) {
+                            xhr.setRequestHeader('WK-EXCLUDE', $pjax.find(".wk-gridview-crud-create").attr('wk-exclude'));
+                        }
+                    });
+
                     $('.wk-crudCreateDialog-content').load(urlGrid, function () {
                         $('.wk-container-loading').hide();
                         var lastCrumb = $(".wkbc-breadcrumb").wkbreadcrumbs('getLast');
 
                         $dialog.find('input[name="wk-crudCreate-input"]').val(lastCrumb['wk-choose']);
-                        $dialog.find('div[data-pjax-container]').gridselected2textinput("reloadSelected");
+                        //     $dialog.find('div[data-pjax-container]').gridselected2textinput("reloadSelected");
 
-                        if ($pjax.find(".wk-gridview-crud-create").is("[url-action]")) {
-                            $dialog.find('input[name="wk-crudCreate-input"]').val('');
-                            $dialog.find('div[data-pjax-container]').gridselected2storage("clearSelected");
-                        }
+                        //   if ($pjax.find(".wk-gridview-crud-create").is("[url-action]")) {
+                        $dialog.find('input[name="wk-crudCreate-input"]').val('');
+                        $dialog.find('div[data-pjax-container]').gridselected2storage("clearSelected");
+                        //      }
+
+
                     });
                 }
             });
@@ -248,12 +271,15 @@
 
     var gridSelectedFromBreadcrumb = function (opts) {
         var xhr = opts.xhr;
-        var inputName = opts.inputName;
         var lastCrumb = $(".wkbc-breadcrumb").length === 1 ? $(".wkbc-breadcrumb").wkbreadcrumbs('getLast') : {};
+        var headerName = ("headerName" in opts) ? opts.headerName.toUpperCase() : "WK-CHOOSE";
 
         if ("wk-choose" in lastCrumb) {
-            xhr.setRequestHeader("WK-CHOOSE", lastCrumb["wk-choose"]);
-            $('input[name="' + inputName + '"]').val(lastCrumb["wk-choose"]);
+            xhr.setRequestHeader(headerName, lastCrumb["wk-choose"]);
+
+            if ("inputName" in opts) {
+                $('input[name="' + opts.inputName + '"]').val(lastCrumb["wk-choose"]);
+            }
         } else if ("fail" in opts) {
             opts.fail();
         }
@@ -261,10 +287,15 @@
 
     var gridSelectedFromLocalStorage = function (opts) {
         var xhr = opts.xhr;
-        var inputName = opts.inputName;
+        var headerName = ("headerName" in opts) ? opts.headerName.toUpperCase() : "WK-CHOOSE";
+
         if (localStorage.getItem("wk-choose")) {
-            xhr.setRequestHeader("WK-CHOOSE", localStorage.getItem("wk-choose"));
-            $('input[name="' + inputName + '"]').val(localStorage.getItem("wk-choose"));
+            xhr.setRequestHeader(headerName, localStorage.getItem("wk-choose"));
+
+            if ("inputName" in opts) {
+                $('input[name="' + opts.inputName + '"]').val(localStorage.getItem("wk-choose"));
+            }
+
             localStorage.removeItem("wk-choose");
         }
     };

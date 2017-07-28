@@ -39,8 +39,9 @@ $this->title = Yii::t('app', 'Update {modelClass}: ', [
             ],
             'crudSettings' => [
                 'create' => GWAddCrudConfigForUpdate::set()
-                    ->urlGrid(['roles/index-for-roles', 'excludeId' => $modelForm->getPrimaryKey()])
-                    ->urlAction(['roles/update-remove-roles', 'id' => $modelForm->getPrimaryKey()]),
+                    ->urlGrid(['roles/index-for-roles'/*, 'excludeId' => $modelForm->getPrimaryKey()*/])
+                    ->urlAction(['roles/update-remove-roles', 'id' => $modelForm->getPrimaryKey()])
+                    ->excludeFromId($modelForm->getPrimaryKey()),
                 'delete' => GWDeleteCrudConfig::set()
                     ->inputName('RoleForm[assignRoles]'),
             ],

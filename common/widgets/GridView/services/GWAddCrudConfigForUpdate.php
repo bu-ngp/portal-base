@@ -13,6 +13,7 @@ class GWAddCrudConfigForUpdate implements GWConfigInterface
 {
     public $urlGrid;
     public $urlAction;
+    public $excludeFromId;
 
     public static function set()
     {
@@ -28,6 +29,14 @@ class GWAddCrudConfigForUpdate implements GWConfigInterface
     public function urlAction($urlAction)
     {
         $this->urlAction = $urlAction;
+        return $this;
+    }
+
+    public function excludeFromId($excludeFromId)
+    {
+        $this->excludeFromId = json_encode((object)[
+            'excludeFromId' => $excludeFromId,
+        ]);
         return $this;
     }
 
@@ -47,6 +56,10 @@ class GWAddCrudConfigForUpdate implements GWConfigInterface
 
         if (empty($this->urlAction)) {
             throw new \Exception('urlAction() required');
+        }
+
+        if (empty($this->excludeFromId)) {
+            throw new \Exception('excludeFromId() required');
         }
 
         return $this;

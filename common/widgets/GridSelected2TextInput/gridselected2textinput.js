@@ -124,7 +124,7 @@
 
                 readFromStorage($pjax);
                 selectRowsFromStorage($pjax);
-                $(document).on('pjax:complete', function (e) {
+                $pjax.on('pjax:complete', function (e) {
                     if (e.target.id == $pjax[0].id) {
                         selectRowsFromStorage($pjax);
                     }
@@ -140,11 +140,8 @@
         },
         destroy: function () {
             return this.each(function () {
-                var $pjax = $(this),
-                    data = $pjax.data('gridselected2textinput');
-
+                var $pjax = $(this);
                 $(window).unbind('.gridselected2textinput');
-                data.tooltip.remove();
                 $pjax.removeData('gridselected2textinput');
             })
         }

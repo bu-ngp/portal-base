@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\widgets\Breadcrumbs\Breadcrumbs;
+use common\widgets\GridView\services\AjaxResponse;
 use domain\forms\base\RoleForm;
 use domain\forms\base\RoleUpdateForm;
 use domain\models\base\AuthItemChild;
@@ -78,19 +79,6 @@ class RolesController extends Controller
         ]);
     }
 
-    public function actionIndexForRoles()
-    {
-        $searchModel = new AuthItemSearch();
-        $filterModel = new AuthItemFilter();
-        $dataProvider = $searchModel->searchForRoles(Yii::$app->request->queryParams);
-
-        return $this->renderAjax('index_for_roles', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'filterModel' => $filterModel,
-        ]);
-    }
-
     /**
      * Creates a new AuthItem model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -153,41 +141,35 @@ class RolesController extends Controller
         ]);
     }
 
+    /** Загрузка грида в модальном окне при создании и обновлении роли */
+    public function actionIndexForRoles()
+    {
+        $searchModel = new AuthItemSearch();
+        $filterModel = new AuthItemFilter();
+        if ($wkexclude = Yii::$app->request->getHeaders()->get('wk-exclude')) {
+            $_exclude = json_decode($wkexclude);
+            $dataProvider = $searchModel->searchForRoles(Yii::$app->request->queryParams, $_exclude);
+
+            return $this->renderAjax('index_for_roles', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'filterModel' => $filterModel,
+            ]);
+        }        
+    }
+
+    /** urlAction. Добавление выбранных записей в гриде в модальном окне при обновлении роли */
     public function actionUpdateRemoveRoles($id)
     {
-        if (Yii::$app->request->isAjax) {
+        if (Yii::$app->request->isAjax && $wkchoose = Yii::$app->request->getHeaders()->get('wk-choose')) {
             Yii::$app->response->format = Response::FORMAT_JSON;
+            $roleModel = $this->findModel($id);
 
-            if ($wkchoose = Yii::$app->request->getHeaders()->get('wk-choose')) {
-                $_choose = json_decode($wkchoose);
-
-                $items = AuthItem::find()
-                    ->andWhere($_choose->checkAll ? ['not in', 'name', $_choose->excluded] : ['in', 'name', $_choose->included])
-                    ->all();
-
-                $transaction = Yii::$app->db->beginTransaction();
-                try {
-                    $auth = Yii::$app->authManager;
-
-                    /** @var AuthItem $item */
-                    foreach ($items as $item) {
-                        $auth->addChild($auth->getRole($id), $auth->getRole($item->name));
-                    }
-
-                    $transaction->commit();
-                } catch (\Exception $e) {
-                    $transaction->rollBack();
-                    return (object)[
-                        'result' => 'error',
-                        'message' => 'Ошибка при добавлении записей',
-                    ];
-                }
-
-                return (object)[
-                    'result' => 'success',
-                ];
+            if ($this->roleService->addRolesForUpdate($roleModel->primaryKey, $wkchoose)) {
+                return AjaxResponse::init(AjaxResponse::SUCCESS);
             }
 
+            return AjaxResponse::init(AjaxResponse::ERROR, $this->roleService->getErrorsAsString());
         }
     }
 

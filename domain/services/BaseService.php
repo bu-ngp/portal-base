@@ -28,4 +28,14 @@ class BaseService
         return $this->errorStore;
     }
 
+    public function getErrorsAsString()
+    {
+        $arr = $this->errorStore;
+        array_walk($arr, function (&$value) {
+            $value = implode(',', $value);
+        });
+
+        return implode(',', $arr);
+    }
+
 }

@@ -63,4 +63,23 @@ class RoleService extends BaseService
 
         return true;
     }
+
+    public function addRolesForUpdate($id, $additionalJSONObj)
+    {
+        if (!is_string($additionalJSONObj) || ($additionalJSONObj = json_decode($additionalJSONObj)) === null) {
+            throw new ServiceErrorsException('assignRoles', \Yii::t('common/roles', 'Error when recognizing selected items'));
+        }
+
+        $authItem = $this->roleRepository->find($id);
+        $authItemChild = AuthItemChild::create($authItem, $additionalJSONObj);
+
+        $this->transactionManager->execute(function () use ($authItem, $authItemChild) {
+            $this->authItemChildRepository->add($authItemChild);
+        }, function ($e) {
+            /** @var $e Exception */
+            throw new ServiceErrorsException('assignRoles', $e->getMessage());
+        });
+
+        return true;
+    }
 }
