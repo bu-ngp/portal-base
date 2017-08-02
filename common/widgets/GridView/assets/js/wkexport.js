@@ -17,6 +17,7 @@
     var methods = {
         init: function (options) {
             return this.each(function () {
+
                 var $pjax = $(this);
                 if ($pjax.data('wkexport')) {
                     return;
@@ -50,11 +51,9 @@
         },
         destroy: function () {
             return this.each(function () {
-                var $pjax = $(this),
-                    data = $pjax.data('wkexport');
+                var $pjax = $(this);
 
                 $(window).unbind('.wkexport');
-                data.tooltip.remove();
                 $pjax.removeData('wkexport');
             })
         }

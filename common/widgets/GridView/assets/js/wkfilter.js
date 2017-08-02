@@ -281,10 +281,10 @@
         destroy: function () {
             return this.each(function () {
                 var $pjax = $(this),
-                    data = $pjax.data('wkfilter');
+                    gridID = $pjax.find('.grid-view')[0].id;
 
+                $('div.' + gridID + '-wk-filterDialog').remove();
                 $(window).unbind('.wkfilter');
-                data.tooltip.remove();
                 $pjax.removeData('wkfilter');
             })
         }

@@ -128,24 +128,72 @@
                 e.preventDefault();
             });
 
-            $dialog.on('hidden.bs.modal', function () {
-                $dialog.find('div[data-pjax-container]').gridselected2textinput("destroy");
-                $dialog.find('div[data-pjax-container]').gridselected2storage("destroy");
-                $('.wk-crudCreateDialog-content').html("");
-                $dialog.find('div.wk-crudCreateDialog-errorMessage').text('');
-                $dialog.find('div.wk-crudCreateDialog-errorMessage').hide();
-                if ($pjax.find(".wk-gridview-crud-create").is("[url-action]")) {
-                    $dialog.find('input[name="wk-crudCreate-input"]').val('');
-                    $dialog.find('div[data-pjax-container]').gridselected2storage("clearSelected");
+            $dialog.on('shown.bs.modal', function () {
+                if ($('.wk-crudCreateDialog-content').html() == "") {
+                    $('.wk-crudCreateDialog-content').load(urlGrid, function () {
+                        $('.wk-container-loading').hide();
+                        $dialog.find('input[name="wk-crudCreate-input"]').val('');
+                        $dialog.find('div[data-pjax-container]').gridselected2storage("clearSelected");
+                    });
                 }
             });
 
+            $dialog.on('hidden.bs.modal', function () {
+                $dialog.find('input[name="wk-crudCreate-input"]').val('');
+                $dialog.find('div[data-pjax-container]').gridselected2textinput("destroy");
+                $dialog.find('div[data-pjax-container]').gridselected2storage("clearSelected");
+                $dialog.find('div[data-pjax-container]').gridselected2storage("destroy");
+                $dialog.find('div[data-pjax-container]').wkgridview("destroy");
+                $('.wk-crudCreateDialog-content').html("");
+                $dialog.find('div.wk-crudCreateDialog-errorMessage').text('');
+                $dialog.find('div.wk-crudCreateDialog-errorMessage').hide();
+            });
 
+            $dialog.find('.wk-crudCreateDialog-btn-apply').on('click', function () {
+                var $grid = $pjax.find('.grid-view');
 
-            $dialog.on('shown.bs.modal', function () {
-                if ($('.wk-crudCreateDialog-content').html() == "") {
+                actionCrud($pjax,
+                    function (inputName) {
+                        gridSelectedToBreadcrumb({
+                            selectedJSON: $dialog.find('input[name="wk-crudCreate-input"]').val(),
+                            fail: function () {
+                                gridSelectedToLocalStorage({
+                                    selectedJSON: $dialog.find('input[name="wk-crudCreate-input"]').val()
+                                });
+                            }
+                        });
 
-                    $dialog.on('pjax:beforeSend', 'div[data-pjax-container]', function (e, xhr) {
+                        $grid.yiiGridView('applyFilter');
+                        $dialog.modal('hide');
+                    },
+                    function (urlAction) {
+                        $.ajax({
+                            url: urlAction,
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader("WK-CHOOSE", $dialog.find('input[name="wk-crudCreate-input"]').val());
+                            },
+                            success: function (response) {
+                                if (response.result === 'success') {
+                                    $grid.yiiGridView('applyFilter');
+                                    $dialog.modal('hide');
+                                }
+
+                                if (response.result === 'error') {
+                                    $dialog.find('div.wk-crudCreateDialog-errorMessage').text(response.message);
+                                    $dialog.find('div.wk-crudCreateDialog-errorMessage').show(200);
+                                }
+                            }
+                        });
+                    }
+                );
+            });
+
+            $dialog.on('pjax:beforeSend', 'div[data-pjax-container]', function (e, xhr) {
+                actionCrud($pjax,
+                    function (inputName) {
+                        xhr.setRequestHeader('WK-EXCLUDE', $('input[name="' + inputName + '"').val());
+                    },
+                    function (actionUrl) {
                         gridSelectedFromBreadcrumb({
                             xhr: xhr,
                             headerName: 'wk-exclude',
@@ -160,88 +208,43 @@
                         if ($pjax.find(".wk-gridview-crud-create").is("[wk-exclude]")) {
                             xhr.setRequestHeader('WK-EXCLUDE', $pjax.find(".wk-gridview-crud-create").attr('wk-exclude'));
                         }
-                    });
-
-                    $('.wk-crudCreateDialog-content').load(urlGrid, function () {
-                        $('.wk-container-loading').hide();
-                        var lastCrumb = $(".wkbc-breadcrumb").wkbreadcrumbs('getLast');
-
-                        $dialog.find('input[name="wk-crudCreate-input"]').val(lastCrumb['wk-choose']);
-                        //     $dialog.find('div[data-pjax-container]').gridselected2textinput("reloadSelected");
-
-                        //   if ($pjax.find(".wk-gridview-crud-create").is("[url-action]")) {
-                        $dialog.find('input[name="wk-crudCreate-input"]').val('');
-                        $dialog.find('div[data-pjax-container]').gridselected2storage("clearSelected");
-                        //      }
-
-
-                    });
-                }
+                    }
+                );
             });
 
-            $dialog.find('.wk-crudCreateDialog-btn-apply').on('click', function () {
-                var $grid = $pjax.find('.grid-view');
-
-                if ($pjax.find(".wk-gridview-crud-create").is("[input-name]")) {
-                    gridSelectedToBreadcrumb({
-                        selectedJSON: $dialog.find('input[name="wk-crudCreate-input"]').val(),
-                        fail: function () {
-                            gridSelectedToLocalStorage({
-                                selectedJSON: $dialog.find('input[name="wk-crudCreate-input"]').val()
-                            });
-                        }
-                    });
-
-                    $grid.yiiGridView('applyFilter');
-                    $dialog.modal('hide');
-                }
-
-                if ($pjax.find(".wk-gridview-crud-create").is("[url-action]")) {
-                    var urlAction = $pjax.find(".wk-gridview-crud-create[url-action]").attr("url-action");
-
-                    $.ajax({
-                        url: urlAction,
-                        beforeSend: function (xhr) {
-                            xhr.setRequestHeader("WK-CHOOSE", $dialog.find('input[name="wk-crudCreate-input"]').val());
-                        },
-                        success: function (response) {
-                            console.debug(response);
-                            if (response.result === 'success') {
-                                $grid.yiiGridView('applyFilter');
-                                $dialog.modal('hide');
+            $pjax.on('pjax:beforeSend', function (e, xhr) {
+                actionCrud($pjax,
+                    function (inputName) {
+                        gridSelectedFromBreadcrumb({
+                            xhr: xhr,
+                            inputName: inputName,
+                            fail: function () {
+                                gridSelectedFromLocalStorage({
+                                    xhr: xhr,
+                                    inputName: inputName
+                                });
                             }
+                        });
+                    },
+                    function (actionUrl) {
 
-                            if (response.result === 'error') {
-                                $dialog.find('div.wk-crudCreateDialog-errorMessage').text(response.message);
-                                $dialog.find('div.wk-crudCreateDialog-errorMessage').show(200);
-                            }
-                        }
-                    });
-                }
-
+                    }
+                );
             });
 
-            if ($pjax.find(".wk-gridview-crud-create").is("[input-name]")) {
-                var inputName = $pjax.find(".wk-gridview-crud-create[input-name]").attr("input-name");
+        }
+    };
+    var actionCrud = function ($pjax, createFunc, updateFunc) {
+        if ($pjax.length === 0) {
+            return;
+        }
 
-                $pjax.on('pjax:beforeSend', function (e, xhr) {
-                    gridSelectedFromBreadcrumb({
-                        xhr: xhr,
-                        inputName: inputName,
-                        fail: function () {
-                            gridSelectedFromLocalStorage({
-                                xhr: xhr,
-                                inputName: inputName
-                            });
-                        }
-                    });
-                });
-            }
+        if ($pjax.find(".wk-gridview-crud-create").is("[input-name]") && (typeof createFunc == "function")) {
+            createFunc($pjax.find(".wk-gridview-crud-create").attr("input-name"));
+        }
 
-            if ($pjax.find(".wk-gridview-crud-create").is("[url-action]")) {
-                var urlAction = $pjax.find(".wk-gridview-crud-create[url-action]").attr("url-action");
-
-            }
+        if ($pjax.find(".wk-gridview-crud-create").is("[url-action]") && (typeof updateFunc == "function")) {
+            updateFunc($pjax.find(".wk-gridview-crud-create").attr("url-action"));
         }
     };
     var makeButtonDelete = function ($pjax) {
@@ -368,11 +371,14 @@
         },
         destroy: function () {
             return this.each(function () {
-                var $pjax = $(this),
-                    data = $pjax.data('wkgridview');
+                var $pjax = $(this);
+                var $grid = $pjax.find('.grid-view');
 
+                $pjax.wkcustomize("destroy");
+                $pjax.wkfilter("destroy");
+                $pjax.wkexport("destroy");
+               /* $grid.yiiGridView("destroy");*/
                 $(window).unbind('.wkgridview');
-                data.tooltip.remove();
                 $pjax.removeData('wkgridview');
             })
         }

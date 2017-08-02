@@ -280,10 +280,10 @@
         destroy: function () {
             return this.each(function () {
                 var $pjax = $(this),
-                    data = $pjax.data('wkcustomize');
+                    gridID = $pjax.find('.grid-view')[0].id;
 
+                $('div.' + gridID + '-wk-customizeDialog').remove();
                 $(window).unbind('.wkcustomize');
-                data.tooltip.remove();
                 $pjax.removeData('wkcustomize');
             })
         }

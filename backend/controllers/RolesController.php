@@ -13,6 +13,7 @@ use domain\models\base\search\AuthItemChildSearch;
 use domain\services\base\RoleService;
 use domain\services\proxyService;
 use common\reports\RolesReport;
+use Knp\Snappy\PdfTest;
 use Yii;
 use domain\models\base\AuthItem;
 use domain\models\base\search\AuthItemSearch;
@@ -146,16 +147,15 @@ class RolesController extends Controller
     {
         $searchModel = new AuthItemSearch();
         $filterModel = new AuthItemFilter();
-        if ($wkexclude = Yii::$app->request->getHeaders()->get('wk-exclude')) {
-            $_exclude = json_decode($wkexclude);
-            $dataProvider = $searchModel->searchForRoles(Yii::$app->request->queryParams, $_exclude);
+        $wkexclude = Yii::$app->request->getHeaders()->get('wk-exclude');
+        $_exclude = $wkexclude ? json_decode($wkexclude) : $wkexclude;
+        $dataProvider = $searchModel->searchForRoles(Yii::$app->request->queryParams, $_exclude);
 
-            return $this->renderAjax('index_for_roles', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-                'filterModel' => $filterModel,
-            ]);
-        }        
+        return $this->renderAjax('index_for_roles', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'filterModel' => $filterModel,
+        ]);
     }
 
     /** urlAction. Добавление выбранных записей в гриде в модальном окне при обновлении роли */

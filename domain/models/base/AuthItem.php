@@ -163,8 +163,13 @@ class AuthItem extends \yii\db\ActiveRecord
      */
     public static function excludeForAuthItemChildIfCreate($jsonSelected)
     {
-        return self::find()
-            ->andWhere($jsonSelected->checkAll ? ['in', 'name', $jsonSelected->excluded] : ['not in', 'name', $jsonSelected->included]);
+        if ($jsonSelected) {
+            return self::find()
+                ->andWhere($jsonSelected->checkAll ? ['in', 'name', $jsonSelected->excluded] : ['not in', 'name', $jsonSelected->included]);
+
+        }
+        
+        return self::find();
     }
 
     public static function items()
