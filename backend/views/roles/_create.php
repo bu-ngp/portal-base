@@ -40,9 +40,9 @@ $this->title = Yii::t('app', 'Create Auth Item');
                     'create' => GWAddCrudConfigForCreate::set()
                         ->urlGrid(['roles/index-for-roles'])
                         ->inputName('RoleForm[assignRoles]'),
-                    'delete' => GWDeleteCrudConfig::set()
-                        ->inputName('RoleForm[assignRoles]'),
-                ],
+                    /*   'delete' => GWDeleteCrudConfig::set()
+                           ->inputName('RoleForm[assignRoles]'),*/
+                   ],
                 'panelHeading' => [
                     'icon' => FA::icon(FA::_LIST_ALT),
                     'title' => Yii::t('common/roles', 'Roles'),

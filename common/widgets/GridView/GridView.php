@@ -31,7 +31,7 @@ class GridView extends \kartik\grid\GridView
 
     public $crudSettings = [];
     public $panelHeading = [];
-    public $selectColumn = true;
+    public $selectColumn = false;
     public $serialColumn = true;
     public $minHeight = false;
     public $customizeDialog = true;
@@ -40,6 +40,7 @@ class GridView extends \kartik\grid\GridView
     /** @var  GWExportGridConfig|null */
     public $exportGrid;
     public $toolbar = [];
+    public $leftBottomToolbar = '';
     public $rightBottomToolbar = '';
     public $pjaxSettings = [
         'loadingCssClass' => 'wk-widget-grid-loading',
@@ -47,7 +48,7 @@ class GridView extends \kartik\grid\GridView
     public $panelAfterTemplate = <<< HTML
         <div class="btn-toolbar kv-grid-toolbar" role="toolbar" style="display: inline-block;">
             <div class="btn-group">
-                {crudButtons}
+                {leftBottomToolbar}
             </div>
         </div>
         {after}
@@ -58,7 +59,7 @@ class GridView extends \kartik\grid\GridView
         </div>
 HTML;
     public $panelBeforeTemplate = <<< HTML
-        <div>
+        <div>  
             <div class="btn-toolbar pull-left kv-grid-toolbar wk-grid-toolbar" role="toolbar">
                 <div class="btn-group">
                     {crudToolbar}
@@ -159,7 +160,7 @@ HTML;
             $this->containerOptions['style'] = "min-height: {$this->minHeight}px;";
         }
 
-        if (!(Yii::$app->request->isAjax && Yii::$app->request->get('_pjax'))) {
+        if (!(Yii::$app->request->isAjax && (Yii::$app->request->get('_pjax') || Yii::$app->request->post('_report', false)))) {
             $this->dataProvider = new ArrayDataProvider();
         }
 
@@ -175,9 +176,10 @@ HTML;
     protected function createCrudButtons()
     {
         $crudButtons = '';
+        $actionButtons = [];
         if (is_array($this->crudSettings) && count($this->crudSettings) > 0) {
             foreach ($this->crudSettings as $key => $crudUrl) {
-                $crudUrl = is_array($crudUrl) ? Url::to($crudUrl) : $crudUrl;
+                // $crudUrl = is_array($crudUrl) ? Url::to($crudUrl) : $crudUrl;
 
                 switch ($key) {
                     case 'create':
@@ -188,61 +190,88 @@ HTML;
 
                         if ($crudUrl instanceof GWAddCrudConfigForCreate) {
                             $GWCreateCrud = $crudUrl->build();
-                            $crudUrl = '#';
+                            $crudUrl = is_array($GWCreateCrud->urlGrid) ? Url::to($GWCreateCrud->urlGrid) : $GWCreateCrud->urlGrid;
 
                             $options = array_merge($options, [
                                 'input-name' => $GWCreateCrud->inputName,
-                                'url-grid' => is_array($GWCreateCrud->urlGrid) ? Url::to($GWCreateCrud->urlGrid) : $GWCreateCrud->urlGrid,
                             ]);
 
                             $this->addCrudCreateSelectedToQuery();
                         }
 
 
-                        if ($crudUrl instanceof GWAddCrudConfigForUpdate) {
-                            $GWCreateCrud = $crudUrl->build();
-                            $crudUrl = '#';
+//                        if ($crudUrl instanceof GWAddCrudConfigForUpdate) {
+//                            $GWCreateCrud = $crudUrl->build();
+//                            $crudUrl = '#';
+//
+//                            $options = array_merge($options, [
+//                                'url-action' => is_array($GWCreateCrud->urlAction) ? Url::to($GWCreateCrud->urlAction) : $GWCreateCrud->urlAction,
+//                                'url-grid' => is_array($GWCreateCrud->urlGrid) ? Url::to($GWCreateCrud->urlGrid) : $GWCreateCrud->urlGrid,
+//                                'wk-exclude' => $GWCreateCrud->excludeFromId,
+//                            ]);
+//
+//                        }
 
-                            $options = array_merge($options, [
-                                'url-action' => is_array($GWCreateCrud->urlAction) ? Url::to($GWCreateCrud->urlAction) : $GWCreateCrud->urlAction,
-                                'url-grid' => is_array($GWCreateCrud->urlGrid) ? Url::to($GWCreateCrud->urlGrid) : $GWCreateCrud->urlGrid,
-                                'wk-exclude' => $GWCreateCrud->excludeFromId,
-                            ]);
-
-                        }
-
-                        $crudButtons .= Html::a(Yii::t('wk-widget-gridview', 'Create'), $crudUrl, $options);
+                        $crudButtons .= Html::a(/*'<i class="fa fa-2x fa-plus-square-o"></i> ' .*/
+                            Yii::t('wk-widget-gridview', 'Create'), $crudUrl, $options);
                         break;
                     case 'update':
-                        $crudButtons .= Html::a(Yii::t('wk-widget-gridview', 'Update'), $crudUrl,
-                            [
-                                'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary wk-btn-update',
-                                'data-pjax' => '0'
-                            ]);
+//                        $actionButtons['choose'] = function ($url, $model) use ($crudUrl) {
+//                            $customurl = Url::to([$crudUrl, 'id' => $model->primaryKey]);
+//                            return Html::a('<i class="fa fa-2x fa-check-square-o"></i>', $customurl, ['title' => 'Выбрать', 'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-success', 'data-pjax' => '0']);
+//                        };
+                        $actionButtons['update'] = function ($url, $model) use ($crudUrl) {
+                            $customurl = Url::to([$crudUrl, 'id' => $model->primaryKey]);
+                            return Html::a('<i class="fa fa-2x fa-pencil-square-o"></i>', $customurl, ['title' => 'Обновить', 'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-primary', 'data-pjax' => '0']);
+                        };
+
+
+//                        $crudButtons .= Html::a(Yii::t('wk-widget-gridview', 'Update'), $crudUrl,
+//                            [
+//                                'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary wk-btn-update',
+//                                'data-pjax' => '0'
+//                            ]);
                         break;
                     case 'delete':
-                        $options = [
-                            'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger wk-gridview-crud-delete',
-                            'data-pjax' => '0'
-                        ];
-
-                        if ($crudUrl instanceof GWDeleteCrudConfig) {
-                            $GWDeleteCrud = $crudUrl->build();
-                            $crudUrl = '#';
-
-                            $options = array_merge($options, [
-                                'input-name' => $GWDeleteCrud->inputName,
-                                // 'url-grid' => is_array($GWDeleteCrud->urlGrid) ? Url::to($GWDeleteCrud->urlGrid) : $GWDeleteCrud->urlGrid,
-                            ]);
-                        }
-
-                        $crudButtons .= Html::a(Yii::t('wk-widget-gridview', 'Delete'), $crudUrl, $options);
+                        $actionButtons['delete'] = function ($url, $model) use ($crudUrl) {
+                            $customurl = Url::to([$crudUrl, 'id' => $model->primaryKey]);
+                            return Html::a('<i class="fa fa-2x fa-trash-o"></i>', $customurl, ['title' => 'Удалить', 'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-danger', 'data-pjax' => '0']);
+                        };
+//                        $options = [
+//                            'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger wk-gridview-crud-delete',
+//                            'data-pjax' => '0'
+//                        ];
+//
+//                        if ($crudUrl instanceof GWDeleteCrudConfig) {
+//                            $GWDeleteCrud = $crudUrl->build();
+//                            $crudUrl = '#';
+//
+//                            $options = array_merge($options, [
+//                                'input-name' => $GWDeleteCrud->inputName,
+//                                // 'url-grid' => is_array($GWDeleteCrud->urlGrid) ? Url::to($GWDeleteCrud->urlGrid) : $GWDeleteCrud->urlGrid,
+//                            ]);
+//                        }
+//
+//                        $crudButtons .= Html::a(Yii::t('wk-widget-gridview', 'Delete'), $crudUrl, $options);
                         break;
                     default:
                         new \Exception(Yii::t('wk-widget-gridview', "In 'crudOptions' array must be only this keys ['create', 'update', 'delete']. Passed '{key}'", [
                             'key' => $key,
                         ]));
                 }
+            }
+
+            $tmpl = '{' . implode("} {", array_keys($actionButtons)) . '}';
+
+            if (count($actionButtons) > 0) {
+                array_unshift($this->columns, [
+                    'class' => 'kartik\grid\ActionColumn',
+                    'header' => Html::encode('Действия'),
+                    'contentOptions' => ['class' => 'wk-grid-action-buttons'],
+                    'buttons' => $actionButtons,
+                    'template' => $tmpl,
+                    'options' => ['wk-widget' => true],
+                ]);
             }
         }
 
@@ -253,6 +282,7 @@ HTML;
     protected function templatesPrepare()
     {
         $this->panelBeforeTemplate = strtr($this->panelBeforeTemplate, ['{customButtons}' => '']);
+        $this->panelAfterTemplate = strtr($this->panelAfterTemplate, ['{leftBottomToolbar}' => $this->leftBottomToolbar]);
         $this->panelAfterTemplate = strtr($this->panelAfterTemplate, ['{rightBottomToolbar}' => $this->rightBottomToolbar]);
     }
 
@@ -297,7 +327,7 @@ HTML;
         $id = $this->id;
         $this->js[] = <<<EOT
             if ($("#$id").length) {
-                /* $("#$id").yiiGridView({"filterUrl": window.location.search}); */
+                $("#$id").yiiGridView({"filterUrl": window.location.search}); /* сокращает url purifyingUrl() */
                 $("#$id").yiiGridView('applyFilter');
             }
 EOT;

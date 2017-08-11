@@ -13,11 +13,6 @@ div.wk-custom-buttons {
     /*float: right;*/
 }
 
-div.wk-grid-toolbar {
-    /*   position: relative;
-       min-height: 35px;*/
-}
-
 div.kv-panel-after {
     display: flex;
     justify-content: space-between;
@@ -222,4 +217,14 @@ div.wk-filterDialog-content {
 .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
     background-color: transparent;
     transition: background-color 0.2s;
+}
+
+.wk-grid-action-buttons a {
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+}
+
+.wk-grid-action-buttons a i {
+    line-height: 30px !important;
 }

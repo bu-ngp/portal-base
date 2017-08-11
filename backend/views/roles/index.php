@@ -50,18 +50,18 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         'crudSettings' => [
             'create' => ['roles/create'],
-            'update' => ['roles/update'],
-            'delete' => ['roles/delete'],
+            'update' => 'roles/update',
+            'delete' => 'roles/delete',
         ],
         'panelHeading' => ['icon' => FA::icon(FA::_LIST_ALT),
             'title' => Yii::t('common/roles', 'Roles'),
         ],
-        'rightBottomToolbar' => Html::a('Отчет', 'roles/report',
-            [
-                'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-default wk-report',
-                'data-pjax' => '0',
-                'wk-loading' => true,
-            ]),
+//        'rightBottomToolbar' => Html::a('Отчет', 'roles/report',
+//            [
+//                'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-default wk-report',
+//                'data-pjax' => '0',
+//                'wk-loading' => true,
+//            ]),
     ]);
     ?>
 </div>

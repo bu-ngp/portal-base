@@ -12,6 +12,7 @@ namespace common\widgets\GridView\services;
 use common\widgets\GridView\GridView;
 use yii\bootstrap\Html;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 class GWPrepareColumns
 {
@@ -108,7 +109,14 @@ class GWPrepareColumns
                 return $return;
             };
         } else {
-            $column['contentOptions'] = function () {
+            $column['contentOptions'] = function () use ($column) {
+                if (is_array($column['contentOptions'])) {
+                    $column['contentOptions']['data-toggle'] = 'tooltip';
+                    $column['contentOptions']['class'] = trim(ArrayHelper::getValue($column, 'contentOptions.class') . ' wk-nowrap');
+
+                    return $column['contentOptions'];
+                }
+
                 return ['data-toggle' => 'tooltip', 'class' => 'wk-nowrap'];
             };
         }

@@ -1,7 +1,7 @@
 <?php
 
+use common\widgets\GridView\GridView;
 use common\widgets\GridView\services\GWFilterDialogConfig;
-use common\widgets\GridViewModal\GridViewModal;
 use rmrevin\yii\fontawesome\FA;
 
 /* @var $this yii\web\View */
@@ -9,7 +9,7 @@ use rmrevin\yii\fontawesome\FA;
 /* @var $filterModel \domain\models\base\filter\AuthItemFilter */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-echo GridViewModal::widget([
+echo GridView::widget([
     'dataProvider' => $dataProvider,
     'filterModel' => $searchModel,
     'filterDialog' => GWFilterDialogConfig::set()->filterModel($filterModel),
