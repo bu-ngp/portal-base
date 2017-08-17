@@ -38,14 +38,17 @@ $this->title = Yii::t('app', 'Update {modelClass}: ', [
                 'description'
             ],
             'crudSettings' => [
-                'create' => 'roles/update-remove-roles',
+                'create' => [
+                    'class' => 'common\widgets\GridView\services\GWAddCrudConfigForUpdate',
+                    'urlGrid' => ['roles/index-for-roles'],
+                ],
 //                'create' => GWAddCrudConfigForUpdate::set()
 //                    ->urlGrid(['roles/index-for-roles'/*, 'excludeId' => $modelForm->getPrimaryKey()*/])
 //                    ->urlAction(['roles/update-remove-roles', 'id' => $modelForm->getPrimaryKey()])
 //                    ->excludeFromId($modelForm->getPrimaryKey()),
 //                'delete' => GWDeleteCrudConfig::set()
 //                    ->inputName('RoleForm[assignRoles]'),
-            'delete' => 'roles/update-remove-roles',
+                'delete' => 'roles/update-remove-roles',
             ],
             'panelHeading' => [
                 'icon' => FA::icon(FA::_LIST_ALT),

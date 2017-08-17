@@ -16,6 +16,7 @@ use Yii;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
+use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
@@ -86,6 +87,7 @@ HTML;
         <div class="clearfix"></div>
 HTML;
     public $customButtons = [];
+    public $gridExcludeIdsFunc;
     protected $js = [];
     /** @var  GWCustomizeDialog */
     protected $GWCustomizeDialog;
@@ -132,6 +134,8 @@ HTML;
             GWExportGrid::lets($this)->prepareConfig($filterString)->export();
         }
 
+        $this->selectedAttribute();
+        $this->wkidAttribute();
         $this->makeCustomButtons();
         $this->templatesPrepare();
         $this->initGridJs();
@@ -177,6 +181,9 @@ HTML;
     {
         $crudButtons = '';
         $actionButtons = [];
+
+        $this->selectGridState($actionButtons);
+
         if (is_array($this->crudSettings) && count($this->crudSettings) > 0) {
             foreach ($this->crudSettings as $key => $crudUrl) {
                 // $crudUrl = is_array($crudUrl) ? Url::to($crudUrl) : $crudUrl;
@@ -188,7 +195,15 @@ HTML;
                             'data-pjax' => '0'
                         ];
 
-                        if ($crudUrl instanceof GWAddCrudConfigForCreate) {
+                        $isTypeObject = isset($crudUrl['class']);
+
+                        if ($isTypeObject) {
+                            $crudUrl = Yii::createObject([
+                                'class' => $crudUrl['class'],
+                                'urlGrid' => $crudUrl['urlGrid'],
+                                'inputName' => $crudUrl['inputName'],
+                            ]);
+
                             $GWCreateCrud = $crudUrl->build();
                             $crudUrl = is_array($GWCreateCrud->urlGrid) ? Url::to($GWCreateCrud->urlGrid) : $GWCreateCrud->urlGrid;
 
@@ -198,6 +213,11 @@ HTML;
 
                             $this->addCrudCreateSelectedToQuery();
                         }
+
+
+                        /*  if ($crudUrl instanceof GWAddCrudConfigForCreate) {
+
+                          }*/
 
 
 //                        if ($crudUrl instanceof GWAddCrudConfigForUpdate) {
@@ -260,19 +280,19 @@ HTML;
                         ]));
                 }
             }
+        }
 
+        if (count($actionButtons) > 0) {
             $tmpl = '{' . implode("} {", array_keys($actionButtons)) . '}';
 
-            if (count($actionButtons) > 0) {
-                array_unshift($this->columns, [
-                    'class' => 'kartik\grid\ActionColumn',
-                    'header' => Html::encode('Действия'),
-                    'contentOptions' => ['class' => 'wk-grid-action-buttons'],
-                    'buttons' => $actionButtons,
-                    'template' => $tmpl,
-                    'options' => ['wk-widget' => true],
-                ]);
-            }
+            array_unshift($this->columns, [
+                'class' => 'kartik\grid\ActionColumn',
+                'header' => Html::encode('Действия'),
+                'contentOptions' => ['class' => 'wk-grid-action-buttons'],
+                'buttons' => $actionButtons,
+                'template' => $tmpl,
+                'options' => ['wk-widget' => true],
+            ]);
         }
 
         $this->panelBeforeTemplate = strtr($this->panelBeforeTemplate, ['{crudToolbar}' => $crudButtons]);
@@ -394,14 +414,55 @@ EOT
             $condition = '1=2';
 
             if (Yii::$app->request->headers['wk-choose']) {
-                $_choose = json_decode(Yii::$app->request->headers['wk-choose']);
+                if ($_choose = json_decode(Yii::$app->request->headers['wk-choose'])) {
+                    /*  if (property_exists($_choose, $this->id) && is_array($_choose->{$this->id})) {
+                          $condition = ['in', 'name', $_choose->{$this->id}];
+                      }*/
+                    if (is_array($_choose)) {
+                        $condition = ['in', 'name', $_choose];
+                    }
 
-                if ($_choose->included || $_choose->excluded) {
-                    $condition = $_choose->included ? ['in', 'name', $_choose->included] : ['not', ['in', 'name', $_choose->excluded]];
                 }
+
+                /* if ($_choose->included || $_choose->excluded) {
+                     $condition = $_choose->included ? ['in', 'name', $_choose->included] : ['not', ['in', 'name', $_choose->excluded]];
+                 }*/
             }
 
             $this->dataProvider->query->andWhere($condition);
+        }
+    }
+
+    protected function selectGridState(array &$actionButtons)
+    {
+        if ($this->gridExcludeIdsFunc instanceof \Closure
+            && Yii::$app->request->headers['wk-selected']
+            && ($_selected = json_decode(Yii::$app->request->headers['wk-selected']))
+            && property_exists($_selected, 'exclude')
+        ) {
+            $actionButtons['choose'] = function ($url, $model) use ($_selected) {
+                $url = $_selected->url . (preg_match('/\?/', $_selected->url) ? '&' : '?') . 'grid=' . urlencode($_selected->gridID) . '&selected=' . urlencode($model->primaryKey);
+
+                return Html::a('<i class="fa fa-2x fa-check-square-o"></i>', $url, ['title' => 'Выбрать', 'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-success', 'data-pjax' => '0']);
+            };
+
+            $func = $this->gridExcludeIdsFunc;
+
+            $func($this->dataProvider->query, $_selected->exclude);
+        }
+    }
+
+    protected function selectedAttribute()
+    {
+        if (Yii::$app->request->get('grid') === $this->id) {
+            $this->options['wk-selected'] = Yii::$app->request->get('selected');
+        }
+    }
+
+    protected function wkidAttribute()
+    {
+        if (Yii::$app->request->get('id')) {
+            $this->options['wk-id'] = Yii::$app->request->get('id');
         }
     }
 }

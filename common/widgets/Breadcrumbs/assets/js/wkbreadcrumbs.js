@@ -208,11 +208,31 @@
 
             return false;
         },
+        getPreLast: function () {
+            var $widget = $(this);
+
+            if ($widget.data('wkbreadcrumbs').crumbs.length > 1) {
+                return $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 2];
+            }
+
+            return false;
+        },
         setLast: function (bcObj) {
             var $widget = $(this);
 
             if ($widget.data('wkbreadcrumbs').crumbs.length > 0) {
                 $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 1] = bcObj;
+                saveCrumbs($widget);
+                return true;
+            }
+
+            return false;
+        },
+        setPreLast: function (bcObj) {
+            var $widget = $(this);
+
+            if ($widget.data('wkbreadcrumbs').crumbs.length > 1) {
+                $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 2] = bcObj;
                 saveCrumbs($widget);
                 return true;
             }

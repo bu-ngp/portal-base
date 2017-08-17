@@ -24,7 +24,7 @@ $this->title = Yii::t('app', 'Create Auth Item');
 
             <?= $form->field($modelForm, 'description')->textInput(['wkkeep' => true]) ?>
 
-            <?= $form->field($modelForm, 'assignRoles', ['enableClientValidation' => false])->hiddenInput()->label(false) ?>
+            <?= $form->field($modelForm, 'assignRoles', ['enableClientValidation' => false])/*->hiddenInput()->label(false)*/ ?>
 
             <?php ActiveForm::end(); ?>
 
@@ -37,12 +37,18 @@ $this->title = Yii::t('app', 'Create Auth Item');
                     'description'
                 ],
                 'crudSettings' => [
-                    'create' => GWAddCrudConfigForCreate::set()
-                        ->urlGrid(['roles/index-for-roles'])
-                        ->inputName('RoleForm[assignRoles]'),
+                    'create' => [
+                        'class' => 'common\widgets\GridView\services\GWAddCrudConfigForCreate',
+                        'urlGrid' => ['roles/index-for-roles'],
+                        'inputName' => 'RoleForm[assignRoles]',
+                    ],
+
+                    /*  GWAddCrudConfigForCreate::set()
+                      ->urlGrid(['roles/index-for-roles'])
+                      ->inputName('RoleForm[assignRoles]'),*/
                     /*   'delete' => GWDeleteCrudConfig::set()
                            ->inputName('RoleForm[assignRoles]'),*/
-                   ],
+                ],
                 'panelHeading' => [
                     'icon' => FA::icon(FA::_LIST_ALT),
                     'title' => Yii::t('common/roles', 'Roles'),

@@ -142,8 +142,21 @@ class RolesController extends Controller
         ]);
     }
 
-    /** Загрузка грида в модальном окне при создании и обновлении роли */
     public function actionIndexForRoles()
+    {
+        $searchModel = new AuthItemSearch();
+        $filterModel = new AuthItemFilter();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index_for_roles', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'filterModel' => $filterModel,
+        ]);
+    }
+
+    /** Загрузка грида в модальном окне при создании и обновлении роли */
+  /*  public function actionIndexForRoles()
     {
         $searchModel = new AuthItemSearch();
         $filterModel = new AuthItemFilter();
@@ -156,7 +169,7 @@ class RolesController extends Controller
             'dataProvider' => $dataProvider,
             'filterModel' => $filterModel,
         ]);
-    }
+    }*/
 
     /** urlAction. Добавление выбранных записей в гриде в модальном окне при обновлении роли */
     public function actionUpdateRemoveRoles($id)

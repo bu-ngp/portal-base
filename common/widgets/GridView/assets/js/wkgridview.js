@@ -18,17 +18,92 @@
         }
     };
 
+    var gridSelectedToBreadcrumbs = function (opts) {
+        var lastCrumb = $(".wkbc-breadcrumb").length === 1 ? $(".wkbc-breadcrumb").wkbreadcrumbs('getLast') : {};
+
+        if (!("wk-choose" in lastCrumb)) {
+            lastCrumb["wk-choose"] = {};
+        }
+
+        var wkchoose = lastCrumb["wk-choose"];
+
+        if (opts.gridID in wkchoose) {
+            if (wkchoose[opts.gridID].indexOf(opts.selected) < 0) {
+                wkchoose[opts.gridID].push(opts.selected);
+            }
+        } else {
+            wkchoose[opts.gridID] = [opts.selected];
+        }
+
+        lastCrumb["wk-choose"] = wkchoose;
+        $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
+    };
+
+    var gridSelectedFromBreadcrumb = function (opts) {
+        var xhr = opts.xhr;
+        var lastCrumb = $(".wkbc-breadcrumb").length === 1 ? $(".wkbc-breadcrumb").wkbreadcrumbs('getLast') : {};
+        var headerName = ("headerName" in opts) ? opts.headerName.toUpperCase() : "WK-CHOOSE";
+
+        if ("wk-choose" in lastCrumb) {
+            var wkchoose = lastCrumb["wk-choose"];
+
+            if (opts.gridID in wkchoose) {
+                xhr.setRequestHeader(headerName, JSON.stringify(wkchoose[opts.gridID]));
+
+                if ("inputName" in opts) {
+                    $('input[name="' + opts.inputName + '"]').val(JSON.stringify(wkchoose[opts.gridID]));
+                }
+            }
+        }
+    };
+
+    var gridExcludedFromBreadcrumb = function (opts) {
+        var xhr = opts.xhr;
+        var preLastCrumb = $(".wkbc-breadcrumb").length === 1 ? $(".wkbc-breadcrumb").wkbreadcrumbs('getPreLast') : {};
+        var headerName = ("headerName" in opts) ? opts.headerName.toUpperCase() : "WK-SELECTED";
+
+        if ("wk-choose" in preLastCrumb) {
+            var wkselected = preLastCrumb["wk-choose"];
+
+            if ("gridID" in wkselected) {
+                xhr.setRequestHeader(headerName, JSON.stringify({
+                    url: preLastCrumb.url,
+                    exclude: wkselected[wkselected.gridID],
+                    gridID: wkselected.gridID
+                }));
+            }
+        }
+    };
+
+    var gridRejectFromBreadcrumb = function (opts) {
+        var xhr = opts.xhr;
+        var preLastCrumb = $(".wkbc-breadcrumb").length === 1 ? $(".wkbc-breadcrumb").wkbreadcrumbs('getPreLast') : {};
+        var headerName = ("headerName" in opts) ? opts.headerName.toUpperCase() : "WK-SELECTED";
+
+        if ("wk-id" in preLastCrumb) {
+            var wkid = preLastCrumb["wk-id"];
+
+            if ("gridID" in wkid) {
+                xhr.setRequestHeader(headerName, JSON.stringify({
+                    url: preLastCrumb.url,
+                    reject: wkid[wkid.gridID],
+                    gridID: wkid.gridID
+                }));
+            }
+        }
+    };
+
     var eventsApply = function ($pjax) {
 
         $pjax.on('dblclick', 'td[data-col-seq]', function (e) {
             //    $(this).css('background-color','red');
         });
 
-        $(document).on('pjax:error', function (e) {
-             e.preventDefault();
-         });
+        $pjax.on('pjax:error', function (e) {
+            e.preventDefault();
+        });
 
-        $(document).on('pjax:send', function () {
+        $pjax.on('pjax:send', function () {
             purifyingUrl();
 
             if ($pjax.find('input[data-krajee-daterangepicker]').data('daterangepicker')) {
@@ -36,8 +111,31 @@
             }
         });
 
+        $pjax.on('pjax:beforeSend', function (e, xhr) {
+            var $addButtonGrid = $pjax.find(".wk-gridview-crud-create");
+            var $grid = $pjax.find('.grid-view');
+            if ($addButtonGrid.is("[input-name]")) {
+                if ($grid.is("[wk-selected]")) {
+                    gridSelectedToBreadcrumbs({
+                        inputName: $addButtonGrid.attr("input-name"),
+                        selected: $grid.attr("wk-selected"),
+                        gridID: $pjax.find('.grid-view')[0].id
+                    });
+                }
 
-        $(document).on('pjax:complete', function (e) {
+                gridSelectedFromBreadcrumb({
+                    xhr: xhr,
+                    inputName: $addButtonGrid.attr("input-name"),
+                    gridID: $pjax.find('.grid-view')[0].id
+                });
+            }
+
+            gridExcludedFromBreadcrumb({
+                xhr: xhr
+            });
+        });
+
+        $pjax.on('pjax:complete', function (e) {
             var pjaxID = $pjax[0].id;
             if (e.target.id == pjaxID) {
                 purifyingUrl();
@@ -50,6 +148,47 @@
                     $(this).find('.dropdown-menu').first().stop(true, true).slideUp(200);
                 });
             }
+        });
+
+        $pjax.on('click', '.wk-gridview-crud-create', function (e) {
+            e.preventDefault();
+
+            var lastCrumb = $(".wkbc-breadcrumb").wkbreadcrumbs('getLast');
+            var wkchoose = "wk-choose" in lastCrumb ? lastCrumb["wk-choose"] : {};
+            var wkid = "wk-id" in lastCrumb ? lastCrumb["wk-id"] : {};
+            var $grid = $pjax.find('.grid-view');
+
+            if ($(this).is("[input-name]")) {
+                if ("wk-choose" in lastCrumb) {
+                    wkchoose.gridID = $grid[0].id;
+
+                    if (!(wkchoose.gridID in wkchoose)) {
+                        wkchoose[wkchoose.gridID] = [];
+                    }
+
+                } else {
+                    wkchoose.gridID = $grid[0].id;
+                    wkchoose[wkchoose.gridID] = [];
+                }
+            }
+
+            if ($grid.is("[wk-id]")) {
+                if ("wk-id" in lastCrumb) {
+
+                } else {
+                    wkchoose.gridID = $grid[0].id;
+                    wkchoose[wkchoose.gridID] = [];
+                }
+                
+
+
+                lastCrumb["wk-id"] = $grid.attr("wk-id");
+            }
+
+            lastCrumb["wk-choose"] = wkchoose;
+            $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
+
+            window.location.href = $(this).attr("href");
         });
     };
 

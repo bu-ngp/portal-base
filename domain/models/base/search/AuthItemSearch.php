@@ -159,10 +159,10 @@ class AuthItemSearch extends AuthItem
         }
 
         // grid filtering conditions
-        $query->andFilterWhere([
+       /* $query->andFilterWhere([
             'type' => 1,
 
-        ]);
+        ]);*/
 
         $query->andFilterWhere(['like', 'description', $this->description]);
 

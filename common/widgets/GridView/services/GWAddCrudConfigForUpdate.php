@@ -12,8 +12,8 @@ namespace common\widgets\GridView\services;
 class GWAddCrudConfigForUpdate implements GWConfigInterface
 {
     public $urlGrid;
-    public $urlAction;
-    public $excludeFromId;
+  /*  public $urlAction;
+    public $excludeFromId;*/
 
     public static function set()
     {
@@ -26,7 +26,7 @@ class GWAddCrudConfigForUpdate implements GWConfigInterface
         return $this;
     }
 
-    public function urlAction($urlAction)
+  /*  public function urlAction($urlAction)
     {
         $this->urlAction = $urlAction;
         return $this;
@@ -38,29 +38,29 @@ class GWAddCrudConfigForUpdate implements GWConfigInterface
             'excludeFromId' => $excludeFromId,
         ]);
         return $this;
-    }
+    }*/
 
     public function build()
     {
         if (!is_string($this->urlGrid) && !is_array($this->urlGrid)) {
             throw new \Exception('urlGrid() must be string or array');
         }
-
+/*
         if (!is_string($this->urlAction) && !is_array($this->urlAction)) {
             throw new \Exception('urlAction() must be string or array');
-        }
+        }*/
 
         if (empty($this->urlGrid)) {
             throw new \Exception('urlGrid() required');
         }
 
-        if (empty($this->urlAction)) {
+     /*   if (empty($this->urlAction)) {
             throw new \Exception('urlAction() required');
         }
 
         if (empty($this->excludeFromId)) {
             throw new \Exception('excludeFromId() required');
-        }
+        }*/
 
         return $this;
     }
