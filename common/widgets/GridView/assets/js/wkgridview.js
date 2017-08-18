@@ -114,7 +114,7 @@
         $pjax.on('pjax:beforeSend', function (e, xhr) {
             var $addButtonGrid = $pjax.find(".wk-gridview-crud-create");
             var $grid = $pjax.find('.grid-view');
-            if ($addButtonGrid.is("[input-name]")) {
+                 if ($addButtonGrid.is("[input-name]")) {
                 if ($grid.is("[wk-selected]")) {
                     gridSelectedToBreadcrumbs({
                         inputName: $addButtonGrid.attr("input-name"),
@@ -131,6 +131,9 @@
             }
 
             gridExcludedFromBreadcrumb({
+                xhr: xhr
+            });
+            gridRejectFromBreadcrumb({
                 xhr: xhr
             });
         });
@@ -150,12 +153,12 @@
             }
         });
 
-        $pjax.on('click', '.wk-gridview-crud-create', function (e) {
+          $pjax.on('click', '.wk-gridview-crud-create', function (e) {
             e.preventDefault();
 
             var lastCrumb = $(".wkbc-breadcrumb").wkbreadcrumbs('getLast');
             var wkchoose = "wk-choose" in lastCrumb ? lastCrumb["wk-choose"] : {};
-            var wkid = "wk-id" in lastCrumb ? lastCrumb["wk-id"] : {};
+            var wkid = {};
             var $grid = $pjax.find('.grid-view');
 
             if ($(this).is("[input-name]")) {
@@ -170,22 +173,17 @@
                     wkchoose.gridID = $grid[0].id;
                     wkchoose[wkchoose.gridID] = [];
                 }
+
+                lastCrumb["wk-choose"] = wkchoose;
             }
 
             if ($grid.is("[wk-id]")) {
-                if ("wk-id" in lastCrumb) {
+                wkid.gridID = $grid[0].id;
+                wkid[wkid.gridID] = $grid.attr("wk-id");
 
-                } else {
-                    wkchoose.gridID = $grid[0].id;
-                    wkchoose[wkchoose.gridID] = [];
-                }
-                
-
-
-                lastCrumb["wk-id"] = $grid.attr("wk-id");
+                lastCrumb["wk-id"] = wkid;
             }
 
-            lastCrumb["wk-choose"] = wkchoose;
             $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
 
             window.location.href = $(this).attr("href");

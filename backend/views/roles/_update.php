@@ -50,6 +50,18 @@ $this->title = Yii::t('app', 'Update {modelClass}: ', [
 //                    ->inputName('RoleForm[assignRoles]'),
                 'delete' => 'roles/update-remove-roles',
             ],
+            'gridInject' => [
+                'mainField' => 'parent',
+                'mainIdParameterName' => 'id',
+                'foreignField' => 'child',
+                'saveFunc' => function (\yii\db\ActiveRecord $model, $mainId, $mainField, $foreignField, $foreignId) {
+                    $model->$mainField = $mainId;
+                    $model->$foreignField = $foreignId;
+                    $model->save();
+
+                    return $model->getErrors();
+                },
+            ],
             'panelHeading' => [
                 'icon' => FA::icon(FA::_LIST_ALT),
                 'title' => Yii::t('common/roles', 'Roles'),

@@ -88,6 +88,7 @@ HTML;
 HTML;
     public $customButtons = [];
     public $gridExcludeIdsFunc;
+    public $gridInject;
     protected $js = [];
     /** @var  GWCustomizeDialog */
     protected $GWCustomizeDialog;
@@ -411,9 +412,9 @@ EOT
     protected function addCrudCreateSelectedToQuery()
     {
         if ($this->dataProvider instanceof ActiveDataProvider) {
-            $condition = '1=2';
-
             if (Yii::$app->request->headers['wk-choose']) {
+                $condition = '1=2';
+
                 if ($_choose = json_decode(Yii::$app->request->headers['wk-choose'])) {
                     /*  if (property_exists($_choose, $this->id) && is_array($_choose->{$this->id})) {
                           $condition = ['in', 'name', $_choose->{$this->id}];
@@ -427,9 +428,11 @@ EOT
                 /* if ($_choose->included || $_choose->excluded) {
                      $condition = $_choose->included ? ['in', 'name', $_choose->included] : ['not', ['in', 'name', $_choose->excluded]];
                  }*/
+
+                $this->dataProvider->query->andWhere($condition);
             }
 
-            $this->dataProvider->query->andWhere($condition);
+
         }
     }
 
@@ -438,7 +441,7 @@ EOT
         if ($this->gridExcludeIdsFunc instanceof \Closure
             && Yii::$app->request->headers['wk-selected']
             && ($_selected = json_decode(Yii::$app->request->headers['wk-selected']))
-            && property_exists($_selected, 'exclude')
+            && (property_exists($_selected, 'exclude') || property_exists($_selected, 'reject'))
         ) {
             $actionButtons['choose'] = function ($url, $model) use ($_selected) {
                 $url = $_selected->url . (preg_match('/\?/', $_selected->url) ? '&' : '?') . 'grid=' . urlencode($_selected->gridID) . '&selected=' . urlencode($model->primaryKey);
@@ -448,7 +451,7 @@ EOT
 
             $func = $this->gridExcludeIdsFunc;
 
-            $func($this->dataProvider->query, $_selected->exclude);
+            $func($this->dataProvider->query, property_exists($_selected, 'exclude') ? $_selected->exclude : [$_selected->reject]);
         }
     }
 
