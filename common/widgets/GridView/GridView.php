@@ -7,6 +7,7 @@ use common\widgets\GridView\services\GWAddCrudConfigForCreate;
 use common\widgets\GridView\services\GWAddCrudConfigForUpdate;
 use common\widgets\GridView\services\GWCustomizeDialog;
 use common\widgets\GridView\services\GWDeleteCrudConfig;
+use common\widgets\GridView\services\GWDeleteCrudConfigForCreate;
 use common\widgets\GridView\services\GWExportGrid;
 use common\widgets\GridView\services\GWExportGridConfig;
 use common\widgets\GridView\services\GWFilterDialog;
@@ -60,6 +61,9 @@ class GridView extends \kartik\grid\GridView
         </div>
 HTML;
     public $panelBeforeTemplate = <<< HTML
+        <div class="wk-grid-errors">
+            {gridErrors}
+        </div>
         <div>  
             <div class="btn-toolbar pull-left kv-grid-toolbar wk-grid-toolbar" role="toolbar">
                 <div class="btn-group">
@@ -137,6 +141,9 @@ HTML;
 
         $this->selectedAttribute();
         $this->wkidAttribute();
+        $this->panelBeforeTemplate = strtr($this->panelBeforeTemplate, [
+            '{gridErrors}' => ($gridErrors = $this->saveSelectedModel()) ? Html::errorSummary($gridErrors) : '',
+        ]);
         $this->makeCustomButtons();
         $this->templatesPrepare();
         $this->initGridJs();
@@ -254,24 +261,51 @@ HTML;
 //                            ]);
                         break;
                     case 'delete':
-                        $actionButtons['delete'] = function ($url, $model) use ($crudUrl) {
-                            $customurl = Url::to([$crudUrl, 'id' => $model->primaryKey]);
-                            return Html::a('<i class="fa fa-2x fa-trash-o"></i>', $customurl, ['title' => 'Удалить', 'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-danger', 'data-pjax' => '0']);
-                        };
-//                        $options = [
-//                            'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger wk-gridview-crud-delete',
-//                            'data-pjax' => '0'
-//                        ];
-//
-//                        if ($crudUrl instanceof GWDeleteCrudConfig) {
-//                            $GWDeleteCrud = $crudUrl->build();
-//                            $crudUrl = '#';
-//
-//                            $options = array_merge($options, [
-//                                'input-name' => $GWDeleteCrud->inputName,
-//                                // 'url-grid' => is_array($GWDeleteCrud->urlGrid) ? Url::to($GWDeleteCrud->urlGrid) : $GWDeleteCrud->urlGrid,
-//                            ]);
-//                        }
+
+                        $options = [
+                            'title' => 'Удалить',
+                            'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-danger wk-gridview-crud-delete',
+                            'data-pjax' => '0'
+                        ];
+
+                        $isTypeObject = isset($crudUrl['class']);
+
+                        if ($isTypeObject) {
+                            $crudUrl = Yii::createObject([
+                                'class' => $crudUrl['class'],
+                                'urlGrid' => $crudUrl['urlGrid'],
+                                'inputName' => $crudUrl['inputName'],
+                            ]);
+
+                            $GWDeleteCrud = $crudUrl->build();
+                            $crudUrl = '#';
+
+                            $options = array_merge($options, [
+                                'input-name' => $GWDeleteCrud->inputName,
+                            ]);
+
+                            $actionButtons['delete'] = function ($url, $model) use ($options) {
+                                $options = array_merge($options, [
+                                    'wk-id' => $model->primaryKey,
+                                ]);
+
+                                return Html::a('<i class="fa fa-2x fa-trash-o"></i>', '#', $options);
+                            };
+                        } else {
+                            if (!is_array($crudUrl)) {
+                                $crudUrl = [$crudUrl];
+                            }
+
+                            $actionButtons['delete'] = function ($url, $model) use ($crudUrl, $options) {
+                                $crudUrl['id'] = $model->primaryKey;
+                                $crudUrl['mainId'] = Yii::$app->request->get('id');
+                                $customurl = Url::to($crudUrl);
+
+                                return Html::a('<i class="fa fa-2x fa-trash-o"></i>', $customurl, $options);
+                            };
+                        }
+
+
 //
 //                        $crudButtons .= Html::a(Yii::t('wk-widget-gridview', 'Delete'), $crudUrl, $options);
                         break;
@@ -362,6 +396,7 @@ EOT;
                 'applyButtonMessage' => Yii::t('wk-widget-gridview', 'Apply'),
                 'closeButtonMessage' => Yii::t('wk-widget-gridview', 'Close'),
                 'redirectToGridButtonCrudCreateDialogMessage' => Yii::t('wk-widget-gridview', 'Follow to Grid Page'),
+                'removeRecordConfirm' => Yii::t('wk-widget-gridview', 'Remove record. Are you sure?'),
             ],
         ];
 
@@ -412,26 +447,22 @@ EOT
     protected function addCrudCreateSelectedToQuery()
     {
         if ($this->dataProvider instanceof ActiveDataProvider) {
-            if (Yii::$app->request->headers['wk-choose']) {
-                $condition = '1=2';
+            $condition = '';
+            if ($_oper = Yii::$app->request->headers['wk-grid-oper']) {
+                $condition = $_oper === 'add' ? '1=2' : '';
+            }
 
+            if (Yii::$app->request->headers['wk-choose']) {
                 if ($_choose = json_decode(Yii::$app->request->headers['wk-choose'])) {
-                    /*  if (property_exists($_choose, $this->id) && is_array($_choose->{$this->id})) {
-                          $condition = ['in', 'name', $_choose->{$this->id}];
-                      }*/
                     if (is_array($_choose)) {
                         $condition = ['in', 'name', $_choose];
                     }
-
                 }
-
-                /* if ($_choose->included || $_choose->excluded) {
-                     $condition = $_choose->included ? ['in', 'name', $_choose->included] : ['not', ['in', 'name', $_choose->excluded]];
-                 }*/
-
-                $this->dataProvider->query->andWhere($condition);
             }
 
+            if (!empty($condition)) {
+                $this->dataProvider->query->andWhere($condition);
+            }
 
         }
     }
@@ -467,5 +498,29 @@ EOT
         if (Yii::$app->request->get('id')) {
             $this->options['wk-id'] = Yii::$app->request->get('id');
         }
+    }
+
+    protected function saveSelectedModel()
+    {
+        if ($this->gridInject
+            && Yii::$app->request->isAjax
+            && Yii::$app->request->get('_pjax')
+            && Yii::$app->request->get('grid')
+            && Yii::$app->request->get('selected')
+            && ($_oper = Yii::$app->request->headers['wk-grid-oper'])
+            && ($_oper === 'save')
+        ) {
+            $gridInject = Yii::createObject($this->gridInject['class'], [[
+                'modelClassName' => $this->gridInject['modelClassName'],
+                'mainField' => $this->gridInject['mainField'],
+                'foreignField' => $this->gridInject['foreignField'],
+                'saveFunc' => $this->gridInject['saveFunc'],
+                'mainIdParameterName' => $this->gridInject['mainIdParameterName'],
+            ]]);
+
+            return $gridInject->save();
+        }
+
+        return [];
     }
 }

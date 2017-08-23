@@ -14,7 +14,8 @@
             titleCrudCreateDialogMessage: 'Choose rows',
             applyButtonMessage: 'Apply',
             closeButtonMessage: 'Close',
-            redirectToGridButtonCrudCreateDialogMessage: 'Follow to Grid Page'
+            redirectToGridButtonCrudCreateDialogMessage: 'Follow to Grid Page',
+            removeRecordConfirm: 'Remove record. Are you sure?'
         }
     };
 
@@ -93,6 +94,69 @@
         }
     };
 
+    var gridSaveModelMarker = function (opts) {
+        var xhr = opts.xhr;
+        var lastCrumb = $(".wkbc-breadcrumb").length === 1 ? $(".wkbc-breadcrumb").wkbreadcrumbs('getLast') : {};
+
+        if ("wk-id" in lastCrumb) {
+            delete(lastCrumb["wk-id"]);
+            xhr.setRequestHeader("WK-GRID-OPER", "save");
+            $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
+        }
+    };
+
+    var gridDeleteRecord = function (opts) {
+        var inputName = opts.inputName;
+        var id = opts.id;
+        var lastCrumb = $(".wkbc-breadcrumb").length === 1 ? $(".wkbc-breadcrumb").wkbreadcrumbs('getLast') : {};
+
+        if ("wk-choose" in lastCrumb) {
+            var wkchoose = lastCrumb["wk-choose"];
+
+            if (opts.gridID in wkchoose) {
+                var chooseArr = wkchoose[opts.gridID];
+                console.debug(chooseArr);
+                chooseArr = $.grep(chooseArr, function (value) {
+                    return value != id;
+                });
+
+                /*   var chooseArr33 = new Array;
+                 console.debug(chooseArr33);
+                 $.map(chooseArr, function (value) {
+                 if (value != id) {
+                 console.debug('test');
+                 chooseArr33.push(value);
+                 }
+                 });*/
+
+                console.debug(chooseArr);
+
+                /*  var index = lastCrumb["wk-choose"][opts.gridID].indexOf(id);
+                 if (index > -1) {
+                 lastCrumb["wk-choose"][opts.gridID].splice(index, 1);
+                 }*/
+
+                //   console.debug(lastCrumb["wk-choose"]);
+                //  console.debug(lastCrumb["wk-choose"][opts.gridID]);
+
+                wkchoose[opts.gridID] = chooseArr;
+                console.debug(wkchoose);
+                // lastCrumb["wk-choose"] = wkchoose;
+                console.debug(lastCrumb);
+                $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
+
+                if ("inputName" in opts) {
+                    //    $('input[name="' + opts.inputName + '"]').val(JSON.stringify(chooseArr2));
+                }
+            }
+        }
+
+        if (typeof opts.success === 'function') {
+            opts.success();
+        }
+
+    };
+
     var eventsApply = function ($pjax) {
 
         $pjax.on('dblclick', 'td[data-col-seq]', function (e) {
@@ -114,7 +178,7 @@
         $pjax.on('pjax:beforeSend', function (e, xhr) {
             var $addButtonGrid = $pjax.find(".wk-gridview-crud-create");
             var $grid = $pjax.find('.grid-view');
-                 if ($addButtonGrid.is("[input-name]")) {
+            if ($addButtonGrid.is("[input-name]")) {
                 if ($grid.is("[wk-selected]")) {
                     gridSelectedToBreadcrumbs({
                         inputName: $addButtonGrid.attr("input-name"),
@@ -129,6 +193,14 @@
                     gridID: $pjax.find('.grid-view')[0].id
                 });
             }
+
+            if ($addButtonGrid.is("[input-name]") || $pjax.find('.grid-view').is['[wk-id]']) {
+                xhr.setRequestHeader("WK-GRID-OPER", $addButtonGrid.is("[input-name]") ? 'add' : 'edit');
+            }
+
+            gridSaveModelMarker({
+                xhr: xhr
+            });
 
             gridExcludedFromBreadcrumb({
                 xhr: xhr
@@ -153,7 +225,7 @@
             }
         });
 
-          $pjax.on('click', '.wk-gridview-crud-create', function (e) {
+        $pjax.on('click', '.wk-gridview-crud-create', function (e) {
             e.preventDefault();
 
             var lastCrumb = $(".wkbc-breadcrumb").wkbreadcrumbs('getLast');
@@ -188,7 +260,43 @@
 
             window.location.href = $(this).attr("href");
         });
+
+        $pjax.on('click', '.wk-gridview-crud-delete', function (e) {
+            var $button = $(this);
+            var $grid = $pjax.find('.grid-view');
+            e.preventDefault();
+
+            wkwidget.confirm({
+                message: $pjax.data('wkgridview').settings.messages.removeRecordConfirm,
+                yes: function () {
+                    if ($button.is("[wk-id]") && $button.is("[input-name]")) {
+                        gridDeleteRecord({
+                            inputName: $button.attr("input-name"),
+                            id: $button.attr("wk-id"),
+                            gridID: $pjax.find('.grid-view')[0].id,
+                            success: function () {
+                                $grid.yiiGridView('applyFilter');
+                            }
+                        });
+
+                    } else {
+                        $.ajax({
+                            url: $button.attr("href"),
+                            success: function (response) {
+                                if (response.result == 'success') {
+                                    $grid.yiiGridView('applyFilter');
+                                } else if (response.result == 'error') {
+                                    $pjax.find('.wk-grid-errors').append("<div>" + response.message + "</div>");
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
+        });
     };
+
 
     var purifyingUrl = function () {
         var UrlParams = {};

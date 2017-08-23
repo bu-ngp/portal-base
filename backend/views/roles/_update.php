@@ -48,18 +48,18 @@ $this->title = Yii::t('app', 'Update {modelClass}: ', [
 //                    ->excludeFromId($modelForm->getPrimaryKey()),
 //                'delete' => GWDeleteCrudConfig::set()
 //                    ->inputName('RoleForm[assignRoles]'),
-                'delete' => 'roles/update-remove-roles',
+                'delete' => ['roles/delete-role'],
             ],
             'gridInject' => [
+                'class' => 'common\widgets\GridView\services\GWSaveModelForUpdate',
                 'mainField' => 'parent',
                 'mainIdParameterName' => 'id',
                 'foreignField' => 'child',
+                'modelClassName' => 'domain\models\base\AuthItemChild',
                 'saveFunc' => function (\yii\db\ActiveRecord $model, $mainId, $mainField, $foreignField, $foreignId) {
                     $model->$mainField = $mainId;
                     $model->$foreignField = $foreignId;
                     $model->save();
-
-                    return $model->getErrors();
                 },
             ],
             'panelHeading' => [

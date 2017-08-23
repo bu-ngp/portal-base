@@ -17,6 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Delete error' => 'Ошибка удаления',
+    'Deleted 0 records' => 'Удалено 0 записей',
     'Error when recognizing selected items' => '',
     'Select roles' => '',
     'Roles' => 'Роли',

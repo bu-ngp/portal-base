@@ -156,20 +156,20 @@ class RolesController extends Controller
     }
 
     /** Загрузка грида в модальном окне при создании и обновлении роли */
-  /*  public function actionIndexForRoles()
-    {
-        $searchModel = new AuthItemSearch();
-        $filterModel = new AuthItemFilter();
-        $wkexclude = Yii::$app->request->getHeaders()->get('wk-exclude');
-        $_exclude = $wkexclude ? json_decode($wkexclude) : $wkexclude;
-        $dataProvider = $searchModel->searchForRoles(Yii::$app->request->queryParams, $_exclude);
+    /*  public function actionIndexForRoles()
+      {
+          $searchModel = new AuthItemSearch();
+          $filterModel = new AuthItemFilter();
+          $wkexclude = Yii::$app->request->getHeaders()->get('wk-exclude');
+          $_exclude = $wkexclude ? json_decode($wkexclude) : $wkexclude;
+          $dataProvider = $searchModel->searchForRoles(Yii::$app->request->queryParams, $_exclude);
 
-        return $this->renderAjax('index_for_roles', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'filterModel' => $filterModel,
-        ]);
-    }*/
+          return $this->renderAjax('index_for_roles', [
+              'searchModel' => $searchModel,
+              'dataProvider' => $dataProvider,
+              'filterModel' => $filterModel,
+          ]);
+      }*/
 
     /** urlAction. Добавление выбранных записей в гриде в модальном окне при обновлении роли */
     public function actionUpdateRemoveRoles($id)
@@ -183,6 +183,24 @@ class RolesController extends Controller
             }
 
             return AjaxResponse::init(AjaxResponse::ERROR, $this->roleService->getErrorsAsString());
+        }
+    }
+
+    public function actionDeleteRole($id, $mainId)
+    {
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $authItemChildModel = AuthItemChild::find()->where(['parent' => $mainId, 'child' => $id])->one();
+            $result = $authItemChildModel->delete();
+
+            if ($result === false) {
+                return AjaxResponse::init(AjaxResponse::ERROR, Yii::t('common/roles', 'Delete error'));
+            } elseif ($result === 0) {
+                return AjaxResponse::init(AjaxResponse::ERROR, Yii::t('common/roles', 'Deleted 0 records'));
+            } else {
+                return AjaxResponse::init(AjaxResponse::SUCCESS);
+            }
+
         }
     }
 

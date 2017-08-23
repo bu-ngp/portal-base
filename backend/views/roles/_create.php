@@ -42,7 +42,10 @@ $this->title = Yii::t('app', 'Create Auth Item');
                         'urlGrid' => ['roles/index-for-roles'],
                         'inputName' => 'RoleForm[assignRoles]',
                     ],
-
+                    'delete' => [
+                        'class' => 'common\widgets\GridView\services\GWDeleteCrudConfigForCreate',
+                        'inputName' => 'RoleForm[assignRoles]',
+                    ],
                     /*  GWAddCrudConfigForCreate::set()
                       ->urlGrid(['roles/index-for-roles'])
                       ->inputName('RoleForm[assignRoles]'),*/

@@ -34,6 +34,7 @@ class AuthItemChild extends \yii\db\ActiveRecord
             [['parent', 'child'], 'string', 'max' => 64],
             [['child'], 'exist', 'skipOnError' => true, 'targetClass' => AuthItem::className(), 'targetAttribute' => ['child' => 'name']],
             [['parent'], 'exist', 'skipOnError' => true, 'targetClass' => AuthItem::className(), 'targetAttribute' => ['parent' => 'name']],
+            [['parent'], 'unique', 'targetAttribute' => ['parent', 'child']],
         ];
     }
 
