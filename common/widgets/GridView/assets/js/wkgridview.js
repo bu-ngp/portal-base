@@ -29,13 +29,14 @@
         var wkchoose = lastCrumb["wk-choose"];
 
         if (opts.gridID in wkchoose) {
-            if (wkchoose[opts.gridID].indexOf(opts.selected) < 0) {
+            if (wkchoose[opts.gridID].indexOf(opts.selected) < 0 && wkchoose.isSaved !== opts.gridID) {
                 wkchoose[opts.gridID].push(opts.selected);
             }
         } else {
             wkchoose[opts.gridID] = [opts.selected];
         }
 
+        wkchoose.isSaved = opts.gridID;
         lastCrumb["wk-choose"] = wkchoose;
         $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
     };
@@ -106,7 +107,6 @@
     };
 
     var gridDeleteRecord = function (opts) {
-        var inputName = opts.inputName;
         var id = opts.id;
         var lastCrumb = $(".wkbc-breadcrumb").length === 1 ? $(".wkbc-breadcrumb").wkbreadcrumbs('getLast') : {};
 
@@ -115,46 +115,19 @@
 
             if (opts.gridID in wkchoose) {
                 var chooseArr = wkchoose[opts.gridID];
-                console.debug(chooseArr);
+
                 chooseArr = $.grep(chooseArr, function (value) {
                     return value != id;
                 });
 
-                /*   var chooseArr33 = new Array;
-                 console.debug(chooseArr33);
-                 $.map(chooseArr, function (value) {
-                 if (value != id) {
-                 console.debug('test');
-                 chooseArr33.push(value);
-                 }
-                 });*/
-
-                console.debug(chooseArr);
-
-                /*  var index = lastCrumb["wk-choose"][opts.gridID].indexOf(id);
-                 if (index > -1) {
-                 lastCrumb["wk-choose"][opts.gridID].splice(index, 1);
-                 }*/
-
-                //   console.debug(lastCrumb["wk-choose"]);
-                //  console.debug(lastCrumb["wk-choose"][opts.gridID]);
-
                 wkchoose[opts.gridID] = chooseArr;
-                console.debug(wkchoose);
-                // lastCrumb["wk-choose"] = wkchoose;
-                console.debug(lastCrumb);
                 $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
-
-                if ("inputName" in opts) {
-                    //    $('input[name="' + opts.inputName + '"]').val(JSON.stringify(chooseArr2));
-                }
             }
         }
 
         if (typeof opts.success === 'function') {
             opts.success();
         }
-
     };
 
     var eventsApply = function ($pjax) {
@@ -241,6 +214,10 @@
                         wkchoose[wkchoose.gridID] = [];
                     }
 
+                    if ("isSaved" in wkchoose && wkchoose.isSaved === $grid[0].id) {
+                        delete wkchoose.isSaved;
+                    }
+
                 } else {
                     wkchoose.gridID = $grid[0].id;
                     wkchoose[wkchoose.gridID] = [];
@@ -271,7 +248,6 @@
                 yes: function () {
                     if ($button.is("[wk-id]") && $button.is("[input-name]")) {
                         gridDeleteRecord({
-                            inputName: $button.attr("input-name"),
                             id: $button.attr("wk-id"),
                             gridID: $pjax.find('.grid-view')[0].id,
                             success: function () {

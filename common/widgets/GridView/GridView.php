@@ -455,7 +455,7 @@ EOT
             if (Yii::$app->request->headers['wk-choose']) {
                 if ($_choose = json_decode(Yii::$app->request->headers['wk-choose'])) {
                     if (is_array($_choose)) {
-                        $condition = ['in', 'name', $_choose];
+                        $condition = ['in', $this->filterModel->primaryKey()[0], $_choose];
                     }
                 }
             }
