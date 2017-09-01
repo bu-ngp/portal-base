@@ -9,59 +9,29 @@
 namespace common\widgets\GridView\services;
 
 
-class GWAddCrudConfigForUpdate implements GWConfigInterface
+class GWAddCrudConfigForUpdate
 {
-    public $urlGrid;
-  /*  public $urlAction;
-    public $excludeFromId;*/
+    protected $urlGrid;
 
-    public static function set()
+    public function __construct($config = [])
     {
-        return new self();
-    }
-
-    public function urlGrid($urlGrid)
-    {
-        $this->urlGrid = $urlGrid;
-        return $this;
-    }
-
-  /*  public function urlAction($urlAction)
-    {
-        $this->urlAction = $urlAction;
-        return $this;
-    }
-
-    public function excludeFromId($excludeFromId)
-    {
-        $this->excludeFromId = json_encode((object)[
-            'excludeFromId' => $excludeFromId,
-        ]);
-        return $this;
-    }*/
-
-    public function build()
-    {
-        if (!is_string($this->urlGrid) && !is_array($this->urlGrid)) {
-            throw new \Exception('urlGrid() must be string or array');
-        }
-/*
-        if (!is_string($this->urlAction) && !is_array($this->urlAction)) {
-            throw new \Exception('urlAction() must be string or array');
-        }*/
-
-        if (empty($this->urlGrid)) {
-            throw new \Exception('urlGrid() required');
+        if (!is_string($config['urlGrid']) && !is_array($config['urlGrid'])) {
+            throw new \Exception('urlGrid variable must be string or array');
         }
 
-     /*   if (empty($this->urlAction)) {
-            throw new \Exception('urlAction() required');
+        if (empty($config['urlGrid'])) {
+            throw new \Exception('urlGrid variable required');
         }
 
-        if (empty($this->excludeFromId)) {
-            throw new \Exception('excludeFromId() required');
-        }*/
-
-        return $this;
+        $this->urlGrid = $config['urlGrid'];
     }
+
+    /**
+     * @return mixed|string
+     */
+    public function getUrlGrid()
+    {
+        return $this->urlGrid;
+    }
+
 }

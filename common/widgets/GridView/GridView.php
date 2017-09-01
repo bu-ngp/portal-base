@@ -3,6 +3,7 @@
 namespace common\widgets\GridView;
 
 use common\widgets\GridView\assets\GridViewAsset;
+use common\widgets\GridView\services\ActionButtons;
 use common\widgets\GridView\services\GWAddCrudConfigForCreate;
 use common\widgets\GridView\services\GWAddCrudConfigForUpdate;
 use common\widgets\GridView\services\GWCustomizeDialog;
@@ -187,151 +188,20 @@ HTML;
 
     protected function createCrudButtons()
     {
-        $crudButtons = '';
-        $actionButtons = [];
+        $actionButtons = new ActionButtons($this);
 
-        $this->selectGridState($actionButtons);
-
-        if (is_array($this->crudSettings) && count($this->crudSettings) > 0) {
-            foreach ($this->crudSettings as $key => $crudUrl) {
-                // $crudUrl = is_array($crudUrl) ? Url::to($crudUrl) : $crudUrl;
-
-                switch ($key) {
-                    case 'create':
-                        $options = [
-                            'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-success wk-gridview-crud-create',
-                            'data-pjax' => '0'
-                        ];
-
-                        $isTypeObject = isset($crudUrl['class']);
-
-                        if ($isTypeObject) {
-                            $crudUrl = Yii::createObject([
-                                'class' => $crudUrl['class'],
-                                'urlGrid' => $crudUrl['urlGrid'],
-                                'inputName' => $crudUrl['inputName'],
-                            ]);
-
-                            $GWCreateCrud = $crudUrl->build();
-                            $crudUrl = is_array($GWCreateCrud->urlGrid) ? Url::to($GWCreateCrud->urlGrid) : $GWCreateCrud->urlGrid;
-
-                            $options = array_merge($options, [
-                                'input-name' => $GWCreateCrud->inputName,
-                            ]);
-
-                            $this->addCrudCreateSelectedToQuery();
-                        }
-
-
-                        /*  if ($crudUrl instanceof GWAddCrudConfigForCreate) {
-
-                          }*/
-
-
-//                        if ($crudUrl instanceof GWAddCrudConfigForUpdate) {
-//                            $GWCreateCrud = $crudUrl->build();
-//                            $crudUrl = '#';
-//
-//                            $options = array_merge($options, [
-//                                'url-action' => is_array($GWCreateCrud->urlAction) ? Url::to($GWCreateCrud->urlAction) : $GWCreateCrud->urlAction,
-//                                'url-grid' => is_array($GWCreateCrud->urlGrid) ? Url::to($GWCreateCrud->urlGrid) : $GWCreateCrud->urlGrid,
-//                                'wk-exclude' => $GWCreateCrud->excludeFromId,
-//                            ]);
-//
-//                        }
-
-                        $crudButtons .= Html::a(/*'<i class="fa fa-2x fa-plus-square-o"></i> ' .*/
-                            Yii::t('wk-widget-gridview', 'Create'), $crudUrl, $options);
-                        break;
-                    case 'update':
-//                        $actionButtons['choose'] = function ($url, $model) use ($crudUrl) {
-//                            $customurl = Url::to([$crudUrl, 'id' => $model->primaryKey]);
-//                            return Html::a('<i class="fa fa-2x fa-check-square-o"></i>', $customurl, ['title' => 'Выбрать', 'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-success', 'data-pjax' => '0']);
-//                        };
-                        $actionButtons['update'] = function ($url, $model) use ($crudUrl) {
-                            $customurl = Url::to([$crudUrl, 'id' => $model->primaryKey]);
-                            return Html::a('<i class="fa fa-2x fa-pencil-square-o"></i>', $customurl, ['title' => 'Обновить', 'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-primary', 'data-pjax' => '0']);
-                        };
-
-
-//                        $crudButtons .= Html::a(Yii::t('wk-widget-gridview', 'Update'), $crudUrl,
-//                            [
-//                                'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary wk-btn-update',
-//                                'data-pjax' => '0'
-//                            ]);
-                        break;
-                    case 'delete':
-
-                        $options = [
-                            'title' => 'Удалить',
-                            'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-danger wk-gridview-crud-delete',
-                            'data-pjax' => '0'
-                        ];
-
-                        $isTypeObject = isset($crudUrl['class']);
-
-                        if ($isTypeObject) {
-                            $crudUrl = Yii::createObject([
-                                'class' => $crudUrl['class'],
-                                'urlGrid' => $crudUrl['urlGrid'],
-                                'inputName' => $crudUrl['inputName'],
-                            ]);
-
-                            $GWDeleteCrud = $crudUrl->build();
-                            $crudUrl = '#';
-
-                            $options = array_merge($options, [
-                                'input-name' => $GWDeleteCrud->inputName,
-                            ]);
-
-                            $actionButtons['delete'] = function ($url, $model) use ($options) {
-                                $options = array_merge($options, [
-                                    'wk-id' => $model->primaryKey,
-                                ]);
-
-                                return Html::a('<i class="fa fa-2x fa-trash-o"></i>', '#', $options);
-                            };
-                        } else {
-                            if (!is_array($crudUrl)) {
-                                $crudUrl = [$crudUrl];
-                            }
-
-                            $actionButtons['delete'] = function ($url, $model) use ($crudUrl, $options) {
-                                $crudUrl['id'] = $model->primaryKey;
-                                $crudUrl['mainId'] = Yii::$app->request->get('id');
-                                $customurl = Url::to($crudUrl);
-
-                                return Html::a('<i class="fa fa-2x fa-trash-o"></i>', $customurl, $options);
-                            };
-                        }
-
-
-//
-//                        $crudButtons .= Html::a(Yii::t('wk-widget-gridview', 'Delete'), $crudUrl, $options);
-                        break;
-                    default:
-                        new \Exception(Yii::t('wk-widget-gridview', "In 'crudOptions' array must be only this keys ['create', 'update', 'delete']. Passed '{key}'", [
-                            'key' => $key,
-                        ]));
-                }
-            }
-        }
-
-        if (count($actionButtons) > 0) {
-            $tmpl = '{' . implode("} {", array_keys($actionButtons)) . '}';
-
+        if ($actionButtons->exists()) {
             array_unshift($this->columns, [
                 'class' => 'kartik\grid\ActionColumn',
                 'header' => Html::encode('Действия'),
                 'contentOptions' => ['class' => 'wk-grid-action-buttons'],
-                'buttons' => $actionButtons,
-                'template' => $tmpl,
+                'buttons' => $actionButtons->getButtons(),
+                'template' => $actionButtons->template(),
                 'options' => ['wk-widget' => true],
             ]);
         }
 
-        $this->panelBeforeTemplate = strtr($this->panelBeforeTemplate, ['{crudToolbar}' => $crudButtons]);
-        $this->panelAfterTemplate = strtr($this->panelAfterTemplate, ['{crudButtons}' => $crudButtons]);
+        $this->panelBeforeTemplate = strtr($this->panelBeforeTemplate, ['{crudToolbar}' => $actionButtons->getCreateButton()]);
     }
 
     protected function templatesPrepare()
@@ -441,48 +311,6 @@ EOT;
                 </div>
 EOT
             ]);
-        }
-    }
-
-    protected function addCrudCreateSelectedToQuery()
-    {
-        if ($this->dataProvider instanceof ActiveDataProvider) {
-            $condition = '';
-            if ($_oper = Yii::$app->request->headers['wk-grid-oper']) {
-                $condition = $_oper === 'add' ? '1=2' : '';
-            }
-
-            if (Yii::$app->request->headers['wk-choose']) {
-                if ($_choose = json_decode(Yii::$app->request->headers['wk-choose'])) {
-                    if (is_array($_choose)) {
-                        $condition = ['in', $this->filterModel->primaryKey()[0], $_choose];
-                    }
-                }
-            }
-
-            if (!empty($condition)) {
-                $this->dataProvider->query->andWhere($condition);
-            }
-
-        }
-    }
-
-    protected function selectGridState(array &$actionButtons)
-    {
-        if ($this->gridExcludeIdsFunc instanceof \Closure
-            && Yii::$app->request->headers['wk-selected']
-            && ($_selected = json_decode(Yii::$app->request->headers['wk-selected']))
-            && (property_exists($_selected, 'exclude') || property_exists($_selected, 'reject'))
-        ) {
-            $actionButtons['choose'] = function ($url, $model) use ($_selected) {
-                $url = $_selected->url . (preg_match('/\?/', $_selected->url) ? '&' : '?') . 'grid=' . urlencode($_selected->gridID) . '&selected=' . urlencode($model->primaryKey);
-
-                return Html::a('<i class="fa fa-2x fa-check-square-o"></i>', $url, ['title' => 'Выбрать', 'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-success', 'data-pjax' => '0']);
-            };
-
-            $func = $this->gridExcludeIdsFunc;
-
-            $func($this->dataProvider->query, property_exists($_selected, 'exclude') ? $_selected->exclude : [$_selected->reject]);
         }
     }
 

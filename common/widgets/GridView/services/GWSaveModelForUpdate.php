@@ -10,7 +10,6 @@ namespace common\widgets\GridView\services;
 
 
 use Yii;
-use yii\db\ActiveRecord;
 
 class GWSaveModelForUpdate
 {
@@ -22,7 +21,7 @@ class GWSaveModelForUpdate
     private $mainId;
     private $foreignId;
 
-    public function __construct($config = []/*, , $mainField, $foreignField, $saveFunc, $mainIdParameterName = 'id'*/)
+    public function __construct($config = [])
     {
         if (!class_exists($config['modelClassName'])) {
             throw new \Exception("class '{$config['modelClassName']}' not exists");
@@ -37,7 +36,7 @@ class GWSaveModelForUpdate
         }
 
         if (!is_string($config['mainIdParameterName']) || $config['mainIdParameterName'] === '') {
-            throw new \Exception('mainIdParameterName must be string');
+            $config['mainIdParameterName'] = 'id';
         }
 
         if (!($config['saveFunc'] instanceof \Closure)) {

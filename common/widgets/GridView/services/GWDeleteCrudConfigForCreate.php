@@ -9,31 +9,28 @@
 namespace common\widgets\GridView\services;
 
 
-class GWDeleteCrudConfigForCreate implements GWConfigInterface
+class GWDeleteCrudConfigForCreate
 {
-    public $inputName;
+    protected $inputName;
 
-    public static function set()
+    public function __construct($config=[])
     {
-        return new self();
-    }
-
-    public function inputName($inputName)
-    {
-        $this->inputName = $inputName;
-        return $this;
-    }
-
-    public function build()
-    {
-        if (!is_string($this->inputName)) {
-            throw new \Exception('inputName() must be string');
+        if (!is_string($config['inputName'])) {
+            throw new \Exception('inputName variable must be string');
         }
 
-        if (empty($this->inputName)) {
-            throw new \Exception('inputName() required');
+        if (empty($config['inputName'])) {
+            throw new \Exception('inputName variable required');
         }
 
-        return $this;
+        $this->inputName = $config['inputName'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getInputName()
+    {
+        return $this->inputName;
     }
 }

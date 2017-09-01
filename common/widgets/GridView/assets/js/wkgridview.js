@@ -9,6 +9,10 @@
         }
     };
 
+    const GRID_DEFAULT = 'default',
+        GRID_ADD = 'add',
+        GRID_EDIT = 'edit';
+
     var defaults = {
         messages: {
             titleCrudCreateDialogMessage: 'Choose rows',
@@ -19,26 +23,54 @@
         }
     };
 
-    var gridSelectedToBreadcrumbs = function (opts) {
+    var getCurrentState = function ($pjax) {
+        if ($pjax.find(".wk-gridview-crud-create").is("[input-name]")) {
+            return GRID_ADD;
+        }
+
+        if ($pjax.find('.grid-view').is("[wk-id]")) {
+            return GRID_EDIT;
+        }
+
+        return GRID_DEFAULT;
+    };
+
+    var gridWkChooseInit = function () {
         var lastCrumb = $(".wkbc-breadcrumb").length === 1 ? $(".wkbc-breadcrumb").wkbreadcrumbs('getLast') : {};
 
         if (!("wk-choose" in lastCrumb)) {
             lastCrumb["wk-choose"] = {};
         }
 
-        var wkchoose = lastCrumb["wk-choose"];
-
-        if (opts.gridID in wkchoose) {
-            if (wkchoose[opts.gridID].indexOf(opts.selected) < 0 && wkchoose.isSaved !== opts.gridID) {
-                wkchoose[opts.gridID].push(opts.selected);
-            }
-        } else {
-            wkchoose[opts.gridID] = [opts.selected];
-        }
-
-        wkchoose.isSaved = opts.gridID;
-        lastCrumb["wk-choose"] = wkchoose;
         $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
+    };
+
+    var gridSelectedToBreadcrumbs = function (opts) {
+        var $grid = opts.grid;
+
+        if ($grid.is('[wk-selected]')) {
+            var lastCrumb = $(".wkbc-breadcrumb").length === 1 ? $(".wkbc-breadcrumb").wkbreadcrumbs('getLast') : {};
+            var gridID = $grid.attr('id');
+            var selected = $grid.attr('wk-selected');
+
+            if (!("wk-choose" in lastCrumb)) {
+                return;
+            }
+
+            var wkchoose = lastCrumb["wk-choose"];
+
+            if (gridID in wkchoose) {
+                if (wkchoose[gridID].indexOf(selected) < 0 && wkchoose.isSaved !== gridID) {
+                    wkchoose[gridID].push(selected);
+                }
+            } else {
+                wkchoose[gridID] = [selected];
+            }
+
+            wkchoose.isSaved = gridID;
+            lastCrumb["wk-choose"] = wkchoose;
+            $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
+        }
     };
 
     var gridSelectedFromBreadcrumb = function (opts) {
@@ -48,13 +80,12 @@
 
         if ("wk-choose" in lastCrumb) {
             var wkchoose = lastCrumb["wk-choose"];
+            var selectedArr = opts.gridID in wkchoose ? wkchoose[opts.gridID] : [];
 
-            if (opts.gridID in wkchoose) {
-                xhr.setRequestHeader(headerName, JSON.stringify(wkchoose[opts.gridID]));
+            xhr.setRequestHeader(headerName, JSON.stringify(selectedArr));
 
-                if ("inputName" in opts) {
-                    $('input[name="' + opts.inputName + '"]').val(JSON.stringify(wkchoose[opts.gridID]));
-                }
+            if ("inputName" in opts) {
+                $('input[name="' + opts.inputName + '"]').val(JSON.stringify(selectedArr));
             }
         }
     };
@@ -151,24 +182,20 @@
         $pjax.on('pjax:beforeSend', function (e, xhr) {
             var $addButtonGrid = $pjax.find(".wk-gridview-crud-create");
             var $grid = $pjax.find('.grid-view');
-            if ($addButtonGrid.is("[input-name]")) {
-                if ($grid.is("[wk-selected]")) {
-                    gridSelectedToBreadcrumbs({
-                        inputName: $addButtonGrid.attr("input-name"),
-                        selected: $grid.attr("wk-selected"),
-                        gridID: $pjax.find('.grid-view')[0].id
-                    });
-                }
+
+            if (getCurrentState($pjax) === GRID_ADD) {
+                gridWkChooseInit();
+
+                gridSelectedToBreadcrumbs({
+                    inputName: $addButtonGrid.attr("input-name"),
+                    grid: $grid
+                });
 
                 gridSelectedFromBreadcrumb({
                     xhr: xhr,
                     inputName: $addButtonGrid.attr("input-name"),
-                    gridID: $pjax.find('.grid-view')[0].id
+                    gridID: $grid.attr("id")
                 });
-            }
-
-            if ($addButtonGrid.is("[input-name]") || $pjax.find('.grid-view').is['[wk-id]']) {
-                xhr.setRequestHeader("WK-GRID-OPER", $addButtonGrid.is("[input-name]") ? 'add' : 'edit');
             }
 
             gridSaveModelMarker({
@@ -178,6 +205,7 @@
             gridExcludedFromBreadcrumb({
                 xhr: xhr
             });
+
             gridRejectFromBreadcrumb({
                 xhr: xhr
             });
@@ -206,34 +234,33 @@
             var wkid = {};
             var $grid = $pjax.find('.grid-view');
 
-            if ($(this).is("[input-name]")) {
+            if (getCurrentState($pjax) === GRID_ADD) {
                 if ("wk-choose" in lastCrumb) {
-                    wkchoose.gridID = $grid[0].id;
+                    wkchoose.gridID = $grid.attr('id');
 
                     if (!(wkchoose.gridID in wkchoose)) {
                         wkchoose[wkchoose.gridID] = [];
                     }
 
-                    if ("isSaved" in wkchoose && wkchoose.isSaved === $grid[0].id) {
+                    if ("isSaved" in wkchoose && wkchoose.isSaved === wkchoose.gridID) {
                         delete wkchoose.isSaved;
                     }
 
                 } else {
-                    wkchoose.gridID = $grid[0].id;
                     wkchoose[wkchoose.gridID] = [];
                 }
 
                 lastCrumb["wk-choose"] = wkchoose;
+                $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
             }
 
-            if ($grid.is("[wk-id]")) {
-                wkid.gridID = $grid[0].id;
+            if (getCurrentState($pjax) === GRID_EDIT) {
+                wkid.gridID = $grid.attr('id');
                 wkid[wkid.gridID] = $grid.attr("wk-id");
 
                 lastCrumb["wk-id"] = wkid;
+                $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
             }
-
-            $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
 
             window.location.href = $(this).attr("href");
         });
@@ -249,7 +276,7 @@
                     if ($button.is("[wk-id]") && $button.is("[input-name]")) {
                         gridDeleteRecord({
                             id: $button.attr("wk-id"),
-                            gridID: $pjax.find('.grid-view')[0].id,
+                            gridID: $pjax.find('.grid-view').attr('id'),
                             success: function () {
                                 $grid.yiiGridView('applyFilter');
                             }
@@ -329,7 +356,8 @@
                 $pjax.data('wkgridview', {
                     pjax: $pjax,
                     grid: $grid,
-                    settings: settings
+                    settings: settings,
+                    state: GRID_DEFAULT
                 });
 
                 eventsApply($pjax);

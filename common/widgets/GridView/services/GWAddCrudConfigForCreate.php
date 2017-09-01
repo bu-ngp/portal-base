@@ -9,46 +9,46 @@
 namespace common\widgets\GridView\services;
 
 
-class GWAddCrudConfigForCreate implements GWConfigInterface
+class GWAddCrudConfigForCreate
 {
-    public $urlGrid;
-    public $inputName;
+    protected $urlGrid;
+    protected $inputName;
 
-    public static function set()
+    public function __construct($config = [])
     {
-        return new self();
+        if (!is_string($config['urlGrid']) && !is_array($config['urlGrid'])) {
+            throw new \Exception('urlGrid variable must be string or array');
+        }
+
+        if (!is_string($config['inputName'])) {
+            throw new \Exception('inputName variable must be string');
+        }
+
+        if (empty($config['urlGrid'])) {
+            throw new \Exception('urlGrid variable required');
+        }
+
+        if (empty($config['inputName'])) {
+            throw new \Exception('inputName variable required');
+        }
+
+        $this->urlGrid = $config['urlGrid'];
+        $this->inputName = $config['inputName'];
     }
 
-    public function urlGrid($urlGrid)
+    /**
+     * @return array|string
+     */
+    public function getUrlGrid()
     {
-        $this->urlGrid = $urlGrid;
-        return $this;
+        return $this->urlGrid;
     }
 
-    public function inputName($inputName)
+    /**
+     * @return string
+     */
+    public function getInputName()
     {
-        $this->inputName = $inputName;
-        return $this;
-    }
-
-    public function build()
-    {
-        if (!is_string($this->urlGrid) && !is_array($this->urlGrid)) {
-            throw new \Exception('urlGrid() must be string or array');
-        }
-
-        if (!is_string($this->inputName)) {
-            throw new \Exception('inputName() must be string');
-        }
-
-        if (empty($this->urlGrid)) {
-            throw new \Exception('urlGrid() required');
-        }
-
-        if (empty($this->inputName)) {
-            throw new \Exception('inputName() required');
-        }
-
-        return $this;
+        return $this->inputName;
     }
 }
