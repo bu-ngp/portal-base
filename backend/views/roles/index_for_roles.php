@@ -16,6 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="auth-item-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -32,16 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'datetime',
             ],
         ],
-        'gridExcludeIdsFunc' => function (\yii\db\ActiveQuery &$activeQuery, array $ids) {
-            /* $activeQuery
-                 ->andWhere(['not', ['name' => $ids]])
-                 ->andWhere(['not exists', (new \yii\db\Query())
-                     ->select('{{%auth_item_child}}.child')
-                     ->from('{{%auth_item_child}}')
-                     ->andWhere(['{{%auth_item_child}}.parent' => $ids])
-                     ->andWhere('{{%auth_item_child}}.child = {{%auth_item}}.name')
-                 ]);*/
-
+        'gridExcludeIdsFunc' => function (\yii\db\ActiveQuery $activeQuery, array $ids) {
             $activeQuery
                 ->andWhere(['not in', 'name', $ids])
                 ->andWhere(['not exists', (new \yii\db\Query())

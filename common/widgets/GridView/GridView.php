@@ -24,6 +24,9 @@ use yii\helpers\Url;
 
 class GridView extends \kartik\grid\GridView
 {
+    const ADD = 'add';
+    const EDIT = 'edit';
+
     public $hover = true;
     public $pjax = true;
     public $resizableColumns = false;
@@ -338,6 +341,14 @@ EOT
             && ($_oper = Yii::$app->request->headers['wk-grid-oper'])
             && ($_oper === 'save')
         ) {
+            if (empty($this->gridInject['saveFunc'])) {
+                $this->gridInject['saveFunc'] = function (\yii\db\ActiveRecord $model, $mainId, $mainField, $foreignField, $foreignId) {
+                    $model->$mainField = $mainId;
+                    $model->$foreignField = $foreignId;
+                    $model->save();
+                };
+            }
+
             $gridInject = Yii::createObject($this->gridInject['class'], [[
                 'modelClassName' => $this->gridInject['modelClassName'],
                 'mainField' => $this->gridInject['mainField'],

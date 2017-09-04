@@ -35,7 +35,7 @@ class RoleForm extends Model
     {
         return [
             [['description', 'assignRoles', 'type', 'name'], 'required'],
-            [['assignRoles'], 'compare', 'compareValue' => '{"checkAll":false,"included":[],"excluded":[]}', 'operator' => '!=', 'message' => Yii::t('common/roles', 'Select roles')],
+            [['assignRoles'], 'compare', 'compareValue' => '[]', 'operator' => '!=', 'message' => Yii::t('common/roles', 'Select roles')],
         ];
     }
 

@@ -23,7 +23,7 @@ $this->title = Yii::t('app', 'Update {modelClass}: ', [
 
     <div class="auth-item-form">
 
-        <?php $form = ActiveForm::begin(['id' => 'myform1']); ?>
+        <?php $form = ActiveForm::begin(['id' => $modelForm->formName()]); ?>
 
         <?= $form->field($modelForm, 'description')->textInput(['wkkeep' => true]) ?>
 
@@ -42,12 +42,6 @@ $this->title = Yii::t('app', 'Update {modelClass}: ', [
                     'class' => 'common\widgets\GridView\services\GWAddCrudConfigForUpdate',
                     'urlGrid' => ['roles/index-for-roles'],
                 ],
-//                'create' => GWAddCrudConfigForUpdate::set()
-//                    ->urlGrid(['roles/index-for-roles'/*, 'excludeId' => $modelForm->getPrimaryKey()*/])
-//                    ->urlAction(['roles/update-remove-roles', 'id' => $modelForm->getPrimaryKey()])
-//                    ->excludeFromId($modelForm->getPrimaryKey()),
-//                'delete' => GWDeleteCrudConfig::set()
-//                    ->inputName('RoleForm[assignRoles]'),
                 'delete' => ['roles/delete-role'],
             ],
             'gridInject' => [
@@ -56,11 +50,6 @@ $this->title = Yii::t('app', 'Update {modelClass}: ', [
                 'mainIdParameterName' => 'id',
                 'foreignField' => 'child',
                 'modelClassName' => 'domain\models\base\AuthItemChild',
-                'saveFunc' => function (\yii\db\ActiveRecord $model, $mainId, $mainField, $foreignField, $foreignId) {
-                    $model->$mainField = $mainId;
-                    $model->$foreignField = $foreignId;
-                    $model->save();
-                },
             ],
             'panelHeading' => [
                 'icon' => FA::icon(FA::_LIST_ALT),
@@ -68,8 +57,10 @@ $this->title = Yii::t('app', 'Update {modelClass}: ', [
             ],
         ]);
         ?>
+
         <div class="form-group">
-            <?= Html::submitButton(Yii::t('common/authitem', 'Create'), ['class' => 'btn btn-success', 'form' => 'myform1']) ?>
+            <?= Html::submitButton(Yii::t('common/authitem', 'Update'), ['class' => 'btn btn-primary', 'form' => $modelForm->formName()]) ?>
         </div>
+
     </div>
 </div>

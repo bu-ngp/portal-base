@@ -7,12 +7,10 @@ use yii\helpers\Html;
 /* @var $searchModel domain\models\base\search\AuthItemSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-/*$this->title = Yii::t('app', 'Update {modelClass}: ', [
-    'modelClass' => 'Auth Item',
-]) . $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Auth Items'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->name]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Update');*/
+$this->title = Yii::t('app', 'Update {modelClass}: ', [
+        'modelClass' => 'Auth Item',
+    ]) . $modelForm->description;
+
 ?>
 <div class="auth-item-update">
 
@@ -22,6 +20,8 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');*/
         'modelForm' => $modelForm,
         'searchModel' => $searchModel,
         'dataProvider' => $dataProvider,
+        'crudSettings' => $crudSettings,
+        'gridInject' => $gridInject,
     ]) ?>
 
 </div>

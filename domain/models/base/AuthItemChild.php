@@ -49,11 +49,11 @@ class AuthItemChild extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function create(AuthItem $authParent, \stdClass $assignedKeys)
+    public static function create(AuthItem $authParent, array $assignedKeys)
     {
         $items = [];
         $authitems = AuthItem::find()
-            ->andWhere($assignedKeys->checkAll ? ['not in', 'name', $assignedKeys->excluded] : ['in', 'name', $assignedKeys->included])
+            ->andWhere(['in', 'name', $assignedKeys])
             ->all();
 
         /** @var AuthItem $authChild */

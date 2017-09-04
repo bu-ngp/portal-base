@@ -8,11 +8,8 @@ use yii\helpers\Html;
 /* @var $searchModel domain\models\base\search\AuthItemSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-//GridSelected2InputAsset::register($this);
-
 $this->title = Yii::t('app', 'Create Auth Item');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('common/authitem', 'Auth Items'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+
 ?>
     <div class="auth-item-create">
 
@@ -22,6 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'modelForm' => $modelForm,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'crudSettings' => $crudSettings,
         ]) ?>
 
     </div>

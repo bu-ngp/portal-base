@@ -2,16 +2,18 @@
 
 use common\widgets\ActiveForm\ActiveForm;
 use common\widgets\GridView\GridView;
-use common\widgets\GridView\services\GWCreateCrudConfig;
-use common\widgets\GridView\services\GWDeleteCrudConfig;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $modelForm \domain\forms\base\RoleUpdateForm */
+/* @var $modelForm \yii\base\Model */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $searchModel domain\models\base\search\AuthItemSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+?>
+
+<?php
+$isNew = $modelForm instanceof \domain\forms\base\RoleForm;
 ?>
 
 <div class="auth-item-form">
@@ -20,34 +22,31 @@ use yii\helpers\Html;
 
     <?= $form->field($modelForm, 'description')->textInput(['wkkeep' => true]) ?>
 
-    <?= ''//$form->field($modelForm, 'assignRoles', ['enableClientValidation' => false])/*->hiddenInput()->label(false)*/ : '' ?>
+    <?= $isNew ? $form->field($modelForm, 'assignRoles', ['enableClientValidation' => false])->hiddenInput()->label(false) : '' ?>
 
     <?php ActiveForm::end(); ?>
 
     <?=
-    GridView::widget([
+    GridView::widget(array_merge([
         'id' => $modelForm->formName() . 'Grid',
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             'description'
         ],
-        'crudSettings' => [
-            'create' => GWCreateCrudConfig::set()
-                ->urlGrid(['roles/index-for-roles'])
-                ->inputName('RoleForm[assignRoles]'),
-            'delete' => GWDeleteCrudConfig::set()
-                ->inputName('RoleForm[assignRoles]'),
-        ],
+        'crudSettings' => $crudSettings,
         'panelHeading' => [
             'icon' => FA::icon(FA::_LIST_ALT),
             'title' => Yii::t('common/roles', 'Roles'),
         ],
-    ]);
+    ],
+        isset($gridInject) ? [
+            'gridInject' => $gridInject,
+        ] : []
+    ));
     ?>
 
-
     <div class="form-group">
-        <?= Html::submitButton(Yii::t('common/authitem', 'Create'), ['class' => 'btn btn-success', 'form' => 'myform1']) ?>
+        <?= Html::submitButton(Yii::t('common/authitem', $isNew ? 'Create' : 'Update'), ['class' => 'btn ' . ($isNew ? 'btn-success' : 'btn-primary'), 'form' => 'myform1']) ?>
     </div>
 </div>
