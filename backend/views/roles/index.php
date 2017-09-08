@@ -23,8 +23,12 @@ $this->params['breadcrumbs'][] = $this->title;
     GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'filterDialog' => GWFilterDialogConfig::set()->filterModel($filterModel),
-        'exportGrid' => GWExportGridConfig::set()->idReportLoader('wk-Report-Loader'),
+        'filterDialog' => [
+            'filterModel' => $filterModel,
+        ],
+        'exportGrid' => [
+            'idReportLoader' => 'wk-Report-Loader',
+        ],
         //'customizeDialog' => false,
         'minHeight' => 450,
         'columns' => [
@@ -49,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
         'crudSettings' => [
-            'create' => ['roles/create'],
+            'create' => 'roles/create',
             'update' => 'roles/update',
             'delete' => 'roles/delete',
         ],

@@ -49,7 +49,6 @@ class AuthItemChildRepository implements RepositoryInterface
         }
     }
 
-
     public function save($authItemChild)
     {
 //        if ($person->getIsNewRecord()) {

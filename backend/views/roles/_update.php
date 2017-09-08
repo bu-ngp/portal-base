@@ -39,13 +39,11 @@ $this->title = Yii::t('app', 'Update {modelClass}: ', [
             ],
             'crudSettings' => [
                 'create' => [
-                    'class' => 'common\widgets\GridView\services\GWAddCrudConfigForUpdate',
-                    'urlGrid' => ['roles/index-for-roles'],
+                    'urlGrid' => 'roles/index-for-roles',
                 ],
-                'delete' => ['roles/delete-role'],
+                'delete' => 'roles/delete-role',
             ],
             'gridInject' => [
-                'class' => 'common\widgets\GridView\services\GWSaveModelForUpdate',
                 'mainField' => 'parent',
                 'mainIdParameterName' => 'id',
                 'foreignField' => 'child',

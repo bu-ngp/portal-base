@@ -13,7 +13,6 @@ use common\widgets\GridView\GridView;
 use Yii;
 use yii\base\Model;
 use yii\bootstrap\Html;
-use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 use yii\web\View;
 
@@ -26,12 +25,12 @@ class GWFilterDialog
 
     public static function lets(GridView $gridView)
     {
-        if (!($gridView->filterDialog instanceof GWFilterDialogConfig)) {
-            throw new \Exception('filterDialog must be GWFilterDialogConfig class');
+        if (!($gridView->filterDialog instanceof GWFilterDialogConfiguration)) {
+            throw new \Exception('filterDialog must be GWFilterDialogConfiguration class');
         }
 
-        if ($gridView->filterDialog->enable === false) {
-            throw new \Exception('GWFilterDialogConfig->enable must be true');
+        if (!$gridView->filterDialog->isEnable()) {
+            throw new \Exception('GWFilterDialogConfiguration must be enable');
         }
 
         return new self($gridView);
@@ -108,7 +107,7 @@ class GWFilterDialog
             $filterMessage = '';
 
             /** @var Model $filterModel */
-            $filterModel = $this->gridView->filterDialog->filterModel;
+            $filterModel = $this->gridView->filterDialog->getFilterModel();
 
             if ($_COOKIE[$this->gridView->id]) {
                 $cookieOptions = json_decode($_COOKIE[$this->gridView->id], true);
@@ -124,7 +123,7 @@ class GWFilterDialog
                 }
             }
 
-            $this->gridView->panel['before'] .= $this->makeFilterContent($this->gridView->getView(), $this->gridView->filterDialog->filterView, $filterModel) . $filterMessage;
+            $this->gridView->panel['before'] .= $this->makeFilterContent($this->gridView->getView(), $this->gridView->filterDialog->getFilterView(), $filterModel) . $filterMessage;
         }
 
         return $this->additionalFilter;

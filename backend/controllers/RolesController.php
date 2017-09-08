@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\GridView\services\AjaxResponse;
+use common\widgets\NotifyShower\NotifyShower;
 use domain\forms\base\RoleForm;
 use domain\forms\base\RoleUpdateForm;
 use domain\models\base\AuthItemChild;
@@ -142,6 +143,7 @@ class RolesController extends Controller
         ]);
     }
 
+    /** Грид для выбора записей */
     public function actionIndexForRoles()
     {
         $searchModel = new AuthItemSearch();
@@ -155,37 +157,7 @@ class RolesController extends Controller
         ]);
     }
 
-    /** Загрузка грида в модальном окне при создании и обновлении роли */
-    /*  public function actionIndexForRoles()
-      {
-          $searchModel = new AuthItemSearch();
-          $filterModel = new AuthItemFilter();
-          $wkexclude = Yii::$app->request->getHeaders()->get('wk-exclude');
-          $_exclude = $wkexclude ? json_decode($wkexclude) : $wkexclude;
-          $dataProvider = $searchModel->searchForRoles(Yii::$app->request->queryParams, $_exclude);
-
-          return $this->renderAjax('index_for_roles', [
-              'searchModel' => $searchModel,
-              'dataProvider' => $dataProvider,
-              'filterModel' => $filterModel,
-          ]);
-      }*/
-
-    /** urlAction. Добавление выбранных записей в гриде в модальном окне при обновлении роли */
-    public function actionUpdateRemoveRoles($id)
-    {
-        if (Yii::$app->request->isAjax && $wkchoose = Yii::$app->request->getHeaders()->get('wk-choose')) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            $roleModel = $this->findModel($id);
-
-            if ($this->roleService->addRolesForUpdate($roleModel->primaryKey, $wkchoose)) {
-                return AjaxResponse::init(AjaxResponse::SUCCESS);
-            }
-
-            return AjaxResponse::init(AjaxResponse::ERROR, $this->roleService->getErrorsAsString());
-        }
-    }
-
+    /** Удаление роли на форме редактирования записи */
     public function actionDeleteRole($id, $mainId)
     {
         if (Yii::$app->request->isAjax) {
@@ -200,7 +172,6 @@ class RolesController extends Controller
             } else {
                 return AjaxResponse::init(AjaxResponse::SUCCESS);
             }
-
         }
     }
 

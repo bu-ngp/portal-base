@@ -5,22 +5,16 @@ namespace common\widgets\GridView;
 use common\widgets\GridView\assets\GridViewAsset;
 use common\widgets\GridView\services\ActionButtons;
 use common\widgets\GridView\services\GWAddCrudConfigForCreate;
-use common\widgets\GridView\services\GWAddCrudConfigForUpdate;
 use common\widgets\GridView\services\GWCustomizeDialog;
-use common\widgets\GridView\services\GWDeleteCrudConfig;
-use common\widgets\GridView\services\GWDeleteCrudConfigForCreate;
 use common\widgets\GridView\services\GWExportGrid;
-use common\widgets\GridView\services\GWExportGridConfig;
+use common\widgets\GridView\services\GWExportGridConfiguration;
 use common\widgets\GridView\services\GWFilterDialog;
-use common\widgets\GridView\services\GWFilterDialogConfig;
+use common\widgets\GridView\services\GWFilterDialogConfiguration;
 use common\widgets\GridView\services\GWPrepareColumns;
 use Yii;
 use yii\bootstrap\Html;
-use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
-use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Url;
 
 class GridView extends \kartik\grid\GridView
 {
@@ -41,10 +35,14 @@ class GridView extends \kartik\grid\GridView
     public $serialColumn = true;
     public $minHeight = false;
     public $customizeDialog = true;
-    /** @var  GWFilterDialogConfig|null */
-    public $filterDialog;
-    /** @var  GWExportGridConfig|null */
-    public $exportGrid;
+    /** @var  GWFilterDialogConfiguration|array */
+    public $filterDialog = [
+        'enable' => false,
+    ];
+    /** @var  GWExportGridConfiguration|array */
+    public $exportGrid = [
+        'enable' => false,
+    ];
     public $toolbar = [];
     public $leftBottomToolbar = '';
     public $rightBottomToolbar = '';
@@ -135,11 +133,12 @@ HTML;
         }
 
         $filterString = '';
-        if ($this->filterDialog->enable) {
+
+        if ($this->filterDialog->isEnable()) {
             $filterString = GWFilterDialog::lets($this)->prepareConfig()->makeFilter();
         }
 
-        if ($this->exportGrid->enable) {
+        if ($this->exportGrid->isEnable()) {
             GWExportGrid::lets($this)->prepareConfig($filterString)->export();
         }
 
@@ -185,8 +184,17 @@ HTML;
 
         GWPrepareColumns::lets($this)->prepare();
 
-        $this->filterDialog = empty($this->filterDialog) ? GWFilterDialogConfig::set()->enable(false)->build() : $this->filterDialog->build();
-        $this->exportGrid = empty($this->exportGrid) ? GWExportGridConfig::set()->enable(false)->build() : $this->exportGrid->build();
+        $this->filterDialog = Yii::createObject('common\widgets\GridView\services\GWFilterDialogConfiguration', [[
+            'enable' => $this->filterDialog['enable'],
+            'filterModel' => $this->filterDialog['filterModel'],
+            'filterView' => $this->filterDialog['filterView'],
+        ]]);
+
+        $this->exportGrid = Yii::createObject('common\widgets\GridView\services\GWExportGridConfiguration', [[
+            'enable' => $this->exportGrid['enable'],
+            'format' => $this->exportGrid['format'],
+            'idReportLoader' => $this->exportGrid['idReportLoader'],
+        ]]);
     }
 
     protected function createCrudButtons()
@@ -349,7 +357,7 @@ EOT
                 };
             }
 
-            $gridInject = Yii::createObject($this->gridInject['class'], [[
+            $gridInject = Yii::createObject('common\widgets\GridView\services\GWSaveModelForUpdate', [[
                 'modelClassName' => $this->gridInject['modelClassName'],
                 'mainField' => $this->gridInject['mainField'],
                 'foreignField' => $this->gridInject['foreignField'],

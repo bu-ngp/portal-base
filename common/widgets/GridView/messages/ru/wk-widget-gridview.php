@@ -17,10 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Choose' => 'Выбрать',
     'In \'crudOptions\' array must be only this keys [\'create\', \'update\', \'delete\']. Passed \'{key}\'' => '',
-    'Remove record. Are you sure?' => 'Вы уверены, что хотите удалить запись?',
-    'Delete' => '@@Удалить@@',
-    'Update' => '@@Обновить@@',
     'Add. filter: ' => 'Доп. фильтр: ',
     'Additional Filter' => 'Дополнительный фильтр',
     'Apply' => 'Применить',
@@ -31,6 +29,7 @@ return [
     'Create' => 'Добавить',
     'Customize' => 'Настройки',
     'Customize Dialog' => 'Форма настройки таблицы',
+    'Delete' => 'Удалить',
     'Drag to the left of the column that you want to see in the grid in a specific order' => '* Перенесите имена колонок, которые Вы хотите видеть в таблице, в левый список о определенном порядке',
     'Enter the number of records on the grid from 10 to 100' => 'Введите количество записей, отображаемых в таблице. От 10 до 100',
     'Export to Excel' => 'Сохранить в Excel',
@@ -42,6 +41,7 @@ return [
     'No' => 'Нет',
     'OK' => 'ОК',
     'Records selected <b>{from}</b> from <b>{all}</b>' => 'Выбраны записи <b>{from}</b> из <b>{all}</b>',
+    'Remove record. Are you sure?' => 'Вы уверены, что хотите удалить запись?',
     'Report' => 'Отчет',
     'Reset' => 'Сброс настроек',
     'Reset Columns. Are you sure?' => 'Вы уверены, что хотите сбросить настройки?',
@@ -53,6 +53,7 @@ return [
     'Rows per page must be from 10 to 100' => 'Количество записей должно быть указано от 10 до 100',
     'Save changes' => 'Сохранить',
     'Search' => 'Поиск',
+    'Update' => 'Обновить',
     'Visible Columns' => 'Видимые колонки',
     'Visible columns cannot empty' => 'Список с видимыми колонками не может быть пустым',
     'Yes' => 'Да',

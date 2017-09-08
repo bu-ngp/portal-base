@@ -35,7 +35,7 @@ class RoleForm extends Model
     {
         return [
             [['description', 'assignRoles', 'type', 'name'], 'required'],
-            [['assignRoles'], 'compare', 'compareValue' => '[]', 'operator' => '!=', 'message' => Yii::t('common/roles', 'Select roles')],
+        //    [['assignRoles'], 'compare', 'compareValue' => '[]', 'operator' => '!=', 'message' => Yii::t('common/roles', 'Need add roles')],
         ];
     }
 
@@ -43,7 +43,7 @@ class RoleForm extends Model
     {
         return [
             'description' => Yii::t('common/authitem', 'Description'),
-            'assignRoles' => Yii::t('common/authitem', 'Assign Roles'),
+          //  'assignRoles' => Yii::t('common/authitem', 'Assign Roles'),
         ];
     }
 }

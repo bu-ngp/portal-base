@@ -9,6 +9,7 @@
 
 namespace domain\services\base;
 
+use common\widgets\NotifyShower\NotifyShower;
 use domain\exceptions\ServiceErrorsException;
 use domain\models\base\AuthItem;
 use domain\models\base\AuthItemChild;
@@ -21,6 +22,9 @@ use RuntimeException;
 
 class RoleService extends BaseService
 {
+    /**
+     * @var RoleRepository
+     */
     private $roleRepository;
     private $transactionManager;
     private $authItemChildRepository;
@@ -44,6 +48,11 @@ class RoleService extends BaseService
             throw new ServiceErrorsException('assignRoles', \Yii::t('common/roles', 'Error when recognizing selected items'));
         }
 
+        if (!$assignedKeys) {
+            NotifyShower::message(\Yii::t('common/roles', 'Need add roles'));
+            throw new ServiceErrorsException('notifyShower');
+        }
+
         $authItem = AuthItem::create($name, $description, $type);
         $authItemChild = AuthItemChild::create($authItem, $assignedKeys);
 
@@ -58,6 +67,12 @@ class RoleService extends BaseService
     public function update($id, $description)
     {
         $authItem = $this->roleRepository->find($id);
+
+        if ($this->roleRepository->isEmptyChildren($authItem)) {
+            NotifyShower::message(\Yii::t('common/roles', 'Need add roles'));
+            throw new ServiceErrorsException('notifyShower');
+        }
+
         $authItem->rename($description);
         $this->roleRepository->save($authItem);
 

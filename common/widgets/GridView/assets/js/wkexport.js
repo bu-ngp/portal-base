@@ -30,6 +30,12 @@
                     settings: settings
                 });
 
+                if (!settings.idReportLoader) {
+                    console.error("idReportLoader option required");
+
+                    return;
+                }
+
                 $pjax.on('click', 'a.wk-btn-exportGrid', function (e) {
                     e.preventDefault();
                     var type = $(this).is('[wk-export]') ? $(this).attr('wk-export') : 'pdf';
@@ -39,7 +45,7 @@
                         data: {_report: true, type: type},
                         method: 'post',
                         success: function (response) {
-                            if (typeof $("#wk-Report-Loader").data('bs.modal') == 'undefined' || !$("#wk-Report-Loader").data('bs.modal').isShown) {
+                            if (typeof $("#" + $pjax.data('wkexport').settings.idReportLoader).data('bs.modal') == 'undefined' || !$("#" + $pjax.data('wkexport').settings.idReportLoader).data('bs.modal').isShown) {
                                 window.open(response);
                             }
                         }

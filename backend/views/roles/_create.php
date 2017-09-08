@@ -10,7 +10,7 @@ use rmrevin\yii\fontawesome\FA;
 /* @var $searchModel domain\models\base\search\AuthItemSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Create Auth Item');
+$this->title = Yii::t('common/authitem', 'Create Auth Item');
 ?>
     <div class="auth-item-create">
 
@@ -36,12 +36,10 @@ $this->title = Yii::t('app', 'Create Auth Item');
                 ],
                 'crudSettings' => [
                     'create' => [
-                        'class' => 'common\widgets\GridView\services\GWAddCrudConfigForCreate',
-                        'urlGrid' => ['roles/index-for-roles'],
+                        'urlGrid' => 'roles/index-for-roles',
                         'inputName' => 'RoleForm[assignRoles]',
                     ],
                     'delete' => [
-                        'class' => 'common\widgets\GridView\services\GWDeleteCrudConfigForCreate',
                         'inputName' => 'RoleForm[assignRoles]',
                     ],
                 ],

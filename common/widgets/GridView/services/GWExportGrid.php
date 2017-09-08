@@ -26,12 +26,20 @@ class GWExportGrid
 
     public static function lets(GridView $gridView)
     {
-        if (!($gridView->exportGrid instanceof GWExportGridConfig)) {
-            throw new \Exception('exportGrid must be GWExportGridConfig class');
+        if (!($gridView->exportGrid instanceof GWExportGridConfiguration)) {
+            throw new \Exception('exportGrid must be GWExportGridConfiguration class');
         }
 
-        if ($gridView->exportGrid->enable === false) {
-            throw new \Exception('GWExportGridConfig->enable must be true');
+        if (!$gridView->exportGrid->isEnable()) {
+            throw new \Exception('GWExportGridConfiguration->enable must be true');
+        }
+
+        if (!$gridView->exportGrid->getIdReportLoader()) {
+            throw new \Exception('idReportLoader required');
+        }
+
+        if (!$gridView->exportGrid->getFormat()) {
+            throw new \Exception('format required');
         }
 
         return new self($gridView);
@@ -64,20 +72,23 @@ class GWExportGrid
 
     protected function prepareJS()
     {
-        $this->gridView->registerJs("$('#{$this->gridView->id}-pjax').wkexport();");
+        $options = [
+            'idReportLoader' => $this->gridView->exportGrid->getIdReportLoader(),
+        ];
+
+        $options = json_encode(array_filter($options), JSON_UNESCAPED_UNICODE);
+
+
+        $this->gridView->registerJs("$('#{$this->gridView->id}-pjax').wkexport($options);");
     }
 
     protected function makeButtonOnToolbar()
     {
-        if (!$this->gridView->exportGrid->format) {
-            $this->gridView->exportGrid->format[] = GridView::PDF;
-        }
-
         if (count($this->gridView->customButtons) > 0) {
             $this->gridView->customButtons[] = '{divider}';
         }
 
-        foreach ($this->gridView->exportGrid->format as $format) {
+        foreach ($this->gridView->exportGrid->getFormat() as $format) {
             $properties = $this->buttonProperties($format);
 
             $button = Html::a($properties['description'] . ' <i class="fa ' . $properties['icon'] . '"></i>', '#',

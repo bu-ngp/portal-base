@@ -47,10 +47,10 @@ class ActionButtonDelete
             'data-pjax' => '0'
         ];
 
-        $isTypeObject = isset($this->crudProp['class']);
+        $isTypeObject = isset($this->crudProp['inputName']);
 
         if ($isTypeObject) {
-            $GWDeleteCrud = Yii::createObject($this->crudProp['class'], [[
+            $GWDeleteCrud = Yii::createObject('common\widgets\GridView\services\GWDeleteCrudConfigForCreate', [[
                 'urlGrid' => $this->crudProp['urlGrid'],
                 'inputName' => $this->crudProp['inputName'],
             ]]);

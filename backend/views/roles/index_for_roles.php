@@ -20,7 +20,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'filterDialog' => GWFilterDialogConfig::set()->filterModel($filterModel),
+        'filterDialog' => [
+            'filterModel' => $filterModel,
+        ],
         'columns' => [
             'description',
             'name',

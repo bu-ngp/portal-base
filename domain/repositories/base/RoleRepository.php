@@ -67,4 +67,13 @@ class RoleRepository implements RepositoryInterface
 //            throw new \RuntimeException(Yii::t('domain/base', 'Deleting error.'));
 //        }
     }
+
+    public function isEmptyChildren($authitem)
+    {
+        if (!($role = Yii::$app->authManager->getRole($authitem->name))) {
+            throw new RuntimeException('Authitem not exists.');
+        }
+
+        return count(Yii::$app->authManager->getChildren($authitem->name)) === 0;
+    }
 }

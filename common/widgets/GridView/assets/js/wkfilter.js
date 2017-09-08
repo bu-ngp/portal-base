@@ -81,7 +81,6 @@
             _filter === '' ? removeCookie($pjax, '_filter') : saveCookie($pjax, {_filter: _filter});
 
             $dialog.modal('hide');
-            $pjax.gridselected2storage('clearSelected');
             $grid.yiiGridView('applyFilter');
         });
 
@@ -94,7 +93,6 @@
                 yes: function () {
                     removeCookie($pjax, '_filter');
                     $dialog.modal('hide');
-                    $pjax.gridselected2storage('clearSelected');
                     $grid.yiiGridView('applyFilter');
                 }
             });
@@ -108,7 +106,6 @@
                 message: '<span>' + $pjax.data('wkfilter').settings.resetConfirmMessage + '</span>',
                 yes: function () {
                     removeCookie($pjax, '_filter');
-                    $pjax.gridselected2storage('clearSelected');
                     $grid.yiiGridView('applyFilter');
                 }
             });

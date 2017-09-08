@@ -48,10 +48,14 @@ class ActionButtonCreate
             'data-pjax' => '0'
         ];
 
-        $isTypeObject = isset($this->crudProp['class']);
+        $isTypeObject = is_array($this->crudProp) && !isset($this->crudProp[0]);
 
         if ($isTypeObject) {
-            $GWCreateCrud = Yii::createObject($this->crudProp['class'], [[
+            $class = $this->crudProp['inputName']
+                ? 'common\widgets\GridView\services\GWAddCrudConfigForCreate'
+                : 'common\widgets\GridView\services\GWAddCrudConfigForUpdate';
+
+            $GWCreateCrud = Yii::createObject($class, [[
                 'urlGrid' => $this->crudProp['urlGrid'],
                 'inputName' => $this->crudProp['inputName'],
             ]]);
