@@ -2,20 +2,15 @@
 
 namespace backend\controllers;
 
-use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\GridView\services\AjaxResponse;
 use common\widgets\NotifyShower\NotifyShower;
 use domain\forms\base\RoleForm;
 use domain\forms\base\RoleUpdateForm;
-use domain\models\base\AuthItemChild;
 use domain\models\base\filter\AuthItemFilter;
-use common\widgets\ReportLoader\ReportByModel;
-use domain\models\base\search\AuthItemChildSearch;
 use domain\services\AjaxFilter;
 use domain\services\base\RoleService;
 use domain\services\proxyService;
 use common\reports\RolesReport;
-use Knp\Snappy\PdfTest;
 use Yii;
 use domain\models\base\AuthItem;
 use domain\models\base\search\AuthItemSearch;
@@ -23,7 +18,6 @@ use yii\filters\AccessControl;
 use yii\filters\ContentNegotiator;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use yii\web\Response;
 
 /**
@@ -157,11 +151,13 @@ class RolesController extends Controller
         $searchModel = new AuthItemSearch();
         $filterModel = new AuthItemFilter();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $gridExcludeIdsFunc = AuthItem::funcExcludeForRoles();
 
         return $this->render('index_for_roles', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'filterModel' => $filterModel,
+            'gridExcludeIdsFunc' => $gridExcludeIdsFunc,
         ]);
     }
 

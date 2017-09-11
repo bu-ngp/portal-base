@@ -22,7 +22,6 @@ use yii\db\Query;
  *
  * @property AuthAssignment[] $authAssignments
  * @property Person[] $users
- * @property AuthRule $ruleName
  * @property AuthItemChild[] $authItemChildren
  * @property AuthItemChild[] $authItemChildren0
  * @property AuthItem[] $parents
@@ -134,34 +133,18 @@ class AuthItem extends \yii\db\ActiveRecord
         return $this->hasMany(AuthItem::className(), ['name' => 'child'])->viaTable('{{%auth_item_child}}', ['parent' => 'name']);
     }
 
-    /**
-     * @param $id
-     * @return ActiveQuery $this
-     */
-    public static function excludeForAuthItemChildIfUpdate($id)
+    public static function funcExcludeForRoles()
     {
-        return self::find()
-            ->andWhere(['not', ['name' => $id]])
-            ->andWhere(['not exists', (new Query())
-                ->select('{{%auth_item_child}}.child')
-                ->from('{{%auth_item_child}}')
-                ->andWhere(['{{%auth_item_child}}.parent' => $id])
-                ->andWhere('{{%auth_item_child}}.child = {{%auth_item}}.name')
-            ]);
-    }
-
-    /**
-     * @param $jsonSelected
-     * @return ActiveQuery $this
-     */
-    public static function excludeForAuthItemChildIfCreate($jsonSelected)
-    {
-        if ($jsonSelected) {
-            return self::find()
-                ->andWhere($jsonSelected->checkAll ? ['in', 'name', $jsonSelected->excluded] : ['not in', 'name', $jsonSelected->included]);
-        }
-
-        return self::find();
+        return function (ActiveQuery $activeQuery, array $ids) {
+            $activeQuery
+                ->andWhere(['not in', 'name', $ids])
+                ->andWhere(['not exists', (new Query())
+                    ->select('{{%auth_item_child}}.child')
+                    ->from('{{%auth_item_child}}')
+                    ->andWhere(['in', '{{%auth_item_child}}.parent', $ids])
+                    ->andWhere('{{%auth_item_child}}.child = {{%auth_item}}.name')
+                ]);
+        };
     }
 
     public static function items()
