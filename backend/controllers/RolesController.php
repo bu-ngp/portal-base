@@ -113,7 +113,7 @@ class RolesController extends Controller
 
         NotifyShower::serviceMessages($this->roleService->getErrors());
 
-        return $this->render('_create', [
+        return $this->render('create', [
             'modelForm' => $form,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -144,7 +144,7 @@ class RolesController extends Controller
 
         NotifyShower::serviceMessages($this->roleService->getErrors());
 
-        return $this->render('_update', [
+        return $this->render('update', [
             'modelForm' => $form,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
