@@ -11,6 +11,7 @@ use domain\models\base\AuthItemChild;
 use domain\models\base\filter\AuthItemFilter;
 use common\widgets\ReportLoader\ReportByModel;
 use domain\models\base\search\AuthItemChildSearch;
+use domain\services\AjaxFilter;
 use domain\services\base\RoleService;
 use domain\services\proxyService;
 use common\reports\RolesReport;
@@ -19,6 +20,7 @@ use Yii;
 use domain\models\base\AuthItem;
 use domain\models\base\search\AuthItemSearch;
 use yii\filters\AccessControl;
+use yii\filters\ContentNegotiator;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -55,10 +57,15 @@ class RolesController extends Controller
                     ],
                 ],
             ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
+            [
+                'class' => AjaxFilter::className(),
+                'actions' => ['delete-role', 'delete', 'report'],
+            ],
+            [
+                'class' => ContentNegotiator::className(),
+                'only' => ['delete-role', 'delete', 'report'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
                 ],
             ],
         ];
@@ -92,7 +99,8 @@ class RolesController extends Controller
         $searchModel = new AuthItemSearch();
         $dataProvider = $searchModel->searchForCreate(Yii::$app->request->queryParams);
 
-        if ($form->load(Yii::$app->request->post()) && $form->validate()
+        if ($form->load(Yii::$app->request->post())
+            && $form->validate()
             && $this->roleService->create(
                 $form->name,
                 $form->description,
@@ -103,7 +111,7 @@ class RolesController extends Controller
             return $this->redirect(['index']);
         }
 
-        $form->addErrors($this->roleService->getErrors());
+        NotifyShower::serviceMessages($this->roleService->getErrors());
 
         return $this->render('_create', [
             'modelForm' => $form,
@@ -134,7 +142,7 @@ class RolesController extends Controller
             return $this->redirect(['index']);
         }
 
-        $form->addErrors($this->roleService->getErrors());
+        NotifyShower::serviceMessages($this->roleService->getErrors());
 
         return $this->render('_update', [
             'modelForm' => $form,
@@ -158,21 +166,15 @@ class RolesController extends Controller
     }
 
     /** Удаление роли на форме редактирования записи */
-    public function actionDeleteRole($id, $mainId)
+    public function actionDeleteRole($mainId, $id)
     {
-        if (Yii::$app->request->isAjax) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            $authItemChildModel = AuthItemChild::find()->where(['parent' => $mainId, 'child' => $id])->one();
-            $result = $authItemChildModel->delete();
-
-            if ($result === false) {
-                return AjaxResponse::init(AjaxResponse::ERROR, Yii::t('common/roles', 'Delete error'));
-            } elseif ($result === 0) {
-                return AjaxResponse::init(AjaxResponse::ERROR, Yii::t('common/roles', 'Deleted 0 records'));
-            } else {
-                return AjaxResponse::init(AjaxResponse::SUCCESS);
-            }
+        try {
+            $this->roleService->removeRoleForUpdate($mainId, $id);
+        } catch (\Exception $e) {
+            return AjaxResponse::init(AjaxResponse::ERROR, $e->getMessage());
         }
+
+        return AjaxResponse::init(AjaxResponse::SUCCESS);
     }
 
     /**
@@ -183,23 +185,22 @@ class RolesController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        try {
+            $this->roleService->removeRole($id);
+        } catch (\Exception $e) {
+            return AjaxResponse::init(AjaxResponse::ERROR, $e->getMessage());
+        }
 
-        return $this->redirect(['index']);
+        return AjaxResponse::init(AjaxResponse::SUCCESS);
     }
 
     public function actionReport()
     {
-        if (Yii::$app->request->isAjax) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return RolesReport::lets()
-                ->assignTemplate('rolesTemplate.xlsx')
-                ->params(['view' => 1])
-                ->type('pdf')
-                ->save();
-        } else {
-            throw new \Exception('Only Ajax Requests');
-        }
+        return RolesReport::lets()
+            ->assignTemplate('rolesTemplate.xlsx')
+            ->params(['view' => 1])
+            ->type('pdf')
+            ->save();
     }
 
     /**

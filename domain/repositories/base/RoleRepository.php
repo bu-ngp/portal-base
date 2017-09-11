@@ -8,13 +8,10 @@
 
 namespace domain\repositories\base;
 
-use common\models\base\Person;
-use domain\exceptions\ServiceErrorsException;
 use domain\models\base\AuthItem;
 use domain\repositories\RepositoryInterface;
 use RuntimeException;
 use Yii;
-use yii\rbac\Role;
 
 class RoleRepository implements RepositoryInterface
 {
@@ -28,6 +25,28 @@ class RoleRepository implements RepositoryInterface
         if (!$authitem = AuthItem::findOne($id)) {
             throw new RuntimeException('Model not found.');
         }
+        return $authitem;
+    }
+
+    /**
+     * Поиск только пользовательской роли
+     *
+     * @param $id
+     * @return AuthItem
+     */
+    public function findByUser($id)
+    {
+        if (!$authitem = AuthItem::find()
+            ->where([
+                'name' => $id,
+                'view' => 0
+            ])
+            ->andWhere(['not in', 'name', ['Administrator']])
+            ->one()
+        ) {
+            throw new RuntimeException('Model not found.');
+        }
+
         return $authitem;
     }
 
@@ -48,6 +67,9 @@ class RoleRepository implements RepositoryInterface
         }
     }
 
+    /**
+     * @param AuthItem $authitem
+     */
     public function save($authitem)
     {
         if (!($role = Yii::$app->authManager->getRole($authitem->name))) {
@@ -61,17 +83,28 @@ class RoleRepository implements RepositoryInterface
         }
     }
 
+    /**
+     * @param AuthItem $authitem
+     */
     public function delete($authitem)
     {
-//        if (!$person->delete()) {
-//            throw new \RuntimeException(Yii::t('domain/base', 'Deleting error.'));
-//        }
+        if (!($role = Yii::$app->authManager->getRole($authitem->name))) {
+            throw new RuntimeException('Role not exists.');
+        }
+
+        if (!Yii::$app->authManager->remove($role)) {
+            throw new \RuntimeException(Yii::t('domain/base', 'Deleting error. Remove Role Fail.'));
+        };
     }
 
+    /**
+     * @param AuthItem $authitem
+     * @return bool
+     */
     public function isEmptyChildren($authitem)
     {
         if (!($role = Yii::$app->authManager->getRole($authitem->name))) {
-            throw new RuntimeException('Authitem not exists.');
+            throw new RuntimeException('Role not exists.');
         }
 
         return count(Yii::$app->authManager->getChildren($authitem->name)) === 0;

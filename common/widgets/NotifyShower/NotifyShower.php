@@ -11,7 +11,6 @@ namespace common\widgets\NotifyShower;
 
 use common\widgets\CardList\assets\CardListAsset;
 use common\widgets\NotifyShower\assets\NotifyShowerAsset;
-use Exception;
 use Yii;
 use yii\bootstrap\Html;
 use yii\bootstrap\Widget;
@@ -24,6 +23,17 @@ class NotifyShower extends Widget
     {
         if (is_string($message) && !empty($message)) {
             self::$messageContainer[] = $message;
+        }
+    }
+
+    static public function serviceMessages(array $messagesArray)
+    {
+        foreach ($messagesArray as $attr => $errorMes) {
+            if ($attr === 'notifyShower') {
+                foreach ($errorMes as $mes) {
+                    self::$messageContainer[] = $mes;
+                }
+            }
         }
     }
 

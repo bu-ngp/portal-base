@@ -1,8 +1,6 @@
 <?php
 
 use common\widgets\GridView\GridView;
-use common\widgets\GridView\services\GWExportGridConfig;
-use common\widgets\GridView\services\GWFilterDialogConfig;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 

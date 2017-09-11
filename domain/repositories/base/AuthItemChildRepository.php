@@ -8,8 +8,6 @@
 
 namespace domain\repositories\base;
 
-use common\models\base\Person;
-use domain\exceptions\ServiceErrorsException;
 use domain\models\base\AuthItem;
 use domain\models\base\AuthItemChild;
 use domain\repositories\RepositoryInterface;
@@ -18,20 +16,24 @@ use Yii;
 
 class AuthItemChildRepository implements RepositoryInterface
 {
-
+    /**
+     * @param $id
+     * @return AuthItemChild
+     */
     public function find($id)
     {
         if (!$authItemChild = AuthItemChild::findOne($id)) {
             throw new RuntimeException('Model not found.');
         }
+
         return $authItemChild;
     }
 
+    /**
+     * @param AuthItemChild[] $authItemChild
+     */
     public function add($authItemChild)
     {
-        /**
-         * @var AuthItemChild $item
-         */
         foreach ($authItemChild as $item) {
             if (!$parent = Yii::$app->authManager->getRole($item->parent)) {
                 throw new RuntimeException("Parent {$item->parent} not exist.");
@@ -49,20 +51,43 @@ class AuthItemChildRepository implements RepositoryInterface
         }
     }
 
+    /**
+     * @param AuthItemChild $authItemChild
+     */
     public function save($authItemChild)
     {
-//        if ($person->getIsNewRecord()) {
-//            throw new \RuntimeException(Yii::t('domain/base', 'Adding existing model.'));
-//        }
-//        if ($person->update(false) === false) {
-//            throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
-//        }
+        throw new RuntimeException("Not exists save method for this model");
     }
 
+    /**
+     * @param AuthItemChild $authItemChild
+     */
     public function delete($authItemChild)
     {
-//        if (!$person->delete()) {
-//            throw new \RuntimeException(Yii::t('domain/base', 'Deleting error.'));
-//        }
+        if (!$parent = Yii::$app->authManager->getRole($authItemChild->parent)) {
+            throw new \RuntimeException(Yii::t('domain/base', 'Deleting error. Parent is missed.'));
+        }
+
+        if (!$child = Yii::$app->authManager->getRole($authItemChild->child)) {
+            throw new \RuntimeException(Yii::t('domain/base', 'Deleting error. Child is missed.'));
+        }
+
+        if (!Yii::$app->authManager->removeChild($parent, $child)) {
+            throw new \RuntimeException(Yii::t('domain/base', 'Deleting error. Remove Child Fail.'));
+        };
+    }
+
+    /**
+     * @param AuthItem $authItem
+     */
+    public function removeChildren($authItem)
+    {
+        if (!$role = Yii::$app->authManager->getRole($authItem->name)) {
+            throw new \RuntimeException(Yii::t('domain/base', "Deleting error. Role '{role}' not exists", ['role' => $authItem->name]));
+        }
+
+        if (Yii::$app->authManager->getChildren($role->name) && !Yii::$app->authManager->removeChildren($role)) {
+            throw new \RuntimeException(Yii::t('domain/base', 'Deleting error. Remove Children Fail.'));
+        }
     }
 }

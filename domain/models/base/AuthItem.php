@@ -2,6 +2,7 @@
 
 namespace domain\models\base;
 
+use common\models\base\Person;
 use common\widgets\GridView\services\GWItemsTrait;
 use Yii;
 use yii\db\ActiveQuery;
@@ -104,14 +105,6 @@ class AuthItem extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getRuleName()
-    {
-        return $this->hasOne(AuthRule::className(), ['name' => 'rule_name'])->from(['ruleName' => AuthRule::tableName()]);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getAuthItemChildren()
     {
         return $this->hasMany(AuthItemChild::className(), ['child' => 'name'])->from(['authItemChildren' => AuthItemChild::tableName()]);
@@ -166,9 +159,8 @@ class AuthItem extends \yii\db\ActiveRecord
         if ($jsonSelected) {
             return self::find()
                 ->andWhere($jsonSelected->checkAll ? ['in', 'name', $jsonSelected->excluded] : ['not in', 'name', $jsonSelected->included]);
-
         }
-        
+
         return self::find();
     }
 

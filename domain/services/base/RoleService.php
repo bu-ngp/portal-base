@@ -9,7 +9,6 @@
 
 namespace domain\services\base;
 
-use common\widgets\NotifyShower\NotifyShower;
 use domain\exceptions\ServiceErrorsException;
 use domain\models\base\AuthItem;
 use domain\models\base\AuthItemChild;
@@ -17,14 +16,9 @@ use domain\repositories\base\AuthItemChildRepository;
 use domain\repositories\base\RoleRepository;
 use domain\services\BaseService;
 use domain\services\TransactionManager;
-use Exception;
-use RuntimeException;
 
 class RoleService extends BaseService
 {
-    /**
-     * @var RoleRepository
-     */
     private $roleRepository;
     private $transactionManager;
     private $authItemChildRepository;
@@ -42,6 +36,16 @@ class RoleService extends BaseService
         parent::__construct();
     }
 
+    /**
+     * Добавление новой пользовательской роли с выбранными подчиненными ролями
+     *
+     * @param string $name Уникальное имя роли
+     * @param string $description Название роли
+     * @param integer $type
+     * @param string $assignedKeys массив с первичными ключами выбранных записей
+     * @return bool
+     * @throws \Exception
+     */
     public function create($name, $description, $type, $assignedKeys)
     {
         if (!is_string($assignedKeys) || ($assignedKeys = json_decode($assignedKeys)) === null) {
@@ -49,8 +53,7 @@ class RoleService extends BaseService
         }
 
         if (!$assignedKeys) {
-            NotifyShower::message(\Yii::t('common/roles', 'Need add roles'));
-            throw new ServiceErrorsException('notifyShower');
+            throw new ServiceErrorsException('notifyShower', \Yii::t('common/roles', 'Need add roles'));
         }
 
         $authItem = AuthItem::create($name, $description, $type);
@@ -64,13 +67,19 @@ class RoleService extends BaseService
         return true;
     }
 
+    /**
+     * Обновление названия роли на форме редактирования роли
+     *
+     * @param string $id Идентификатор обновляемой роли
+     * @param string $description Новое название роли
+     * @return bool
+     */
     public function update($id, $description)
     {
         $authItem = $this->roleRepository->find($id);
 
         if ($this->roleRepository->isEmptyChildren($authItem)) {
-            NotifyShower::message(\Yii::t('common/roles', 'Need add roles'));
-            throw new ServiceErrorsException('notifyShower');
+            throw new ServiceErrorsException('notifyShower', \Yii::t('common/roles', 'Need add roles'));
         }
 
         $authItem->rename($description);
@@ -79,22 +88,31 @@ class RoleService extends BaseService
         return true;
     }
 
-    public function addRolesForUpdate($id, $additionalJSONObj)
+    /**
+     * Удаление прикрепленной роли на форме редактирования роли
+     *
+     * @param string $parent Редактируемая роль
+     * @param string $child Прикрепленная роль к редактируемой роли
+     */
+    public function removeRoleForUpdate($parent, $child)
     {
-        if (!is_string($additionalJSONObj) || ($additionalJSONObj = json_decode($additionalJSONObj)) === null) {
-            throw new ServiceErrorsException('assignRoles', \Yii::t('common/roles', 'Error when recognizing selected items'));
-        }
+        $authItemChildModel = $this->authItemChildRepository->find(['parent' => $parent, 'child' => $child]);
+        $this->authItemChildRepository->delete($authItemChildModel);
+    }
 
-        $authItem = $this->roleRepository->find($id);
-        $authItemChild = AuthItemChild::create($authItem, $additionalJSONObj);
+    /**
+     * Удаление роли со всеми прикрепленными ролями
+     *
+     * @param string $id Идентификатор удалемой роли
+     * @throws \Exception
+     */
+    public function removeRole($id)
+    {
+        $authItem = $this->roleRepository->findByUser($id);
 
-        $this->transactionManager->execute(function () use ($authItem, $authItemChild) {
-            $this->authItemChildRepository->add($authItemChild);
-        }, function ($e) {
-            /** @var $e Exception */
-            throw new ServiceErrorsException('assignRoles', $e->getMessage());
+        $this->transactionManager->execute(function () use ($authItem) {
+            $this->authItemChildRepository->removeChildren($authItem);
+            $this->roleRepository->delete($authItem);
         });
-
-        return true;
     }
 }
