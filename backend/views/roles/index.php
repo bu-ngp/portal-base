@@ -1,6 +1,7 @@
 <?php
 
 use common\widgets\GridView\GridView;
+use domain\models\base\AuthItem;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 
@@ -23,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'filterDialog' => [
             'filterModel' => $filterModel,
-        //    'filterView' => '_filter_old',
+            //    'filterView' => '_filter_old',
         ],
         'exportGrid' => [
             'idReportLoader' => 'wk-Report-Loader',
@@ -54,7 +55,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'crudSettings' => [
             'create' => 'roles/create',
             'update' => 'roles/update',
-            'delete' => 'roles/delete',
+            'delete' => [
+                'url' => 'roles/delete',
+                'beforeRender' => function ($model) {
+                    /** @var AuthItem $model */
+                    return !($model->view || $model->name === 'Administrator');
+                },
+            ],
         ],
         'panelHeading' => ['icon' => FA::icon(FA::_LIST_ALT),
             'title' => Yii::t('common/roles', 'Roles'),

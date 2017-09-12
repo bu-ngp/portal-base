@@ -41,13 +41,24 @@ class ActionButtonUpdate
 
     protected function buttonInit()
     {
-        $crudUrl = $this->crudProp;
+        $crudProp = $this->crudProp;
 
-        $this->actionButtons['update'] = function ($url, $model) use ($crudUrl) {
+        $this->actionButtons['update'] = function ($url, $model) use ($crudProp) {
+            $crudUrl = is_string($crudProp) ? $crudProp : $crudProp['url'];
+
             $customurl = Url::to([$crudUrl, 'id' => $model->primaryKey]);
-            return Html::a('<i class="fa fa-2x fa-pencil-square-o"></i>', $customurl, ['title' => Yii::t('wk-widget-gridview', 'Update'), 'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-primary', 'data-pjax' => '0']);
+            return $this->beforeRender($model) ? Html::a('<i class="fa fa-2x fa-pencil-square-o"></i>', $customurl, ['title' => Yii::t('wk-widget-gridview', 'Update'), 'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-primary', 'data-pjax' => '0']) : '';
         };
 
         return $this->actionButtons;
+    }
+
+    protected function beforeRender($model)
+    {
+        if (!empty($this->crudProp['url']) && $this->crudProp['beforeRender'] instanceof \Closure) {
+            return $this->crudProp['beforeRender']($model);
+        }
+
+        return true;
     }
 }

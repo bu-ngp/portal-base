@@ -64,7 +64,7 @@ class ActionButtonDelete
                     'wk-id' => $model->primaryKey,
                 ]);
 
-                return Html::a('<i class="fa fa-2x fa-trash-o"></i>', '#', $options);
+                return $this->beforeRender($model) ? Html::a('<i class="fa fa-2x fa-trash-o"></i>', '#', $options) : '';
             };
         } else {
             if (!is_array($this->crudProp)) {
@@ -74,14 +74,24 @@ class ActionButtonDelete
             $crudProp = $this->crudProp;
 
             $this->actionButtons['delete'] = function ($url, $model) use ($crudProp, $options) {
-                $crudProp['id'] = $model->primaryKey;
-                $crudProp['mainId'] = Yii::$app->request->get('id');
-                $customurl = Url::to($crudProp);
+                $urlArr = count($crudProp) === 1 && isset($crudProp[0]) ? $crudProp : [$crudProp['url']];
 
-                return Html::a('<i class="fa fa-2x fa-trash-o"></i>', $customurl, $options);
+                $urlArr['id'] = $model->primaryKey;
+                $urlArr['mainId'] = Yii::$app->request->get('id');
+
+                return $this->beforeRender($model) ? Html::a('<i class="fa fa-2x fa-trash-o"></i>', Url::to($urlArr), $options) : '';
             };
         }
 
         return $this->actionButtons;
+    }
+
+    protected function beforeRender($model)
+    {
+        if (!empty($this->crudProp['url']) && $this->crudProp['beforeRender'] instanceof \Closure) {
+            return $this->crudProp['beforeRender']($model);
+        }
+
+        return true;
     }
 }

@@ -289,7 +289,7 @@
                                 if (response.result == 'success') {
                                     $grid.yiiGridView('applyFilter');
                                 } else if (response.result == 'error') {
-                                    $pjax.find('.wk-grid-errors').append("<div>" + response.message + "</div>");
+                                    $pjax.find('.wk-grid-errors').html("<div>" + response.message + "</div>");
                                 }
                             }
                         });

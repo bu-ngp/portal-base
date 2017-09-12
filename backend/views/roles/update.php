@@ -1,6 +1,8 @@
 <?php
 
 use domain\forms\base\RoleUpdateForm;
+use domain\models\base\AuthItem;
+use domain\models\base\AuthItemChild;
 use yii\helpers\Html;
 use common\widgets\ActiveForm\ActiveForm;
 
@@ -34,7 +36,22 @@ $this->title = Yii::t('app', 'Update {modelClass}: ', [
                     'create' => [
                         'urlGrid' => 'roles/index-for-roles',
                     ],
-                    'delete' => 'roles/delete-role',
+                    'delete' => [
+                        'url' => 'roles/delete-role',
+                        'beforeRender' => function ($model) {
+                            /** @var AuthItem $model */
+
+                            return $_GET['id'] && AuthItemChild::find()
+                                ->joinWith(['parent0'])
+                                ->andWhere([
+                                    'child' => $model->name,
+                                    'Parent0.name' => $_GET['id'],
+                                    'Parent0.view' => 0,
+                                ])
+                                ->andWhere(['not', ['parent' => 'Administrator']])
+                                ->one();
+                        },
+                    ],
                 ],
                 'gridInject' => [
                     'mainField' => 'parent',
