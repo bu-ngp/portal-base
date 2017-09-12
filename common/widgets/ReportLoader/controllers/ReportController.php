@@ -4,6 +4,7 @@ namespace common\widgets\ReportLoader\controllers;
 
 use common\widgets\ReportLoader\models\ReportLoader;
 use common\widgets\ReportLoader\ReportProcess;
+use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\db\Expression;
 use yii\web\Controller;
@@ -32,7 +33,7 @@ class ReportController extends Controller
                 new Expression('DATE_FORMAT(rl_start,\'%d.%m.%Y %H:%i:%s\') as start'),
             ])
             ->andWhere([
-                'rl_process_id' => Yii::$app->user->isGuest ? Yii::$app->session->getId() : Yii::$app->user->getId(),
+                'rl_process_id' => Yii::$app->user->isGuest ? Yii::$app->session->getId() : Uuid::uuid2str(Yii::$app->user->getId()),
             ])
             ->andWhere(['not', ['rl_status' => 3]])
             ->orderBy(['rl_id' => SORT_DESC])
@@ -85,7 +86,7 @@ class ReportController extends Controller
             $session = Yii::$app->get('session', false);
 
             if ($user && $session) {
-                $rl_process_id = $user->isGuest ? $session->id : $user->id;
+                $rl_process_id = $user->isGuest ? $session->id : Uuid::uuid2str($user->id);
 
                 return ReportLoader::deleteAll(['rl_process_id' => $rl_process_id]) > 0;
             }

@@ -2,6 +2,7 @@
 
 namespace common\widgets\ReportLoader;
 
+use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\behaviors\AttributeBehavior;
 use yii\db\BaseActiveRecord;
@@ -53,7 +54,7 @@ class BlameableBehavior extends AttributeBehavior
             $session = Yii::$app->get('session', false);
 
             if ($user && $session) {
-                return $user->isGuest ? $session->id : $user->id;
+                return $user->isGuest ? $session->id : Uuid::uuid2str($user->id);
             }
 
             return null;

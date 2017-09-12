@@ -2,9 +2,12 @@
 
 namespace common\models\base;
 
+use domain\models\base\AuthAssignment;
+use domain\models\base\AuthItem;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\base\NotSupportedException;
+use yii\debug\models\search\Profile;
 use yii\web\IdentityInterface;
 
 /**
@@ -101,7 +104,8 @@ class Person extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return static::findOne(Uuid::str2uuid($id));
+        //   return static::findOne(Uuid::str2uuid($id));
+        return static::findOne($id);
     }
 
     /**
@@ -123,7 +127,8 @@ class Person extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function getId()
     {
-        return Uuid::uuid2str($this->getPrimaryKey());
+        //  return Uuid::uuid2str($this->getPrimaryKey());
+        return $this->getPrimaryKey();
     }
 
     /**

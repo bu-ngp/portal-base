@@ -46,8 +46,9 @@ class RolesController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        //  'actions' => ['index'],
+                        'actions' => ['index', 'create', 'update', 'index-for-roles', 'delete-role', 'delete'],
                         'allow' => true,
+                        'roles' => ['baseAdministrator2'],
                     ],
                 ],
             ],
