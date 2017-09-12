@@ -23,6 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'filterDialog' => [
             'filterModel' => $filterModel,
+        //    'filterView' => '_filter_old',
         ],
         'exportGrid' => [
             'idReportLoader' => 'wk-Report-Loader',
