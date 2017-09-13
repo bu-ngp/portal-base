@@ -112,6 +112,7 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
 </div>
 <?= ReportLoader::widget(['id' => 'wk-Report-Loader']); ?>
 <?= NotifyShower::widget(); ?>
+<?php \common\assets\PropellerAsset::register($this) ?>
 <?php $this->endBody() ?>
 </body>
 </html>

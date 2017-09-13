@@ -129,12 +129,44 @@
             var lastBC = $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 1];
 
             $.each(lastBC.forms, function (name, value) {
-                var input = $('[name="' + name + '"]');
-
-                if (input.length && !input.val()) {
-                    input.val(value);
+                var input = $('[name="' + name + '"][wkkeep]');
+                if (input.length) {
+                    if (input.attr('type') === 'checkbox') {
+                        input.prop('checked', value);
+                    } else {
+                        input.val(value);
+                    }
                 }
             });
+
+            if (lastBC.forms) {
+                // paper input
+                $(".pmd-textfield-focused").remove();
+                $(".pmd-textfield [wkkeep].form-control").after('<span class="pmd-textfield-focused"></span>');
+                // floating label
+                $('.pmd-textfield input[wkkeep].form-control').each(function () {
+                    if ($(this).val() !== "") {
+                        $(this).closest('.pmd-textfield').addClass("pmd-textfield-floating-label-completed");
+                    }
+                });
+                // floating change label
+                $(".pmd-textfield input[wkkeep].form-control").on('change', function () {
+                    if ($(this).val() !== "") {
+                        $(this).closest('.pmd-textfield').addClass("pmd-textfield-floating-label-completed");
+                    }
+                });
+                // floating label animation
+                $("body").on("focus", ".pmd-textfield [wkkeep].form-control", function () {
+                    $(this).closest('.pmd-textfield').addClass("pmd-textfield-floating-label-active pmd-textfield-floating-label-completed");
+                });
+                // remove floating label animation
+                $("body").on("focusout", ".pmd-textfield [wkkeep].form-control", function () {
+                    if ($(this).val() === "") {
+                        $(this).closest('.pmd-textfield').removeClass("pmd-textfield-floating-label-completed");
+                    }
+                    $(this).closest('.pmd-textfield').removeClass("pmd-textfield-floating-label-active");
+                });
+            }
         }
     };
 
@@ -150,7 +182,12 @@
             if ($widget.data('wkbreadcrumbs').crumbs.length && $(this).is('[name]')) {
                 var lastBC = $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 1];
 
-                lastBC.forms[$(this).attr("name")] = $(this).val();
+                if ($(this).attr('type') === 'checkbox') {
+                    lastBC.forms[$(this).attr("name")] = +$(this).prop('checked');
+                } else {
+                    lastBC.forms[$(this).attr("name")] = $(this).val();
+                }
+
                 $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 1] = lastBC;
 
                 saveCrumbs($widget);

@@ -18,8 +18,8 @@
  */
 return [
     'Error when recognizing selected items' => '',
+    'Delete error' => '@@Ошибка удаления@@',
+    'Deleted 0 records' => '@@Удалено 0 записей@@',
     'Need add roles' => 'Необходимо добавить роли',
-    'Delete error' => 'Ошибка удаления',
-    'Deleted 0 records' => 'Удалено 0 записей',
     'Roles' => 'Роли',
 ];

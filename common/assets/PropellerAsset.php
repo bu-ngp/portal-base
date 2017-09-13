@@ -2,6 +2,7 @@
 
 namespace common\assets;
 
+use yii\web\View;
 use yii\web\AssetBundle;
 
 /**

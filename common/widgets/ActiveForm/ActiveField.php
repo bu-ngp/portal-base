@@ -21,7 +21,10 @@ class ActiveField extends \yii\bootstrap\ActiveField
         $options = empty($options) ? [
             'label' => "<span class=\"control-label\">{$model->getAttributeLabel($attribute)}</span>",
             'labelOptions' => ['class' => 'pmd-checkbox'],
-        ] : $options;
+        ] : array_replace([
+            'label' => "<span class=\"control-label\">{$model->getAttributeLabel($attribute)}</span>",
+            'labelOptions' => ['class' => 'pmd-checkbox'],
+        ], $options);
 
         return parent::checkbox($options, $enclosedByLabel);
     }

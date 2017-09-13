@@ -17,15 +17,10 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Adding existing model.' => '',
-    'Deleting error.' => '',
-    'Deleting error. Child is missed.' => '',
-    'Deleting error. Parent is missed.' => '',
-    'Deleting error. Remove Child Fail.' => '',
-    'Deleting error. Remove Children Fail.' => '',
-    'Deleting error. Remove Role Fail.' => '',
-    'Deleting error. Role \'{role}\' not exists' => '',
-    'Incorrect username or password.' => '',
-    'Saving error.' => '',
-    'unsupported' => '',
+    'Config Ldap Active' => '',
+    'Config Ldap Host' => '',
+    'Config Ldap ID' => '',
+    'Config Ldap Port' => '',
+    'LDAP settings' => '',
+    'Update Ldap Settings' => '',
 ];

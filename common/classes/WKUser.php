@@ -9,6 +9,7 @@
 namespace common\classes;
 
 
+use yii\web\IdentityInterface;
 use yii\web\User;
 
 class WKUser extends User
@@ -18,23 +19,33 @@ class WKUser extends User
         return parent::can($permissionName, $params, $allowCaching) ?: $this->ldapAccess();
     }
 
+    public function login(IdentityInterface $identity, $duration = 0)
+    {
+        return parent::login($identity, $duration) ?: $this->ldapLogin($identity, $duration);
+    }
+
     protected function ldapAccess()
     {
-        $ds=ldap_connect("172.19.17.100");
+        /* $ds=ldap_connect("172.19.17.100");
 
-        if ($ds) {
-            $r=ldap_bind($ds,'sysadmin','test');
+         if ($ds) {
+             $r=ldap_bind($ds,'sysadmin','test');
 
-            $sr=ldap_search($ds,"ou=Administrators,dc=mugp1,dc=local", "cn=sysadmin");
+             $sr=ldap_search($ds,"ou=Administrators,dc=mugp1,dc=local", "cn=sysadmin");
 
-            $result_ent = ldap_get_entries($ds,$sr);
+             $result_ent = ldap_get_entries($ds,$sr);
 
-          //  $a=print_r($result_ent,true);
+           //  $a=print_r($result_ent,true);
 
-        } else {
-            echo "<h4>Невозможно подключиться к серверу LDAP</h4>";
-        }
+         } else {
+             echo "<h4>Невозможно подключиться к серверу LDAP</h4>";
+         }*/
 
         return true;
+    }
+
+    protected function ldapLogin($identity, $duration = 0)
+    {
+        return false;
     }
 }
