@@ -23,11 +23,13 @@ class WKUser extends User
         $ds=ldap_connect("172.19.17.100");
 
         if ($ds) {
-            $r=ldap_bind($ds,'sysadmin','SerGpAdmin');
+            $r=ldap_bind($ds,'sysadmin','test');
 
-            $sr=ldap_search($ds, "DC=mugp1,DC=local", "sn=*");
+            $sr=ldap_search($ds,"ou=Administrators,dc=mugp1,dc=local", "cn=sysadmin");
 
+            $result_ent = ldap_get_entries($ds,$sr);
 
+          //  $a=print_r($result_ent,true);
 
         } else {
             echo "<h4>Невозможно подключиться к серверу LDAP</h4>";
