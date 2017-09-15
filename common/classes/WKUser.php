@@ -21,7 +21,7 @@ class WKUser extends User
 
     public function login(IdentityInterface $identity, $duration = 0)
     {
-        return parent::login($identity, $duration) ?: $this->ldapLogin($identity, $duration);
+        return parent::login($identity, $duration)/* ?: $this->ldapLogin($identity, $duration)*/;
     }
 
     protected function ldapAccess()

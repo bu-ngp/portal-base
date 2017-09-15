@@ -9,6 +9,7 @@
 namespace backend\controllers;
 
 
+use common\widgets\NotifyShower\NotifyShower;
 use domain\forms\base\ConfigLdapUpdateForm;
 use domain\models\base\ConfigLdap;
 use domain\services\base\ConfigLdapService;
@@ -43,6 +44,8 @@ class ConfigLdapController extends Controller
         ) {
             return $this->redirect(['config-auth/index']);
         }
+
+        NotifyShower::serviceMessages($this->configLdapService->getErrors());
 
         return $this->render('update', ['modelForm' => $form]);
     }
