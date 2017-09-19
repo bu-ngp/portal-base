@@ -89,7 +89,7 @@ return [
             'csrfParam' => '_csrf-wk-portal',
         ],
         'user' => [
-            'class' => 'yii\web\User',
+            'class' => 'common\classes\WKUser',
             'identityClass' => 'common\models\base\Person',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-wk-portal', 'httpOnly' => true],

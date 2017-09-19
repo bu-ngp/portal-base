@@ -9,6 +9,8 @@
 namespace common\classes;
 
 
+use yii\db\Query;
+use yii\rbac\DbManager;
 use yii\web\IdentityInterface;
 use yii\web\User;
 
@@ -16,36 +18,56 @@ class WKUser extends User
 {
     public function can($permissionName, $params = [], $allowCaching = true)
     {
-        return parent::can($permissionName, $params, $allowCaching) ?: $this->ldapAccess();
+        return parent::can($permissionName, $params, $allowCaching) ?: $this->canLdap($permissionName);
     }
 
-    public function login(IdentityInterface $identity, $duration = 0)
+    protected function canLdap($permissionName)
     {
-        return parent::login($identity, $duration)/* ?: $this->ldapLogin($identity, $duration)*/;
-    }
+        /*   if ($allowCaching && empty($params) && isset($this->_access[$permissionName])) {
+               return $this->_access[$permissionName];
+           }*/
+        if (($accessChecker = $this->getAccessChecker()) === null && !$accessChecker instanceof DbManager) {
+            return false;
+        }
 
-    protected function ldapAccess()
-    {
-        /* $ds=ldap_connect("172.19.17.100");
+        $access = $this->checkAccessLdap($accessChecker, $this->getId(), $permissionName);
 
-         if ($ds) {
-             $r=ldap_bind($ds,'sysadmin','test');
-
-             $sr=ldap_search($ds,"ou=Administrators,dc=mugp1,dc=local", "cn=sysadmin");
-
-             $result_ent = ldap_get_entries($ds,$sr);
-
-           //  $a=print_r($result_ent,true);
-
-         } else {
-             echo "<h4>Невозможно подключиться к серверу LDAP</h4>";
+        /* if ($allowCaching && empty($params)) {
+             $this->_access[$permissionName] = $access;
          }*/
 
-        return true;
+        return $access;
     }
 
-    protected function ldapLogin($identity, $duration = 0)
+    protected function checkAccessLdap(DbManager $accessChecker, $id, $permissionName)
     {
-        return false;
+      
+    }
+    
+    protected function checkAccessRecursive($user, $itemName, $params, $assignments) {
+        if (($item = $this->getItem($itemName)) === null) {
+            return false;
+        }
+
+        Yii::trace($item instanceof Role ? "Checking role: $itemName" : "Checking permission: $itemName", __METHOD__);
+
+        if (!$this->executeRule($user, $item, $params)) {
+            return false;
+        }
+
+        if (isset($assignments[$itemName]) || in_array($itemName, $this->defaultRoles)) {
+            return true;
+        }
+        
+        $query = new Query;
+        $parents = $query->select(['parent'])
+            ->from($this->itemChildTable)
+            ->where(['child' => $itemName])
+            ->column($this->db);
+        foreach ($parents as $parent) {
+            if ($this->checkAccessRecursive($user, $parent, $params, $assignments)) {
+                return true;
+            }
+        }
     }
 }

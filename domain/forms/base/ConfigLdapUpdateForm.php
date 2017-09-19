@@ -16,6 +16,8 @@ class ConfigLdapUpdateForm extends Model
 {
     public $config_ldap_host;
     public $config_ldap_port;
+    public $config_ldap_admin_login;
+    public $config_ldap_admin_password;
     public $config_ldap_active;
 
     private $configLdap;

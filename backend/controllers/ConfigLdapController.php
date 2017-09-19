@@ -39,6 +39,8 @@ class ConfigLdapController extends Controller
             && $this->configLdapService->update(
                 $form->config_ldap_host,
                 $form->config_ldap_port,
+                $form->config_ldap_admin_login,
+                $form->config_ldap_admin_password,
                 $form->config_ldap_active
             )
         ) {

@@ -16,6 +16,8 @@ class m170913_050424_configLdap extends Migration
             'config_ldap_id' => $this->primaryKey()->unsigned(),
             'config_ldap_host' => $this->string(),
             'config_ldap_port' => $this->integer()->notNull()->unsigned()->defaultValue(389),
+            'config_ldap_admin_login' => $this->string()->notNull()->defaultValue(''),
+            'config_ldap_admin_password' => $this->string()->notNull()->defaultValue(''),
             'config_ldap_active' => $this->boolean()->notNull()->defaultValue(0),
         ], $tableOptions);
 

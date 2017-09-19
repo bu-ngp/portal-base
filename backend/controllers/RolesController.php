@@ -48,7 +48,7 @@ class RolesController extends Controller
                     [
                         'actions' => ['index', 'create', 'update', 'index-for-roles', 'delete-role', 'delete'],
                         'allow' => true,
-                        'roles' => ['baseAdministrator2'],
+                        'roles' => ['baseAdministrator'],
                     ],
                 ],
             ],

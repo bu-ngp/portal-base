@@ -85,6 +85,7 @@ class m130524_201442_init extends Migration
             'name' => $this->string(64)->notNull(),
             'type' => $this->smallInteger()->notNull(),
             'view' => $this->boolean()->notNull()->defaultValue(0),
+            'ldap_group' => $this->string(),
             'description' => $this->text(),
             'rule_name' => $this->string(64),
             'data' => $this->binary(),

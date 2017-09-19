@@ -25,6 +25,8 @@ $this->title = Yii::t('app', 'Update {modelClass}: ', [
 
         <?= $form->field($modelForm, 'description')->textInput(['wkkeep' => true]) ?>
 
+        <?= $form->field($modelForm, 'ldap_group')->textInput(['wkkeep' => true]) ?>
+
         <?php ActiveForm::end(); ?>
 
         <?= $this->render('_grid', [

@@ -111,12 +111,13 @@ class PersonLdap extends Model implements IdentityInterface
     {
         $connection = self::getCachedLdapUser($password, $username);
 
-        $result = ldap_search($connection, 'dc=mugp1,dc=local', "sAMAccountName=$username", [
-            'objectguid',
-            'samaccountname',
-            'displayName',
-            'memberof',
-        ]);
+        $result = ldap_search($connection, 'dc=mugp1,dc=local', /*"memberOf:1.2.840.113556.1.4.1941:=" .*/
+            "sAMAccountName=$username", [
+                'objectguid',
+                'samaccountname',
+                'displayName',
+                'memberof',
+            ]);
 
 
         // Получаем количество результатов предыдущей проверки
@@ -153,11 +154,14 @@ class PersonLdap extends Model implements IdentityInterface
             self::$username = null;
 
             $configLdap = ConfigLdap::findOne(1);
+            $domainMachine = gethostbyaddr($configLdap->config_ldap_host);
+            $domain = count(($domainArray = explode('.', $domainMachine))) >= 3 ? $domainArray[1] . '\\' : '';
+
             $connection = ldap_connect($configLdap->config_ldap_host, $configLdap->config_ldap_port);
             ldap_set_option($connection, LDAP_OPT_REFERRALS, 0);
             ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3);
 
-            if (ldap_bind($connection, "mugp1\\$username", $password)) {
+            if (ldap_bind($connection, $domain . $username, $password)) {
                 self::$ldapConn = $connection;
                 self::$username = $username;
             }

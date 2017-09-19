@@ -2,6 +2,7 @@
 
 namespace common\models\base;
 
+use common\classes\Ldap;
 use domain\models\base\AuthAssignment;
 use domain\models\base\AuthItem;
 use wartron\yii2uuid\helpers\Uuid;
@@ -29,6 +30,8 @@ use yii\web\IdentityInterface;
  */
 class Person extends \yii\db\ActiveRecord implements IdentityInterface
 {
+    public $person_ldap_groups = [];
+
     /**
      * @inheritdoc
      */
@@ -104,8 +107,14 @@ class Person extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
+        $user = static::findOne($id);
+
+        if (!$user) {
+            $user = Ldap::adminConnect()->find($id);
+        }
+
         //   return static::findOne(Uuid::str2uuid($id));
-        return static::findOne($id);
+        return $user;
     }
 
     /**
@@ -167,9 +176,21 @@ class Person extends \yii\db\ActiveRecord implements IdentityInterface
      * @param string $username
      * @return static|null
      */
-    public static function findByUsername($username)
+    public static function findByUsername($username, $password)
     {
-        return static::findOne(['person_username' => $username]);
+        $user = static::findOne(['person_username' => $username]);
+
+        if ($user && Yii::$app->security->validatePassword($password, $user->person_password_hash)) {
+            return $user;
+        }
+
+        $user = Ldap::userConnect($username, $password)->findByUser($username);
+
+        if ($user) {
+            return $user;
+        }
+
+        return null;
     }
 
     /**

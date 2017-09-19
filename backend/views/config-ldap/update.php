@@ -25,6 +25,10 @@ $this->title = Yii::t('common/config-ldap', 'Update Ldap Settings');
 
         <?= $form->field($modelForm, 'config_ldap_port')->textInput(['wkkeep' => true]) ?>
 
+        <?= $form->field($modelForm, 'config_ldap_admin_login')->textInput(['wkkeep' => true]) ?>
+
+        <?= $form->field($modelForm, 'config_ldap_admin_password')->passwordInput() ?>
+
         <?= $form->field($modelForm, 'config_ldap_active')->checkbox(['wkkeep' => true]) ?>
 
         <div class="form-group">

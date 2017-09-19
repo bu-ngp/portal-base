@@ -12,6 +12,7 @@ namespace domain\services\base;
 use domain\exceptions\ServiceErrorsException;
 use domain\repositories\base\ConfigLdapRepository;
 use domain\services\BaseService;
+use Yii;
 
 class ConfigLdapService extends BaseService
 {
@@ -26,14 +27,14 @@ class ConfigLdapService extends BaseService
         parent::__construct();
     }
 
-    public function update($ldapHost, $ldapPort = 389, $ldapActive = false)
+    public function update($ldapHost, $ldapPort = 389, $ldapAdminLogin, $ldapAdminPassword, $ldapActive = false)
     {
         if ($ds = ldap_connect($ldapHost, $ldapPort)) {
             try {
-                if (ldap_bind($ds)) {
+                if (ldap_bind($ds, $ldapAdminLogin, $ldapAdminPassword)) {
                     ldap_close($ds);
                     $configLdap = $this->configLdapRepository->find();
-                    $configLdap->editData($ldapHost, $ldapPort, $ldapActive);
+                    $configLdap->editData($ldapHost, $ldapPort, $ldapAdminLogin, $ldapAdminPassword, $ldapActive);
                     $this->configLdapRepository->save($configLdap);
                 } else {
                     throw new ServiceErrorsException('notifyShower', \Yii::t('common/config-ldap', "LDAP can't connect"));
