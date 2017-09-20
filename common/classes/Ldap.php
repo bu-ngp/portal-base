@@ -19,7 +19,12 @@ class Ldap
     const ADMIN = 'admin';
     const USER = 'user';
 
-    private $ldapConn;
+    private $_ldapConn;
+
+    public function __construct($type, $username = null, $password = null)
+    {
+        $this->_ldapConn = $this->getConnection($type, $username, $password);
+    }
 
     public static function adminConnect()
     {
@@ -31,9 +36,77 @@ class Ldap
         return new self(Ldap::USER, $username, $password);
     }
 
-    public function __construct($type, $username = null, $password = null)
+    public static function getDomain($host)
     {
-        $this->ldapConn = $this->getConnection($type, $username, $password);
+        $domainMachine = gethostbyaddr($host);
+        $domainArray = explode('.', $domainMachine);
+
+        unset($domainArray[count($domainArray) - 1]);
+        unset($domainArray[0]);
+
+        if ($domainArray) {
+            return implode('.', $domainArray) . '\\';
+        }
+
+        return '';
+    }
+
+    public function find($id)
+    {
+        $id = $this->idConvert($id);
+
+        $result = ldap_search($this->_ldapConn, $this->getBaseDN(), "objectGUID=$id", [
+            'objectguid',
+            'samaccountname',
+            'displayName',
+            'mail',
+            'memberof',
+        ]);
+
+        // Получаем количество результатов предыдущей проверки
+        $result_ent = ldap_get_entries($this->_ldapConn, $result);
+        $result_ent = $this->getResult($result_ent);
+
+        if ($result_ent) {
+            return new Person([
+                'person_id' => $result_ent[0]['objectguid'],
+                'person_fullname' => $result_ent[0]['displayname'],
+                'person_username' => $result_ent[0]['samaccountname'],
+                'person_email' => $result_ent[0]['mail'],
+                'person_auth_key' => Uuid::uuid2str($result_ent[0]['objectguid']),
+                'person_ldap_groups' => $this->getGroups($result_ent[0]['memberof']),
+            ]);
+        }
+
+        return null;
+    }
+
+    public function findByUser($username)
+    {
+        $result = ldap_search($this->_ldapConn, $this->getBaseDN(), "sAMAccountName=$username", [
+            'objectguid',
+            'samaccountname',
+            'displayName',
+            'mail',
+            'memberof',
+        ]);
+
+        // Получаем количество результатов предыдущей проверки
+        $result_ent = ldap_get_entries($this->_ldapConn, $result);
+        $result_ent = $this->getResult($result_ent);
+
+        if ($result_ent) {
+            return new Person([
+                'person_id' => $result_ent[0]['objectguid'],
+                'person_fullname' => $result_ent[0]['displayname'],
+                'person_username' => $result_ent[0]['samaccountname'],
+                'person_email' => $result_ent[0]['mail'],
+                'person_auth_key' => Uuid::uuid2str($result_ent[0]['objectguid']),
+                'person_ldap_groups' => $this->getGroups($result_ent[0]['memberof']),
+            ]);
+        }
+
+        return null;
     }
 
     protected function getConnection($type, $username = null, $password = null)
@@ -60,80 +133,6 @@ class Ldap
             default:
                 throw new \Exception('Error Connection');
         }
-    }
-
-    public static function getDomain($host)
-    {
-        $domainMachine = gethostbyaddr($host);
-        $domainArray = explode('.', $domainMachine);
-
-        unset($domainArray[count($domainArray) - 1]);
-        unset($domainArray[0]);
-
-        if ($domainArray) {
-            return implode('.', $domainArray) . '\\';
-        }
-
-        return '';
-    }
-
-    public function find($id)
-    {
-        $id = $this->idConvert($id);
-
-        $result = ldap_search($this->ldapConn, 'dc=mugp1,dc=local', "objectGUID=$id", [
-            'objectguid',
-            'samaccountname',
-            'displayName',
-            'mail',
-            'memberof',
-        ]);
-
-
-        // Получаем количество результатов предыдущей проверки
-        $result_ent = ldap_get_entries($this->ldapConn, $result);
-        $result_ent = $this->getResult($result_ent);
-
-        if ($result_ent) {
-            return new Person([
-                'person_id' => $result_ent[0]['objectguid'],
-                'person_fullname' => $result_ent[0]['displayname'],
-                'person_username' => $result_ent[0]['samaccountname'],
-                'person_email' => $result_ent[0]['mail'],
-                'person_auth_key' => Uuid::uuid2str($result_ent[0]['objectguid']),
-                'person_ldap_groups' => $this->getGroups($result_ent[0]['memberof']),
-            ]);
-        }
-
-        return null;
-    }
-
-    public function findByUser($username)
-    {
-        $result = ldap_search($this->ldapConn, 'dc=mugp1,dc=local', "sAMAccountName=$username", [
-            'objectguid',
-            'samaccountname',
-            'displayName',
-            'mail',
-            'memberof',
-        ]);
-
-        // Получаем количество результатов предыдущей проверки
-        $result_ent = ldap_get_entries($this->ldapConn, $result);
-        $result_ent = $this->getResult($result_ent);
-
-        if ($result_ent) {
-            return new Person([
-                'person_id' => $result_ent[0]['objectguid'],
-                'person_fullname' => $result_ent[0]['displayname'],
-                'person_username' => $result_ent[0]['samaccountname'],
-                'person_email' => $result_ent[0]['mail'],
-                'person_auth_key' => Uuid::uuid2str($result_ent[0]['objectguid']),
-                'person_ldap_groups' => $this->getGroups($result_ent[0]['memberof']),
-            ]);
-        }
-
-        return null;
     }
 
     protected function idConvert($id)
@@ -165,10 +164,25 @@ class Ldap
         return $ldapResult;
     }
 
-    protected function getGroups($memberOf)
+    protected function getGroups(array $memberOf)
     {
         return array_map(function ($group) {
             return preg_replace('/CN=(.*?),.*/', '$1', $group);
         }, $memberOf);
+    }
+
+    protected function getBaseDN()
+    {
+        $configLdap = ConfigLdap::findOne(1);
+        $domainMachine = gethostbyaddr($configLdap->config_ldap_host);
+        $domainArray = explode('.', $domainMachine);
+
+        unset($domainArray[0]);
+
+        if ($domainArray) {
+            return 'dc=' . implode(',dc=', $domainArray);
+        }
+
+        return '';
     }
 }
