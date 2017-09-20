@@ -56,12 +56,17 @@ class ConfigLdap extends \yii\db\ActiveRecord
         ];
     }
 
-    public function editData($config_ldap_host, $config_ldap_port, $config_ldap_active, $config_ldap_admin_login, $config_ldap_admin_password)
+    public function editData($config_ldap_host, $config_ldap_port, $config_ldap_admin_login, $config_ldap_admin_password, $config_ldap_active)
     {
         $this->config_ldap_host = $config_ldap_host;
         $this->config_ldap_port = $config_ldap_port;
         $this->config_ldap_admin_login = $config_ldap_admin_login;
-        $this->config_ldap_admin_password = Yii::$app->security->generatePasswordHash($config_ldap_admin_password);
+        $this->config_ldap_admin_password = Yii::$app->security->encryptByPassword($config_ldap_admin_password, Yii::$app->request->cookieValidationKey);
         $this->config_ldap_active = $config_ldap_active;
+    }
+
+    public static function isLdapActive()
+    {
+        return self::findOne(1)->config_ldap_active;
     }
 }

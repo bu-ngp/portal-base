@@ -5,7 +5,8 @@ namespace common\models\base;
 use common\classes\Ldap;
 use domain\models\base\AuthAssignment;
 use domain\models\base\AuthItem;
-use wartron\yii2uuid\helpers\Uuid;
+use domain\models\base\ConfigLdap;
+use Exception;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\debug\models\search\Profile;
@@ -30,6 +31,9 @@ use yii\web\IdentityInterface;
  */
 class Person extends \yii\db\ActiveRecord implements IdentityInterface
 {
+    /**
+     * @var array Группы LDAP доменного пользователя, проверяются в common\classes\WKUser
+     */
     public $person_ldap_groups = [];
 
     /**
@@ -109,11 +113,14 @@ class Person extends \yii\db\ActiveRecord implements IdentityInterface
     {
         $user = static::findOne($id);
 
-        if (!$user) {
-            $user = Ldap::adminConnect()->find($id);
+        if (!$user && ConfigLdap::isLdapActive()) {
+            try {
+                $user = Ldap::adminConnect()->find($id);
+            } catch (Exception $e) {
+                return null;
+            }
         }
 
-        //   return static::findOne(Uuid::str2uuid($id));
         return $user;
     }
 
@@ -136,7 +143,6 @@ class Person extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function getId()
     {
-        //  return Uuid::uuid2str($this->getPrimaryKey());
         return $this->getPrimaryKey();
     }
 
@@ -174,7 +180,7 @@ class Person extends \yii\db\ActiveRecord implements IdentityInterface
      * Finds user by username
      *
      * @param string $username
-     * @return static|null
+     * @return Person|null
      */
     public static function findByUsername($username, $password)
     {
@@ -184,23 +190,18 @@ class Person extends \yii\db\ActiveRecord implements IdentityInterface
             return $user;
         }
 
-        $user = Ldap::userConnect($username, $password)->findByUser($username);
+        if (ConfigLdap::isLdapActive()) {
+            try {
+                $user = Ldap::userConnect($username, $password)->findByUser($username);
+            } catch (Exception $e) {
+                return null;
+            }
+        }
 
         if ($user) {
             return $user;
         }
 
         return null;
-    }
-
-    /**
-     * Validates password
-     *
-     * @param string $password password to validate
-     * @return bool if password provided is valid for current user
-     */
-    public function validatePassword($password)
-    {
-        return Yii::$app->security->validatePassword($password, $this->person_password_hash);
     }
 }

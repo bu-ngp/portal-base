@@ -9,6 +9,7 @@
 
 namespace domain\services\base;
 
+use common\classes\Ldap;
 use domain\exceptions\ServiceErrorsException;
 use domain\repositories\base\ConfigLdapRepository;
 use domain\services\BaseService;
@@ -29,9 +30,14 @@ class ConfigLdapService extends BaseService
 
     public function update($ldapHost, $ldapPort = 389, $ldapAdminLogin, $ldapAdminPassword, $ldapActive = false)
     {
+        $domain = Ldap::getDomain($ldapHost);
+
         if ($ds = ldap_connect($ldapHost, $ldapPort)) {
+            ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
+            ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+
             try {
-                if (ldap_bind($ds, $ldapAdminLogin, $ldapAdminPassword)) {
+                if (ldap_bind($ds, $domain . $ldapAdminLogin, $ldapAdminPassword)) {
                     ldap_close($ds);
                     $configLdap = $this->configLdapRepository->find();
                     $configLdap->editData($ldapHost, $ldapPort, $ldapAdminLogin, $ldapAdminPassword, $ldapActive);

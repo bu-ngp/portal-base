@@ -24,7 +24,7 @@ class AuthItemSearch extends AuthItem
     public function rules()
     {
         return [
-            [['name', 'description', 'rule_name', 'data', 'updated_at'], 'safe'],
+            [['name', 'description', 'ldap_group', 'rule_name', 'data', 'updated_at'], 'safe'],
             [['type', 'view', 'created_at'], 'integer'],
         ];
     }
@@ -166,6 +166,7 @@ class AuthItemSearch extends AuthItem
         ]);
 
         $query->andFilterWhere(['like', 'description', $this->description]);
+        $query->andFilterWhere(['like', 'ldap_group', $this->ldap_group, false]);
 
         return $dataProvider;
     }
@@ -201,6 +202,7 @@ class AuthItemSearch extends AuthItem
         ]);
 
         $query->andFilterWhere(['like', 'description', $this->description]);
+        $query->andFilterWhere(['like', 'ldap_group', $this->ldap_group, false]);
 
         return $dataProvider;
     }

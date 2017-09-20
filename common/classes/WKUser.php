@@ -9,65 +9,122 @@
 namespace common\classes;
 
 
+use wartron\yii2uuid\helpers\Uuid;
+use Yii;
+use yii\base\InvalidValueException;
 use yii\db\Query;
 use yii\rbac\DbManager;
+use yii\web\Cookie;
 use yii\web\IdentityInterface;
 use yii\web\User;
 
 class WKUser extends User
 {
+    public $identityLdapGroupProperty;
+
+    private $_accessLdap;
+
     public function can($permissionName, $params = [], $allowCaching = true)
     {
-        return parent::can($permissionName, $params, $allowCaching) ?: $this->canLdap($permissionName);
+        return parent::can($permissionName, $params, $allowCaching) ?: $this->canLdap($permissionName, $allowCaching);
     }
 
-    protected function canLdap($permissionName)
+    protected function canLdap($permissionName, $allowCaching = true)
     {
-        /*   if ($allowCaching && empty($params) && isset($this->_access[$permissionName])) {
-               return $this->_access[$permissionName];
-           }*/
+        if ($allowCaching && isset($this->_accessLdap[$permissionName])) {
+            return $this->_accessLdap[$permissionName];
+        }
+
         if (($accessChecker = $this->getAccessChecker()) === null && !$accessChecker instanceof DbManager) {
             return false;
         }
 
-        $access = $this->checkAccessLdap($accessChecker, $this->getId(), $permissionName);
+        $access = $this->checkAccessLdap($accessChecker, $permissionName);
 
-        /* if ($allowCaching && empty($params)) {
-             $this->_access[$permissionName] = $access;
-         }*/
+        if ($allowCaching && empty($params)) {
+            $this->_accessLdap[$permissionName] = $access;
+        }
 
         return $access;
     }
 
-    protected function checkAccessLdap(DbManager $accessChecker, $id, $permissionName)
+    protected function checkAccessLdap(DbManager $accessChecker, $permissionName)
     {
-      
+        $AuthItem = (new Query)
+            ->select(['ldap_group'])
+            ->from($accessChecker->itemTable)
+            ->where(['name' => $permissionName])
+            ->one($accessChecker->db);
+
+        if (!($this->identityLdapGroupProperty
+            || property_exists(Yii::$app->user->identity, $this->identityLdapGroupProperty)
+            || Yii::$app->user->identity->{$this->identityLdapGroupProperty})
+        ) {
+            return false;
+        }
+
+        return $this->checkAccessLdapRecursive($accessChecker, $permissionName, $AuthItem['ldap_group']);
     }
-    
-    protected function checkAccessRecursive($user, $itemName, $params, $assignments) {
-        if (($item = $this->getItem($itemName)) === null) {
-            return false;
-        }
 
-        Yii::trace($item instanceof Role ? "Checking role: $itemName" : "Checking permission: $itemName", __METHOD__);
+    protected function checkAccessLdapRecursive(DbManager $accessChecker, $itemName, $ldap_group)
+    {
+        $groups = Yii::$app->user->identity->{$this->identityLdapGroupProperty};
 
-        if (!$this->executeRule($user, $item, $params)) {
-            return false;
-        }
-
-        if (isset($assignments[$itemName]) || in_array($itemName, $this->defaultRoles)) {
+        if ($groups && in_array($ldap_group, $groups)) {
             return true;
         }
-        
-        $query = new Query;
-        $parents = $query->select(['parent'])
-            ->from($this->itemChildTable)
+
+        $parents = (new Query)
+            ->select(['parent', 'ldap_group'])
+            ->from($accessChecker->itemChildTable)
+            ->innerJoin($accessChecker->itemTable, "{$accessChecker->itemTable}.name = {$accessChecker->itemChildTable}.parent")
             ->where(['child' => $itemName])
-            ->column($this->db);
+            ->all($accessChecker->db);
+
         foreach ($parents as $parent) {
-            if ($this->checkAccessRecursive($user, $parent, $params, $assignments)) {
+            if ($this->checkAccessLdapRecursive($accessChecker, $parent['parent'], $parent['ldap_group'])) {
                 return true;
             }
         }
+
+        return false;
+    }
+
+    protected function sendIdentityCookie($identity, $duration)
+    {
+        $cookie = new Cookie($this->identityCookie);
+        $cookie->value = json_encode([
+            Uuid::uuid2str($identity->getId()), // Binary to String
+            $identity->getAuthKey(),
+            $duration,
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        $cookie->expire = time() + $duration;
+        Yii::$app->getResponse()->getCookies()->add($cookie);
+    }
+
+    protected function getIdentityAndDurationFromCookie()
+    {
+        $value = Yii::$app->getRequest()->getCookies()->getValue($this->identityCookie['name']);
+        if ($value === null) {
+            return null;
+        }
+        $data = json_decode($value, true);
+        if (count($data) == 3) {
+            list ($id, $authKey, $duration) = $data;
+            /* @var $class IdentityInterface */
+            $class = $this->identityClass;
+            $identity = $class::findIdentity(Uuid::str2uuid($id)); // String to Binary
+            if ($identity !== null) {
+                if (!$identity instanceof IdentityInterface) {
+                    throw new InvalidValueException("$class::findIdentity() must return an object implementing IdentityInterface.");
+                } elseif (!$identity->validateAuthKey($authKey)) {
+                    Yii::warning("Invalid auth key attempted for user '$id': $authKey", __METHOD__);
+                } else {
+                    return ['identity' => $identity, 'duration' => $duration];
+                }
+            }
+        }
+        $this->removeIdentityCookie();
+        return null;
     }
 }

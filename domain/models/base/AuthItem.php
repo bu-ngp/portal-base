@@ -15,6 +15,7 @@ use yii\db\Query;
  * @property integer $type
  * @property integer $view
  * @property string $description
+ * @property string $ldap_group
  * @property string $rule_name
  * @property resource $data
  * @property integer $created_at
@@ -47,7 +48,7 @@ class AuthItem extends \yii\db\ActiveRecord
         return [
             [['name', 'type', 'created_at', 'updated_at'], 'required'],
             [['type', 'view', 'created_at', 'updated_at'], 'integer'],
-            [['description', 'data'], 'string'],
+            [['description', 'data', 'ldap_group'], 'string'],
             [['name', 'rule_name'], 'string', 'max' => 64],
             //    [['rule_name'], 'exist', 'skipOnError' => true, 'targetClass' => AuthRule::className(), 'targetAttribute' => ['rule_name' => 'name']],
         ];
@@ -63,6 +64,7 @@ class AuthItem extends \yii\db\ActiveRecord
             'type' => Yii::t('domain/authitem', 'Type'),
             'view' => Yii::t('domain/authitem', 'View'),
             'description' => Yii::t('domain/authitem', 'Description'),
+            'ldap_group' => Yii::t('domain/authitem', 'Ldap Group'),
             'rule_name' => Yii::t('domain/authitem', 'Rule Name'),
             'data' => Yii::t('domain/authitem', 'Data'),
             'created_at' => Yii::t('domain/authitem', 'Created At'),
@@ -70,19 +72,22 @@ class AuthItem extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function create($name, $description, $type)
+    public static function create($name, $description, $ldapGroup, $type)
     {
         $authItem = new self([
             'name' => $name,
             'description' => $description,
-            'type' => $type
+            'ldap_group' => $ldapGroup,
+            'type' => $type,
         ]);
+
         return $authItem;
     }
 
-    public function rename($description)
+    public function editData($description, $ldapGroup)
     {
         $this->description = $description;
+        $this->ldap_group = $ldapGroup;
     }
 
     /**

@@ -35,4 +35,11 @@ class ActiveField extends \yii\bootstrap\ActiveField
 
         return parent::textInput($options);
     }
+
+    public function passwordInput($options = [])
+    {
+        $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield pmd-textfield-floating-label' : 'form-group pmd-textfield pmd-textfield-floating-label';
+
+        return parent::passwordInput($options);
+    }
 }

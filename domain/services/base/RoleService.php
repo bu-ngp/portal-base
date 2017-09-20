@@ -41,12 +41,13 @@ class RoleService extends BaseService
      *
      * @param string $name Уникальное имя роли
      * @param string $description Название роли
+     * @param string $ldapGroup Группа LDAP
      * @param integer $type
      * @param string $assignedKeys массив с первичными ключами выбранных записей
      * @return bool
      * @throws \Exception
      */
-    public function create($name, $description, $type, $assignedKeys)
+    public function create($name, $description, $ldapGroup, $type, $assignedKeys)
     {
         if (!is_string($assignedKeys) || ($assignedKeys = json_decode($assignedKeys)) === null) {
             throw new ServiceErrorsException('assignRoles', \Yii::t('common/roles', 'Error when recognizing selected items'));
@@ -56,7 +57,7 @@ class RoleService extends BaseService
             throw new ServiceErrorsException('notifyShower', \Yii::t('common/roles', 'Need add roles'));
         }
 
-        $authItem = AuthItem::create($name, $description, $type);
+        $authItem = AuthItem::create($name, $description, $ldapGroup, $type);
         $authItemChild = AuthItemChild::create($authItem, $assignedKeys);
 
         $this->transactionManager->execute(function () use ($authItem, $authItemChild) {
@@ -72,9 +73,10 @@ class RoleService extends BaseService
      *
      * @param string $id Идентификатор обновляемой роли
      * @param string $description Новое название роли
+     * @param string $ldapGroup Группа LDAP
      * @return bool
      */
-    public function update($id, $description)
+    public function update($id, $description, $ldapGroup)
     {
         $authItem = $this->roleRepository->find($id);
 
@@ -82,7 +84,7 @@ class RoleService extends BaseService
             throw new ServiceErrorsException('notifyShower', \Yii::t('common/roles', 'Need add roles'));
         }
 
-        $authItem->rename($description);
+        $authItem->editData($description, $ldapGroup);
         $this->roleRepository->save($authItem);
 
         return true;

@@ -39,15 +39,16 @@ class Ldap
     protected function getConnection($type, $username = null, $password = null)
     {
         $configLdap = ConfigLdap::findOne(1);
-        $domain = $this->getDomain($configLdap->config_ldap_host);
+        $domain = self::getDomain($configLdap->config_ldap_host);
 
         $connection = ldap_connect($configLdap->config_ldap_host, $configLdap->config_ldap_port);
         ldap_set_option($connection, LDAP_OPT_REFERRALS, 0);
         ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3);
 
+
         switch ($type) {
             case Ldap::ADMIN:
-                if (ldap_bind($connection, $domain . $configLdap->config_ldap_admin_login, $configLdap->config_ldap_admin_password)) {
+                if (ldap_bind($connection, $domain . $configLdap->config_ldap_admin_login, Yii::$app->security->decryptByPassword($configLdap->config_ldap_admin_password, Yii::$app->request->cookieValidationKey))) {
                     return $connection;
                 }
                 break;
@@ -61,7 +62,7 @@ class Ldap
         }
     }
 
-    protected function getDomain($host)
+    public static function getDomain($host)
     {
         $domainMachine = gethostbyaddr($host);
         $domainArray = explode('.', $domainMachine);
@@ -84,6 +85,7 @@ class Ldap
             'objectguid',
             'samaccountname',
             'displayName',
+            'mail',
             'memberof',
         ]);
 
@@ -97,6 +99,7 @@ class Ldap
                 'person_id' => $result_ent[0]['objectguid'],
                 'person_fullname' => $result_ent[0]['displayname'],
                 'person_username' => $result_ent[0]['samaccountname'],
+                'person_email' => $result_ent[0]['mail'],
                 'person_auth_key' => Uuid::uuid2str($result_ent[0]['objectguid']),
                 'person_ldap_groups' => $this->getGroups($result_ent[0]['memberof']),
             ]);
@@ -111,6 +114,7 @@ class Ldap
             'objectguid',
             'samaccountname',
             'displayName',
+            'mail',
             'memberof',
         ]);
 
@@ -123,6 +127,7 @@ class Ldap
                 'person_id' => $result_ent[0]['objectguid'],
                 'person_fullname' => $result_ent[0]['displayname'],
                 'person_username' => $result_ent[0]['samaccountname'],
+                'person_email' => $result_ent[0]['mail'],
                 'person_auth_key' => Uuid::uuid2str($result_ent[0]['objectguid']),
                 'person_ldap_groups' => $this->getGroups($result_ent[0]['memberof']),
             ]);

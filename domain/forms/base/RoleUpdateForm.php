@@ -15,6 +15,7 @@ use yii\base\Model;
 class RoleUpdateForm extends Model
 {
     public $description;
+    public $ldap_group;
 
     private $authItem;
 
@@ -32,6 +33,7 @@ class RoleUpdateForm extends Model
     {
         return [
             [['description'], 'required'],
+            [['ldap_group'], 'string'],
         ];
     }
 
@@ -39,6 +41,7 @@ class RoleUpdateForm extends Model
     {
         return [
             'description' => Yii::t('common/authitem', 'Description'),
+            'ldap_group' => Yii::t('domain/authitem', 'Ldap Group'),
         ];
     }
 

@@ -20,6 +20,8 @@ $this->title = Yii::t('common/authitem', 'Create Auth Item');
 
         <?= $form->field($modelForm, 'description')->textInput(['wkkeep' => true]) ?>
 
+        <?= $form->field($modelForm, 'ldap_group')->textInput(['wkkeep' => true]) ?>
+
         <?= $form->field($modelForm, 'assignRoles', ['enableClientValidation' => false])->hiddenInput()->label(false) ?>
 
         <?php ActiveForm::end(); ?>

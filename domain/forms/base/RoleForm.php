@@ -16,6 +16,7 @@ class RoleForm extends Model
 {
     public $name;
     public $description;
+    public $ldap_group;
     public $type;
     public $assignRoles;
 
@@ -35,7 +36,8 @@ class RoleForm extends Model
     {
         return [
             [['description', 'assignRoles', 'type', 'name'], 'required'],
-        //    [['assignRoles'], 'compare', 'compareValue' => '[]', 'operator' => '!=', 'message' => Yii::t('common/roles', 'Need add roles')],
+            [['ldap_group'], 'string'],
+            //    [['assignRoles'], 'compare', 'compareValue' => '[]', 'operator' => '!=', 'message' => Yii::t('common/roles', 'Need add roles')],
         ];
     }
 
@@ -43,7 +45,8 @@ class RoleForm extends Model
     {
         return [
             'description' => Yii::t('common/authitem', 'Description'),
-          //  'assignRoles' => Yii::t('common/authitem', 'Assign Roles'),
+            'ldap_group' => Yii::t('domain/authitem', 'Ldap Group'),
+            //  'assignRoles' => Yii::t('common/authitem', 'Assign Roles'),
         ];
     }
 }

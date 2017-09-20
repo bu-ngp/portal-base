@@ -25,21 +25,4 @@ class PersonService extends BaseService
         parent::__construct();
     }
 
-    /**
-     * Logs in a user using the provided username and password.
-     * @param $person_username
-     * @param $person_password
-     * @param bool $rememberMe
-     * @return bool whether the user is logged in successfully
-     */
-    public function login($person_username, $person_password, $rememberMe = true)
-    {
-        return $this->personRepository->login($person_username, $person_password, $rememberMe);
-    }
-
-    public function logout()
-    {
-        return $this->personRepository->logout();
-    }
-
 }

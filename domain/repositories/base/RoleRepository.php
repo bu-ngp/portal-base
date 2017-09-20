@@ -12,6 +12,7 @@ use domain\models\base\AuthItem;
 use domain\repositories\RepositoryInterface;
 use RuntimeException;
 use Yii;
+use yii\db\Query;
 
 class RoleRepository implements RepositoryInterface
 {
@@ -65,6 +66,8 @@ class RoleRepository implements RepositoryInterface
         if (!Yii::$app->authManager->add($role)) {
             throw new RuntimeException('Saving error.');
         }
+
+        AuthItem::updateAll(['ldap_group' => $authitem->ldap_group], ['name' => $authitem->name]);
     }
 
     /**
@@ -81,6 +84,8 @@ class RoleRepository implements RepositoryInterface
         if (!Yii::$app->authManager->update($authitem->primaryKey, $role)) {
             throw new RuntimeException('Saving error.');
         }
+
+        AuthItem::updateAll(['ldap_group' => $authitem->ldap_group], ['name' => $authitem->name]);
     }
 
     /**

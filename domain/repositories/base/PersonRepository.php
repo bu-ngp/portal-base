@@ -60,33 +60,4 @@ class PersonRepository implements RepositoryInterface
             throw new \RuntimeException(Yii::t('domain/base', 'Deleting error.'));
         }
     }
-
-    public function login($person_username, $person_password, $rememberMe = true)
-    {
-        $person = $this->getPerson($person_username);
-        if (!$person || !$person->validatePassword($person_password)) {
-            throw new ServiceErrorsException('person_password', Yii::t('domain/base', 'Incorrect username or password.'));
-        }
-
-        return Yii::$app->user->login($person, $rememberMe ? 3600 * 24 * 30 : 0);
-    }
-
-    /**
-     * Finds user by [[username]]
-     *
-     * @return Person|null
-     */
-    protected function getPerson($person_username)
-    {
-        if ($this->_person === null) {
-            $this->_person = Person::findByUsername($person_username);
-        }
-
-        return $this->_person;
-    }
-
-    public function logout()
-    {
-        Yii::$app->user->logout();
-    }
 }

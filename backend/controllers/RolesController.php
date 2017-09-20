@@ -48,7 +48,7 @@ class RolesController extends Controller
                     [
                         'actions' => ['index', 'create', 'update', 'index-for-roles', 'delete-role', 'delete'],
                         'allow' => true,
-                        'roles' => ['baseAdministrator'],
+                        'roles' => ['dolzhEdit'],
                     ],
                 ],
             ],
@@ -99,6 +99,7 @@ class RolesController extends Controller
             && $this->roleService->create(
                 $form->name,
                 $form->description,
+                $form->ldap_group,
                 $form->type,
                 $form->assignRoles
             )
@@ -131,7 +132,8 @@ class RolesController extends Controller
         if ($form->load(Yii::$app->request->post()) && $form->validate()
             && $this->roleService->update(
                 $roleModel->primaryKey,
-                $form->description
+                $form->description,
+                $form->ldap_group
             )
         ) {
             return $this->redirect(['index']);
