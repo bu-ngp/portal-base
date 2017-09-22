@@ -15,7 +15,7 @@ $this->title = Yii::t('common/config', 'Portal configuration');
                     'FAIcon' => 'list-alt',
                 ],
                 'title' => Yii::t('common/config', 'Authorization'),
-                'link' => Yii::$app->urlManager->createUrl(['config-auth']),
+                'link' => Yii::$app->urlManager->createUrl(['configuration/config-auth']),
             ],
         ],
     ])

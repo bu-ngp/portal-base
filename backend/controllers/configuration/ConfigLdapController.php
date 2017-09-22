@@ -6,7 +6,7 @@
  * Time: 10:31
  */
 
-namespace backend\controllers;
+namespace backend\controllers\configuration;
 
 
 use common\widgets\NotifyShower\NotifyShower;
@@ -44,7 +44,7 @@ class ConfigLdapController extends Controller
                 $form->config_ldap_active
             )
         ) {
-            return $this->redirect(['config-auth/index']);
+            return $this->redirect(['configuration/config-auth/index']);
         }
 
         $form->config_ldap_admin_password = NULL;

@@ -1,21 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: VOVANCHO
- * Date: 12.05.2017
- * Time: 19:08
- */
-namespace console\controllers;
 
 use common\models\base\Person;
 use console\helpers\RbacHelper;
 use domain\models\base\AuthItem;
-use Yii;
-use yii\console\Controller;
+use yii\db\Migration;
 
-class RbacController extends Controller
+class m170922_104145_rbac extends Migration
 {
-    public function actionInit()
+    public function safeUp()
     {
         $userOperator = RbacHelper::createRole(RbacHelper::USER_OPERATOR, 'Оператор менеджера пользователей',
             RbacHelper::createPermission(RbacHelper::USER_EDIT, 'Редактирование пользователей'));
@@ -52,5 +44,11 @@ class RbacController extends Controller
         }
 
         AuthItem::updateAll(['view' => 1], ['not', ['name' => 'Administrator']]);
+    }
+
+    public function safeDown()
+    {
+        $auth = Yii::$app->authManager;
+        $auth->removeAll();
     }
 }

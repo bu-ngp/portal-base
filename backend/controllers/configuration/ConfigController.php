@@ -6,7 +6,7 @@
  * Time: 10:19
  */
 
-namespace backend\controllers;
+namespace backend\controllers\configuration;
 
 
 use yii\web\Controller;

@@ -9,7 +9,7 @@
 namespace console\controllers;
 
 
-use domain\proc\models\ReportLoader;
+use common\widgets\ReportLoader\models\ReportLoader;
 use yii\console\Controller;
 
 class ReportloaderController extends Controller

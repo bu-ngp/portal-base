@@ -16,7 +16,7 @@ $this->title = Yii::t('common/config', 'Authorization');
                 ],
                 'title' => Yii::t('common/roles', 'Roles'),
                 'description' => 'Создание и редактирование ролей в системе',
-                'link' => Yii::$app->urlManager->createUrl(['roles']),
+                'link' => Yii::$app->urlManager->createUrl(['configuration/roles']),
             ],
             [
                 'styleClass' => CardList::RED_STYLE,
@@ -24,7 +24,16 @@ $this->title = Yii::t('common/config', 'Authorization');
                     'FAIcon' => 'list-alt',
                 ],
                 'title' => Yii::t('common/config-ldap', 'LDAP settings'),
-                'link' => Yii::$app->urlManager->createUrl(['config-ldap/update']),
+                'link' => Yii::$app->urlManager->createUrl(['configuration/config-ldap/update']),
+            ],
+            [
+                'styleClass' => CardList::GREEN_STYLE,
+                'preview' => [
+                    'FAIcon' => 'list-alt',
+                ],
+                'title' => Yii::t('common/config-ldap', 'Users of system'),
+                'description' => 'Пользователи системы',
+                'link' => Yii::$app->urlManager->createUrl(['configuration/users']),
             ],
         ],
     ])

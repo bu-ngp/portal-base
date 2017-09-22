@@ -97,34 +97,13 @@ class SiteController extends Controller
     }
 
     /**
-     * Logs in a user.
-     *
-     * @return mixed
-     */
-    public function actionLogin()
-    {
-        $form = new \domain\forms\LoginForm();
-        if ($form->load(Yii::$app->request->post()) && $form->validate()
-            && $this->personService->login($form->person_username, $form->person_password, $form->person_rememberMe)
-        ) {
-            return $this->goBack();
-        }
-
-        $form->addErrors($this->personService->getErrors());
-
-        return $this->render('login', [
-            'LoginForm' => $form,
-        ]);
-    }
-
-    /**
      * Logs out the current user.
      *
      * @return mixed
      */
     public function actionLogout()
     {
-        $this->personService->logout();
+        Yii::$app->user->logout();
 
         return $this->goHome();
     }

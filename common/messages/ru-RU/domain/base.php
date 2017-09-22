@@ -25,7 +25,7 @@ return [
     'Deleting error. Remove Children Fail.' => '',
     'Deleting error. Remove Role Fail.' => '',
     'Deleting error. Role \'{role}\' not exists' => '',
-    'Incorrect username or password.' => '',
-    'Saving error.' => '',
     'unsupported' => '',
+    'Incorrect username or password.' => '@@@@',
+    'Saving error.' => 'Ошибка сохранения.',
 ];

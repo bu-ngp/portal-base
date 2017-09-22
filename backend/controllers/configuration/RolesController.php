@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\controllers;
+namespace backend\controllers\configuration;
 
 use common\widgets\GridView\services\AjaxResponse;
 use common\widgets\NotifyShower\NotifyShower;

@@ -11,9 +11,9 @@ use common\widgets\ActiveForm\ActiveForm;
 /* @var $searchModel domain\models\base\search\AuthItemSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Update {modelClass}: ', [
-        'modelClass' => 'Auth Item',
-    ]) . $modelForm->description;
+$this->title = Yii::t('common/authitem', 'Update "{modelClass}": ', [
+        'modelClass' => $modelForm->description,
+    ]);
 ?>
 <div class="auth-item-update">
 
@@ -36,7 +36,7 @@ $this->title = Yii::t('app', 'Update {modelClass}: ', [
             'gridConfig' => [
                 'crudSettings' => [
                     'create' => [
-                        'urlGrid' => 'roles/index-for-roles',
+                        'urlGrid' => 'configuration/roles/index-for-roles',
                     ],
                     'delete' => [
                         'url' => 'roles/delete-role',

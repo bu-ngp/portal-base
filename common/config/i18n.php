@@ -28,5 +28,6 @@ return [
         'assets/',
         'migrations/',
         'messages/',
+        'widgets/',
     ],
 ];

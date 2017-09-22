@@ -24,7 +24,16 @@ $this->title = 'My Yii Application';
                     'FAIcon' => 'list-alt',
                 ],
                 'title' => Yii::t('common/config', 'Portal configuration'),
-                'link' => Yii::$app->urlManager->createUrl(['config']),
+                'link' => Yii::$app->urlManager->createUrl(['configuration/config']),
+            ],
+            [
+                'styleClass' => CardList::YELLOW_STYLE,
+                'preview' => [
+                    'FAIcon' => 'list-alt',
+                ],
+                'title' => Yii::t('common/config', 'Tiles on main page'),
+                'description' => 'Добавление/Редактирование/Удаление плиток',
+                'link' => Yii::$app->urlManager->createUrl(['configuration/tiles']),
             ],
         ],
     ])

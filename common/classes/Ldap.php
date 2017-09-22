@@ -38,7 +38,7 @@ class Ldap
 
     public static function getDomain($host)
     {
-        $domainMachine = gethostbyaddr($host);
+        $domainMachine = filter_var($host, FILTER_VALIDATE_IP) ? gethostbyaddr($host) : $host;
         $domainArray = explode('.', $domainMachine);
 
         unset($domainArray[count($domainArray) - 1]);

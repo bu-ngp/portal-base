@@ -33,7 +33,7 @@ $this->title = Yii::t('common/authitem', 'Create Auth Item');
             'gridConfig' => [
                 'crudSettings' => [
                     'create' => [
-                        'urlGrid' => 'roles/index-for-roles',
+                        'urlGrid' => 'configuration/roles/index-for-roles',
                         'inputName' => 'RoleForm[assignRoles]',
                     ],
                     'delete' => [

@@ -107,7 +107,7 @@
             contentObj.title +
             '</h2>' +
             '<span class="pmd-card-subtitle-text">' +
-            contentObj.description +
+            ("description" in contentObj && typeof contentObj.description != "undefined" ? contentObj.description : "") +
             '</span>' +
             '</div>');
     };

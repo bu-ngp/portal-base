@@ -53,10 +53,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
         'crudSettings' => [
-            'create' => 'roles/create',
-            'update' => 'roles/update',
+            'create' => 'configuration/roles/create',
+            'update' => 'configuration/roles/update',
             'delete' => [
-                'url' => 'roles/delete',
+                'url' => 'configuration/roles/delete',
                 'beforeRender' => function ($model) {
                     /** @var AuthItem $model */
                     return !($model->view || $model->name === 'Administrator');

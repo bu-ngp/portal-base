@@ -17,17 +17,18 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Additional' => 'Дополнительные',
     'Child' => '',
     'Created At' => '',
     'Data' => '',
     'Item Name' => '',
-    'Main' => 'Основные',
+    'Ldap Group' => '',
     'Parent' => '',
     'Rule Name' => '',
     'Updated At' => '',
     'User ID' => '',
+    'Additional' => 'Дополнительные',
     'Description' => 'Наименование',
+    'Main' => 'Основные',
     'Name' => 'Идентификатор',
     'Role Name' => 'Имя роли',
     'System Roles Only' => 'Только системные роли',

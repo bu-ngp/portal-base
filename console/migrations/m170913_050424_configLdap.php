@@ -4,6 +4,11 @@ use yii\db\Migration;
 
 class m170913_050424_configLdap extends Migration
 {
+    protected function blobTypeNotNull($table, $fieldName)
+    {
+        return $this->db->createCommand("ALTER TABLE $table ADD $fieldName BLOB NOT NULL")->execute();
+    }
+
     public function up()
     {
         $tableOptions = null;
@@ -17,12 +22,14 @@ class m170913_050424_configLdap extends Migration
             'config_ldap_host' => $this->string(),
             'config_ldap_port' => $this->integer()->notNull()->unsigned()->defaultValue(389),
             'config_ldap_admin_login' => $this->string()->notNull()->defaultValue(''),
-            'config_ldap_admin_password' => $this->string()->notNull()->defaultValue(''),
             'config_ldap_active' => $this->boolean()->notNull()->defaultValue(0),
         ], $tableOptions);
 
+        $this->blobTypeNotNull('{{%config_ldap}}', 'config_ldap_admin_password');
+
         $this->insert('{{%config_ldap}}', [
             'config_ldap_host' => '',
+            'config_ldap_admin_password' => '',
         ]);
     }
 

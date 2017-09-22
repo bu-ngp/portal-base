@@ -74,7 +74,7 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
 
         ];
         if (Yii::$app->user->isGuest) {
-            $menuItems[] = ['label' => 'Войти', 'url' => ['/login'], 'linkOptions' => ['class' => 'pmd-ripple-effect']];
+            $menuItems[] = ['label' => 'Войти', 'url' => Yii::$app->urlManagerAdmin->createUrl('login'), 'linkOptions' => ['class' => 'pmd-ripple-effect']];
         } else {
             $menuItems[] = '<li>'
                 . Html::beginForm(Yii::$app->urlManagerFrontend->createUrl(['/site/logout']), 'post')

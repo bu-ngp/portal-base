@@ -17,8 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Create' => '',
-    'Create Auth Item' => '',
-    'Description' => '',
-    'Update' => '',
+    'Update "{modelClass}": ' => 'Обновить роль "{modelClass}": ',
+    'Create' => 'Создать',
+    'Create Auth Item' => 'Добавить роль',
+    'Description' => 'Название',
+    'Update' => 'Обновить',
 ];
