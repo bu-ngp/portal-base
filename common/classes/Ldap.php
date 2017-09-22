@@ -174,7 +174,7 @@ class Ldap
     protected function getBaseDN()
     {
         $configLdap = ConfigLdap::findOne(1);
-        $domainMachine = gethostbyaddr($configLdap->config_ldap_host);
+        $domainMachine = filter_var($configLdap->config_ldap_host, FILTER_VALIDATE_IP) ? gethostbyaddr($configLdap->config_ldap_host) : $configLdap->config_ldap_host;
         $domainArray = explode('.', $domainMachine);
 
         unset($domainArray[0]);
