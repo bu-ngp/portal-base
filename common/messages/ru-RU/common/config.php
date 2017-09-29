@@ -17,6 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Tiles on main page' => '',
     'Authorization' => 'Авторизация',
     'Portal configuration' => 'Настройки портала',
 ];

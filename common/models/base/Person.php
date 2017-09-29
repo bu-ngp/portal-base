@@ -2,31 +2,45 @@
 
 namespace common\models\base;
 
+use common\classes\BlameableBehavior;
 use common\classes\Ldap;
 use domain\models\base\AuthAssignment;
 use domain\models\base\AuthItem;
 use domain\models\base\ConfigLdap;
+use domain\models\base\Employee;
+use domain\models\base\EmployeeHistory;
+use domain\models\base\Parttime;
 use Exception;
+use wartron\yii2uuid\behaviors\UUIDBehavior;
 use Yii;
 use yii\base\NotSupportedException;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 use yii\debug\models\search\Profile;
 use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "{{%person}}".
  *
- * @property string $person_id
+ * @property resource $person_id
  * @property integer $person_code
  * @property string $person_fullname
  * @property string $person_username
  * @property string $person_auth_key
  * @property string $person_password_hash
  * @property string $person_email
+ * @property integer $person_hired
+ * @property integer $person_fired
  * @property integer $created_at
  * @property integer $updated_at
+ * @property string $created_by
+ * @property string $updated_by
  *
  * @property AuthAssignment[] $authAssignments
  * @property AuthItem[] $itemNames
+ * @property Employee $employee
+ * @property EmployeeHistory[] $employeeHistories
+ * @property Parttime[] $parttimes
  * @property Profile $person
  */
 class Person extends \yii\db\ActiveRecord implements IdentityInterface
@@ -50,9 +64,8 @@ class Person extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['person_id', 'person_code', 'person_fullname', 'person_username', 'person_auth_key', 'person_password_hash', 'created_at', 'updated_at'], 'required'],
-            [['person_code', 'created_at', 'updated_at'], 'integer'],
-            [['person_id'], 'string', 'max' => 16],
+            [['person_code', 'person_fullname', 'person_username', 'person_auth_key', 'person_password_hash'], 'required'],
+            [['person_code', 'person_hired', 'person_fired'], 'integer'],
             [['person_fullname', 'person_username', 'person_password_hash', 'person_email'], 'string', 'max' => 255],
             [['person_auth_key'], 'string', 'max' => 32],
             [['person_username'], 'unique'],
@@ -73,8 +86,29 @@ class Person extends \yii\db\ActiveRecord implements IdentityInterface
             'person_auth_key' => Yii::t('common/person', 'Person Auth Key'),
             'person_password_hash' => Yii::t('common/person', 'Person Password Hash'),
             'person_email' => Yii::t('common/person', 'Person Email'),
+            'person_hired' => Yii::t('common/person', 'Person Hired'),
+            'person_fired' => Yii::t('common/person', 'Person Fired'),
             'created_at' => Yii::t('common/person', 'Created At'),
             'updated_at' => Yii::t('common/person', 'Updated At'),
+            'created_by' => Yii::t('domain/employee', 'Created By'),
+            'updated_by' => Yii::t('domain/employee', 'Updated By'),
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'value' => new Expression('NOW()'),
+            ],
+            [
+                'class' => BlameableBehavior::className(),
+            ],
+            [
+                'class' => UUIDBehavior::className(),
+                'column' => 'person_id',
+            ],
         ];
     }
 
@@ -92,6 +126,30 @@ class Person extends \yii\db\ActiveRecord implements IdentityInterface
     public function getItemNames()
     {
         return $this->hasMany(AuthItem::className(), ['name' => 'item_name'])->viaTable('{{%auth_assignment}}', ['user_id' => 'person_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEmployee()
+    {
+        return $this->hasOne(Employee::className(), ['person_id' => 'person_id'])->from(['employee' => Employee::tableName()]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEmployeeHistories()
+    {
+        return $this->hasMany(EmployeeHistory::className(), ['person_id' => 'person_id'])->from(['employeeHistories' => EmployeeHistory::tableName()]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getParttimes()
+    {
+        return $this->hasMany(Parttime::className(), ['person_id' => 'person_id'])->from(['parttimes' => Parttime::tableName()]);
     }
 
     /**
@@ -203,5 +261,15 @@ class Person extends \yii\db\ActiveRecord implements IdentityInterface
         }
 
         return null;
+    }
+
+    public function isLocal()
+    {
+        return !$this->isNewRecord;
+    }
+
+    public function isLdap()
+    {
+        return $this->isNewRecord;
     }
 }

@@ -51,6 +51,8 @@ class m130524_201442_init extends Migration
             'profile_address' => $this->string(400),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
+            'created_by' => $this->string()->notNull(),
+            'updated_by' => $this->string()->notNull(),
         ], $tableOptions);
 
         $this->uuidCreate('{{%profile}}', 'profile_id');
@@ -64,8 +66,12 @@ class m130524_201442_init extends Migration
             'person_auth_key' => $this->char(32)->notNull(),
             'person_password_hash' => $this->string()->notNull(),
             'person_email' => $this->string(),
+            'person_hired' => $this->integer(),
+            'person_fired' => $this->integer(),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
+            'created_by' => $this->string()->notNull(),
+            'updated_by' => $this->string()->notNull(),
         ], $tableOptions);
 
         $this->uuidCreate('{{%person}}', 'person_id');
@@ -117,7 +123,7 @@ class m130524_201442_init extends Migration
         $this->addForeignKey('item_name', $authManager->assignmentTable, 'item_name', $authManager->itemTable, 'name', $this->isMSSQL() ? null : 'CASCADE', $this->isMSSQL() ? null : 'CASCADE');
         $this->addForeignKey('user_id', $authManager->assignmentTable, 'user_id', '{{%person}}', 'person_id');
 
-        $uuid1 = Uuid::uuid1();
+        $uuid1 = Uuid::uuid();
 
         $this->insert('{{%profile}}', [
             'profile_id' => $uuid1,
@@ -128,6 +134,8 @@ class m130524_201442_init extends Migration
             'profile_address' => null,
             'created_at' => time(),
             'updated_at' => time(),
+            'created_by' => 'system',
+            'updated_by' => 'system',
         ]);
 
         $this->insert('{{%person}}', [
@@ -138,8 +146,12 @@ class m130524_201442_init extends Migration
             'person_auth_key' => Yii::$app->security->generateRandomString(),
             'person_password_hash' => Yii::$app->security->generatePasswordHash('admin'),
             'person_email' => 'admin@mm.ru',
+            'person_hired' => null,
+            'person_fired' => null,
             'created_at' => time(),
             'updated_at' => time(),
+            'created_by' => 'system',
+            'updated_by' => 'system',
         ]);
     }
 

@@ -17,17 +17,5 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Created At' => '',
-    'Person Auth Key' => '',
-    'Person Code' => '',
-    'Person Fired' => 'Дата увольнения',
-    'Person Hired' => 'Дата приема на работу',
-    'Person ID' => '',
-    'Person Password Hash' => '',
-    'Remember Me' => '',
-    'Updated At' => '',
-    'Person Email' => 'Электронная почта',
-    'Person Fullname' => 'Фамилия Имя Отчество',
-    'Person Password' => 'Пароль',
-    'Person Username' => 'Логин',
+    'Users' => 'Пользователи системы',
 ];

@@ -1,6 +1,7 @@
 <?php
 
-use yii\db\Migration;
+
+use common\classes\mysql\Migration;
 
 class m170610_085215_session extends Migration
 {
@@ -19,7 +20,7 @@ class m170610_085215_session extends Migration
         $this->createTable('{{%session}}', [
             'id' => $this->string()->notNull(),
             'expire' => $this->integer(),
-            'data' => $this->binary(),
+            'data' => $this->blob(),
             'PRIMARY KEY ([[id]])',
         ], $tableOptions);
     }
