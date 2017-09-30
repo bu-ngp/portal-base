@@ -16,6 +16,9 @@ $searchModelClass = StringHelper::basename($generator->searchModelClass);
 if ($modelClass === $searchModelClass) {
     $searchModelAlias = $searchModelClass . 'Search';
 }
+$form = $modelClass . "Form";
+$service = $modelClass . "Service";
+$findModel = lcfirst($modelClass) . "Model";
 
 /* @var $class ActiveRecordInterface */
 $class = $generator->modelClass;
@@ -23,6 +26,12 @@ $pks = $class::primaryKey();
 $urlParams = $generator->generateUrlParams();
 $actionParams = $generator->generateActionParams();
 $actionParamComments = $generator->generateActionParamComments();
+/** @var \yii\db\ActiveRecord $model */
+$model = new $generator->modelClass();
+$safeAttributes = $model->safeAttributes();
+if (empty($safeAttributes)) {
+    $safeAttributes = $model->attributes();
+}
 
 echo "<?php\n";
 ?>
@@ -38,7 +47,14 @@ use yii\data\ActiveDataProvider;
 <?php endif; ?>
 use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+use common\widgets\GridView\services\AjaxResponse;
+use domain\forms\base\<?= $form ?>;
+use domain\services\AjaxFilter;
+use domain\services\base\<?= $service ?>;
+use domain\services\proxyService;
+use yii\filters\ContentNegotiator;
+use yii\filters\AccessControl;
+use yii\web\Response;
 
 /**
  * <?= $controllerClass ?> implements the CRUD actions for <?= $modelClass ?> model.
@@ -46,15 +62,31 @@ use yii\filters\VerbFilter;
 class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) . "\n" ?>
 {
     /**
+    * @var <?= $service ?> $<?= lcfirst($service) ?>
+    */
+    private $<?= lcfirst($service) ?>;
+
+    public function __construct($id, $module, <?= $service ?> $<?= lcfirst($service) ?>, $config = [])
+    {
+        $this-><?= lcfirst($service) ?> = new proxyService($<?= lcfirst($service) ?>);
+        parent::__construct($id, $module, $config = []);
+    }
+
+    /**
      * @inheritdoc
      */
     public function behaviors()
     {
         return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
+            [
+                'class' => AjaxFilter::className(),
+                'actions' => ['delete'],
+            ],
+            [
+                'class' => ContentNegotiator::className(),
+                'only' => ['delete'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
                 ],
             ],
         ];
@@ -92,15 +124,28 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      */
     public function actionCreate()
     {
-        $model = new <?= $modelClass ?>();
+        $form = new <?= $form ?>();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', <?= $urlParams ?>]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        if ($form->load(Yii::$app->request->post())
+            && $form->validate()
+            && $this-><?= lcfirst($service) ?>->create(<?php
+        $properties = [];
+
+        foreach ($generator->getColumnNames() as $attribute) {
+            if (in_array($attribute, $safeAttributes)) {
+                $properties[] = '$form->' . $attribute;
+            }
         }
+
+        echo implode(",\n", $properties)
+?>)
+        ) {
+            return $this->redirect(['index']);
+        }
+
+        return $this->render('create', [
+            'modelForm' => $form,
+        ]);
     }
 
     /**
@@ -111,15 +156,28 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      */
     public function actionUpdate(<?= $actionParams ?>)
     {
-        $model = $this->findModel(<?= $actionParams ?>);
+        $<?= $findModel ?> = $this->findModel(<?= $actionParams ?>);
+        $form = new <?= $form ?>($<?= $findModel ?>);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', <?= $urlParams ?>]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        if ($form->load(Yii::$app->request->post()) && $form->validate()
+            && $this-><?= lcfirst($service) ?>->update($<?= $findModel ?>->primaryKey, <?php
+$properties = [];
+
+foreach ($generator->getColumnNames() as $attribute) {
+    if (in_array($attribute, $safeAttributes)) {
+        $properties[] = '$form->' . $attribute;
+    }
+}
+
+echo implode(",\n", $properties)
+?>)
+        ) {
+            return $this->redirect(['index']);
         }
+
+        return $this->render('update', [
+            'modelForm' => $form,
+        ]);
     }
 
     /**
@@ -130,9 +188,13 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      */
     public function actionDelete(<?= $actionParams ?>)
     {
-        $this->findModel(<?= $actionParams ?>)->delete();
+        try {
+            $this-><?= lcfirst($service) ?>->delete(<?= $actionParams ?>);
+        } catch (\Exception $e) {
+            return AjaxResponse::init(AjaxResponse::ERROR, $e->getMessage());
+        }
 
-        return $this->redirect(['index']);
+        return AjaxResponse::init(AjaxResponse::SUCCESS);
     }
 
     /**

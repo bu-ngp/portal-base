@@ -35,6 +35,14 @@ $this->title = 'My Yii Application';
                 'description' => 'Добавление/Редактирование/Удаление плиток',
                 'link' => Yii::$app->urlManager->createUrl(['configuration/tiles']),
             ],
+            [
+                'styleClass' => CardList::GREEN_STYLE,
+                'preview' => [
+                    'FAIcon' => 'list-alt',
+                ],
+                'title' => Yii::t('common/config', 'Spravochniki'),
+                'link' => Yii::$app->urlManager->createUrl(['configuration/sprav']),
+            ],
         ],
     ])
     ?>

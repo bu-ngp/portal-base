@@ -7,11 +7,11 @@
 
 namespace common\gii\model;
 
+use common\classes\mysql\Schema;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\db\Connection;
-use yii\db\Schema;
 use yii\db\TableSchema;
 use yii\gii\CodeFile;
 use yii\helpers\Inflector;
@@ -226,6 +226,24 @@ class Generator extends \yii\gii\Generator
                 $this->render('model.php', $params)
             );
 
+            $repositoryDir = Yii::getAlias('@' . preg_replace('/(.*?\\/)(\w+)(\\/.*)/', '$1repositories$3', str_replace('\\', '/', $this->ns)));
+            $files[] = new CodeFile(
+                $repositoryDir . '/' . $modelClassName . 'Repository.php',
+                $this->render('repository.php', $params)
+            );
+
+            $formDir = Yii::getAlias('@' . preg_replace('/(.*?\\/)(\w+)(\\/.*)/', '$1forms$3', str_replace('\\', '/', $this->ns)));
+            $files[] = new CodeFile(
+                $formDir . '/' . $modelClassName . 'Form.php',
+                $this->render('form.php', $params)
+            );
+
+            $serviceDir = Yii::getAlias('@' . preg_replace('/(.*?\\/)(\w+)(\\/.*)/', '$1services$3', str_replace('\\', '/', $this->ns)));
+            $files[] = new CodeFile(
+                $serviceDir . '/' . $modelClassName . 'Service.php',
+                $this->render('service.php', $params)
+            );
+
             // query :
             if ($queryClassName) {
                 $params['className'] = $queryClassName;
@@ -300,6 +318,7 @@ class Generator extends \yii\gii\Generator
                 case Schema::TYPE_TIME:
                 case Schema::TYPE_DATETIME:
                 case Schema::TYPE_TIMESTAMP:
+                case Schema::TYPE_BINARY:
                     $types['safe'][] = $column->name;
                     break;
                 default: // strings

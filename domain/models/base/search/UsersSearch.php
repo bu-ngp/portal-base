@@ -24,6 +24,8 @@ class UsersSearch extends Person
         // add related fields to searchable attributes
         return array_merge(parent::attributes(), [
             'employee.dolzh.dolzh_name',
+            'employee.podraz.podraz_name',
+            'employee.build.build_name',
         ]);
     }
 
@@ -37,6 +39,8 @@ class UsersSearch extends Person
             [['person_code', 'person_hired', 'person_fired', 'created_at', 'updated_at'], 'integer'],
             [[
                 'employee.dolzh.dolzh_name',
+                'employee.podraz.podraz_name',
+                'employee.build.build_name',
             ], 'safe'],
         ];
     }
@@ -67,7 +71,11 @@ class UsersSearch extends Person
             'query' => $query,
         ]);
 
-        $query->joinWith(['employee.dolzh']);
+        $query->joinWith([
+            'employee.dolzh',
+            'employee.podraz',
+            'employee.build',
+        ]);
 
         $this->load($params);
 
@@ -95,16 +103,20 @@ class UsersSearch extends Person
             ->andFilterWhere(['like', 'created_by', $this->created_by])
             ->andFilterWhere(['like', 'updated_by', $this->updated_by]);
 
-
-        $dataProvider->sort->attributes['employee.dolzh'] = [
-            'asc' => ['employee.dolzh' => SORT_ASC],
-            'desc' => ['employee.dolzh' => SORT_DESC],
+        $dataProvider->sort->attributes['employee.dolzh.dolzh_name'] = [
+            'asc' => ['dolzh.dolzh_name' => SORT_ASC],
+            'desc' => ['dolzh.dolzh_name' => SORT_DESC],
         ];
 
-        /*     $dataProvider->sort->attributes['person_fullname'] = [
-                 'asc' => ['person_fullname' => SORT_ASC],
-                 'desc' => ['person_fullname' => SORT_DESC],
-             ];*/
+        $dataProvider->sort->attributes['employee.podraz.podraz_name'] = [
+            'asc' => ['podraz.podraz_name' => SORT_ASC],
+            'desc' => ['podraz.podraz_name' => SORT_DESC],
+        ];
+
+        $dataProvider->sort->attributes['employee.build.build_name'] = [
+            'asc' => ['build.build_name' => SORT_ASC],
+            'desc' => ['build.build_name' => SORT_DESC],
+        ];
 
         return $dataProvider;
     }

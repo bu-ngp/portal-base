@@ -32,7 +32,6 @@ class Build extends \yii\db\ActiveRecord
     {
         return [
             [['build_name'], 'required'],
-            [['build_id'], 'safe'],
             [['build_name'], 'string', 'max' => 255],
         ];
     }
@@ -53,9 +52,21 @@ class Build extends \yii\db\ActiveRecord
         return [
             [
                 'class' => UUIDBehavior::className(),
-                'column' => 'profile_id',
+                'column' => 'build_id',
             ],
         ];
+    }
+
+    public static function create($build_name)
+    {
+        return new self([
+            'build_name' => $build_name,
+        ]);
+    }
+
+    public function editData($build_name)
+    {
+        $this->build_name = $build_name;
     }
 
     /**

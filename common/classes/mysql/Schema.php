@@ -12,6 +12,8 @@ class Schema extends \yii\db\mysql\Schema
 {
     const TYPE_BLOB = 'blob';
 
+    public $columnSchemaClass = 'common\classes\mysql\ColumnSchema';
+
     public function __construct($config = [])
     {
         $this->typeMap['binary'] = self::TYPE_BINARY;

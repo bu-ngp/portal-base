@@ -2,6 +2,7 @@
 /**
  * This is the template for generating the model class of a specified table.
  */
+use common\classes\mysql\Schema;
 
 /* @var $this yii\web\View */
 /* @var $generator yii\gii\generators\model\Generator */
@@ -12,6 +13,10 @@
 /* @var $labels string[] list of attribute labels (name => label) */
 /* @var $rules string[] list of validation rules */
 /* @var $relations array list of relations (name => relation declaration) */
+
+$safeAttributes = array_filter(array_keys($tableSchema->columns), function($value) use ($tableSchema) {
+    return !$tableSchema->columns[$value]->isPrimaryKey;
+});
 
 echo "<?php\n";
 ?>
@@ -72,6 +77,86 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
 <?php endforeach; ?>
         ];
     }
+<?php
+$uuidPrimaryKeys = array_filter(array_keys($tableSchema->columns), function ($value) use ($tableSchema) {
+    return $tableSchema->columns[$value]->isPrimaryKey && $tableSchema->columns[$value]->type === Schema::TYPE_BINARY && $tableSchema->columns[$value]->size === 16;
+});
+?>
+<?php if ($uuidPrimaryKeys): ?>
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => UUIDBehavior::className(),
+                'column' => '<?= $uuidPrimaryKeys[0] ?>',
+            ],
+        ];
+    }
+<?php endif; ?>
+
+    public static function create(<?php
+        $properties = [];
+
+        foreach ($tableSchema->columns as $column) {
+            if (in_array($column->name, $safeAttributes)) {
+                $properties[]= '$' . $column->name;
+            }
+        }
+
+        if ($properties) {
+            echo implode(', ', $properties);
+        }
+?>)
+    {
+        return new self([
+<?php
+        $values = [];
+
+        foreach ($tableSchema->columns as $column) {
+            if (in_array($column->name, $safeAttributes)) {
+                $values[] = "            '{$column->name}' => \${$column->name}";
+            }
+        }
+
+        if ($values) {
+            echo implode(",\n", $values) . ',';
+        }
+?>
+
+        ]);
+    }
+
+    public function editData(<?php
+$properties = [];
+
+foreach ($tableSchema->columns as $column) {
+    if (in_array($column->name, $safeAttributes)) {
+        $properties[] = '$' . $column->name;
+    }
+}
+
+if ($properties) {
+    echo implode(', ', $properties);
+}
+?>)
+    {
+<?php
+$values = [];
+
+foreach ($tableSchema->columns as $column) {
+    if (in_array($column->name, $safeAttributes)) {
+        $values[] = "        \$this->{$column->name} = \${$column->name}";
+    }
+}
+
+if ($values) {
+    echo implode(";\n", $values) . ';';
+}
+?>
+
+    }
+
 <?php foreach ($relations as $name => $relation): ?>
 
     /**

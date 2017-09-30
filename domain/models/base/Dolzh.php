@@ -2,6 +2,7 @@
 
 namespace domain\models\base;
 
+use wartron\yii2uuid\behaviors\UUIDBehavior;
 use Yii;
 
 /**
@@ -30,8 +31,7 @@ class Dolzh extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['dolzh_id', 'dolzh_name'], 'required'],
-         //   [['dolzh_id'], 'string', 'max' => 16],
+            [['dolzh_name'], 'required'],
             [['dolzh_name'], 'string', 'max' => 255],
         ];
     }
@@ -45,6 +45,28 @@ class Dolzh extends \yii\db\ActiveRecord
             'dolzh_id' => Yii::t('domain/employee', 'Dolzh ID'),
             'dolzh_name' => Yii::t('domain/employee', 'Dolzh Name'),
         ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => UUIDBehavior::className(),
+                'column' => 'dolzh_id',
+            ],
+        ];
+    }
+
+    public static function create($dolzh_name)
+    {
+        return new self([
+            'dolzh_name' => $dolzh_name,
+        ]);
+    }
+
+    public function editData($dolzh_name)
+    {
+        $this->dolzh_name = $dolzh_name;
     }
 
     /**

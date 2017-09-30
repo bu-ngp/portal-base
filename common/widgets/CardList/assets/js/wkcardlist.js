@@ -204,8 +204,6 @@
                     triggerNextPage($widget, $widget.data('wkcardlist').scrollHandler);
                 }
             });
-        } else {
-            console.error('initScrollPager($widget) - $widget undefined');
         }
     };
 

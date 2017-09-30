@@ -44,7 +44,6 @@ class Profile extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['profile_id'], 'safe'],
             [['profile_dr'], 'date', 'format' => 'yyyy-MM-dd'],
             [['profile_pol'], 'in', 'range' => [Profile::MALE, Profile::FEMALE]],
             [['profile_inn'], 'string', 'max' => 12],

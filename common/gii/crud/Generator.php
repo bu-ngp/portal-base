@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\gii\generators\crud;
+namespace common\gii\crud;
 
 use Yii;
 use yii\db\ActiveRecord;
@@ -212,7 +212,7 @@ class Generator extends \yii\gii\Generator
     public function getNameAttribute()
     {
         foreach ($this->getColumnNames() as $name) {
-            if (!strcasecmp($name, 'name') || !strcasecmp($name, 'title')) {
+            if (strpos($name, 'name') || strpos($name, 'title') || strpos($name, 'description')) {
                 return $name;
             }
         }
@@ -240,27 +240,41 @@ class Generator extends \yii\gii\Generator
         }
         $column = $tableSchema->columns[$attribute];
         if ($column->phpType === 'boolean') {
-            return "\$form->field(\$model, '$attribute')->checkbox()";
+            return "\$form->field(\$model, '$attribute')->checkbox(['wkkeep' => true])";
         } elseif ($column->type === 'text') {
-            return "\$form->field(\$model, '$attribute')->textarea(['rows' => 6])";
+            return "\$form->field(\$model, '$attribute')->textarea(['rows' => 6, 'wkkeep' => true])";
         } else {
             if (preg_match('/^(password|pass|passwd|passcode)$/i', $column->name)) {
                 $input = 'passwordInput';
             } else {
                 $input = 'textInput';
             }
+
             if (is_array($column->enumValues) && count($column->enumValues) > 0) {
                 $dropDownOptions = [];
                 foreach ($column->enumValues as $enumValue) {
                     $dropDownOptions[$enumValue] = Inflector::humanize($enumValue);
                 }
                 return "\$form->field(\$model, '$attribute')->dropDownList("
-                    . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)).", ['prompt' => ''])";
-            } elseif ($column->phpType !== 'string' || $column->size === null) {
-                return "\$form->field(\$model, '$attribute')->$input()";
-            } else {
-                return "\$form->field(\$model, '$attribute')->$input(['maxlength' => true])";
+                . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)) . ", ['prompt' => ''])";
             }
+
+            $options = [];
+            $optionsString = "";
+
+            if ($input === 'textInput') {
+                $options[] = "'wkkeep' => true";
+            }
+
+            if ($column->phpType !== 'string' || $column->size !== null) {
+                $options[] = "'maxlength' => true";
+            }
+
+            if ($options) {
+                $optionsString = "[" . implode(', ', $options) . "]";
+            }
+
+            return "\$form->field(\$model, '$attribute')->$input($optionsString)";
         }
     }
 

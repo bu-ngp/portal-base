@@ -10,21 +10,39 @@ echo "<?php\n";
 ?>
 
 use yii\helpers\Html;
-
+use common\widgets\ActiveForm\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model <?= ltrim($generator->modelClass, '\\') ?> */
+/* @var $modelForm <?= preg_replace('/(.*)(models)(.*)/','$1forms$3',ltrim($generator->modelClass, '\\') . "Form") ?> */
 
 $this->title = <?= $generator->generateString('Create ' . Inflector::camel2words(StringHelper::basename($generator->modelClass))) ?>;
-$this->params['breadcrumbs'][] = ['label' => <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>, 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-create">
 
     <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
 
-    <?= "<?= " ?>$this->render('_form', [
-        'model' => $model,
-    ]) ?>
+    <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-form">
 
+        <?= "<?php " ?>$form = ActiveForm::begin(); ?>
+
+<?php
+    /** @var \yii\db\ActiveRecord $model */
+    $model = new $generator->modelClass();
+    $safeAttributes = $model->safeAttributes();
+    if (empty($safeAttributes)) {
+        $safeAttributes = $model->attributes();
+    }
+?>
+        <?php foreach ($generator->getColumnNames() as $attribute) {
+            if (in_array($attribute, $safeAttributes)) {
+                echo "<?= " . preg_replace('/\(\$model/','($modelForm',$generator->generateActiveField($attribute))  . " ?>\n\n";
+            }
+        } ?>
+        <div class="form-group">
+            <?= "<?= " ?>Html::submitButton(<?= $generator->generateString('Create') ?>, ['class' => 'btn btn-success']) ?>
+        </div>
+
+        <?= "<?php " ?>ActiveForm::end(); ?>
+
+    </div>
 </div>

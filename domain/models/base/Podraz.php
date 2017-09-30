@@ -32,7 +32,6 @@ class Podraz extends \yii\db\ActiveRecord
     {
         return [
             [['podraz_name'], 'required'],
-            [['podraz_id'], 'safe'],
             [['podraz_name'], 'string', 'max' => 255],
         ];
     }
@@ -56,6 +55,18 @@ class Podraz extends \yii\db\ActiveRecord
                 'column' => 'podraz_id',
             ],
         ];
+    }
+
+    public static function create($podraz_name)
+    {
+        return new self([
+            'podraz_name' => $podraz_name,
+        ]);
+    }
+
+    public function editData($podraz_name)
+    {
+        $this->podraz_name = $podraz_name;
     }
 
     /**

@@ -6,6 +6,7 @@
  * Time: 20:56
  */
 
+use common\models\base\Person;
 use common\widgets\GridView\GridView;
 use domain\models\base\AuthItem;
 use rmrevin\yii\fontawesome\FA;
@@ -40,42 +41,34 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             'person_fullname',
 
-           // 'employee.dolzh.dolzh_name',
+            'employee.dolzh.dolzh_name',
+            'employee.podraz.podraz_name',
+            'employee.build.build_name',
             [
-                'attribute' => 'employee.dolzh.dolzh_name',
-                'value' => function ($model) {
-                    $a='';
-
-                    return $model->employee->dolzh->dolzh_name;
-                },
-            ],
-            /*    'employee.podraz.podraz_name',
-                'employee.build.build_name',
-                [
-                    'attribute' => 'person_fired',
-                    'format' => 'datetime',
-                    'filterWidgetOptions' => [
-                        //    'convertFormat' => true,
-                        'pluginEvents' => [
-                            'apply.daterangepicker' => 'function(event, picker) {
+                'attribute' => 'person_fired',
+                'format' => 'datetime',
+                'filterWidgetOptions' => [
+                    //    'convertFormat' => true,
+                    'pluginEvents' => [
+                        'apply.daterangepicker' => 'function(event, picker) {
                               console.debug(picker.startDate.format("YYYY-MM-DD"));
                               console.debug(event);
                             }',
-                        ],
                     ],
-                ],*/
+                ],
+            ],
         ],
-//        'crudSettings' => [
-//            'create' => 'configuration/roles/create',
-//            'update' => 'configuration/roles/update',
-//            'delete' => [
-//                'url' => 'configuration/roles/delete',
-//                'beforeRender' => function ($model) {
-//                    /** @var AuthItem $model */
-//                    return !($model->view || $model->name === 'Administrator');
-//                },
-//            ],
-//        ],
+        'crudSettings' => [
+            'create' => 'configuration/users/create',
+            'update' => 'configuration/users/update',
+            'delete' => [
+                'url' => 'configuration/users/delete',
+                'beforeRender' => function ($model) {
+                    /** @var Person $model */
+                    return !($model->person_username === 'admin');
+                },
+            ],
+        ],
         'panelHeading' => ['icon' => FA::icon(FA::_USER),
             'title' => Yii::t('common/users', 'Users'),
         ],

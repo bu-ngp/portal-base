@@ -12,21 +12,41 @@ echo "<?php\n";
 ?>
 
 use yii\helpers\Html;
+use common\widgets\ActiveForm\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model <?= ltrim($generator->modelClass, '\\') ?> */
+/* @var $modelForm <?= preg_replace('/(.*)(models)(.*)/','$1forms$3',ltrim($generator->modelClass, '\\') . "Form") ?> */
 
-$this->title = <?= $generator->generateString('Update {modelClass}: ', ['modelClass' => Inflector::camel2words(StringHelper::basename($generator->modelClass))]) ?> . $model-><?= $generator->getNameAttribute() ?>;
-$this->params['breadcrumbs'][] = ['label' => <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>, 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model-><?= $generator->getNameAttribute() ?>, 'url' => ['view', <?= $urlParams ?>]];
-$this->params['breadcrumbs'][] = <?= $generator->generateString('Update') ?>;
+$this->title = Yii::t('<?= $generator->messageCategory ?>', 'Update "{modelClass}": ', [
+    'modelClass' => $modelForm-><?= $generator->getNameAttribute() ?>,
+]);
 ?>
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-update">
 
     <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
 
-    <?= "<?= " ?>$this->render('_form', [
-        'model' => $model,
-    ]) ?>
+    <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-form">
 
+        <?= "<?php " ?>$form = ActiveForm::begin(); ?>
+
+        <?php
+        /** @var \yii\db\ActiveRecord $model */
+        $model = new $generator->modelClass();
+        $safeAttributes = $model->safeAttributes();
+        if (empty($safeAttributes)) {
+            $safeAttributes = $model->attributes();
+        }
+        ?>
+        <?php foreach ($generator->getColumnNames() as $attribute) {
+            if (in_array($attribute, $safeAttributes)) {
+                echo "<?= " . preg_replace('/\(\$model/','($modelForm',$generator->generateActiveField($attribute)) . " ?>\n\n";
+            }
+        } ?>
+        <div class="form-group">
+            <?= "<?= " ?>Html::submitButton(<?= $generator->generateString('Update') ?>, ['class' => 'btn btn-primary']) ?>
+        </div>
+
+        <?= "<?php " ?>ActiveForm::end(); ?>
+
+    </div>
 </div>

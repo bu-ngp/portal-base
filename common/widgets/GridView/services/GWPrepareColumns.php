@@ -135,7 +135,8 @@ class GWPrepareColumns
 
             } elseif (empty($column['value'])) {
                 $column['value'] = function ($model, $key, $index, $column) {
-                    return '<span>' . Html::encode($model->{$column->attribute}) . '</span>';
+                    /** @var $model ActiveRecord */
+                    return '<span>' . Html::encode($model->getAttribute($column->attribute)) . '</span>';
                 };
             }
         }
@@ -152,7 +153,8 @@ class GWPrepareColumns
             },
             'format' => 'html',
             'value' => function ($model, $key, $index, $column) {
-                return '<span>' . Html::encode($model->{$column->attribute}) . '</span>';
+                /** @var $model ActiveRecord */
+                return '<span>' . Html::encode($model->getAttribute($column->attribute)) . '</span>';
             },
         ];
     }
@@ -175,7 +177,10 @@ class GWPrepareColumns
         if (method_exists($model, 'itemsValues') && $items = $model::itemsValues($column['attribute'])) {
             $column['filter'] = $items;
             $column['value'] = function ($model, $key, $index, $column) use ($items) {
-                return '<span>' . (isset($model->{$column->attribute}) ? $items[$model->{$column->attribute}] : '') . '</span>';
+                /** @var $model ActiveRecord */
+                $value = $model->getAttribute($column->attribute);
+                
+                return '<span>' . (isset($value) ? $items[$value] : '') . '</span>';
             };
         }
     }
