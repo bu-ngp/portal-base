@@ -87,6 +87,7 @@ return [
         ],
         'request' => [
             'csrfParam' => '_csrf-wk-portal',
+            //'enableCsrfValidation' => false,
         ],
         'user' => [
             'class' => 'common\classes\WKUser',

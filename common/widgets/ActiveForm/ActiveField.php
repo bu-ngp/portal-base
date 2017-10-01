@@ -31,6 +31,7 @@ class ActiveField extends \yii\bootstrap\ActiveField
 
     public function textInput($options = [])
     {
+        $this->initWKIcon($options);
         $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield pmd-textfield-floating-label' : 'form-group pmd-textfield pmd-textfield-floating-label';
 
         return parent::textInput($options);
@@ -38,8 +39,18 @@ class ActiveField extends \yii\bootstrap\ActiveField
 
     public function passwordInput($options = [])
     {
+        $this->initWKIcon($options);
         $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield pmd-textfield-floating-label' : 'form-group pmd-textfield pmd-textfield-floating-label';
 
         return parent::passwordInput($options);
+    }
+
+    protected function initWKIcon(array $options)
+    {
+        if (isset($options['wkicon'])) {
+            $this->template = preg_replace('/(.*)\{input\}(.*)/', '$1<div class="input-group"><div style="min-width: 50px;" class="input-group-addon"><i class="fa fa-2x fa-' . $options['wkicon'] . ' pmd-sm"></i></div>{input}</div>$2', $this->template);
+            $this->labelOptions['class'] .= ' pmd-input-group-label';
+            unset($options['wkicon']);
+        }
     }
 }

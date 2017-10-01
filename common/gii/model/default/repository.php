@@ -18,6 +18,7 @@ echo "<?php\n";
 namespace <?= $ns ?>;
 
 use <?= $generator->ns ?>\<?= $generator->modelClass ?>;
+use domain\exceptions\ServiceErrorsException;
 use domain\repositories\RepositoryInterface;
 use RuntimeException;
 use Yii;

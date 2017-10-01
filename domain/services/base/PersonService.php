@@ -10,6 +10,8 @@
 namespace domain\services\base;
 
 use domain\repositories\base\PersonRepository;
+use domain\services\base\dto\PersonData;
+use domain\services\base\dto\ProfileData;
 use domain\services\BaseService;
 
 class PersonService extends BaseService
@@ -25,4 +27,8 @@ class PersonService extends BaseService
         parent::__construct();
     }
 
+    public function create(PersonData $personData, ProfileData $profileData, $assignEmployees, $assignRoles)
+    {
+
+    }
 }

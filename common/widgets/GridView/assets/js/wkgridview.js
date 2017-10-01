@@ -183,6 +183,8 @@
             var $addButtonGrid = $pjax.find(".wk-gridview-crud-create");
             var $grid = $pjax.find('.grid-view');
 
+            $pjax[0].busy = true; // для загрузки нескольких гридов на странице по очереди
+
             if (getCurrentState($pjax) === GRID_ADD) {
                 gridWkChooseInit();
 
@@ -213,6 +215,9 @@
 
         $pjax.on('pjax:complete', function (e) {
             var pjaxID = $pjax[0].id;
+
+            $pjax[0].busy = false; // для загрузки нескольких гридов на странице по очереди
+
             if (e.target.id == pjaxID) {
                 purifyingUrl();
 

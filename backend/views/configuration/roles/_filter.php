@@ -27,6 +27,6 @@ use common\widgets\Tabs\Tabs;
             'content' => $form->field($filterModel, 'authitem_name')->textInput(),
         ],
     ],
-]); ?>
+]) ?>
 
 <?php ActiveFilterForm::end(); ?>

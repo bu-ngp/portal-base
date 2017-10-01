@@ -18,13 +18,34 @@ $safeAttributes = array_filter(array_keys($tableSchema->columns), function($valu
     return !$tableSchema->columns[$value]->isPrimaryKey;
 });
 
+$uuidPrimaryKeys = array_filter(array_keys($tableSchema->columns), function ($value) use ($tableSchema) {
+    return $tableSchema->columns[$value]->isPrimaryKey && $tableSchema->columns[$value]->type === Schema::TYPE_BINARY && $tableSchema->columns[$value]->size === 16;
+});
+
+$timestampColumns = array_filter(array_keys($tableSchema->columns), function ($value) use ($tableSchema) {
+    return in_array($tableSchema->columns[$value]->name, ['created_at', 'updated_at']);
+});
+
+$blameableColumns = array_filter(array_keys($tableSchema->columns), function ($value) use ($tableSchema) {
+    return in_array($tableSchema->columns[$value]->name, ['created_by', 'updated_by']);
+});
+
 echo "<?php\n";
 ?>
 
 namespace <?= $generator->ns ?>;
 
 use Yii;
-
+<?php if ($uuidPrimaryKeys): ?>
+use wartron\yii2uuid\behaviors\UUIDBehavior;
+<?php endif; ?>
+<?php if (count($timestampColumns) === 2): ?>
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
+<?php endif; ?>
+<?php if (count($timestampColumns) === 2): ?>
+use common\classes\BlameableBehavior;
+<?php endif; ?>
 /**
  * This is the model class for table "<?= $generator->generateTableName($tableName) ?>".
  *
@@ -77,20 +98,28 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
 <?php endforeach; ?>
         ];
     }
-<?php
-$uuidPrimaryKeys = array_filter(array_keys($tableSchema->columns), function ($value) use ($tableSchema) {
-    return $tableSchema->columns[$value]->isPrimaryKey && $tableSchema->columns[$value]->type === Schema::TYPE_BINARY && $tableSchema->columns[$value]->size === 16;
-});
-?>
-<?php if ($uuidPrimaryKeys): ?>
+<?php if ($uuidPrimaryKeys || count($timestampColumns) === 2 || count($blameableColumns) === 2): ?>
 
     public function behaviors()
     {
         return [
+<?php if ($uuidPrimaryKeys): ?>
             [
                 'class' => UUIDBehavior::className(),
                 'column' => '<?= $uuidPrimaryKeys[0] ?>',
             ],
+<?php endif; ?>
+<?php if (count($timestampColumns) === 2): ?>
+            [
+                'class' => TimestampBehavior::className(),
+                'value' => new Expression('NOW()'),
+            ],
+<?php endif; ?>
+<?php if (count($blameableColumns) === 2): ?>
+            [
+                'class' => BlameableBehavior::className(),
+            ],
+<?php endif; ?>
         ];
     }
 <?php endif; ?>

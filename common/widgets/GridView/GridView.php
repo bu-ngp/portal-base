@@ -48,6 +48,8 @@ class GridView extends \kartik\grid\GridView
     public $rightBottomToolbar = '';
     public $pjaxSettings = [
         'loadingCssClass' => 'wk-widget-grid-loading',
+      //  'loadingCssClass' => false,
+       // 'options' => ['clientOptions' => ['async' => false]],
     ];
     public $panelAfterTemplate = <<< HTML
         <div class="btn-toolbar kv-grid-toolbar" role="toolbar" style="display: inline-block;">
@@ -264,7 +266,25 @@ HTML;
         $this->js[] = <<<EOT
             if ($("#$id").length) {
                 $("#$id").yiiGridView({"filterUrl": window.location.search}); /* сокращает url purifyingUrl() */
-                $("#$id").yiiGridView('applyFilter');
+                
+                function Func_$id() {
+                    var busy = false;
+                    $.each($("div[data-pjax-container]"), function() {
+                        if ($(this)[0].busy) {
+                            busy = $(this)[0].busy;
+                        }
+                    });
+                
+                    if (!busy) {
+                        $("#$id").yiiGridView('applyFilter');
+                    } else {
+                        setTimeout(function() {
+                            Func_$id();
+                        }, 300);
+                    } 
+                }
+                
+                Func_$id();               
             }
 EOT;
     }

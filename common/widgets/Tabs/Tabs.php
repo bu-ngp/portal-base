@@ -8,7 +8,7 @@
 
 namespace common\widgets\Tabs;
 
-
+use common\widgets\Tabs\assets\TabsAsset;
 use yii\base\InvalidConfigException;
 use yii\bootstrap\Dropdown;
 use yii\bootstrap\Html;
@@ -20,6 +20,12 @@ class Tabs extends \yii\bootstrap\Tabs
     public $headerOptions = ['role' => 'presentation'];
     public $linkOptions = ['role' => 'tab'];
     public $itemOptions = ['role' => 'tabpanel'];
+
+    public function run()
+    {
+        $this->registerAssets();
+        return parent::run();
+    }
 
     protected function renderItems()
     {
@@ -97,6 +103,14 @@ class Tabs extends \yii\bootstrap\Tabs
             Html::tag('div', Html::tag('div', '', ['class' => 'pmd-tab-active-bar']) . $ul, ['class' => 'pmd-tabs']) .
             Html::tag('div', $tabContent, ['class' => 'pmd-card-body'])
             , ['class' => 'pmd-card pmd-z-depth']);
+    }
+
+    protected function registerAssets()
+    {
+        $view = $this->getView();
+        TabsAsset::register(self::getView());
+
+        $view->registerJs("$(document).find('.pmd-tabs').pmdTab()");
     }
 
 }
