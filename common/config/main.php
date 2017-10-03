@@ -15,7 +15,7 @@ return [
             'linkAssets' => true,
         ],
         'cache' => [
-            'class' => 'yii\caching\FileCache',
+            'class' => 'yii\caching\MemCache',
         ],
         'assetsAutoCompress' =>
             [

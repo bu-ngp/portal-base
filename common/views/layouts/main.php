@@ -100,16 +100,14 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
             <?= $content ?>
         </div>
     </div>
-
-    <footer class="footer">
-        <div class="container">
-            <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-
-            <p class="pull-right"><?= Yii::powered() ?></p>
-        </div>
-    </footer>
-
 </div>
+<footer class="footer">
+    <div class="container-footer">
+        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+
+        <p class="pull-right"><?= Yii::powered() ?></p>
+    </div>
+</footer>
 <?= ReportLoader::widget(['id' => 'wk-Report-Loader']); ?>
 <?= NotifyShower::widget(); ?>
 <?php \common\assets\PropellerAsset::register($this) ?>
