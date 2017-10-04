@@ -8,6 +8,12 @@
   "type": "project",
   "license": "BSD-3-Clause",
   "minimum-stability": "stable",
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
   "require": {
     "php": ">=5.4.0",
     "yiisoft/yii2": "~2.0.6",
@@ -43,13 +49,7 @@
     "enm1989/geckodriver": "~0.16.1"
   },
   "config": {
-    "process-timeout": 1800,
-    "fxp-asset": {
-      "installer-paths": {
-        "npm-asset-library": "vendor/npm",
-        "bower-asset-library": "vendor/bower"
-      }
-    }
+    "process-timeout": 1800
   },
   "scripts": {
     "production-set": "php init --env=Production --overwrite=n",

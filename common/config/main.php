@@ -4,6 +4,10 @@ return [
     'layoutPath' => dirname(dirname(__DIR__)) . '/common/views/layouts',
     'language' => 'ru-RU',
     'sourceLanguage' => 'en-US',
+    'aliases' => [
+        '@bower' => '@vendor/bower-asset',
+        '@npm'   => '@vendor/npm-asset',
+    ],
     'bootstrap' => [
         'assetsAutoCompress',
         'log',
@@ -59,18 +63,10 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-                'login' => 'site/login',
-            ],
-        ],
         'urlManagerAdmin' => [
             'class' => 'yii\web\urlManager',
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'baseUrl' => 'manager',
             'rules' => [
                 'login' => 'site/login',
             ],
