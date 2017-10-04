@@ -4,6 +4,7 @@ namespace common\models\base;
 
 use common\classes\BlameableBehavior;
 use common\classes\Ldap;
+use common\classes\LdapModelInterface;
 use domain\models\base\AuthAssignment;
 use domain\models\base\AuthItem;
 use domain\models\base\ConfigLdap;
@@ -43,12 +44,12 @@ use yii\web\IdentityInterface;
  * @property Parttime[] $parttimes
  * @property Profile $person
  */
-class Person extends \yii\db\ActiveRecord implements IdentityInterface
+class Person extends \yii\db\ActiveRecord implements LdapModelInterface
 {
     /**
      * @var array Группы LDAP доменного пользователя, проверяются в common\classes\WKUser
      */
-    public $person_ldap_groups = [];
+    private $person_ldap_groups = [];
 
     /**
      * @inheritdoc
@@ -271,5 +272,15 @@ class Person extends \yii\db\ActiveRecord implements IdentityInterface
     public function isLdap()
     {
         return $this->isNewRecord;
+    }
+
+    public function setLdapGroups(array $ldapGroups)
+    {
+        $this->person_ldap_groups = $ldapGroups;
+    }
+
+    public function getLdapGroups()
+    {
+        return $this->person_ldap_groups;
     }
 }

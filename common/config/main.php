@@ -91,7 +91,6 @@ return [
         ],
         'user' => [
             'class' => 'common\classes\WKUser',
-            'identityLdapGroupProperty' => 'person_ldap_groups',
             'identityClass' => 'common\models\base\Person',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-wk-portal', 'httpOnly' => true],

@@ -20,8 +20,6 @@ use yii\web\User;
 
 class WKUser extends User
 {
-    public $identityLdapGroupProperty;
-
     private $_accessLdap;
 
     public function can($permissionName, $params = [], $allowCaching = true)
@@ -50,25 +48,24 @@ class WKUser extends User
 
     protected function checkAccessLdap(DbManager $accessChecker, $permissionName)
     {
+        if (!Yii::$app->user->identity instanceof LdapModelInterface) {
+            return false;
+        }
+
         $AuthItem = (new Query)
             ->select(['ldap_group'])
             ->from($accessChecker->itemTable)
             ->where(['name' => $permissionName])
             ->one($accessChecker->db);
 
-        if (!($this->identityLdapGroupProperty
-            || property_exists(Yii::$app->user->identity, $this->identityLdapGroupProperty)
-            || Yii::$app->user->identity->{$this->identityLdapGroupProperty})
-        ) {
-            return false;
-        }
-
         return $this->checkAccessLdapRecursive($accessChecker, $permissionName, $AuthItem['ldap_group']);
     }
 
     protected function checkAccessLdapRecursive(DbManager $accessChecker, $itemName, $ldap_group)
     {
-        $groups = Yii::$app->user->identity->{$this->identityLdapGroupProperty};
+        /** @var array $groups */
+        /** @var LdapModelInterface Yii::$app->user->identity */
+        $groups = Yii::$app->user->identity->getLdapGroups();
 
         if ($groups && in_array($ldap_group, $groups)) {
             return true;

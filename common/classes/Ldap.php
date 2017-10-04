@@ -63,22 +63,7 @@ class Ldap
             'memberof',
         ]);
 
-        // Получаем количество результатов предыдущей проверки
-        $result_ent = ldap_get_entries($this->_ldapConn, $result);
-        $result_ent = $this->getResult($result_ent);
-
-        if ($result_ent) {
-            return new Person([
-                'person_id' => $result_ent[0]['objectguid'],
-                'person_fullname' => $result_ent[0]['displayname'],
-                'person_username' => $result_ent[0]['samaccountname'],
-                'person_email' => $result_ent[0]['mail'],
-                'person_auth_key' => Uuid::uuid2str($result_ent[0]['objectguid']),
-                'person_ldap_groups' => $this->getGroups($result_ent[0]['memberof']),
-            ]);
-        }
-
-        return null;
+        return $this->ldapSearchToModel($result);
     }
 
     public function findByUser($username)
@@ -91,18 +76,22 @@ class Ldap
             'memberof',
         ]);
 
+        return $this->ldapSearchToModel($result);
+    }
+
+    protected function ldapSearchToModel($ldapSearch)
+    {
         // Получаем количество результатов предыдущей проверки
-        $result_ent = ldap_get_entries($this->_ldapConn, $result);
-        $result_ent = $this->getResult($result_ent);
+        $result_ent = ldap_get_entries($this->_ldapConn, $ldapSearch);
 
         if ($result_ent) {
             return new Person([
-                'person_id' => $result_ent[0]['objectguid'],
-                'person_fullname' => $result_ent[0]['displayname'],
-                'person_username' => $result_ent[0]['samaccountname'],
-                'person_email' => $result_ent[0]['mail'],
-                'person_auth_key' => Uuid::uuid2str($result_ent[0]['objectguid']),
-                'person_ldap_groups' => $this->getGroups($result_ent[0]['memberof']),
+                'person_id' => $result_ent[0]['objectguid'][0],
+                'person_fullname' => $result_ent[0]['displayname'][0],
+                'person_username' => $result_ent[0]['samaccountname'][0],
+                'person_email' => $result_ent[0]['mail'][0],
+                'person_auth_key' => Uuid::uuid2str($result_ent[0]['objectguid'][0]),
+                'ldapGroups' => $this->getGroups($result_ent[0]['memberof']),
             ]);
         }
 
@@ -140,32 +129,10 @@ class Ldap
         return strtolower(preg_replace('/(\w{2})/', '\\\\$1', Uuid::uuid2str($id)));
     }
 
-    protected function getResult(array $ldapResult)
-    {
-        unset($ldapResult['count']);
-
-        array_walk($ldapResult, function (&$item) {
-            foreach ($item as $key => $value) {
-                if (is_int($key)) {
-                    unset($item[$key]);
-                } else {
-                    unset($item['count']);
-                    unset($item['dn']);
-
-                    if ($value['count'] === 1) {
-                        $item[$key] = $value[0];
-                    } else {
-                        unset($item[$key]['count']);
-                    }
-                }
-            }
-        });
-
-        return $ldapResult;
-    }
-
     protected function getGroups(array $memberOf)
     {
+        unset($memberOf['count']);
+
         return array_map(function ($group) {
             return preg_replace('/CN=(.*?),.*/', '$1', $group);
         }, $memberOf);
