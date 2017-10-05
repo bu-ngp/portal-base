@@ -95,4 +95,14 @@ class Profile extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Person::className(), ['person_id' => 'profile_id'])->from(['person' => Person::tableName()]);
     }
+
+    public static function items()
+    {
+        return [
+            'profile_pol' => [
+                Profile::MALE => 'Мужской',
+                Profile::FEMALE => 'Женский',
+            ],
+        ];
+    }
 }

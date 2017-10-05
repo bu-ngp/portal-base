@@ -133,6 +133,14 @@
                 if (input.length) {
                     if (input.attr('type') === 'checkbox') {
                         input.prop('checked', value);
+                    } else if (input.attr('type') === 'radio') {
+                        $.each(input, function () {
+                            if ($(this).val() == value) {
+                                $(this).prop('checked', true);
+
+                                return false;
+                            }
+                        });
                     } else {
                         input.val(value);
                     }
@@ -172,7 +180,7 @@
 
     var eventsApply = function ($widget) {
 
-        $(document).on('change', 'input[wkkeep]', function () {
+        $(document).on('change dp.change', 'input[wkkeep]', function () {
             getFromSessionStorage($widget, {
                 fail: function () {
                     getFromLocalStorage($widget);

@@ -26,6 +26,8 @@
     "npm-asset/imagesloaded": "*",
     "npm-asset/jquery-sortable": "*",
     "npm-asset/jquery-ui": "*",
+    "npm-asset/moment": "*",
+    "npm-asset/material-design-icons": "*",
     "wartron/yii2-uuid": "@dev",
     "moontoast/math": "~1.1.2",
     "rmrevin/yii2-fontawesome": "~2.17",
