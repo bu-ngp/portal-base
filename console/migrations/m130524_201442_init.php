@@ -2,7 +2,7 @@
 
 use wartron\yii2uuid\helpers\Uuid;
 use yii\base\InvalidConfigException;
-use yii\db\Migration;
+use common\classes\mysql\Migration;
 use yii\rbac\DbManager;
 
 class m130524_201442_init extends Migration
@@ -20,30 +20,12 @@ class m130524_201442_init extends Migration
         return $authManager;
     }
 
-    protected function uuidCreate($table, $fieldName)
-    {
-        return $this->db->createCommand("ALTER TABLE $table ADD $fieldName BINARY(16) NOT NULL FIRST")->execute();
-    }
-
-    /**
-     * @return bool
-     */
-    protected function isMSSQL()
-    {
-        return $this->db->driverName === 'mssql' || $this->db->driverName === 'sqlsrv' || $this->db->driverName === 'dblib';
-    }
-
     public function safeUp()
     {
         $authManager = $this->getAuthManager();
 
-        $tableOptions = null;
-        if ($this->db->driverName === 'mysql') {
-            // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
-            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
-        }
-
         $this->createTable('{{%profile}}', [
+            'profile_id' => $this->binary(16)->notNull(),
             'profile_inn' => $this->char(12),
             'profile_dr' => $this->date(),
             'profile_pol' => $this->boolean(),
@@ -53,39 +35,37 @@ class m130524_201442_init extends Migration
             'updated_at' => $this->integer()->notNull(),
             'created_by' => $this->string()->notNull(),
             'updated_by' => $this->string()->notNull(),
-        ], $tableOptions);
-
-        $this->uuidCreate('{{%profile}}', 'profile_id');
+        ]);
 
         $this->addPrimaryKey('profile_id', '{{%profile}}', 'profile_id');
 
         $this->createTable('{{%person}}', [
-            'person_code' => $this->integer()->notNull(),
+            'person_id' => $this->binary(16)->notNull(),
             'person_fullname' => $this->string()->notNull(),
             'person_username' => $this->string()->notNull()->unique(),
             'person_auth_key' => $this->char(32)->notNull(),
             'person_password_hash' => $this->string()->notNull(),
             'person_email' => $this->string(),
-            'person_hired' => $this->integer(),
-            'person_fired' => $this->integer(),
+            'person_hired' => $this->date(),
+            'person_fired' => $this->date(),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
             'created_by' => $this->string()->notNull(),
             'updated_by' => $this->string()->notNull(),
-        ], $tableOptions);
-
-        $this->uuidCreate('{{%person}}', 'person_id');
+        ]);
 
         $this->addPrimaryKey('person_id', '{{%person}}', 'person_id');
-        $this->addForeignKey('person_profile', '{{%person}}', 'person_id', '{{%profile}}', 'profile_id', $this->isMSSQL() ? null : 'CASCADE', $this->isMSSQL() ? null : 'CASCADE');
+        $this->addForeignKey('person_profile', '{{%person}}', 'person_id', '{{%profile}}', 'profile_id', 'CASCADE', 'CASCADE');
 
+        $this->createOnlyAutoIncrement('person_code', '{{%person}}', 'person_id');
+        
         $this->createTable($authManager->ruleTable, [
             'name' => $this->string(64)->notNull(),
-            'data' => $this->binary(),
+            'data' => $this->blob(),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
             'PRIMARY KEY (name)',
-        ], $tableOptions);
+        ]);
 
         $this->createTable($authManager->itemTable, [
             'name' => $this->string(64)->notNull(),
@@ -97,30 +77,29 @@ class m130524_201442_init extends Migration
             'data' => $this->binary(),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
-        ], $tableOptions);
+        ]);
 
         $this->addPrimaryKey('name', $authManager->itemTable, 'name');
         $this->createIndex('idx-auth_item-type', $authManager->itemTable, 'type');
-        $this->addForeignKey('rule_name', $authManager->itemTable, 'rule_name', $authManager->ruleTable, 'name', $this->isMSSQL() ? null : 'SET NULL', $this->isMSSQL() ? null : 'CASCADE');
+        $this->addForeignKey('rule_name', $authManager->itemTable, 'rule_name', $authManager->ruleTable, 'name', 'SET NULL', 'CASCADE');
 
         $this->createTable($authManager->itemChildTable, [
             'parent' => $this->string(64)->notNull(),
             'child' => $this->string(64)->notNull(),
-        ], $tableOptions);
+        ]);
 
         $this->addPrimaryKey('parent_child', $authManager->itemChildTable, ['parent', 'child']);
-        $this->addForeignKey('parent', $authManager->itemChildTable, 'parent', $authManager->itemTable, 'name', $this->isMSSQL() ? null : 'CASCADE', $this->isMSSQL() ? null : 'CASCADE');
-        $this->addForeignKey('child', $authManager->itemChildTable, 'child', $authManager->itemTable, 'name', $this->isMSSQL() ? null : 'CASCADE', $this->isMSSQL() ? null : 'CASCADE');
+        $this->addForeignKey('parent', $authManager->itemChildTable, 'parent', $authManager->itemTable, 'name', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('child', $authManager->itemChildTable, 'child', $authManager->itemTable, 'name', 'CASCADE', 'CASCADE');
 
         $this->createTable($authManager->assignmentTable, [
+            'user_id' => $this->binary(16)->notNull(),
             'item_name' => $this->string(64)->notNull(),
             'created_at' => $this->integer()->notNull(),
-        ], $tableOptions);
-
-        $this->uuidCreate($authManager->assignmentTable, 'user_id');
+        ]);
 
         $this->addPrimaryKey('item_name_user_id', $authManager->assignmentTable, ['item_name', 'user_id']);
-        $this->addForeignKey('item_name', $authManager->assignmentTable, 'item_name', $authManager->itemTable, 'name', $this->isMSSQL() ? null : 'CASCADE', $this->isMSSQL() ? null : 'CASCADE');
+        $this->addForeignKey('item_name', $authManager->assignmentTable, 'item_name', $authManager->itemTable, 'name', 'CASCADE', 'CASCADE');
         $this->addForeignKey('user_id', $authManager->assignmentTable, 'user_id', '{{%person}}', 'person_id');
 
         $uuid1 = Uuid::uuid();
@@ -140,7 +119,7 @@ class m130524_201442_init extends Migration
 
         $this->insert('{{%person}}', [
             'person_id' => $uuid1,
-            'person_code' => 1,
+            'person_code' => null,
             'person_fullname' => 'Администратор',
             'person_username' => 'admin',
             'person_auth_key' => Yii::$app->security->generateRandomString(),
@@ -159,10 +138,6 @@ class m130524_201442_init extends Migration
     {
         $authManager = $this->getAuthManager();
         $this->db = $authManager->db;
-
-        if ($this->isMSSQL()) {
-            $this->execute('DROP TRIGGER dbo.trigger_auth_item_child;');
-        }
 
         $this->dropTable($authManager->assignmentTable);
         $this->dropTable($authManager->itemChildTable);

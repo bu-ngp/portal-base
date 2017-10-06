@@ -5,12 +5,14 @@ namespace common\models\base;
 use common\classes\BlameableBehavior;
 use common\classes\Ldap;
 use common\classes\LdapModelInterface;
+use common\classes\validators\WKDateValidator;
 use domain\models\base\AuthAssignment;
 use domain\models\base\AuthItem;
 use domain\models\base\ConfigLdap;
 use domain\models\base\Employee;
 use domain\models\base\EmployeeHistory;
 use domain\models\base\Parttime;
+use domain\services\base\dto\PersonData;
 use Exception;
 use wartron\yii2uuid\behaviors\UUIDBehavior;
 use Yii;
@@ -65,9 +67,13 @@ class Person extends \yii\db\ActiveRecord implements LdapModelInterface
     public function rules()
     {
         return [
-            [['person_code', 'person_fullname', 'person_username', 'person_auth_key', 'person_password_hash'], 'required'],
-            [['person_code', 'person_hired', 'person_fired'], 'integer'],
+            [['person_fullname', 'person_username', 'person_auth_key', 'person_password_hash'], 'required'],
+            [['person_code'], 'safe'],
+            [['person_hired', 'person_fired'], WKDateValidator::className()],
+            [['person_username'], 'match', 'pattern' => '/^\D([0-9a-z_-]+)?$/i', 'message' => Yii::t('domain/user', 'Need only latin symbols or digits or "-", "_". First character can\'t digit.')],
+            [['person_username', 'person_fullname'], 'string', 'min' => 3],
             [['person_fullname', 'person_username', 'person_password_hash', 'person_email'], 'string', 'max' => 255],
+            [['person_email'], 'email'],
             [['person_auth_key'], 'string', 'max' => 32],
             [['person_username'], 'unique'],
             [['person_id'], 'exist', 'skipOnError' => true, 'targetClass' => Profile::className(), 'targetAttribute' => ['person_id' => 'profile_id']],
@@ -111,6 +117,18 @@ class Person extends \yii\db\ActiveRecord implements LdapModelInterface
                 'column' => 'person_id',
             ],
         ];
+    }
+
+    public static function create(PersonData $personData)
+    {
+        return new self([
+            'person_fullname' => $personData->person_fullname,
+            'person_username' => $personData->person_username,
+            'person_auth_key' => Yii::$app->security->generateRandomString(),
+            'person_password_hash' => Yii::$app->security->generatePasswordHash($personData->person_password),
+            'person_email' => $personData->person_email,
+            'person_hired' => date('Y-m-d'),
+        ]);
     }
 
     /**

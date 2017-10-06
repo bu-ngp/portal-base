@@ -3,7 +3,10 @@
 namespace domain\models\base;
 
 use common\classes\BlameableBehavior;
+use common\classes\validators\SnilsValidator;
+use common\classes\validators\WKDateValidator;
 use common\models\base\Person;
+use domain\services\base\dto\ProfileData;
 use wartron\yii2uuid\behaviors\UUIDBehavior;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -44,10 +47,11 @@ class Profile extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['profile_dr'], 'date', 'format' => 'yyyy-MM-dd'],
+            [['profile_id'], 'required'],
+            [['profile_dr'], WKDateValidator::className()],
             [['profile_pol'], 'in', 'range' => [Profile::MALE, Profile::FEMALE]],
-            [['profile_inn'], 'string', 'max' => 12],
-            [['profile_snils'], 'string', 'max' => 11],
+            [['profile_inn'], 'match', 'pattern' => '/\d{12}/', 'message' => Yii::t('domain/profile', 'INN required 12 digits')],
+            [['profile_snils'], SnilsValidator::className()],
             [['profile_address'], 'string', 'max' => 400],
         ];
     }
@@ -81,11 +85,19 @@ class Profile extends \yii\db\ActiveRecord
             [
                 'class' => BlameableBehavior::className(),
             ],
-            [
-                'class' => UUIDBehavior::className(),
-                'column' => 'profile_id',
-            ],
         ];
+    }
+
+    public static function create($primaryKey, ProfileData $profileData)
+    {
+        return new self([
+            'profile_id' => $primaryKey,
+            'profile_inn' => $profileData->profile_inn,
+            'profile_dr' => $profileData->profile_dr,
+            'profile_pol' => $profileData->profile_pol,
+            'profile_snils' => $profileData->profile_snils,
+            'profile_address' => $profileData->profile_address,
+        ]);
     }
 
     /**

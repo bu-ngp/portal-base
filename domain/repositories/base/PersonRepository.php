@@ -10,6 +10,7 @@ namespace domain\repositories\base;
 
 use common\models\base\Person;
 use domain\exceptions\ServiceErrorsException;
+use domain\models\base\Profile;
 use domain\repositories\RepositoryInterface;
 use Yii;
 

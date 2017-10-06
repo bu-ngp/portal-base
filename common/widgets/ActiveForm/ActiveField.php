@@ -15,6 +15,7 @@ use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\validators\DateValidator;
+use yii\web\JsExpression;
 use yii\widgets\MaskedInput;
 
 class ActiveField extends \yii\bootstrap\ActiveField
@@ -97,10 +98,12 @@ class ActiveField extends \yii\bootstrap\ActiveField
             if ($validator instanceof DateValidator) {
                 if ($validator->format === 'yyyy-MM-dd') {
                     $format = 'DD.MM.YYYY';
+                   // $format = 'YYYY-MM-DD';
                 }
 
                 if ($validator->format === 'yyyy-MM-dd HH:mm:ss') {
                     $format = 'DD.MM.YYYY HH:mm:ss';
+                   // $format = 'YYYY-MM-DD HH:mm:ss';
                 }
             }
         }
@@ -110,6 +113,7 @@ class ActiveField extends \yii\bootstrap\ActiveField
         $JSOptions = Json::encode([
             'locale' => 'ru',
             'format' => $format,
+           // 'extraFormats' => ['DD.MM.YYYY'],
         ]);
 
         DateTimePickerAsset::register($view);
@@ -129,6 +133,11 @@ class ActiveField extends \yii\bootstrap\ActiveField
         }
 
         $options['options']['class'] = $options['options']['class'] ?: 'form-control';
+
+        $options['clientOptions'] = [
+            'showMaskOnHover' => false,
+            'autoUnmask' => true,
+        ];
 
         return $this->widget(MaskedInput::className(), $options);
     }

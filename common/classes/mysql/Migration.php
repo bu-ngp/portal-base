@@ -15,4 +15,11 @@ class Migration extends \yii\db\Migration
     {
         return $this->getDb()->getSchema()->createColumnSchemaBuilder(Schema::TYPE_BLOB);
     }
+
+    public function createOnlyAutoIncrement($field, $table, $after = '')
+    {
+        $after = $after ? "AFTER `$after`" : '';
+
+        return $this->getDb()->createCommand("ALTER TABLE $table ADD `$field` INT(11) NOT NULL UNIQUE AUTO_INCREMENT $after")->execute();
+    }
 }
