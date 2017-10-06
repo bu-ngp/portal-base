@@ -75,5 +75,23 @@ $this->title = Yii::t('common/person', 'Create User');
             <?= Html::submitButton(Yii::t('common/podraz', 'Create'), ['class' => 'btn btn-success', 'form' => $modelUserForm->formName()]) ?>
         </div>
 
+        <?php
+        $this->registerJs(<<<EOT
+        
+            $('#{$modelUserForm->formName()}').on('submit', function(event) {
+                event.preventDefault();
+                
+                $('#{$modelProfileForm->formName()} input[name="_csrf-wk-portal"]').remove();
+                
+                $.ajax({
+                    type: "POST",
+                    url: window.location.href,
+                    data: $('#{$modelUserForm->formName()}').serialize() + "&" +  $('#{$modelProfileForm->formName()}').serialize()
+                });
+            });
+EOT
+        )
+        ?>
+
     </div>
 </div>

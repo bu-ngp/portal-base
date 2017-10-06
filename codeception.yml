@@ -3,7 +3,11 @@ include:
     - common
     - frontend
     - backend
+    - domain
 paths:
     log: console/runtime/logs
 settings:
     colors: false
+extensions:
+    enabled:
+        - Codeception\Extension\RunFailed
