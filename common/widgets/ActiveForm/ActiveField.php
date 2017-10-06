@@ -136,7 +136,7 @@ class ActiveField extends \yii\bootstrap\ActiveField
 
         $options['clientOptions'] = [
             'showMaskOnHover' => false,
-            'autoUnmask' => true,
+          //  'autoUnmask' => true,
         ];
 
         return $this->widget(MaskedInput::className(), $options);
@@ -144,7 +144,7 @@ class ActiveField extends \yii\bootstrap\ActiveField
 
     public function snilsInput($options = [])
     {
-        $options['mask'] = '999-999-999-99';
+        $options['mask'] = '999-999-999 99';
 
         return $this->maskedInput($options);
     }

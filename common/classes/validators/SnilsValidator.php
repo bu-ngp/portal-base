@@ -20,6 +20,8 @@ class SnilsValidator extends Validator
 
     public function validateAttribute($model, $attribute)
     {
+        $this->filterSnils($model, $attribute);
+
         if (intval($model->{$attribute}) < self::$MIN_VALUE) {
             $model->addError($attribute, 'СНИЛС должен быть больше ' . static::$MIN_VALUE);
             return;
@@ -59,5 +61,10 @@ class SnilsValidator extends Validator
         }
 
         return $sum;
+    }
+
+    private function filterSnils($model, $attribute)
+    {
+        $model->$attribute = preg_replace('/[-\s]/', '', $model->$attribute);
     }
 }

@@ -20,18 +20,21 @@ $this->title = Yii::t('common/person', 'Create User');
     <h1><?= Html::encode($this->title) ?></h1>
 
     <div class="user-form">
-
+        <?php $userForm = ActiveForm::begin(['id' => $modelUserForm->formName()]); ?>
         <?= Panel::widget([
             'label' => Yii::t('common/employee', 'User'),
-            'content' => $this->render('_personForm', ['modelUserForm' => $modelUserForm]),
+            'content' => $this->render('_personForm', ['modelUserForm' => $modelUserForm, 'userForm' => $userForm]),
         ]) ?>
+
+        <?= Panel::widget([
+            'label' => Yii::t('common/employee', 'Profile'),
+            'content' => $this->render('_profileForm', ['modelProfileForm' => $modelProfileForm, 'profileForm' => $userForm]),
+        ]) ?>
+
+        <?php ActiveForm::end(); ?>
 
         <?= Tabs::widget([
             'items' => [
-                [
-                    'label' => Yii::t('common/employee', 'Profile'),
-                    'content' => $this->render('_profileForm', ['modelProfileForm' => $modelProfileForm]),
-                ],
                 [
                     'label' => Yii::t('common/employee', 'Employees'),
                     'content' => $this->render('_employeeGrid', [
@@ -76,21 +79,21 @@ $this->title = Yii::t('common/person', 'Create User');
         </div>
 
         <?php
-        $this->registerJs(<<<EOT
-        
-            $('#{$modelUserForm->formName()}').on('submit', function(event) {
-                event.preventDefault();
-                
-                $('#{$modelProfileForm->formName()} input[name="_csrf-wk-portal"]').remove();
-                
-                $.ajax({
-                    type: "POST",
-                    url: window.location.href,
-                    data: $('#{$modelUserForm->formName()}').serialize() + "&" +  $('#{$modelProfileForm->formName()}').serialize()
-                });
-            });
-EOT
-        )
+//        $this->registerJs(<<<EOT
+//
+//            $('#{$modelUserForm->formName()}').on('submit', function(event) {
+//                event.preventDefault();
+//
+//                $('#{$modelProfileForm->formName()} input[name="_csrf-wk-portal"]').remove();
+//
+//                $.ajax({
+//                    type: "POST",
+//                    url: window.location.href,
+//                    data: $('#{$modelUserForm->formName()}').serialize() + "&" +  $('#{$modelProfileForm->formName()}').serialize()
+//                });
+//            });
+//EOT
+//        )
         ?>
 
     </div>

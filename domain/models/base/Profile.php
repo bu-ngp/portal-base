@@ -80,7 +80,8 @@ class Profile extends \yii\db\ActiveRecord
         return [
             [
                 'class' => TimestampBehavior::className(),
-                'value' => new Expression('NOW()'),
+             //   'value' => new Expression('NOW()'),
+                'value' => time(),
             ],
             [
                 'class' => BlameableBehavior::className(),

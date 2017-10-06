@@ -107,7 +107,8 @@ class Person extends \yii\db\ActiveRecord implements LdapModelInterface
         return [
             [
                 'class' => TimestampBehavior::className(),
-                'value' => new Expression('NOW()'),
+                //   'value' => new Expression('NOW()'),
+                'value' => time(),
             ],
             [
                 'class' => BlameableBehavior::className(),
@@ -122,6 +123,7 @@ class Person extends \yii\db\ActiveRecord implements LdapModelInterface
     public static function create(PersonData $personData)
     {
         return new self([
+//            'person_code' => null,
             'person_fullname' => $personData->person_fullname,
             'person_username' => $personData->person_username,
             'person_auth_key' => Yii::$app->security->generateRandomString(),

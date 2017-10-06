@@ -7,7 +7,7 @@ use rmrevin\yii\fontawesome\FA;
 /* @var $modelUserForm domain\forms\base\UserForm */
 ?>
 
-<?php $userForm = ActiveForm::begin(['id' => $modelUserForm->formName()]); ?>
+<?php //$userForm = ActiveForm::begin(['id' => $modelUserForm->formName()]); ?>
 
 <div class="form-group">
     <div class="row">
@@ -42,4 +42,4 @@ use rmrevin\yii\fontawesome\FA;
 <?= $userForm->field($modelUserForm, 'assignEmployees', ['enableClientValidation' => false])->hiddenInput()->label(false) ?>
 <?= $userForm->field($modelUserForm, 'assignRoles', ['enableClientValidation' => false])->hiddenInput()->label(false) ?>
 
-<?php ActiveForm::end(); ?>
+<?php //ActiveForm::end(); ?>

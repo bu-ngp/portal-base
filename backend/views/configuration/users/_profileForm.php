@@ -8,7 +8,7 @@ use rmrevin\yii\fontawesome\FA;
 /* @var $modelProfileForm domain\forms\base\UserForm */
 ?>
 
-<?php $profileForm = ActiveForm::begin(['id' => $modelProfileForm->formName()]); ?>
+<?php //$profileForm = ActiveForm::begin(['id' => $modelProfileForm->formName()]); ?>
 
     <div class="form-group">
         <div class="row">
@@ -50,4 +50,4 @@ use rmrevin\yii\fontawesome\FA;
         </div>
     </div>
 
-<?php ActiveForm::end(); ?>
+<?php //ActiveForm::end(); ?>
