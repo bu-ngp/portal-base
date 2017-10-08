@@ -3,6 +3,7 @@
 namespace domain\forms\base;
 
 use domain\models\base\Build;
+use domain\rules\base\BuildRules;
 use yii\base\Model;
 
 class BuildForm extends Model
@@ -12,7 +13,7 @@ class BuildForm extends Model
     public function __construct(Build $build = null, $config = [])
     {
         if ($build) {
-            $this->load($build->attributes, '');
+            $this->build_name = $build->build_name;
         }
 
         parent::__construct($config);
@@ -20,7 +21,8 @@ class BuildForm extends Model
 
     public function rules()
     {
-        return (new Build())->rules();
+        return BuildRules::client();
+
     }
 
     public function attributeLabels()

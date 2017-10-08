@@ -4,9 +4,12 @@ namespace domain\models\base;
 
 use common\models\base\Person;
 use common\widgets\GridView\services\GWItemsTrait;
+use domain\behaviors\UserRoleBehavior;
+use domain\rules\base\RoleRules;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%auth_item}}".
@@ -45,13 +48,13 @@ class AuthItem extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
-            [['name', 'type', 'created_at', 'updated_at'], 'required'],
-            [['type', 'view', 'created_at', 'updated_at'], 'integer'],
-            [['description', 'data', 'ldap_group'], 'string'],
+        return ArrayHelper::merge(RoleRules::client(), [
+            [['name', 'type'], 'required'],
+            [['type', 'view'], 'integer'],
+            [['data'], 'string'],
             [['name', 'rule_name'], 'string', 'max' => 64],
-            //    [['rule_name'], 'exist', 'skipOnError' => true, 'targetClass' => AuthRule::className(), 'targetAttribute' => ['rule_name' => 'name']],
-        ];
+            [['name', 'description'], 'unique'],
+        ]);
     }
 
     /**
@@ -72,13 +75,20 @@ class AuthItem extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function create($name, $description, $ldapGroup, $type)
+    public function behaviors()
+    {
+        return [
+            UserRoleBehavior::className(),
+        ];
+    }
+
+    public static function create($name, $description, $ldapGroup)
     {
         $authItem = new self([
             'name' => $name,
             'description' => $description,
             'ldap_group' => $ldapGroup,
-            'type' => $type,
+            'type' => 1,
         ]);
 
         return $authItem;

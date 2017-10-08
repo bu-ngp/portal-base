@@ -2,8 +2,11 @@
 
 namespace domain\models\base;
 
+use domain\behaviors\UpperCaseBehavior;
+use domain\rules\base\BuildRules;
 use wartron\yii2uuid\behaviors\UUIDBehavior;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%build}}".
@@ -30,10 +33,9 @@ class Build extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
-            [['build_name'], 'required'],
-            [['build_name'], 'string', 'max' => 255],
-        ];
+        return ArrayHelper::merge(BuildRules::client(), [
+            [['build_name'], 'unique'],
+        ]);
     }
 
     /**
@@ -53,6 +55,10 @@ class Build extends \yii\db\ActiveRecord
             [
                 'class' => UUIDBehavior::className(),
                 'column' => 'build_id',
+            ],
+            [
+                'class' => UpperCaseBehavior::className(),
+                'attributes' => ['build_name'],
             ],
         ];
     }

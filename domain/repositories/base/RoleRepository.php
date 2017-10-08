@@ -53,6 +53,7 @@ class RoleRepository implements RepositoryInterface
 
     /**
      * @param AuthItem $authitem
+     * @return int
      */
     public function add($authitem)
     {
@@ -67,11 +68,12 @@ class RoleRepository implements RepositoryInterface
             throw new RuntimeException('Saving error.');
         }
 
-        AuthItem::updateAll(['ldap_group' => $authitem->ldap_group], ['name' => $authitem->name]);
+        return AuthItem::updateAll(['ldap_group' => $authitem->ldap_group], ['name' => $authitem->name]);
     }
 
     /**
      * @param AuthItem $authitem
+     * @return int
      */
     public function save($authitem)
     {
@@ -85,7 +87,7 @@ class RoleRepository implements RepositoryInterface
             throw new RuntimeException('Saving error.');
         }
 
-        AuthItem::updateAll(['ldap_group' => $authitem->ldap_group], ['name' => $authitem->name]);
+        return AuthItem::updateAll(['ldap_group' => $authitem->ldap_group], ['name' => $authitem->name]);
     }
 
     /**

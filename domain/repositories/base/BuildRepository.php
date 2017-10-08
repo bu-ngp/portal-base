@@ -24,6 +24,7 @@ class BuildRepository implements RepositoryInterface
 
     /**
      * @param Build $build
+     * @return bool
      */
     public function add($build)
     {
@@ -33,10 +34,13 @@ class BuildRepository implements RepositoryInterface
         if (!$build->insert(false)) {
             throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
         }
+        
+        return true;
     }
 
     /**
      * @param Build $build
+     * @return bool
      */
     public function save($build)
     {
@@ -46,6 +50,8 @@ class BuildRepository implements RepositoryInterface
         if ($build->update(false) === false) {
             throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
         }
+
+        return true;
     }
 
     /**

@@ -2,11 +2,12 @@
 
 namespace domain\services\base;
 
+use domain\forms\base\BuildForm;
 use domain\models\base\Build;
 use domain\repositories\base\BuildRepository;
-use domain\services\BaseService;
+use domain\services\WKService;
 
-class BuildService extends BaseService
+class BuildService extends WKService
 {
     private $buildRepository;
 
@@ -15,26 +16,27 @@ class BuildService extends BaseService
     )
     {
         $this->buildRepository = $buildRepository;
-
-        parent::__construct();
     }
 
-    public function create($build_name)
+    public function create(BuildForm $form)
     {
-        $build = Build::create($build_name);
-        $this->buildRepository->add($build);
+        $build = Build::create($form->build_name);
+        if (!$this->validateModels($build, $form)) {
+            return false;
+        }
 
-        return true;
+        return $this->buildRepository->add($build);
     }
 
-    public function update($id, $build_name)
+    public function update($id, BuildForm $form)
     {
         $build = $this->buildRepository->find($id);
+        $build->editData($form->build_name);
+        if (!$this->validateModels($build, $form)) {
+            return false;
+        }
 
-        $build->editData($build_name);
-        $this->buildRepository->save($build);
-
-        return true;
+        return $this->buildRepository->save($build);
     }
 
     public function delete($id)

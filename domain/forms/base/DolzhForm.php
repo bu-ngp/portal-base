@@ -3,6 +3,7 @@
 namespace domain\forms\base;
 
 use domain\models\base\Dolzh;
+use domain\rules\base\DolzhRules;
 use yii\base\Model;
 
 class DolzhForm extends Model
@@ -12,7 +13,7 @@ class DolzhForm extends Model
     public function __construct(Dolzh $dolzh = null, $config = [])
     {
         if ($dolzh) {
-            $this->load($dolzh->attributes, '');
+            $this->dolzh_name = $dolzh->dolzh_name;
         }
 
         parent::__construct($config);
@@ -20,7 +21,7 @@ class DolzhForm extends Model
 
     public function rules()
     {
-        return (new Dolzh())->rules();
+        return DolzhRules::client();
     }
 
     public function attributeLabels()

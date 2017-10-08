@@ -16,10 +16,14 @@ class TransactionManager
         try {
             call_user_func($function);
             $transaction->commit();
+
+            return true;
         } catch (\Exception $e) {
             $transaction->rollBack();
             if ($functionError) {
                 call_user_func($functionError, $e);
+                
+                return false;
             } else {
                 throw $e;
             }

@@ -3,20 +3,18 @@
 # Suite for unit or integration tests.
 
 actor: UnitTester
-settings:
-    colors: false
 modules:
     enabled:
         - Asserts
-        - \Helper\Unit
-        - Yii2
-        - Db
-    config:
-        Yii2:
-            configFile: '../common/config/test.php'
+        - \domain\tests\Helper\Unit
+        - Yii2:
+            configFile: '../common/config/test-local.php'
+            entryUrl: 'http://127.0.0.1:8080/wk-portal_dev/'
             entryScript: index-test.php
             cleanup: false
-        Db:
+        - Db:
             dsn: 'mysql:host=127.0.0.1;dbname=wkportal_test'
             user: 'root'
             password: '265463'
+            cleanup: true
+            dump: 'tests/_data/dump.sql'

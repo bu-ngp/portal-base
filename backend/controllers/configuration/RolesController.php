@@ -3,13 +3,11 @@
 namespace backend\controllers\configuration;
 
 use common\widgets\GridView\services\AjaxResponse;
-use common\widgets\NotifyShower\NotifyShower;
 use domain\forms\base\RoleForm;
 use domain\forms\base\RoleUpdateForm;
 use domain\models\base\filter\AuthItemFilter;
 use domain\services\AjaxFilter;
 use domain\services\base\RoleService;
-use domain\services\proxyService;
 use common\reports\RolesReport;
 use Yii;
 use domain\models\base\AuthItem;
@@ -32,7 +30,7 @@ class RolesController extends Controller
 
     public function __construct($id, $module, RoleService $roleService, $config = [])
     {
-        $this->roleService = new proxyService($roleService);
+        $this->roleService = $roleService;
         parent::__construct($id, $module, $config = []);
     }
 
@@ -96,18 +94,10 @@ class RolesController extends Controller
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $this->roleService->create(
-                $form->name,
-                $form->description,
-                $form->ldap_group,
-                $form->type,
-                $form->assignRoles
-            )
+            && $this->roleService->create($form)
         ) {
             return $this->redirect(['index']);
         }
-
-        NotifyShower::serviceMessages($this->roleService->getErrors());
 
         return $this->render('create', [
             'modelForm' => $form,
@@ -129,17 +119,12 @@ class RolesController extends Controller
         $searchModel = new AuthItemSearch();
         $dataProvider = $searchModel->searchForUpdate(Yii::$app->request->queryParams);
 
-        if ($form->load(Yii::$app->request->post()) && $form->validate()
-            && $this->roleService->update(
-                $roleModel->primaryKey,
-                $form->description,
-                $form->ldap_group
-            )
+        if ($form->load(Yii::$app->request->post())
+            && $form->validate()
+            && $this->roleService->update($roleModel->primaryKey, $form)
         ) {
             return $this->redirect(['index']);
         }
-
-        NotifyShower::serviceMessages($this->roleService->getErrors());
 
         return $this->render('update', [
             'modelForm' => $form,

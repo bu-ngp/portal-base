@@ -17,24 +17,30 @@ use yii\bootstrap\Widget;
 
 class NotifyShower extends Widget
 {
+    const SUCCESS = 'success';
+    const ERROR = 'danger';
+
     static public $messageContainer = [];
 
-    static public function message($message)
+    static public function message($message, $type = self::ERROR)
     {
         if (is_string($message) && !empty($message)) {
-            self::$messageContainer[] = $message;
+            self::$messageContainer[] = [
+                'type' => $type,
+                'message' => $message,
+            ];
+
+            return $type !== self::ERROR;
         }
+
+        return true;
     }
 
-    static public function serviceMessages(array $messagesArray)
+    static public function hasErrors()
     {
-        foreach ($messagesArray as $attr => $errorMes) {
-            if ($attr === 'notifyShower') {
-                foreach ($errorMes as $mes) {
-                    self::$messageContainer[] = $mes;
-                }
-            }
-        }
+        return array_filter(self::$messageContainer, function ($value) {
+            return $value['type'] === self::ERROR;
+        });
     }
 
     /**
@@ -61,8 +67,8 @@ class NotifyShower extends Widget
     {
         $html = '';
 
-        foreach (self::$messageContainer as $message) {
-            $html .= "<li>$message</li>";
+        foreach (self::$messageContainer as $value) {
+            $html .= "<li message-type=\"{$value['type']}\">{$value['message']}</li>";
         }
 
         return $html ? "<ul>$html</ul>" : '';
@@ -75,7 +81,7 @@ class NotifyShower extends Widget
         $settings = ['type' => 'danger'];
         $settings = json_encode(array_filter($settings), JSON_UNESCAPED_UNICODE);
 
-        $view->registerJs("$('div.wk-notify-shower>ul li').each(function() { $.notify({message: $(this).text()}, $settings); });  ");
+        $view->registerJs("$('div.wk-notify-shower>ul li').each(function() { $.notify({message: $(this).text(), type: $(this).attr('message-type')}, $settings); });  ");
     }
 
 }

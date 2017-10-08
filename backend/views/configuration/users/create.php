@@ -21,14 +21,24 @@ $this->title = Yii::t('common/person', 'Create User');
 
     <div class="user-form">
         <?php $userForm = ActiveForm::begin(['id' => $modelUserForm->formName()]); ?>
-        <?= Panel::widget([
-            'label' => Yii::t('common/employee', 'User'),
-            'content' => $this->render('_personForm', ['modelUserForm' => $modelUserForm, 'userForm' => $userForm]),
-        ]) ?>
 
-        <?= Panel::widget([
-            'label' => Yii::t('common/employee', 'Profile'),
-            'content' => $this->render('_profileForm', ['modelProfileForm' => $modelProfileForm, 'profileForm' => $userForm]),
+        <?= Tabs::widget([
+            'items' => [
+                [
+                    'label' => Yii::t('common/employee', 'User'),
+                    'content' => Panel::widget([
+                        'label' => Yii::t('common/employee', 'User'),
+                        'content' => $this->render('_personForm', ['modelUserForm' => $modelUserForm, 'userForm' => $userForm]),
+                    ]),
+                ],
+                [
+                    'label' => Yii::t('common/employee', 'Profile'),
+                    'content' => Panel::widget([
+                        'label' => Yii::t('common/employee', 'Profile'),
+                        'content' => $this->render('_profileForm', ['modelProfileForm' => $modelProfileForm, 'profileForm' => $userForm]),
+                    ]),
+                ],
+            ],
         ]) ?>
 
         <?php ActiveForm::end(); ?>
@@ -79,21 +89,24 @@ $this->title = Yii::t('common/person', 'Create User');
         </div>
 
         <?php
-//        $this->registerJs(<<<EOT
-//
-//            $('#{$modelUserForm->formName()}').on('submit', function(event) {
-//                event.preventDefault();
-//
-//                $('#{$modelProfileForm->formName()} input[name="_csrf-wk-portal"]').remove();
-//
-//                $.ajax({
-//                    type: "POST",
-//                    url: window.location.href,
-//                    data: $('#{$modelUserForm->formName()}').serialize() + "&" +  $('#{$modelProfileForm->formName()}').serialize()
-//                });
-//            });
-//EOT
-//        )
+        $this->registerJs(<<<EOT
+            findErrors = function() {
+                var tabError = $('#{$modelUserForm->formName()}').find('div.has-error').first().parents('div.tab-pane');     
+                
+                if (tabError.length) {
+                    $('a[href="#' + tabError.attr('id') + '"]').click();
+                } 
+            }
+        
+            findErrors();
+            
+            $('button[type="submit"]').on('click', function() {
+                setTimeout(function() {
+                    findErrors();
+                }, 2000);
+            });
+EOT
+        )
         ?>
 
     </div>

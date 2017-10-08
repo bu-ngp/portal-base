@@ -31,7 +31,7 @@ class UsersController extends Controller
 
     public function __construct($id, $module, PersonService $personService, $config = [])
     {
-        $this->personService = new proxyService($personService);
+        $this->personService = $personService;
         parent::__construct($id, $module, $config = []);
     }
 
@@ -63,21 +63,8 @@ class UsersController extends Controller
             && $profileForm->load(Yii::$app->request->post())
             && $profileForm->validate()
             && $this->personService->create(
-                new PersonData(
-                    $userForm->person_fullname,
-                    $userForm->person_username,
-                    $userForm->person_password,
-                    $userForm->person_password_repeat,
-                    $userForm->person_email,
-                    $userForm->person_fired
-                ),
-                new ProfileData(
-                    $profileForm->profile_inn,
-                    $profileForm->profile_dr,
-                    $profileForm->profile_pol,
-                    $profileForm->profile_snils,
-                    $profileForm->profile_address
-                ),
+                $userForm,
+                $profileForm,
                 $userForm->assignEmployees,
                 $userForm->assignRoles
             )
@@ -85,7 +72,8 @@ class UsersController extends Controller
             return $this->redirect(['index']);
         }
 
-        NotifyShower::serviceMessages($this->personService->getErrors());
+        $userForm->person_password = null;
+        $userForm->person_password_repeat = null;
 
         return $this->render('create', [
             'modelUserForm' => $userForm,

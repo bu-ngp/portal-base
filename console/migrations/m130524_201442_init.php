@@ -26,10 +26,10 @@ class m130524_201442_init extends Migration
 
         $this->createTable('{{%profile}}', [
             'profile_id' => $this->binary(16)->notNull(),
-            'profile_inn' => $this->char(12),
+            'profile_inn' => $this->char(12)->unique(),
             'profile_dr' => $this->date(),
             'profile_pol' => $this->boolean(),
-            'profile_snils' => $this->char(11),
+            'profile_snils' => $this->char(11)->unique(),
             'profile_address' => $this->string(400),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
@@ -55,7 +55,7 @@ class m130524_201442_init extends Migration
         ]);
 
         $this->addPrimaryKey('person_id', '{{%person}}', 'person_id');
-        $this->addForeignKey('person_profile', '{{%person}}', 'person_id', '{{%profile}}', 'profile_id', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('person_profile', '{{%profile}}', 'profile_id', '{{%person}}', 'person_id', 'CASCADE', 'CASCADE');
 
         $this->createOnlyAutoIncrement('person_code', '{{%person}}', 'person_id');
         
@@ -102,23 +102,8 @@ class m130524_201442_init extends Migration
         $this->addForeignKey('item_name', $authManager->assignmentTable, 'item_name', $authManager->itemTable, 'name', 'CASCADE', 'CASCADE');
         $this->addForeignKey('user_id', $authManager->assignmentTable, 'user_id', '{{%person}}', 'person_id');
 
-        $uuid1 = Uuid::uuid();
-
-        $this->insert('{{%profile}}', [
-            'profile_id' => $uuid1,
-            'profile_inn' => null,
-            'profile_dr' => null,
-            'profile_pol' => null,
-            'profile_snils' => null,
-            'profile_address' => null,
-            'created_at' => time(),
-            'updated_at' => time(),
-            'created_by' => 'system',
-            'updated_by' => 'system',
-        ]);
-
         $this->insert('{{%person}}', [
-            'person_id' => $uuid1,
+            'person_id' => Uuid::uuid(),
             'person_code' => null,
             'person_fullname' => 'Администратор',
             'person_username' => 'admin',

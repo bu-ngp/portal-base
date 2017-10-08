@@ -14,7 +14,7 @@ use domain\repositories\RepositoryInterface;
 use RuntimeException;
 use Yii;
 
-class AuthItemChildRepository implements RepositoryInterface
+class AuthItemChildRepository
 {
     /**
      * @param $id
@@ -30,31 +30,26 @@ class AuthItemChildRepository implements RepositoryInterface
     }
 
     /**
-     * @param AuthItemChild[] $authItemChild
+     * @param AuthItemChild $authItemChild
      */
-    public function add($authItemChild)
+    public function add(AuthItemChild $authItemChild)
     {
-        foreach ($authItemChild as $item) {
-            if (!$parent = Yii::$app->authManager->getRole($item->parent)) {
-                throw new RuntimeException("Parent {$item->parent} not exist.");
-            }
+        if (!$parent = Yii::$app->authManager->getRole($authItemChild->parent)) {
+            throw new RuntimeException("Parent {$authItemChild->parent} not exist.");
+        }
 
-            if (!$child = Yii::$app->authManager->getRole($item->child)) {
-                throw new RuntimeException("Child {$item->child} not exist.");
-            }
+        if (!$child = Yii::$app->authManager->getRole($authItemChild->child)) {
+            throw new RuntimeException("Child {$authItemChild->child} not exist.");
+        }
 
-            if (Yii::$app->authManager->canAddChild($parent, $child)) {
-                Yii::$app->authManager->addChild($parent, $child);
-            } else {
-                throw new RuntimeException("Can't assign '{$child->description}' to '{$parent->description}'");
-            }
+        if (Yii::$app->authManager->canAddChild($parent, $child)) {
+            Yii::$app->authManager->addChild($parent, $child);
+        } else {
+            throw new RuntimeException("Can't assign '{$child->description}' to '{$parent->description}'");
         }
     }
 
-    /**
-     * @param AuthItemChild $authItemChild
-     */
-    public function save($authItemChild)
+    public function save()
     {
         throw new RuntimeException("Not exists save method for this model");
     }
@@ -62,7 +57,7 @@ class AuthItemChildRepository implements RepositoryInterface
     /**
      * @param AuthItemChild $authItemChild
      */
-    public function delete($authItemChild)
+    public function delete(AuthItemChild $authItemChild)
     {
         if (!$parent = Yii::$app->authManager->getRole($authItemChild->parent)) {
             throw new \RuntimeException(Yii::t('domain/base', 'Deleting error. Parent is missed.'));
@@ -80,7 +75,7 @@ class AuthItemChildRepository implements RepositoryInterface
     /**
      * @param AuthItem $authItem
      */
-    public function removeChildren($authItem)
+    public function removeChildren(AuthItem $authItem)
     {
         if (!$role = Yii::$app->authManager->getRole($authItem->name)) {
             throw new \RuntimeException(Yii::t('domain/base', "Deleting error. Role '{role}' not exists", ['role' => $authItem->name]));

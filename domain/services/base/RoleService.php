@@ -9,15 +9,17 @@
 
 namespace domain\services\base;
 
-use domain\exceptions\ServiceErrorsException;
+use common\widgets\NotifyShower\NotifyShower;
+use domain\forms\base\RoleForm;
+use domain\forms\base\RoleUpdateForm;
 use domain\models\base\AuthItem;
 use domain\models\base\AuthItemChild;
 use domain\repositories\base\AuthItemChildRepository;
 use domain\repositories\base\RoleRepository;
-use domain\services\BaseService;
 use domain\services\TransactionManager;
+use domain\services\WKService;
 
-class RoleService extends BaseService
+class RoleService extends WKService
 {
     private $roleRepository;
     private $transactionManager;
@@ -32,62 +34,57 @@ class RoleService extends BaseService
         $this->roleRepository = $roleRepository;
         $this->authItemChildRepository = $authItemChildRepository;
         $this->transactionManager = $transactionManager;
-
-        parent::__construct();
     }
 
     /**
      * Добавление новой пользовательской роли с выбранными подчиненными ролями
      *
-     * @param string $name Уникальное имя роли
-     * @param string $description Название роли
-     * @param string $ldapGroup Группа LDAP
-     * @param integer $type
-     * @param string $assignedKeys массив с первичными ключами выбранных записей
+     * @param RoleForm $form
      * @return bool
      * @throws \Exception
      */
-    public function create($name, $description, $ldapGroup, $type, $assignedKeys)
+    public function create(RoleForm $form)
     {
-        if (!is_string($assignedKeys) || ($assignedKeys = json_decode($assignedKeys)) === null) {
-            throw new ServiceErrorsException('assignRoles', \Yii::t('common/roles', 'Error when recognizing selected items'));
+        $assignedKeys = $this->guardAssignRoles($form);
+
+        $authItem = AuthItem::create($form->name, $form->description, $form->ldap_group);
+        if (NotifyShower::hasErrors() || !$this->validateModels($authItem, $form)) {
+            return false;
         }
 
-        if (!$assignedKeys) {
-            throw new ServiceErrorsException('notifyShower', \Yii::t('common/roles', 'Need add roles'));
-        }
-
-        $authItem = AuthItem::create($name, $description, $ldapGroup, $type);
         $authItemChild = AuthItemChild::create($authItem, $assignedKeys);
 
-        $this->transactionManager->execute(function () use ($authItem, $authItemChild) {
+        return $this->transactionManager->execute(function () use ($authItem, $authItemChild) {
             $this->roleRepository->add($authItem);
-            $this->authItemChildRepository->add($authItemChild);
-        });
 
-        return true;
+            foreach ($authItemChild as $item) {
+                $this->authItemChildRepository->add($item);
+            }
+        });
     }
 
     /**
      * Обновление названия роли на форме редактирования роли
      *
      * @param string $id Идентификатор обновляемой роли
-     * @param string $description Новое название роли
-     * @param string $ldapGroup Группа LDAP
+     * @param RoleUpdateForm $form
      * @return bool
      */
-    public function update($id, $description, $ldapGroup)
+    public function update($id, RoleUpdateForm $form)
     {
         $authItem = $this->roleRepository->find($id);
 
         if ($this->roleRepository->isEmptyChildren($authItem)) {
-            throw new ServiceErrorsException('notifyShower', \Yii::t('common/roles', 'Need add roles'));
+            NotifyShower::message(\Yii::t('common/roles', 'Need add roles'));
         }
 
-        $authItem->editData($description, $ldapGroup);
-        $this->roleRepository->save($authItem);
+        $authItem->editData($form->description, $form->ldap_group);
 
-        return true;
+        if (NotifyShower::hasErrors() || !$this->validateModels($authItem, $form)) {
+            return false;
+        }
+
+        return $this->roleRepository->save($authItem);
     }
 
     /**
@@ -116,5 +113,20 @@ class RoleService extends BaseService
             $this->authItemChildRepository->removeChildren($authItem);
             $this->roleRepository->delete($authItem);
         });
+    }
+
+    private function guardAssignRoles($form)
+    {
+        if (!is_string($form->assignRoles) || ($assignedKeys = json_decode($form->assignRoles)) === null) {
+            NotifyShower::message(\Yii::t('common/roles', 'Error when recognizing selected items'));
+
+            return false;
+        }
+
+        if (!$assignedKeys) {
+            NotifyShower::message(\Yii::t('common/roles', 'Need add roles'));
+        }
+
+        return $assignedKeys;
     }
 }

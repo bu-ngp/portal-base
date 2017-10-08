@@ -2,11 +2,12 @@
 
 namespace domain\services\base;
 
+use domain\forms\base\DolzhForm;
 use domain\models\base\Dolzh;
 use domain\repositories\base\DolzhRepository;
-use domain\services\BaseService;
+use domain\services\WKService;
 
-class DolzhService extends BaseService
+class DolzhService extends WKService
 {
     private $dolzhRepository;
 
@@ -15,26 +16,27 @@ class DolzhService extends BaseService
     )
     {
         $this->dolzhRepository = $dolzhRepository;
-
-        parent::__construct();
     }
 
-    public function create($dolzh_name)
+    public function create(DolzhForm $form)
     {
-        $dolzh = Dolzh::create($dolzh_name);
-        $this->dolzhRepository->add($dolzh);
+        $dolzh = Dolzh::create($form->dolzh_name);
+        if (!$this->validateModels($dolzh, $form)) {
+            return false;
+        }
 
-        return true;
+        return $this->dolzhRepository->add($dolzh);
     }
 
-    public function update($id, $dolzh_name)
+    public function update($id, DolzhForm $form)
     {
         $dolzh = $this->dolzhRepository->find($id);
+        $dolzh->editData($form->dolzh_name);
+        if (!$this->validateModels($dolzh, $form)) {
+            return false;
+        }
 
-        $dolzh->editData($dolzh_name);
-        $this->dolzhRepository->save($dolzh);
-
-        return true;
+        return $this->dolzhRepository->save($dolzh);
     }
 
     public function delete($id)

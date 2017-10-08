@@ -24,6 +24,7 @@ class PodrazRepository implements RepositoryInterface
 
     /**
      * @param Podraz $podraz
+     * @return bool
      */
     public function add($podraz)
     {
@@ -33,10 +34,13 @@ class PodrazRepository implements RepositoryInterface
         if (!$podraz->insert(false)) {
             throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
         }
+        
+        return true;
     }
 
     /**
      * @param Podraz $podraz
+     * @return bool
      */
     public function save($podraz)
     {
@@ -46,6 +50,8 @@ class PodrazRepository implements RepositoryInterface
         if ($podraz->update(false) === false) {
             throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
         }
+        
+        return true;
     }
 
     /**

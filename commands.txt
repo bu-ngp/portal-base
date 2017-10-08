@@ -1,3 +1,6 @@
 codecept run acceptance -c frontend
 codecept run acceptance -c frontend --env firefox
 codecept run acceptance -c frontend --colors
+
+codecept bootstrap --namespace domain\tests domain
+codecept generate:test unit Dolzh --config domain

@@ -1,5 +1,7 @@
 <?php
 return [
+    'id' => 'app-test',
+    'basePath' => dirname(__DIR__),
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'layoutPath' => dirname(dirname(__DIR__)) . '/common/views/layouts',
     'language' => 'ru-RU',

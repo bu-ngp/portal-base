@@ -9,8 +9,10 @@
 namespace domain\forms\base;
 
 use domain\models\base\AuthItem;
+use domain\rules\base\RoleRules;
 use Yii;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 
 class RoleForm extends Model
 {
@@ -20,33 +22,18 @@ class RoleForm extends Model
     public $type;
     public $assignRoles;
 
-    private $authItem;
-
-    public function __construct(AuthItem $authItem = null, $config = [])
-    {
-        $this->name = $authItem ? $authItem->name : 'UserRole' . time();
-        $this->type = $authItem ? $authItem->type : 1;
-        parent::__construct($config);
-    }
-
     /**
      * @inheritdoc
      */
     public function rules()
     {
-        return [
-            [['description', 'assignRoles', 'type', 'name'], 'required'],
-            [['ldap_group'], 'string'],
-            //    [['assignRoles'], 'compare', 'compareValue' => '[]', 'operator' => '!=', 'message' => Yii::t('common/roles', 'Need add roles')],
-        ];
+        return ArrayHelper::merge(RoleRules::client(), [
+            [['assignRoles'], 'required'],
+        ]);
     }
 
     public function attributeLabels()
     {
-        return [
-            'description' => Yii::t('common/authitem', 'Description'),
-            'ldap_group' => Yii::t('domain/authitem', 'Ldap Group'),
-            //  'assignRoles' => Yii::t('common/authitem', 'Assign Roles'),
-        ];
+        return (new AuthItem())->attributeLabels();
     }
 }

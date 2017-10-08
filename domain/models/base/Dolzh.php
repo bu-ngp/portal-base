@@ -2,8 +2,11 @@
 
 namespace domain\models\base;
 
+use domain\behaviors\UpperCaseBehavior;
+use domain\rules\base\DolzhRules;
 use wartron\yii2uuid\behaviors\UUIDBehavior;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%dolzh}}".
@@ -30,10 +33,9 @@ class Dolzh extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
-            [['dolzh_name'], 'required'],
-            [['dolzh_name'], 'string', 'max' => 255],
-        ];
+        return ArrayHelper::merge(DolzhRules::client(), [
+            [['dolzh_name'], 'unique'],
+        ]);
     }
 
     /**
@@ -53,6 +55,10 @@ class Dolzh extends \yii\db\ActiveRecord
             [
                 'class' => UUIDBehavior::className(),
                 'column' => 'dolzh_id',
+            ],
+            [
+                'class' => UpperCaseBehavior::className(),
+                'attributes' => ['dolzh_name'],
             ],
         ];
     }

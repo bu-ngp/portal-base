@@ -2,8 +2,11 @@
 
 namespace domain\models\base;
 
+use domain\behaviors\UpperCaseBehavior;
+use domain\rules\base\PodrazRules;
 use wartron\yii2uuid\behaviors\UUIDBehavior;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%podraz}}".
@@ -30,10 +33,9 @@ class Podraz extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
-            [['podraz_name'], 'required'],
-            [['podraz_name'], 'string', 'max' => 255],
-        ];
+        return ArrayHelper::merge(PodrazRules::client(), [
+            [['podraz_name'], 'unique'],
+        ]);
     }
 
     /**
@@ -53,6 +55,10 @@ class Podraz extends \yii\db\ActiveRecord
             [
                 'class' => UUIDBehavior::className(),
                 'column' => 'podraz_id',
+            ],
+            [
+                'class' => UpperCaseBehavior::className(),
+                'attributes' => ['podraz_name'],
             ],
         ];
     }

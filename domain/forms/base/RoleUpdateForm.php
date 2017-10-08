@@ -9,6 +9,7 @@
 namespace domain\forms\base;
 
 use domain\models\base\AuthItem;
+use domain\rules\base\RoleRules;
 use Yii;
 use yii\base\Model;
 
@@ -22,7 +23,9 @@ class RoleUpdateForm extends Model
     public function __construct(AuthItem $authItem = null, $config = [])
     {
         $this->authItem = $authItem;
-        $this->load($authItem->attributes, '');
+        $this->description = $authItem->description;
+        $this->ldap_group = $authItem->ldap_group;
+
         parent::__construct($config);
     }
 
@@ -31,18 +34,12 @@ class RoleUpdateForm extends Model
      */
     public function rules()
     {
-        return [
-            [['description'], 'required'],
-            [['ldap_group'], 'string'],
-        ];
+        return RoleRules::client();
     }
 
     public function attributeLabels()
     {
-        return [
-            'description' => Yii::t('common/authitem', 'Description'),
-            'ldap_group' => Yii::t('domain/authitem', 'Ldap Group'),
-        ];
+        return (new AuthItem())->attributeLabels();
     }
 
     public function getPrimaryKey()

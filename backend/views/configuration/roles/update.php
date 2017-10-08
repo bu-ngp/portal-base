@@ -39,7 +39,7 @@ $this->title = Yii::t('common/authitem', 'Update "{modelClass}": ', [
                         'urlGrid' => 'configuration/roles/index-for-roles',
                     ],
                     'delete' => [
-                        'url' => 'roles/delete-role',
+                        'url' => 'configuration/roles/delete-role',
                         'beforeRender' => function ($model) {
                             /** @var AuthItem $model */
 

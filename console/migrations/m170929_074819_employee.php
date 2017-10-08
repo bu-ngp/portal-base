@@ -6,28 +6,28 @@ class m170929_074819_employee extends yii\db\Migration
     {
         $this->createTable('{{%dolzh}}', [
             'dolzh_id' => $this->binary(16)->notNull(),
-            'dolzh_name' => $this->string()->notNull(),
+            'dolzh_name' => $this->string()->notNull()->unique(),
         ]);
 
         $this->addPrimaryKey('dolzh_id', '{{%dolzh}}', 'dolzh_id');
 
         $this->createTable('{{%podraz}}', [
             'podraz_id' => $this->binary(16)->notNull(),
-            'podraz_name' => $this->string()->notNull(),
+            'podraz_name' => $this->string()->notNull()->unique(),
         ]);
 
         $this->addPrimaryKey('podraz_id', '{{%podraz}}', 'podraz_id');
 
         $this->createTable('{{%build}}', [
             'build_id' => $this->binary(16)->notNull(),
-            'build_name' => $this->string()->notNull(),
+            'build_name' => $this->string()->notNull()->unique(),
         ]);
 
         $this->addPrimaryKey('build_id', '{{%build}}', 'build_id');
 
         $this->createTable('{{%employee}}', [
             'employee_id' => $this->primaryKey(),
-            'person_id' => $this->binary(16)->notNull(),
+            'person_id' => $this->binary(16)->notNull()->unique(),
             'dolzh_id' => $this->binary(16)->notNull(),
             'podraz_id' => $this->binary(16)->notNull(),
             'build_id' => $this->binary(16)->null(),

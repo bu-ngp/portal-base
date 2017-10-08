@@ -24,6 +24,7 @@ class DolzhRepository implements RepositoryInterface
 
     /**
      * @param Dolzh $dolzh
+     * @return bool
      */
     public function add($dolzh)
     {
@@ -33,10 +34,13 @@ class DolzhRepository implements RepositoryInterface
         if (!$dolzh->insert(false)) {
             throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
         }
+        
+        return true;
     }
 
     /**
      * @param Dolzh $dolzh
+     * @return bool
      */
     public function save($dolzh)
     {
@@ -46,6 +50,8 @@ class DolzhRepository implements RepositoryInterface
         if ($dolzh->update(false) === false) {
             throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
         }
+
+        return true;
     }
 
     /**

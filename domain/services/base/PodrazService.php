@@ -2,11 +2,12 @@
 
 namespace domain\services\base;
 
+use domain\forms\base\PodrazForm;
 use domain\models\base\Podraz;
 use domain\repositories\base\PodrazRepository;
-use domain\services\BaseService;
+use domain\services\WKService;
 
-class PodrazService extends BaseService
+class PodrazService extends WKService
 {
     private $podrazRepository;
 
@@ -15,26 +16,27 @@ class PodrazService extends BaseService
     )
     {
         $this->podrazRepository = $podrazRepository;
-
-        parent::__construct();
     }
 
-    public function create($podraz_name)
+    public function create(PodrazForm $form)
     {
-        $podraz = Podraz::create($podraz_name);
-        $this->podrazRepository->add($podraz);
+        $podraz = Podraz::create($form->podraz_name);
+        if (!$this->validateModels($podraz, $form)) {
+            return false;
+        }
 
-        return true;
+        return  $this->podrazRepository->add($podraz);
     }
 
-    public function update($id, $podraz_name)
+    public function update($id, PodrazForm $form)
     {
         $podraz = $this->podrazRepository->find($id);
+        $podraz->editData($form->podraz_name);
+        if (!$this->validateModels($podraz, $form)) {
+            return false;
+        }
 
-        $podraz->editData($podraz_name);
-        $this->podrazRepository->save($podraz);
-
-        return true;
+        return $this->podrazRepository->save($podraz);
     }
 
     public function delete($id)

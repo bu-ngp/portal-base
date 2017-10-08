@@ -11,7 +11,6 @@ use common\widgets\GridView\services\AjaxResponse;
 use domain\forms\base\PodrazForm;
 use domain\services\AjaxFilter;
 use domain\services\base\PodrazService;
-use domain\services\proxyService;
 use yii\filters\ContentNegotiator;
 use yii\filters\AccessControl;
 use yii\web\Response;
@@ -22,13 +21,13 @@ use yii\web\Response;
 class PodrazController extends Controller
 {
     /**
-    * @var PodrazService $podrazService
-    */
+     * @var PodrazService $podrazService
+     */
     private $podrazService;
 
     public function __construct($id, $module, PodrazService $podrazService, $config = [])
     {
-        $this->podrazService = new proxyService($podrazService);
+        $this->podrazService = $podrazService;
         parent::__construct($id, $module, $config = []);
     }
 
@@ -78,7 +77,7 @@ class PodrazController extends Controller
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $this->podrazService->create($form->podraz_name)
+            && $this->podrazService->create($form)
         ) {
             return $this->redirect(['index']);
         }
@@ -100,7 +99,7 @@ class PodrazController extends Controller
         $form = new PodrazForm($podrazModel);
 
         if ($form->load(Yii::$app->request->post()) && $form->validate()
-            && $this->podrazService->update($podrazModel->primaryKey, $form->podraz_name)
+            && $this->podrazService->update($podrazModel->primaryKey, $form)
         ) {
             return $this->redirect(['index']);
         }

@@ -11,7 +11,6 @@ use common\widgets\GridView\services\AjaxResponse;
 use domain\forms\base\BuildForm;
 use domain\services\AjaxFilter;
 use domain\services\base\BuildService;
-use domain\services\proxyService;
 use yii\filters\ContentNegotiator;
 use yii\filters\AccessControl;
 use yii\web\Response;
@@ -28,7 +27,7 @@ class BuildController extends Controller
 
     public function __construct($id, $module, BuildService $buildService, $config = [])
     {
-        $this->buildService = new proxyService($buildService);
+        $this->buildService = $buildService;
         parent::__construct($id, $module, $config = []);
     }
 
@@ -78,7 +77,7 @@ class BuildController extends Controller
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $this->buildService->create($form->build_name)
+            && $this->buildService->create($form)
         ) {
             return $this->redirect(['index']);
         }
@@ -100,7 +99,7 @@ class BuildController extends Controller
         $form = new BuildForm($buildModel);
 
         if ($form->load(Yii::$app->request->post()) && $form->validate()
-            && $this->buildService->update($buildModel->primaryKey, $form->build_name)
+            && $this->buildService->update($buildModel->primaryKey, $form)
         ) {
             return $this->redirect(['index']);
         }

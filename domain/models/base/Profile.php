@@ -6,6 +6,7 @@ use common\classes\BlameableBehavior;
 use common\classes\validators\SnilsValidator;
 use common\classes\validators\WKDateValidator;
 use common\models\base\Person;
+use domain\forms\base\ProfileForm;
 use domain\services\base\dto\ProfileData;
 use wartron\yii2uuid\behaviors\UUIDBehavior;
 use Yii;
@@ -80,7 +81,7 @@ class Profile extends \yii\db\ActiveRecord
         return [
             [
                 'class' => TimestampBehavior::className(),
-             //   'value' => new Expression('NOW()'),
+                //   'value' => new Expression('NOW()'),
                 'value' => time(),
             ],
             [
@@ -89,16 +90,25 @@ class Profile extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function create($primaryKey, ProfileData $profileData)
+    public static function create($primaryKey, ProfileForm $profileForm)
     {
         return new self([
             'profile_id' => $primaryKey,
-            'profile_inn' => $profileData->profile_inn,
-            'profile_dr' => $profileData->profile_dr,
-            'profile_pol' => $profileData->profile_pol,
-            'profile_snils' => $profileData->profile_snils,
-            'profile_address' => $profileData->profile_address,
+            'profile_inn' => $profileForm->profile_inn,
+            'profile_dr' => $profileForm->profile_dr,
+            'profile_pol' => $profileForm->profile_pol,
+            'profile_snils' => $profileForm->profile_snils,
+            'profile_address' => $profileForm->profile_address,
         ]);
+    }
+
+    public function isNotEmpty()
+    {
+        return $this->profile_inn
+        || $this->profile_dr
+        || $this->profile_pol
+        || $this->profile_snils
+        || $this->profile_address;
     }
 
     /**

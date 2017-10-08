@@ -3,6 +3,7 @@
 namespace domain\forms\base;
 
 use domain\models\base\Podraz;
+use domain\rules\base\PodrazRules;
 use yii\base\Model;
 
 class PodrazForm extends Model
@@ -12,7 +13,7 @@ class PodrazForm extends Model
     public function __construct(Podraz $podraz = null, $config = [])
     {
         if ($podraz) {
-            $this->load($podraz->attributes, '');
+            $this->podraz_name = $podraz->podraz_name;
         }
 
         parent::__construct($config);
@@ -20,7 +21,7 @@ class PodrazForm extends Model
 
     public function rules()
     {
-        return (new Podraz())->rules();
+        return PodrazRules::client();
     }
 
     public function attributeLabels()

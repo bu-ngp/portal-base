@@ -28,7 +28,7 @@ class DolzhController extends Controller
 
     public function __construct($id, $module, DolzhService $dolzhService, $config = [])
     {
-        $this->dolzhService = new proxyService($dolzhService);
+        $this->dolzhService = $dolzhService;
         parent::__construct($id, $module, $config = []);
     }
 
@@ -88,7 +88,7 @@ class DolzhController extends Controller
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $this->dolzhService->create($form->dolzh_name)
+            && $this->dolzhService->create($form)
         ) {
             return $this->redirect(['index']);
         }
@@ -109,8 +109,9 @@ class DolzhController extends Controller
         $dolzhModel = $this->findModel($id);
         $form = new DolzhForm($dolzhModel);
 
-        if ($form->load(Yii::$app->request->post()) && $form->validate()
-            && $this->dolzhService->update($dolzhModel->primaryKey, $form->dolzh_name)
+        if ($form->load(Yii::$app->request->post())
+            && $form->validate()
+            && $this->dolzhService->update($dolzhModel->primaryKey, $form)
         ) {
             return $this->redirect(['index']);
         }
