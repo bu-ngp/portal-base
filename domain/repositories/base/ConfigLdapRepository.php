@@ -36,6 +36,7 @@ class ConfigLdapRepository implements RepositoryInterface
 
     /**
      * @param ConfigLdap $configLdap
+     * @return bool
      */
     public function save($configLdap)
     {
@@ -45,6 +46,8 @@ class ConfigLdapRepository implements RepositoryInterface
         if ($configLdap->update(false) === false) {
             throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
         }
+
+        return true;
     }
 
     public function delete($model)

@@ -10,6 +10,7 @@
 namespace domain\services\base;
 
 use common\classes\Ldap;
+use common\widgets\NotifyShower\NotifyShower;
 use domain\exceptions\ServiceErrorsException;
 use domain\repositories\base\ConfigLdapRepository;
 use domain\services\BaseService;
@@ -41,17 +42,18 @@ class ConfigLdapService extends BaseService
                     ldap_close($ds);
                     $configLdap = $this->configLdapRepository->find();
                     $configLdap->editData($ldapHost, $ldapPort, $ldapAdminLogin, $ldapAdminPassword, $ldapActive);
-                    $this->configLdapRepository->save($configLdap);
+
+                    return $this->configLdapRepository->save($configLdap);
                 } else {
-                    throw new ServiceErrorsException('notifyShower', \Yii::t('common/config-ldap', "LDAP can't connect"));
+                    NotifyShower::message(\Yii::t('common/config-ldap', "LDAP can't connect"));
                 }
             } catch (\Exception $e) {
-                throw new ServiceErrorsException('notifyShower', \Yii::t('common/config-ldap', "LDAP can't connect"));
+                NotifyShower::message(\Yii::t('common/config-ldap', "LDAP can't connect"));
             }
         } else {
-            throw new ServiceErrorsException('notifyShower', \Yii::t('common/config-ldap', 'Ldap config not correct'));
+            NotifyShower::message(\Yii::t('common/config-ldap', 'Ldap config not correct'));
         }
 
-        return true;
+        return false;
     }
 }

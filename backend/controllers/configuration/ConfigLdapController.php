@@ -49,8 +49,6 @@ class ConfigLdapController extends Controller
 
         $form->config_ldap_admin_password = NULL;
 
-        NotifyShower::serviceMessages($this->configLdapService->getErrors());
-
         return $this->render('update', ['modelForm' => $form]);
     }
 }
