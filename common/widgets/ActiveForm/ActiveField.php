@@ -11,6 +11,7 @@ namespace common\widgets\ActiveForm;
 
 use common\widgets\PropellerAssets\DateTimePickerAsset;
 use common\widgets\PropellerAssets\RadioAsset;
+use common\widgets\Select2\Select2;
 use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
@@ -98,12 +99,12 @@ class ActiveField extends \yii\bootstrap\ActiveField
             if ($validator instanceof DateValidator) {
                 if ($validator->format === 'yyyy-MM-dd') {
                     $format = 'DD.MM.YYYY';
-                   // $format = 'YYYY-MM-DD';
+                    // $format = 'YYYY-MM-DD';
                 }
 
                 if ($validator->format === 'yyyy-MM-dd HH:mm:ss') {
                     $format = 'DD.MM.YYYY HH:mm:ss';
-                   // $format = 'YYYY-MM-DD HH:mm:ss';
+                    // $format = 'YYYY-MM-DD HH:mm:ss';
                 }
             }
         }
@@ -113,7 +114,7 @@ class ActiveField extends \yii\bootstrap\ActiveField
         $JSOptions = Json::encode([
             'locale' => 'ru',
             'format' => $format,
-           // 'extraFormats' => ['DD.MM.YYYY'],
+            // 'extraFormats' => ['DD.MM.YYYY'],
         ]);
 
         DateTimePickerAsset::register($view);
@@ -136,7 +137,7 @@ class ActiveField extends \yii\bootstrap\ActiveField
 
         $options['clientOptions'] = [
             'showMaskOnHover' => false,
-          //  'autoUnmask' => true,
+            //  'autoUnmask' => true,
         ];
 
         return $this->widget(MaskedInput::className(), $options);
@@ -147,6 +148,14 @@ class ActiveField extends \yii\bootstrap\ActiveField
         $options['mask'] = '999-999-999 99';
 
         return $this->maskedInput($options);
+    }
+
+    public function select2($options = [])
+    {
+        //$this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield pmd-textfield-floating-label' : 'form-group pmd-textfield pmd-textfield-floating-label';
+        $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield' : 'form-group pmd-textfield';
+
+        return $this->widget(Select2::className(), $options);
     }
 
     protected function initWKIcon(array &$options)

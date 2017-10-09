@@ -148,11 +148,7 @@ a.desc:after {
     padding-left: 45px;
 }
 
-div.form-group.pmd-textfield.required:before {
-    content: '*';
+div.form-group.pmd-textfield.required > label.control-label:after {
+    content: ' *';
     color: red;
-    position: absolute;
-    top: 15px;
-    left: -7px;
-    font-size: 20px;
 }

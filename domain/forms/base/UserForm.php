@@ -34,11 +34,15 @@ class UserForm extends Model
             [['person_password', 'person_password_repeat'], 'required'],
             [['person_password'], 'string', 'min' => 6],
             [['person_password_repeat'], 'compare', 'compareAttribute' => 'person_password'],
+            [['assignRoles'], 'safe'],
         ]);
     }
 
     public function attributeLabels()
     {
-        return array_merge((new Person())->attributeLabels(), (new Profile())->attributeLabels());
+        return array_merge((new Person())->attributeLabels(), (new Profile())->attributeLabels(), [
+            'person_password' => Yii::t('domain/person', 'Person Password'),
+            'person_password_repeat' => Yii::t('domain/person', 'Person Password Repeat'),
+        ]);
     }
 }

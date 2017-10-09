@@ -94,6 +94,28 @@ class AuthItemSearch extends AuthItem
         return $dataProvider;
     }
 
+    public function searchForUsers($params)
+    {
+        $query = AuthItem::find();
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'sort' => ['defaultOrder' => ['name' => SORT_ASC]],
+        ]);
+
+        $this->load($params);
+
+        $query->andFilterWhere([
+            'type' => 1,
+            'view' => 0,
+            'created_at' => $this->created_at,
+        ]);
+
+        $query->andFilterWhere(['like', 'description', $this->description]);
+
+        return $dataProvider;
+    }
+
     public function searchForRoles($params, $_exclude)
     {
         $query = isset($_exclude->excludeFromId)

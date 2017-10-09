@@ -17,7 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Tiles on main page' => '',
+    'Spravochniki' => 'Справочники',
+    'Tiles on main page' => 'Плитки на главной странице',
     'Authorization' => 'Авторизация',
     'Portal configuration' => 'Настройки портала',
 ];

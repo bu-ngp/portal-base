@@ -62,12 +62,7 @@ class UsersController extends Controller
             && $userForm->validate()
             && $profileForm->load(Yii::$app->request->post())
             && $profileForm->validate()
-            && $this->personService->create(
-                $userForm,
-                $profileForm,
-                $userForm->assignEmployees,
-                $userForm->assignRoles
-            )
+            && $this->personService->create($userForm, $profileForm)
         ) {
             return $this->redirect(['index']);
         }

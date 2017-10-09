@@ -16,7 +16,7 @@ use domain\models\base\Parttime;
 use domain\rules\base\UserRules;
 use domain\services\base\dto\PersonData;
 use Exception;
-use wartron\yii2uuid\behaviors\UUIDBehavior;
+use domain\behaviors\UUIDBehavior;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;

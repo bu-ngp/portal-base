@@ -17,9 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Error when recognizing selected items' => '',
-    'Person Password' => 'Пароль',
-    'Person Password Repeat' => 'Повторите ввод пароля',
-    'Password very short. Need minimum 6 characters.' => 'Пароль должен содержать не менее 6 символов.',
-    'Person not found.' => 'Пользователь не найден',
+    'Create' => 'Создать',
+    'Create Podraz' => 'Добавить подразделение',
+    'Podrazs' => 'Подразделения',
+    'Update' => 'Обновить',
+    'Update "{modelClass}": ' => 'Обновить "{modelClass}": ',
 ];

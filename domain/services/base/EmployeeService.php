@@ -19,9 +19,15 @@ class EmployeeService extends BaseService
         parent::__construct();
     }
 
-    public function create($person_id, $dolzh_id, $podraz_id, $build_id, $employee_begin, $created_at, $updated_at, $created_by, $updated_by)
+    public function create($form)
     {
-        $employee = Employee::create($person_id, $dolzh_id, $podraz_id, $build_id, $employee_begin, $created_at, $updated_at, $created_by, $updated_by);
+        $employee = Employee::create(
+            $form->person_id,
+            $form->dolzh_id,
+            $form->podraz_id,
+            $form->build_id,
+            $form->employee_begin
+        );
         $this->employeeRepository->add($employee);
 
         return true;

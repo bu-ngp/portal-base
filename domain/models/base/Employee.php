@@ -85,10 +85,16 @@ class Employee extends \yii\db\ActiveRecord
         ];
     }
 
+    public static function create($person_id, $dolzh_id, $podraz_id, $build_id, $employee_begin)
+    {
+
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getBuild()
+    public
+    function getBuild()
     {
         return $this->hasOne(Build::className(), ['build_id' => 'build_id'])->from(['build' => Build::tableName()]);
     }
@@ -96,7 +102,8 @@ class Employee extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getDolzh()
+    public
+    function getDolzh()
     {
         return $this->hasOne(Dolzh::className(), ['dolzh_id' => 'dolzh_id'])->from(['dolzh' => Dolzh::tableName()]);
     }
@@ -104,7 +111,8 @@ class Employee extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPerson()
+    public
+    function getPerson()
     {
         return $this->hasOne(Person::className(), ['person_id' => 'person_id'])->from(['person' => Person::tableName()]);
     }
@@ -112,7 +120,8 @@ class Employee extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPodraz()
+    public
+    function getPodraz()
     {
         return $this->hasOne(Podraz::className(), ['podraz_id' => 'podraz_id'])->from(['podraz' => Podraz::tableName()]);
     }

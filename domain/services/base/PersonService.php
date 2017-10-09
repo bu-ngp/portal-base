@@ -13,7 +13,9 @@ use common\models\base\Person;
 use common\widgets\NotifyShower\NotifyShower;
 use domain\forms\base\ProfileForm;
 use domain\forms\base\UserForm;
+use domain\models\base\AuthAssignment;
 use domain\models\base\Profile;
+use domain\repositories\base\AuthAssignmentRepository;
 use domain\repositories\base\PersonRepository;
 use domain\repositories\base\ProfileRepository;
 use domain\services\base\dto\PersonData;
@@ -28,21 +30,25 @@ class PersonService extends WKService
     private $transactionManager;
     private $personRepository;
     private $profileRepository;
+    private $authAssignmentRepository;
 
     public function __construct(
         TransactionManager $transactionManager,
         PersonRepository $personRepository,
-        ProfileRepository $profileRepository
+        ProfileRepository $profileRepository,
+        AuthAssignmentRepository $authAssignmentRepository
     )
     {
         $this->transactionManager = $transactionManager;
         $this->personRepository = $personRepository;
         $this->profileRepository = $profileRepository;
+        $this->authAssignmentRepository = $authAssignmentRepository;
     }
 
-    public function create(UserForm $userForm, ProfileForm $profileForm, $assignEmployees, $assignRoles)
+    public function create(UserForm $userForm, ProfileForm $profileForm)
     {
         $this->guardPasswordLength($userForm);
+        $assignedKeysUser = $this->guardAssignRoles($userForm);
         $person = Person::create($userForm);
         $personValidate = $this->validateModels($person, $userForm);
 
@@ -55,10 +61,16 @@ class PersonService extends WKService
             return false;
         }
 
-        return $this->transactionManager->execute(function () use ($person, $profile) {
+        $authAssignment = AuthAssignment::create($person, $assignedKeysUser);
+
+        return $this->transactionManager->execute(function () use ($person, $profile, $authAssignment) {
             $this->personRepository->add($person);
             if ($profile->isNotEmpty()) {
                 $this->profileRepository->add($profile);
+            }
+
+            foreach ($authAssignment as $item) {
+                $this->authAssignmentRepository->add($item);
             }
         });
     }
@@ -66,7 +78,18 @@ class PersonService extends WKService
     public function guardPasswordLength(UserForm $userForm)
     {
         if (mb_strlen($userForm->person_password, 'UTF-8') < 6) {
-            NotifyShower::message(Yii::t('domain\person', 'Password very short. Need minimum 6 characters.'));
+            NotifyShower::message(Yii::t('domain/person', 'Password very short. Need minimum 6 characters.'));
         }
+    }
+
+    private function guardAssignRoles($form)
+    {
+        if (!is_string($form->assignRoles) || ($assignedKeys = json_decode($form->assignRoles)) === null) {
+            NotifyShower::message(\Yii::t('domain/person', 'Error when recognizing selected items'));
+
+            return false;
+        }
+
+        return $assignedKeys;
     }
 }

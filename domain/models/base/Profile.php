@@ -54,6 +54,7 @@ class Profile extends \yii\db\ActiveRecord
             [['profile_inn'], 'match', 'pattern' => '/\d{12}/', 'message' => Yii::t('domain/profile', 'INN required 12 digits')],
             [['profile_snils'], SnilsValidator::className()],
             [['profile_address'], 'string', 'max' => 400],
+            [['profile_inn', 'profile_snils'], 'unique'],
         ];
     }
 

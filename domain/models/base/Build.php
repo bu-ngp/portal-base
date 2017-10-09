@@ -4,7 +4,7 @@ namespace domain\models\base;
 
 use domain\behaviors\UpperCaseBehavior;
 use domain\rules\base\BuildRules;
-use wartron\yii2uuid\behaviors\UUIDBehavior;
+use domain\behaviors\UUIDBehavior;
 use Yii;
 use yii\helpers\ArrayHelper;
 

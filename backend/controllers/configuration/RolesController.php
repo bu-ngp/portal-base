@@ -44,9 +44,8 @@ class RolesController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'create', 'update', 'index-for-roles', 'delete-role', 'delete'],
+                        'actions' => ['index', 'create', 'update', 'index-for-roles', 'index-for-users', 'delete-role', 'delete'],
                         'allow' => true,
-                        'roles' => ['dolzhEdit'],
                     ],
                 ],
             ],
@@ -145,6 +144,19 @@ class RolesController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'filterModel' => $filterModel,
+            'gridExcludeIdsFunc' => $gridExcludeIdsFunc,
+        ]);
+    }
+
+    public function actionIndexForUsers()
+    {
+        $searchModel = new AuthItemSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $gridExcludeIdsFunc = AuthItem::funcExcludeForRoles();
+
+        return $this->render('index_for_users', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
             'gridExcludeIdsFunc' => $gridExcludeIdsFunc,
         ]);
     }

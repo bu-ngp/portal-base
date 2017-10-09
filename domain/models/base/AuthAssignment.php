@@ -2,6 +2,7 @@
 
 namespace domain\models\base;
 
+use common\models\base\Person;
 use Yii;
 
 /**
@@ -49,6 +50,23 @@ class AuthAssignment extends \yii\db\ActiveRecord
             'item_name' => Yii::t('domain/authitem', 'Item Name'),
             'created_at' => Yii::t('domain/authitem', 'Created At'),
         ];
+    }
+    
+    public static function create(Person $person, array $assignedKeys) {
+        $items = [];
+        $authitems = AuthItem::find()
+            ->andWhere(['in', 'name', $assignedKeys])
+            ->all();
+
+        /** @var AuthItem $authitem */
+        foreach ($authitems as $authitem) {
+            $items[] = new self([
+                'user_id' => $person->primaryKey,
+                'item_name' => $authitem->name,
+            ]);
+        }
+
+        return $items;
     }
 
     /**

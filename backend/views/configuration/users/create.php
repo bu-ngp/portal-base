@@ -71,7 +71,7 @@ $this->title = Yii::t('common/person', 'Create User');
                         'gridConfig' => [
                             'crudSettings' => [
                                 'create' => [
-                                    'urlGrid' => 'configuration/role/index-for-user',
+                                    'urlGrid' => 'configuration/roles/index-for-users',
                                     'inputName' => 'UserForm[assignRoles]',
                                 ],
                                 'delete' => [
