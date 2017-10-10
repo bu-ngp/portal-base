@@ -21,11 +21,12 @@ foreach ($map as $key => $value) {
 ?>
 
 <?= $form->field($modelForm, 'dolzh_id')->select2([
-    'data' => $map2,
-    'options' => ['placeholder' => 'Select a state ...'],
-    'pluginOptions' => [
-        'allowClear' => true
-    ],
+    'activeRecordClass' => Dolzh::className(),
+    'queryCallback' => \domain\queries\DolzhQuery::getCallbackAllDolzhs(),
+    'wkkeep' => true,
+    'wkicon' => FA::_ADDRESS_BOOK,
+    'multiple' => true,
+    'selectionGridUrl' => ['configuration/spravochniki/dolzh/index'],
 ]); ?>
 
 <?= $form->field($modelForm, 'podraz_id')->textInput(['wkkeep' => true, 'maxlength' => true, 'wkicon' => FA::_USER_SECRET]) ?>

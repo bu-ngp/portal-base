@@ -131,8 +131,24 @@
             $.each(lastBC.forms, function (name, value) {
                 var input = $('[name="' + name + '"][wkkeep]');
                 if (input.length) {
+
                     if (input.attr('type') === 'checkbox') {
                         input.prop('checked', value);
+                    } else if (input.prop("tagName") === 'SELECT') {
+                        if (value[0]) {
+                            if ($.isArray(value[0])) {
+                                $.each(value[0], function (key) {
+                                    var $option = $('<option selected></option>');
+                                    $option.text(value[1][key]).val(this);
+                                    input.append($option)
+                                });
+                                input.trigger('change');
+                            } else {
+                                var $option = $('<option selected></option>');
+                                $option.text(value[1]).val(value[0]);
+                                input.append($option).trigger('change');
+                            }
+                        }
                     } else if (input.attr('type') === 'radio') {
                         $.each(input, function () {
                             if ($(this).val() == value) {
@@ -180,7 +196,7 @@
 
     var eventsApply = function ($widget) {
 
-        $(document).on('change dp.change', 'input[wkkeep]', function () {
+        $(document).on('change dp.change', 'input[wkkeep], select[wkkeep]', function () {
             getFromSessionStorage($widget, {
                 fail: function () {
                     getFromLocalStorage($widget);
@@ -192,6 +208,23 @@
 
                 if ($(this).attr('type') === 'checkbox') {
                     lastBC.forms[$(this).attr("name")] = +$(this).prop('checked');
+                } else if ($(this).hasClass("select2-hidden-accessible") && $(this).prop("tagName") === "SELECT") {
+                    var $multiple = $(this).next('.select2.select2-container').find('.select2-selection.select2-selection--multiple ul li');
+
+                    if ($multiple.length) {
+                        var textChoose = [];
+
+                        $.each($multiple, function () {
+                            if ($(this).is('.select2-selection__choice')) {
+                                textChoose.push($(this).attr('title'));
+                            }
+                        });
+
+                        lastBC.forms[$(this).attr("name")] = [$(this).val(), textChoose];
+                    } else if ($(this).find('.select2-selection.select2-selection--single')) {
+                        lastBC.forms[$(this).attr("name")] = [$(this).val(), $(this).find('option:selected').text()];
+                    }
+
                 } else {
                     lastBC.forms[$(this).attr("name")] = $(this).val();
                 }
