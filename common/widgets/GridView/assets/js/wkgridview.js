@@ -252,7 +252,7 @@
                     }
 
                 } else {
-                    wkchoose[wkchoose.gridID] = [];
+                    wkchoose[$grid.attr('id')] = [];
                 }
 
                 lastCrumb["wk-choose"] = wkchoose;

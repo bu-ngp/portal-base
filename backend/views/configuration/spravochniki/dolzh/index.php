@@ -2,6 +2,7 @@
 
 use common\widgets\GridView\GridView;
 use rmrevin\yii\fontawesome\FA;
+use yii\db\ActiveQuery;
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
@@ -34,6 +35,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'icon' => FA::icon(FA::_USER),
             'title' => Yii::t('common/dolzh', 'Dolzhs'),
         ],
+        'gridExcludeIdsFunc' => function (ActiveQuery $activeQuery, array $ids) {
+            $activeQuery
+                ->andWhere(['not in', 'dolzh_id', $ids]);
+//                    ->andWhere(['not exists', (new Query())
+//                        ->select('{{%auth_item_child}}.child')
+//                        ->from('{{%auth_item_child}}')
+//                        ->andWhere(['in', '{{%auth_item_child}}.parent', $ids])
+//                        ->andWhere('{{%auth_item_child}}.child = {{%auth_item}}.name')
+//                    ]);
+        }
     ]);
     ?>
 </div>

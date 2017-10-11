@@ -35,7 +35,7 @@ class EmployeeController extends Controller
     {
         $form = new EmployeeForm();
 
-        if (Yii::$app->request->isAjax) {
+      /*  if (Yii::$app->request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
 
             $id = Uuid::str2uuid($_GET['id']);
@@ -54,7 +54,6 @@ class EmployeeController extends Controller
             }
 
             if ($q) {
-
                 $result = $query->andWhere(['like', 'dolzh_name', $q])->asArray()->all();
                 foreach ($result as $row) {
                     $row['dolzh_id'] = Uuid::uuid2str($row['dolzh_id']);
@@ -65,7 +64,7 @@ class EmployeeController extends Controller
             }
 
             return [];
-        }
+        }*/
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()

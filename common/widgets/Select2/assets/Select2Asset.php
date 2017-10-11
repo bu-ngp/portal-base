@@ -12,18 +12,16 @@ class Select2Asset extends \yii\web\AssetBundle
 {
     public function init()
     {
-        $this->sourcePath = '@bower/select2';
-        $this->css = [
-            'dist/css/select2.min.css',
-        ];
+        $this->sourcePath = __DIR__;
 
         $this->js = [
-            'dist/js/select2.full.min.js',
+            'js/wkselect2.js',
         ];
 
         $this->depends = [
             'yii\web\YiiAsset',
             'yii\bootstrap\BootstrapAsset',
+            //'kartik\select2\Select2Asset',
         ];
 
         parent::init();

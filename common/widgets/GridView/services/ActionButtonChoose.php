@@ -9,6 +9,7 @@
 namespace common\widgets\GridView\services;
 
 use common\widgets\GridView\GridView;
+use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\bootstrap\Html;
 
@@ -38,7 +39,8 @@ class ActionButtonChoose
             && (property_exists($_selected, 'exclude') || property_exists($_selected, 'reject'))
         ) {
             $this->actionButtons['choose'] = function ($url, $model) use ($_selected) {
-                $url = $_selected->url . (preg_match('/\?/', $_selected->url) ? '&' : '?') . 'grid=' . urlencode($_selected->gridID) . '&selected=' . urlencode($model->primaryKey);
+                $selected = GridViewHelper::isBinary($model->primaryKey) ? Uuid::uuid2str($model->primaryKey) : $model->primaryKey;
+                $url = $_selected->url . (preg_match('/\?/', $_selected->url) ? '&' : '?') . 'grid=' . urlencode($_selected->gridID) . '&selected=' . urlencode($selected);
 
                 return Html::a('<i class="fa fa-2x fa-check-square-o"></i>', $url, ['title' => Yii::t('wk-widget-gridview', 'Choose'), 'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-success', 'data-pjax' => '0']);
             };

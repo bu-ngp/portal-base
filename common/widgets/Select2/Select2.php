@@ -9,7 +9,8 @@
 namespace common\widgets\Select2;
 
 
-use common\widgets\PropellerAssets\Select2Asset;
+use common\widgets\PropellerAssets\Select2Asset AS PropellerSelect2Asset;
+use common\widgets\Select2\assets\Select2Asset;
 use common\widgets\PropellerAssets\TextFieldAsset;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
@@ -20,6 +21,7 @@ use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\JsExpression;
+use yii\web\Response;
 use yii\web\View;
 
 class Select2 extends \kartik\select2\Select2
@@ -37,6 +39,13 @@ class Select2 extends \kartik\select2\Select2
 
 //    public $data;
 //    public $selectClass = 'select-with-search form-control pmd-select2';
+
+    public function init()
+    {
+        $this->returnAjaxData();
+
+        parent::init();
+    }
 
     public function run()
     {
@@ -85,7 +94,7 @@ class Select2 extends \kartik\select2\Select2
         if ($this->selectionGridUrl) {
             $url = is_array($this->selectionGridUrl) ? Url::to($this->selectionGridUrl) : $this->selectionGridUrl;
 
-            $this->addon['append']['content'] = '<div class="input-group-addon"><a class="btn btn-success" href="' . $url . '"><i class="glyphicon glyphicon-option-horizontal pmd-sm"></i></a></div>';
+            $this->addon['append']['content'] = '<div class="input-group-addon"><a class="btn btn-success wk-widget-select2-choose-from-grid" href="' . $url . '"><i class="glyphicon glyphicon-option-horizontal pmd-sm"></i></a></div>';
 //  $this->addon['contentAfter'] =
 //                Html::button(Html::icon('option-horizontal'), [
 //                'class' => 'btn btn-success',
@@ -96,9 +105,25 @@ class Select2 extends \kartik\select2\Select2
             $this->addon['append']['asButton'] = true;
         }
 
+        $this->selectedAttribute();
+
         $this->registerWKAssets1();
         parent::run();
         $this->registerWKAssets2();
+    }
+
+    protected function selectedAttribute()
+    {
+        if (Yii::$app->request->get('grid') === $this->options['id'] && Yii::$app->request->get('selected')) {
+            $dataQuery = $this->getDataQuery();
+            /* ???????????????????????????????????????????????? */
+            $resultQuery = $dataQuery->andWhere([$this->idAttribute => Uuid::str2uuid(Yii::$app->request->get('selected'))])->asArray()->one();
+            $resultQuery[$this->attribute] = Yii::$app->request->get('selected');
+            $this->initValueText = implode(', ', $resultQuery);
+            $this->value[] = Yii::$app->request->get('selected');
+
+            $this->options['wk-selected'] = Yii::$app->request->get('selected');
+        }
     }
 
     /**
@@ -128,7 +153,10 @@ class Select2 extends \kartik\select2\Select2
         $view = $this->getView();
 
 //        Select2Asset::register($view);
+        PropellerSelect2Asset::register($view);
         Select2Asset::register($view);
+        $view->registerJs("$('#{$this->options['id']}').wkselect2();");
+
 
         $view->registerJs(<<<EOT
         
@@ -154,6 +182,42 @@ EOT
 //$('#{$this->id}').select2({theme: "bootstrap"});
 //EOT
 //        );
+    }
+
+    protected function returnAjaxData()
+    {
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->clearOutputBuffers();
+
+            $jsonObj = [];
+
+            $id = Uuid::str2uuid($_GET['id']);
+            $q = $_GET['q'];
+
+            $queryCallback = $this->queryCallback;
+            $query = $queryCallback((new $this->activeRecordClass)->find());
+            $resultReturn = [];
+
+            if ($id) {
+                $result = $query->andWhere([$this->attribute => $id])->asArray()->one();
+                $result[$this->attribute] = Uuid::uuid2str($result[$this->attribute]);
+                $resultReturn = ['id' => $result[$this->attribute], 'text' => implode(', ', $result)];
+
+                $jsonObj = $resultReturn;
+            }
+
+            if ($q) {
+                $result = $query->andWhere(['like', 'dolzh_name', $q])->asArray()->all();
+                foreach ($result as $row) {
+                    $row[$this->attribute] = Uuid::uuid2str($row[$this->attribute]);
+                    $resultReturn[] = ['id' => $row[$this->attribute], 'text' => implode(', ', $row)];
+                }
+
+                $jsonObj = ['results' => $resultReturn];
+            }
+
+            exit(json_encode($jsonObj));
+        }
     }
 //
 //    public function init()
