@@ -152,3 +152,11 @@ div.form-group.pmd-textfield.required > label.control-label:after {
     content: ' *';
     color: red;
 }
+
+div.wk-block-select2-choose-from-grid {
+    padding-right: 0 !important;
+}
+
+div.wk-widget-input-prepend-icon > span {
+    min-width: 50px;
+}

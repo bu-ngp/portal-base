@@ -85,6 +85,7 @@ class Select2 extends \kartik\select2\Select2
 
         if ($this->wkicon) {
             $this->addon['prepend']['content'] = '<i class="fa fa-2x fa-' . $this->wkicon . ' pmd-sm"></i>';
+            $this->addon['groupOptions']['class'] .= ' wk-widget-input-prepend-icon';
         }
 
         if ($this->multiple === true) {
@@ -94,7 +95,7 @@ class Select2 extends \kartik\select2\Select2
         if ($this->selectionGridUrl) {
             $url = is_array($this->selectionGridUrl) ? Url::to($this->selectionGridUrl) : $this->selectionGridUrl;
 
-            $this->addon['append']['content'] = '<div class="input-group-addon"><a class="btn btn-success wk-widget-select2-choose-from-grid" href="' . $url . '"><i class="glyphicon glyphicon-option-horizontal pmd-sm"></i></a></div>';
+            $this->addon['append']['content'] = '<div class="input-group-addon wk-block-select2-choose-from-grid"><a class="btn btn-success wk-widget-select2-choose-from-grid" href="' . $url . '"><i class="glyphicon glyphicon-option-horizontal pmd-sm"></i></a></div>';
 //  $this->addon['contentAfter'] =
 //                Html::button(Html::icon('option-horizontal'), [
 //                'class' => 'btn btn-success',
