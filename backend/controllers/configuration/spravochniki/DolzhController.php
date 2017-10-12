@@ -4,6 +4,7 @@ namespace backend\controllers\configuration\spravochniki;
 
 use common\widgets\GridView\services\AjaxResponse;
 use domain\forms\base\DolzhForm;
+use domain\providers\DolzhProvider;
 use domain\services\AjaxFilter;
 use domain\services\base\DolzhService;
 use domain\services\proxyService;
@@ -70,6 +71,7 @@ class DolzhController extends Controller
     {
         $searchModel = new DolzhSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        //$dataProvider = new DolzhProvider();
 
         return $this->render('index', [
             'searchModel' => $searchModel,

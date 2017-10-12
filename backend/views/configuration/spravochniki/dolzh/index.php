@@ -36,8 +36,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'title' => Yii::t('common/dolzh', 'Dolzhs'),
         ],
         'gridExcludeIdsFunc' => function (ActiveQuery $activeQuery, array $ids) {
-            $activeQuery
-                ->andWhere(['not in', 'dolzh_id', $ids]);
+//            $activeQuery
+//                ->andWhere(['not in', 'dolzh_id', $ids]);
 //                    ->andWhere(['not exists', (new Query())
 //                        ->select('{{%auth_item_child}}.child')
 //                        ->from('{{%auth_item_child}}')

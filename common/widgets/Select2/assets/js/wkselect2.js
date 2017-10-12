@@ -11,6 +11,22 @@
 
     var defaults = {};
 
+    var isSingle = function ($widget) {
+        if ($widget.next('.select2.select2-container').find(".select2-selection.select2-selection--single").length) {
+            return true;
+        }
+
+        return false;
+    };
+
+    var isMultiple = function ($widget) {
+        if ($widget.next('.select2.select2-container').find(".select2-selection.select2-selection--multiple").length) {
+            return true;
+        }
+
+        return false;
+    };
+
     var selectFromUrl = function ($widget) {
         if ($widget.is('[wk-selected]') && $widget.attr('wk-selected') !== "") {
             $widget.val($widget.attr('wk-selected')).trigger('change');
@@ -22,24 +38,16 @@
             e.preventDefault();
 
             var lastCrumb = $(".wkbc-breadcrumb").wkbreadcrumbs('getLast');
-            var wkchoose = "wk-choose" in lastCrumb ? lastCrumb["wk-choose"] : {};
-            var select2ID = $widget.data('wkselect2').select2ID;
+            var wkchoose = "wk-choose" in lastCrumb ? lastCrumb["wk-choose"] : {"wk-choose": {}};
 
-            if ("wk-choose" in lastCrumb) {
-                wkchoose.gridID = select2ID;
-
-                if (!(wkchoose.gridID in wkchoose)) {
-                    wkchoose[wkchoose.gridID] = [];
-                }
-
-                if ("isSaved" in wkchoose && wkchoose.isSaved === wkchoose.gridID) {
-                    delete wkchoose.isSaved;
-                }
-            } else {
-                wkchoose[select2ID] = [];
-                wkchoose["gridID"] = select2ID;
+            wkchoose.gridID = $widget.data('wkselect2').select2ID;
+            if (!(wkchoose.gridID in wkchoose)) {
+                wkchoose[wkchoose.gridID] = [];
             }
-
+            /*
+             if ("isSaved" in wkchoose && wkchoose.isSaved === wkchoose.gridID) {
+             delete wkchoose.isSaved;
+             }*/
             lastCrumb["wk-choose"] = wkchoose;
             $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
             window.location.href = $(this).attr("href");
@@ -47,23 +55,35 @@
 
         $widget.on('change', function (e) {
             var lastCrumb = $(".wkbc-breadcrumb").wkbreadcrumbs('getLast');
-            var wkchoose = "wk-choose" in lastCrumb ? lastCrumb["wk-choose"] : {};
+            var wkchoose = "wk-choose" in lastCrumb ? lastCrumb["wk-choose"] : {"wk-choose": {}};
             var select2ID = $widget.data('wkselect2').select2ID;
 
-            if ("wk-choose" in lastCrumb) {
-                wkchoose.gridID = select2ID;
+            wkchoose.gridID = select2ID;
+            console.debug($widget.val());
+            console.debug(wkchoose[select2ID]);
 
-                if (!(select2ID in wkchoose)) {
-                    wkchoose[select2ID] = [$widget.val()];
-                }
-
-                if (!$.inArray($widget.val(), wkchoose[select2ID])) {
-                    wkchoose[select2ID].push($widget.val());
-                }
-
-            } else {
-                wkchoose[select2ID] = [$widget.val()];
+            console.debug(!(select2ID in wkchoose));
+            console.debug(!($.isArray(wkchoose[select2ID])));
+            if ((select2ID in wkchoose)) {
+                console.debug(wkchoose[select2ID].length === 0);
             }
+
+            console.debug(isSingle($widget));
+
+            if (!(select2ID in wkchoose) || !($.isArray(wkchoose[select2ID])) || wkchoose[select2ID].length === 0 || isSingle($widget)) {
+                wkchoose[select2ID] = isSingle($widget) ? [$widget.val()] : $widget.val();
+            } else {
+                console.debug("cool");
+                console.debug($widget.val()[0]);
+                console.debug(wkchoose[select2ID]);
+                console.debug($.inArray($widget.val()[0], wkchoose[select2ID]));
+                if ($.inArray($widget.val()[0], wkchoose[select2ID]) < 0) {
+                    console.debug(wkchoose[select2ID]);
+                    wkchoose[select2ID].push($widget.val()[0]);
+                }
+            }
+            console.debug("wkchoose[select2ID]");
+            console.debug(wkchoose[select2ID]);
 
             lastCrumb["wk-choose"] = wkchoose;
             $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
@@ -102,8 +122,9 @@
                     select2ID: $widget.attr('id')
                 });
 
-                selectFromUrl($widget);
+
                 eventsApply($widget);
+                selectFromUrl($widget);
             });
         },
         destroy: function () {
