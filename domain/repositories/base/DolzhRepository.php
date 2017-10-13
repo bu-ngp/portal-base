@@ -3,11 +3,9 @@
 namespace domain\repositories\base;
 
 use domain\models\base\Dolzh;
-use domain\repositories\RepositoryInterface;
-use RuntimeException;
 use Yii;
 
-class DolzhRepository implements RepositoryInterface
+class DolzhRepository
 {
     /**
      * @param $id
@@ -16,7 +14,7 @@ class DolzhRepository implements RepositoryInterface
     public function find($id)
     {
         if (!$dolzh = Dolzh::findOne($id)) {
-            throw new RuntimeException('Model not found.');
+            throw new \RuntimeException('Model not found.');
         }
 
         return $dolzh;
@@ -24,43 +22,37 @@ class DolzhRepository implements RepositoryInterface
 
     /**
      * @param Dolzh $dolzh
-     * @return bool
      */
-    public function add($dolzh)
+    public function add(Dolzh $dolzh)
     {
         if (!$dolzh->getIsNewRecord()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Adding existing model.'));
+            throw new \DomainException(Yii::t('domain/base', 'Adding existing model.'));
         }
         if (!$dolzh->insert(false)) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Saving error.'));
         }
-        
-        return true;
     }
 
     /**
      * @param Dolzh $dolzh
-     * @return bool
      */
-    public function save($dolzh)
+    public function save(Dolzh $dolzh)
     {
         if ($dolzh->getIsNewRecord()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Adding existing model.'));
+            throw new \DomainException(Yii::t('domain/base', 'Adding existing model.'));
         }
         if ($dolzh->update(false) === false) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Saving error.'));
         }
-
-        return true;
     }
 
     /**
      * @param Dolzh $dolzh
      */
-    public function delete($dolzh)
+    public function delete(Dolzh $dolzh)
     {
         if (!$dolzh->delete()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Deleting error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Deleting error.'));
         }
     }
 }

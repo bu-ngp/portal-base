@@ -7,6 +7,7 @@ use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\NotifyShower\NotifyShower;
 use common\widgets\ReportLoader\assets\ReportLoaderAsset;
 use common\widgets\ReportLoader\ReportLoader;
+use lo\modules\noty\Wrapper;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
@@ -96,7 +97,6 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
             <?= Breadcrumbs::widget(/*['defaultShow' => false]*/)  /*Breadcrumbs::widget([
                 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
             ])*/ ?>
-            <?= Alert::widget() ?>
             <?= $content ?>
         </div>
     </div>
@@ -109,7 +109,10 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
     </div>
 </footer>
 <?= ReportLoader::widget(['id' => 'wk-Report-Loader']); ?>
-<?= NotifyShower::widget(); ?>
+<?= Wrapper::widget([
+    'layerClass' => 'lo\modules\noty\layers\Toastr',
+]) ?>
+
 <?php \common\assets\PropellerAsset::register($this) ?>
 <?php $this->endBody() ?>
 </body>

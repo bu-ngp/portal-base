@@ -3,11 +3,9 @@
 namespace domain\repositories\base;
 
 use domain\models\base\Podraz;
-use domain\repositories\RepositoryInterface;
-use RuntimeException;
 use Yii;
 
-class PodrazRepository implements RepositoryInterface
+class PodrazRepository
 {
     /**
      * @param $id
@@ -16,7 +14,7 @@ class PodrazRepository implements RepositoryInterface
     public function find($id)
     {
         if (!$podraz = Podraz::findOne($id)) {
-            throw new RuntimeException('Model not found.');
+            throw new \RuntimeException('Model not found.');
         }
 
         return $podraz;
@@ -24,43 +22,37 @@ class PodrazRepository implements RepositoryInterface
 
     /**
      * @param Podraz $podraz
-     * @return bool
      */
-    public function add($podraz)
+    public function add(Podraz $podraz)
     {
         if (!$podraz->getIsNewRecord()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Adding existing model.'));
+            throw new \DomainException(Yii::t('domain/base', 'Adding existing model.'));
         }
         if (!$podraz->insert(false)) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Saving error.'));
         }
-        
-        return true;
     }
 
     /**
      * @param Podraz $podraz
-     * @return bool
      */
-    public function save($podraz)
+    public function save(Podraz $podraz)
     {
         if ($podraz->getIsNewRecord()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Adding existing model.'));
+            throw new \DomainException(Yii::t('domain/base', 'Adding existing model.'));
         }
         if ($podraz->update(false) === false) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Saving error.'));
         }
-        
-        return true;
     }
 
     /**
      * @param Podraz $podraz
      */
-    public function delete($podraz)
+    public function delete(Podraz $podraz)
     {
         if (!$podraz->delete()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Deleting error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Deleting error.'));
         }
     }
 }

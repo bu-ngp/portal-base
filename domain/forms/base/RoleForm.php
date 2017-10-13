@@ -27,6 +27,7 @@ class RoleForm extends Model
      */
     public function rules()
     {
+       // return [];
         return ArrayHelper::merge(RoleRules::client(), [
             [['assignRoles'], 'required'],
         ]);

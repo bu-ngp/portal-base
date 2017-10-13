@@ -4,9 +4,9 @@ namespace domain\services\base;
 
 use domain\models\base\Employee;
 use domain\repositories\base\EmployeeRepository;
-use domain\services\BaseService;
+use domain\services\WKService;
 
-class EmployeeService extends BaseService
+class EmployeeService extends WKService
 {
     private $employeeRepository;
 
@@ -15,8 +15,6 @@ class EmployeeService extends BaseService
     )
     {
         $this->employeeRepository = $employeeRepository;
-
-        parent::__construct();
     }
 
     public function create($form)

@@ -9,7 +9,6 @@
 namespace backend\controllers\configuration;
 
 
-use common\widgets\NotifyShower\NotifyShower;
 use domain\forms\base\ConfigLdapUpdateForm;
 use domain\models\base\ConfigLdap;
 use domain\services\base\ConfigLdapService;
@@ -44,6 +43,8 @@ class ConfigLdapController extends Controller
                 $form->config_ldap_active
             )
         ) {
+            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
+
             return $this->redirect(['configuration/config-auth/index']);
         }
 

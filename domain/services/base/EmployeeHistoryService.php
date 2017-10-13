@@ -4,9 +4,9 @@ namespace domain\services\base;
 
 use domain\models\base\EmployeeHistory;
 use domain\repositories\base\EmployeeHistoryRepository;
-use domain\services\BaseService;
+use domain\services\WKService;
 
-class EmployeeHistoryService extends BaseService
+class EmployeeHistoryService extends WKService
 {
     private $employeeHistoryRepository;
 
@@ -15,8 +15,6 @@ class EmployeeHistoryService extends BaseService
     )
     {
         $this->employeeHistoryRepository = $employeeHistoryRepository;
-
-        parent::__construct();
     }
 
     public function create($person_id, $dolzh_id, $podraz_id, $build_id, $employee_history_begin, $created_at, $updated_at, $created_by, $updated_by)

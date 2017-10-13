@@ -9,14 +9,11 @@
 namespace backend\controllers\configuration;
 
 
-use common\widgets\NotifyShower\NotifyShower;
 use domain\forms\base\ProfileForm;
 use domain\forms\base\UserForm;
 use domain\models\base\search\AuthItemSearch;
 use domain\models\base\search\EmployeeSearch;
 use domain\models\base\search\UsersSearch;
-use domain\services\base\dto\PersonData;
-use domain\services\base\dto\ProfileData;
 use domain\services\base\PersonService;
 use domain\services\proxyService;
 use Yii;
@@ -31,7 +28,7 @@ class UsersController extends Controller
 
     public function __construct($id, $module, PersonService $personService, $config = [])
     {
-        $this->personService = $personService;
+        $this->personService = new proxyService($personService);
         parent::__construct($id, $module, $config = []);
     }
 
@@ -64,6 +61,8 @@ class UsersController extends Controller
             && $profileForm->validate()
             && $this->personService->create($userForm, $profileForm)
         ) {
+            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
+
             return $this->redirect(['index']);
         }
 

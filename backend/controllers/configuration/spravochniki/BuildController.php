@@ -2,6 +2,7 @@
 
 namespace backend\controllers\configuration\spravochniki;
 
+use domain\services\proxyService;
 use Yii;
 use domain\models\base\Build;
 use domain\models\base\search\BuildSearch;
@@ -21,13 +22,13 @@ use yii\web\Response;
 class BuildController extends Controller
 {
     /**
-    * @var BuildService $buildService
-    */
+     * @var BuildService $buildService
+     */
     private $buildService;
 
     public function __construct($id, $module, BuildService $buildService, $config = [])
     {
-        $this->buildService = $buildService;
+        $this->buildService = new proxyService($buildService);
         parent::__construct($id, $module, $config = []);
     }
 
@@ -79,6 +80,8 @@ class BuildController extends Controller
             && $form->validate()
             && $this->buildService->create($form)
         ) {
+            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
+
             return $this->redirect(['index']);
         }
 
@@ -95,12 +98,14 @@ class BuildController extends Controller
      */
     public function actionUpdate($id)
     {
-        $buildModel = $this->findModel($id);
+        $buildModel = $this->buildService->find($id);
         $form = new BuildForm($buildModel);
 
         if ($form->load(Yii::$app->request->post()) && $form->validate()
             && $this->buildService->update($buildModel->primaryKey, $form)
         ) {
+            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
+
             return $this->redirect(['index']);
         }
 
@@ -124,21 +129,5 @@ class BuildController extends Controller
         }
 
         return AjaxResponse::init(AjaxResponse::SUCCESS);
-    }
-
-    /**
-     * Finds the Build model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param resource $id
-     * @return Build the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Build::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
     }
 }

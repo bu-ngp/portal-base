@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "c5cf94cd80808c7c4ba8e5497fcdac6b",
+    "content-hash": "8199b7717140b0aabafe672f04c5d9ce",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -179,14 +179,36 @@
             "version": "4.0.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/select2/select2.git",
+                "url": "git@github.com:ivaynberg/select2.git",
                 "reference": "16f6b10628f9000918708cef9b3da615119cf6d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/select2/select2/zipball/16f6b10628f9000918708cef9b3da615119cf6d6",
+                "url": "https://api.github.com/repos/ivaynberg/select2/zipball/16f6b10628f9000918708cef9b3da615119cf6d6",
                 "reference": "16f6b10628f9000918708cef9b3da615119cf6d6",
                 "shasum": null
+            },
+            "type": "bower-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "bower-asset/toastr",
+            "version": "2.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/johnpapa/toastr-bower.git",
+                "reference": "d6fef68471aa1836bc44ba1a41a90a96548b784f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/johnpapa/toastr-bower/zipball/d6fef68471aa1836bc44ba1a41a90a96548b784f",
+                "reference": "d6fef68471aa1836bc44ba1a41a90a96548b784f",
+                "shasum": null
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.6.3,<3"
             },
             "type": "bower-asset",
             "license": [
@@ -833,6 +855,65 @@
                 "wkhtmltopdf"
             ],
             "time": "2015-11-17T13:16:27+00:00"
+        },
+        {
+            "name": "loveorigami/yii2-notification-wrapper",
+            "version": "6.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/loveorigami/yii2-notification-wrapper.git",
+                "reference": "e4fca256172b76e644f247b29d964e0085954702"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/loveorigami/yii2-notification-wrapper/zipball/e4fca256172b76e644f247b29d964e0085954702",
+                "reference": "e4fca256172b76e644f247b29d964e0085954702",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "~2"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "bootstrap": "lo\\modules\\noty\\Bootstrap"
+            },
+            "autoload": {
+                "psr-4": {
+                    "lo\\modules\\noty\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andrey Lukyanov",
+                    "email": "loveorigami@mail.ru",
+                    "homepage": "http://loveorigami.info",
+                    "role": "Developer"
+                }
+            ],
+            "description": "This module for renders a message from session flash (with ajax, pjax support and etc.)",
+            "homepage": "https://github.com/loveorigami/yii2-notification-wrapper",
+            "keywords": [
+                "alert",
+                "flash",
+                "growl",
+                "lobibox",
+                "module",
+                "notific8",
+                "notification",
+                "noty",
+                "notyfy",
+                "notyjs",
+                "pnotyfy",
+                "sweetalert",
+                "toast",
+                "toastr",
+                "yii2"
+            ],
+            "time": "2016-03-31T00:00:00+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -2544,30 +2625,26 @@
         },
         {
             "name": "yiisoft/yii2-bootstrap",
-            "version": "2.0.6",
+            "version": "2.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-bootstrap.git",
-                "reference": "3fd2b8c950cce79d60e9702d6bcb24eb3c80f6c5"
+                "reference": "02a54d868343ed11d02f0f0f8cbbecb590e0cb3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-bootstrap/zipball/3fd2b8c950cce79d60e9702d6bcb24eb3c80f6c5",
-                "reference": "3fd2b8c950cce79d60e9702d6bcb24eb3c80f6c5",
+                "url": "https://api.github.com/repos/yiisoft/yii2-bootstrap/zipball/02a54d868343ed11d02f0f0f8cbbecb590e0cb3f",
+                "reference": "02a54d868343ed11d02f0f0f8cbbecb590e0cb3f",
                 "shasum": ""
             },
             "require": {
                 "bower-asset/bootstrap": "3.3.* | 3.2.* | 3.1.*",
-                "yiisoft/yii2": ">=2.0.6"
+                "yiisoft/yii2": "~2.0.6"
             },
             "type": "yii2-extension",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.0.x-dev"
-                },
-                "asset-installer-paths": {
-                    "npm-asset-library": "vendor/npm",
-                    "bower-asset-library": "vendor/bower"
                 }
             },
             "autoload": {
@@ -2590,7 +2667,7 @@
                 "bootstrap",
                 "yii2"
             ],
-            "time": "2016-03-17T03:29:28+00:00"
+            "time": "2017-10-09T19:48:22+00:00"
         },
         {
             "name": "yiisoft/yii2-composer",
@@ -5067,16 +5144,16 @@
         },
         {
             "name": "yiisoft/yii2-debug",
-            "version": "2.0.11",
+            "version": "2.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-debug.git",
-                "reference": "372fbf0d47303b7d68275d6720935e5116915418"
+                "reference": "93082f46d3568b4431a26f264e0d16a12c42bd50"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-debug/zipball/372fbf0d47303b7d68275d6720935e5116915418",
-                "reference": "372fbf0d47303b7d68275d6720935e5116915418",
+                "url": "https://api.github.com/repos/yiisoft/yii2-debug/zipball/93082f46d3568b4431a26f264e0d16a12c42bd50",
+                "reference": "93082f46d3568b4431a26f264e0d16a12c42bd50",
                 "shasum": ""
             },
             "require": {
@@ -5110,7 +5187,7 @@
                 "debugger",
                 "yii2"
             ],
-            "time": "2017-09-05T23:21:05+00:00"
+            "time": "2017-10-09T20:30:01+00:00"
         },
         {
             "name": "yiisoft/yii2-faker",

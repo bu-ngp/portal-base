@@ -2,6 +2,7 @@
 
 namespace backend\controllers\configuration\spravochniki;
 
+use domain\services\proxyService;
 use Yii;
 use domain\models\base\Podraz;
 use domain\models\base\search\PodrazSearch;
@@ -27,7 +28,7 @@ class PodrazController extends Controller
 
     public function __construct($id, $module, PodrazService $podrazService, $config = [])
     {
-        $this->podrazService = $podrazService;
+        $this->podrazService = new proxyService($podrazService);
         parent::__construct($id, $module, $config = []);
     }
 
@@ -79,6 +80,8 @@ class PodrazController extends Controller
             && $form->validate()
             && $this->podrazService->create($form)
         ) {
+            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
+
             return $this->redirect(['index']);
         }
 
@@ -95,12 +98,14 @@ class PodrazController extends Controller
      */
     public function actionUpdate($id)
     {
-        $podrazModel = $this->findModel($id);
+        $podrazModel = $this->podrazService->find($id);
         $form = new PodrazForm($podrazModel);
 
         if ($form->load(Yii::$app->request->post()) && $form->validate()
             && $this->podrazService->update($podrazModel->primaryKey, $form)
         ) {
+            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
+
             return $this->redirect(['index']);
         }
 
@@ -124,21 +129,5 @@ class PodrazController extends Controller
         }
 
         return AjaxResponse::init(AjaxResponse::SUCCESS);
-    }
-
-    /**
-     * Finds the Podraz model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param resource $id
-     * @return Podraz the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Podraz::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
     }
 }

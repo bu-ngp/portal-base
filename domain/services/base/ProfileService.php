@@ -4,9 +4,9 @@ namespace domain\services\base;
 
 use domain\models\base\Profile;
 use domain\repositories\base\ProfileRepository;
-use domain\services\BaseService;
+use domain\services\WKService;
 
-class ProfileService extends BaseService
+class ProfileService extends WKService
 {
     private $profileRepository;
 
@@ -15,8 +15,6 @@ class ProfileService extends BaseService
     )
     {
         $this->profileRepository = $profileRepository;
-
-        parent::__construct();
     }
 
     public function create($profile_inn, $profile_dr, $profile_pol, $profile_snils, $profile_address, $created_at, $updated_at, $created_by, $updated_by)

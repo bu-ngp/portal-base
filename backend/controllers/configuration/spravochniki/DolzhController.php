@@ -29,7 +29,7 @@ class DolzhController extends Controller
 
     public function __construct($id, $module, DolzhService $dolzhService, $config = [])
     {
-        $this->dolzhService = $dolzhService;
+        $this->dolzhService = new proxyService($dolzhService);
         parent::__construct($id, $module, $config = []);
     }
 
@@ -92,6 +92,8 @@ class DolzhController extends Controller
             && $form->validate()
             && $this->dolzhService->create($form)
         ) {
+            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
+
             return $this->redirect(['index']);
         }
 
@@ -108,13 +110,15 @@ class DolzhController extends Controller
      */
     public function actionUpdate($id)
     {
-        $dolzhModel = $this->findModel($id);
+        $dolzhModel = $this->dolzhService->find($id);
         $form = new DolzhForm($dolzhModel);
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
             && $this->dolzhService->update($dolzhModel->primaryKey, $form)
         ) {
+            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
+
             return $this->redirect(['index']);
         }
 
@@ -138,21 +142,5 @@ class DolzhController extends Controller
         }
 
         return AjaxResponse::init(AjaxResponse::SUCCESS);
-    }
-
-    /**
-     * Finds the Dolzh model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param resource $id
-     * @return Dolzh the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Dolzh::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
     }
 }

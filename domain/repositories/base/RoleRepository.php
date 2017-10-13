@@ -9,14 +9,10 @@
 namespace domain\repositories\base;
 
 use domain\models\base\AuthItem;
-use domain\repositories\RepositoryInterface;
-use RuntimeException;
 use Yii;
-use yii\db\Query;
 
-class RoleRepository implements RepositoryInterface
+class RoleRepository
 {
-
     /**
      * @param $id
      * @return AuthItem
@@ -24,8 +20,9 @@ class RoleRepository implements RepositoryInterface
     public function find($id)
     {
         if (!$authitem = AuthItem::findOne($id)) {
-            throw new RuntimeException('Model not found.');
+            throw new \RuntimeException('Model not found.');
         }
+
         return $authitem;
     }
 
@@ -45,7 +42,7 @@ class RoleRepository implements RepositoryInterface
             ->andWhere(['not in', 'name', ['Administrator']])
             ->one()
         ) {
-            throw new RuntimeException('Model not found.');
+            throw new \DomainException('Model not found.');
         }
 
         return $authitem;
@@ -53,54 +50,52 @@ class RoleRepository implements RepositoryInterface
 
     /**
      * @param AuthItem $authitem
-     * @return int
      */
-    public function add($authitem)
+    public function add(AuthItem $authitem)
     {
         if ($role = Yii::$app->authManager->getRole($authitem->name)) {
-            throw new RuntimeException('Adding existing model.');
+            throw new \DomainException('Adding existing model.');
         }
 
         $role = Yii::$app->authManager->createRole($authitem->name);
         $role->description = $authitem->description;
 
         if (!Yii::$app->authManager->add($role)) {
-            throw new RuntimeException('Saving error.');
+            throw new \DomainException('Saving error.');
         }
 
-        return AuthItem::updateAll(['ldap_group' => $authitem->ldap_group], ['name' => $authitem->name]);
+        AuthItem::updateAll(['ldap_group' => $authitem->ldap_group], ['name' => $authitem->name]);
     }
 
     /**
      * @param AuthItem $authitem
-     * @return int
      */
-    public function save($authitem)
+    public function save(AuthItem $authitem)
     {
         if (!($role = Yii::$app->authManager->getRole($authitem->name))) {
-            throw new RuntimeException('Authitem not exists.');
+            throw new \DomainException('Authitem not exists.');
         }
 
         $role->description = $authitem->description;
 
         if (!Yii::$app->authManager->update($authitem->primaryKey, $role)) {
-            throw new RuntimeException('Saving error.');
+            throw new \DomainException('Saving error.');
         }
 
-        return AuthItem::updateAll(['ldap_group' => $authitem->ldap_group], ['name' => $authitem->name]);
+        AuthItem::updateAll(['ldap_group' => $authitem->ldap_group], ['name' => $authitem->name]);
     }
 
     /**
      * @param AuthItem $authitem
      */
-    public function delete($authitem)
+    public function delete(AuthItem $authitem)
     {
         if (!($role = Yii::$app->authManager->getRole($authitem->name))) {
-            throw new RuntimeException('Role not exists.');
+            throw new \DomainException('Role not exists.');
         }
 
         if (!Yii::$app->authManager->remove($role)) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Deleting error. Remove Role Fail.'));
+            throw new \DomainException(Yii::t('domain/base', 'Deleting error. Remove Role Fail.'));
         };
     }
 
@@ -108,10 +103,10 @@ class RoleRepository implements RepositoryInterface
      * @param AuthItem $authitem
      * @return bool
      */
-    public function isEmptyChildren($authitem)
+    public function isEmptyChildren(AuthItem $authitem)
     {
         if (!($role = Yii::$app->authManager->getRole($authitem->name))) {
-            throw new RuntimeException('Role not exists.');
+            throw new \DomainException('Role not exists.');
         }
 
         return count(Yii::$app->authManager->getChildren($authitem->name)) === 0;

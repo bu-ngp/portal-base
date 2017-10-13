@@ -18,14 +18,18 @@ class BuildService extends WKService
         $this->buildRepository = $buildRepository;
     }
 
+    public function find($id) {
+        return $this->buildRepository->find($id);
+    }
+
     public function create(BuildForm $form)
     {
         $build = Build::create($form->build_name);
         if (!$this->validateModels($build, $form)) {
-            return false;
+            throw new \DomainException();
         }
 
-        return $this->buildRepository->add($build);
+        $this->buildRepository->add($build);
     }
 
     public function update($id, BuildForm $form)
@@ -33,10 +37,10 @@ class BuildService extends WKService
         $build = $this->buildRepository->find($id);
         $build->editData($form->build_name);
         if (!$this->validateModels($build, $form)) {
-            return false;
+            throw new \DomainException();
         }
 
-        return $this->buildRepository->save($build);
+        $this->buildRepository->save($build);
     }
 
     public function delete($id)

@@ -18,14 +18,18 @@ class DolzhService extends WKService
         $this->dolzhRepository = $dolzhRepository;
     }
 
+    public function find($id) {
+        return $this->dolzhRepository->find($id);
+    }
+
     public function create(DolzhForm $form)
     {
         $dolzh = Dolzh::create($form->dolzh_name);
         if (!$this->validateModels($dolzh, $form)) {
-            return false;
+            throw new \DomainException();
         }
 
-        return $this->dolzhRepository->add($dolzh);
+        $this->dolzhRepository->add($dolzh);
     }
 
     public function update($id, DolzhForm $form)
@@ -33,10 +37,10 @@ class DolzhService extends WKService
         $dolzh = $this->dolzhRepository->find($id);
         $dolzh->editData($form->dolzh_name);
         if (!$this->validateModels($dolzh, $form)) {
-            return false;
+            throw new \DomainException();
         }
 
-        return $this->dolzhRepository->save($dolzh);
+        $this->dolzhRepository->save($dolzh);
     }
 
     public function delete($id)

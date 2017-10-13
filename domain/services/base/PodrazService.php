@@ -18,14 +18,18 @@ class PodrazService extends WKService
         $this->podrazRepository = $podrazRepository;
     }
 
+    public function find($id) {
+        return $this->podrazRepository->find($id);
+    }
+
     public function create(PodrazForm $form)
     {
         $podraz = Podraz::create($form->podraz_name);
         if (!$this->validateModels($podraz, $form)) {
-            return false;
+            throw new \DomainException();
         }
 
-        return  $this->podrazRepository->add($podraz);
+        $this->podrazRepository->add($podraz);
     }
 
     public function update($id, PodrazForm $form)
@@ -33,10 +37,10 @@ class PodrazService extends WKService
         $podraz = $this->podrazRepository->find($id);
         $podraz->editData($form->podraz_name);
         if (!$this->validateModels($podraz, $form)) {
-            return false;
+            throw new \DomainException();
         }
 
-        return $this->podrazRepository->save($podraz);
+        $this->podrazRepository->save($podraz);
     }
 
     public function delete($id)

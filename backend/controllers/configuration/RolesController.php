@@ -9,6 +9,7 @@ use domain\models\base\filter\AuthItemFilter;
 use domain\services\AjaxFilter;
 use domain\services\base\RoleService;
 use common\reports\RolesReport;
+use domain\services\proxyService;
 use Yii;
 use domain\models\base\AuthItem;
 use domain\models\base\search\AuthItemSearch;
@@ -30,7 +31,7 @@ class RolesController extends Controller
 
     public function __construct($id, $module, RoleService $roleService, $config = [])
     {
-        $this->roleService = $roleService;
+        $this->roleService = new proxyService($roleService);
         parent::__construct($id, $module, $config = []);
     }
 
@@ -95,6 +96,8 @@ class RolesController extends Controller
             && $form->validate()
             && $this->roleService->create($form)
         ) {
+            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
+
             return $this->redirect(['index']);
         }
 
@@ -113,7 +116,7 @@ class RolesController extends Controller
      */
     public function actionUpdate($id)
     {
-        $roleModel = $this->findModel($id);
+        $roleModel = $this->roleService->find($id);
         $form = new RoleUpdateForm($roleModel);
         $searchModel = new AuthItemSearch();
         $dataProvider = $searchModel->searchForUpdate(Yii::$app->request->queryParams);
@@ -122,6 +125,8 @@ class RolesController extends Controller
             && $form->validate()
             && $this->roleService->update($roleModel->primaryKey, $form)
         ) {
+            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
+
             return $this->redirect(['index']);
         }
 
@@ -197,21 +202,5 @@ class RolesController extends Controller
             ->params(['view' => 1])
             ->type('pdf')
             ->save();
-    }
-
-    /**
-     * Finds the AuthItem model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @return AuthItem the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = AuthItem::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
     }
 }

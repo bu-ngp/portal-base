@@ -8,6 +8,8 @@
 
 namespace domain\rules\base;
 
+use Yii;
+
 class RoleRules
 {
     public static function client()

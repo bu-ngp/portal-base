@@ -3,11 +3,9 @@
 namespace domain\repositories\base;
 
 use domain\models\base\Build;
-use domain\repositories\RepositoryInterface;
-use RuntimeException;
 use Yii;
 
-class BuildRepository implements RepositoryInterface
+class BuildRepository
 {
     /**
      * @param $id
@@ -16,7 +14,7 @@ class BuildRepository implements RepositoryInterface
     public function find($id)
     {
         if (!$build = Build::findOne($id)) {
-            throw new RuntimeException('Model not found.');
+            throw new \RuntimeException('Model not found.');
         }
 
         return $build;
@@ -24,43 +22,37 @@ class BuildRepository implements RepositoryInterface
 
     /**
      * @param Build $build
-     * @return bool
      */
-    public function add($build)
+    public function add(Build $build)
     {
         if (!$build->getIsNewRecord()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Adding existing model.'));
+            throw new \DomainException(Yii::t('domain/base', 'Adding existing model.'));
         }
         if (!$build->insert(false)) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Saving error.'));
         }
-        
-        return true;
     }
 
     /**
      * @param Build $build
-     * @return bool
      */
-    public function save($build)
+    public function save(Build $build)
     {
         if ($build->getIsNewRecord()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Adding existing model.'));
+            throw new \DomainException(Yii::t('domain/base', 'Adding existing model.'));
         }
         if ($build->update(false) === false) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Saving error.'));
         }
-
-        return true;
     }
 
     /**
      * @param Build $build
      */
-    public function delete($build)
+    public function delete(Build $build)
     {
         if (!$build->delete()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Deleting error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Deleting error.'));
         }
     }
 }

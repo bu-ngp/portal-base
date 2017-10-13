@@ -18,6 +18,7 @@ use domain\repositories\base\AuthItemChildRepository;
 use domain\repositories\base\RoleRepository;
 use domain\services\TransactionManager;
 use domain\services\WKService;
+use Yii;
 
 class RoleService extends WKService
 {
@@ -36,6 +37,10 @@ class RoleService extends WKService
         $this->transactionManager = $transactionManager;
     }
 
+    public function find($id) {
+        return $this->roleRepository->find($id);
+    }
+
     /**
      * Добавление новой пользовательской роли с выбранными подчиненными ролями
      *
@@ -48,8 +53,8 @@ class RoleService extends WKService
         $assignedKeys = $this->guardAssignRoles($form);
 
         $authItem = AuthItem::create($form->name, $form->description, $form->ldap_group);
-        if (NotifyShower::hasErrors() || !$this->validateModels($authItem, $form)) {
-            return false;
+        if (!$this->validateModels($authItem, $form)) {
+            throw new \DomainException();
         }
 
         $authItemChild = AuthItemChild::create($authItem, $assignedKeys);
@@ -75,16 +80,16 @@ class RoleService extends WKService
         $authItem = $this->roleRepository->find($id);
 
         if ($this->roleRepository->isEmptyChildren($authItem)) {
-            NotifyShower::message(\Yii::t('common/roles', 'Need add roles'));
+            throw new \DomainException(Yii::t('common/roles', 'Need add roles'));
         }
 
         $authItem->editData($form->description, $form->ldap_group);
 
-        if (NotifyShower::hasErrors() || !$this->validateModels($authItem, $form)) {
-            return false;
+        if (!$this->validateModels($authItem, $form)) {
+            throw new \DomainException();
         }
 
-        return $this->roleRepository->save($authItem);
+        $this->roleRepository->save($authItem);
     }
 
     /**
@@ -118,13 +123,11 @@ class RoleService extends WKService
     private function guardAssignRoles($form)
     {
         if (!is_string($form->assignRoles) || ($assignedKeys = json_decode($form->assignRoles)) === null) {
-            NotifyShower::message(\Yii::t('common/roles', 'Error when recognizing selected items'));
-
-            return false;
+            throw new \DomainException(Yii::t('common/roles', 'Error when recognizing selected items'));
         }
 
         if (!$assignedKeys) {
-            NotifyShower::message(\Yii::t('common/roles', 'Need add roles'));
+            Yii::$app->session->addFlash('error', (Yii::t('common/roles', 'Need add roles')));
         }
 
         return $assignedKeys;

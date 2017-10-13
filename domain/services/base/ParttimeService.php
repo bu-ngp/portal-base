@@ -4,9 +4,9 @@ namespace domain\services\base;
 
 use domain\models\base\Parttime;
 use domain\repositories\base\ParttimeRepository;
-use domain\services\BaseService;
+use domain\services\WKService;
 
-class ParttimeService extends BaseService
+class ParttimeService extends WKService
 {
     private $parttimeRepository;
 
@@ -15,8 +15,6 @@ class ParttimeService extends BaseService
     )
     {
         $this->parttimeRepository = $parttimeRepository;
-
-        parent::__construct();
     }
 
     public function create($person_id, $dolzh_id, $podraz_id, $build_id, $parttime_begin, $parttime_end, $created_at, $updated_at, $created_by, $updated_by)

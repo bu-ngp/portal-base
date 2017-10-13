@@ -10,13 +10,10 @@
 namespace domain\services\base;
 
 use common\classes\Ldap;
-use common\widgets\NotifyShower\NotifyShower;
-use domain\exceptions\ServiceErrorsException;
 use domain\repositories\base\ConfigLdapRepository;
-use domain\services\BaseService;
 use Yii;
 
-class ConfigLdapService extends BaseService
+class ConfigLdapService
 {
     private $configLdapRepository;
 
@@ -25,8 +22,6 @@ class ConfigLdapService extends BaseService
     )
     {
         $this->configLdapRepository = $configLdapRepository;
-
-        parent::__construct();
     }
 
     public function update($ldapHost, $ldapPort = 389, $ldapAdminLogin, $ldapAdminPassword, $ldapActive = false)
@@ -43,17 +38,15 @@ class ConfigLdapService extends BaseService
                     $configLdap = $this->configLdapRepository->find();
                     $configLdap->editData($ldapHost, $ldapPort, $ldapAdminLogin, $ldapAdminPassword, $ldapActive);
 
-                    return $this->configLdapRepository->save($configLdap);
+                    $this->configLdapRepository->save($configLdap);
                 } else {
-                    NotifyShower::message(\Yii::t('common/config-ldap', "LDAP can't connect"));
+                    throw new \DomainException(\Yii::t('common/config-ldap', "LDAP can't connect"));
                 }
             } catch (\Exception $e) {
-                NotifyShower::message(\Yii::t('common/config-ldap', "LDAP can't connect"));
+                throw new \DomainException(\Yii::t('common/config-ldap', "LDAP can't connect"));
             }
         } else {
-            NotifyShower::message(\Yii::t('common/config-ldap', 'Ldap config not correct'));
+            throw new \DomainException(\Yii::t('common/config-ldap', 'Ldap config not correct'));
         }
-
-        return false;
     }
 }

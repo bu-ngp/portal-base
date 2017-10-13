@@ -119,6 +119,9 @@ return [
         ],
     ],
     'modules' => [
+        'noty' => [
+            'class' => 'lo\modules\noty\Module',
+        ],
         /*  'wkcardlist' => [
               'class' => '\common\widgets\CardList\Module'
           ]*/

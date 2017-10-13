@@ -8,24 +8,40 @@
 
 namespace domain\services;
 
-
-use domain\exceptions\ServiceErrorsException;
+use Yii;
 
 class proxyService
 {
     private $serviceClass;
+    private $storeErrors = [];
+    private $useFlash;
 
-    public function __construct(BaseService $serviceClass)
+    public function __construct($serviceClass, $useFlash = true)
     {
         $this->serviceClass = $serviceClass;
+        $this->useFlash = $useFlash;
     }
 
     public function __call($method, $arguments)
     {
         try {
-            return call_user_func_array([$this->serviceClass, $method], $arguments);
-        } catch (ServiceErrorsException $e) {
-            $this->serviceClass->addError($e->getAttribute(), $e->getMessage());
+            call_user_func_array([$this->serviceClass, $method], $arguments);
+
+            return true;
+        } catch (\DomainException $e) {
+            if ($e->getMessage()) {
+                $this->storeErrors[] = $e->getMessage();
+                if ($this->useFlash) {
+                    Yii::$app->session->addFlash('error', $e->getMessage());
+                }
+            }
         }
+
+        return false;
+    }
+
+    public function getErrorsProxyService()
+    {
+        return $this->storeErrors;
     }
 }
