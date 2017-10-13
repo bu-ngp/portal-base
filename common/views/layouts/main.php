@@ -4,7 +4,6 @@
 /* @var $content string */
 
 use common\widgets\Breadcrumbs\Breadcrumbs;
-use common\widgets\NotifyShower\NotifyShower;
 use common\widgets\ReportLoader\assets\ReportLoaderAsset;
 use common\widgets\ReportLoader\ReportLoader;
 use lo\modules\noty\Wrapper;
@@ -12,7 +11,6 @@ use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use common\assets\AppCommonAsset;
-use common\widgets\Alert;
 
 if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
     $this->beginContent('@app/views/layouts/assets.php');
@@ -113,7 +111,7 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
     'layerClass' => 'lo\modules\noty\layers\Toastr',
 ]) ?>
 
-<?php \common\assets\PropellerAsset::register($this) ?>
+<?php //\common\assets\PropellerAsset::register($this) ?>
 <?php $this->endBody() ?>
 </body>
 </html>

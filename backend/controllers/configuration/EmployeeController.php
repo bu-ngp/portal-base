@@ -35,37 +35,6 @@ class EmployeeController extends Controller
     {
         $form = new EmployeeForm();
 
-      /*  if (Yii::$app->request->isAjax) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-
-            $id = Uuid::str2uuid($_GET['id']);
-            $q = $_GET['q'];
-
-            $dolzhQuery = DolzhQuery::getCallbackAllDolzhs();
-            $query = $dolzhQuery((new Dolzh())->find());
-            $resultReturn = [];
-
-            if ($id) {
-                $result = $query->andWhere(['dolzh_id' => $id])->asArray()->one();
-                $result['dolzh_id'] = Uuid::uuid2str($result['dolzh_id']);
-                $resultReturn = ['id' => $result['dolzh_id'], 'text' => implode(', ', $result)];
-
-                return $resultReturn;
-            }
-
-            if ($q) {
-                $result = $query->andWhere(['like', 'dolzh_name', $q])->asArray()->all();
-                foreach ($result as $row) {
-                    $row['dolzh_id'] = Uuid::uuid2str($row['dolzh_id']);
-                    $resultReturn[] = ['id' => $row['dolzh_id'], 'text' => implode(', ', $row)];
-                }
-
-                return ['results' => $resultReturn];
-            }
-
-            return [];
-        }*/
-
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
             && $this->employeeService->create($form)
@@ -79,4 +48,10 @@ class EmployeeController extends Controller
             'modelForm' => $form,
         ]);
     }
+
+    public function actionTest()
+    {
+        return $this->render('_test');
+    }
+
 }

@@ -19,7 +19,6 @@ class AppCommonAsset extends AssetBundle
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
-        //'common\assets\PropellerAsset',
         'rmrevin\yii\fontawesome\AssetBundle',
     ];
 }

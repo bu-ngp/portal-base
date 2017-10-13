@@ -152,8 +152,8 @@ class ActiveField extends \yii\bootstrap\ActiveField
 
     public function select2($options = [])
     {
-        $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield pmd-textfield-floating-label' : 'form-group pmd-textfield pmd-textfield-floating-label';
-       // $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield' : 'form-group pmd-textfield';
+       // $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield pmd-textfield-floating-label' : 'form-group pmd-textfield pmd-textfield-floating-label';
+        $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield' : 'form-group pmd-textfield';
 
         $options['modelQuery'] = $this->model;
         $options['idAttribute'] = $this->attribute;

@@ -145,7 +145,7 @@ class Select2 extends \kartik\select2\Select2
     {
         $view = $this->getView();
 
-        TextFieldAsset::register($view);
+        //TextFieldAsset::register($view);
 
     }
 
