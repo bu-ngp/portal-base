@@ -4,6 +4,7 @@ use common\widgets\ActiveForm\ActiveForm;
 use domain\models\base\Dolzh;
 use common\widgets\Select2\Select2;
 use rmrevin\yii\fontawesome\FA;
+use yii\db\ActiveQuery;
 
 /* @var $this yii\web\View */
 /* @var $modelForm domain\forms\base\EmployeeForm */
@@ -11,18 +12,12 @@ use rmrevin\yii\fontawesome\FA;
 
 <?php $form = ActiveForm::begin(['id' => $modelForm->formName()]); ?>
 
-<?php
-$map = \yii\helpers\ArrayHelper::map(Dolzh::find()->all(), 'dolzh_id', 'dolzh_name');
-
-$map2 = [];
-foreach ($map as $key => $value) {
-    $map2[\wartron\yii2uuid\helpers\Uuid::uuid2str($key)] = $value;
-}
-?>
-
 <?= $form->field($modelForm, 'dolzh_id')->select2([
     'activeRecordClass' => Dolzh::className(),
-    'queryCallback' => \domain\queries\DolzhQuery::getCallbackAllDolzhs(),
+    // 'queryCallback' => \domain\queries\DolzhQuery::getCallbackAllDolzhs(),
+    'queryCallback' => function (ActiveQuery $query) {
+        return $query->select(['dolzh_id', 'dolzh_name']);
+    },
     'wkkeep' => true,
     'wkicon' => FA::_ADDRESS_BOOK,
     'multiple' => true,

@@ -53,9 +53,10 @@ class Select2 extends \kartik\select2\Select2
 
         $dataQuery = $this->getDataQuery();
         $resultQueryCount = $dataQuery->count();
+        $this->options['placeholder'] = '';
 
         if ($resultQueryCount > 1 /*100*/) {
-            $this->options['placeholder'] = '';
+            $this->options['wk-ajax'] = true;
             $this->pluginOptions['minimumInputLength'] = 2;
             $this->pluginOptions['ajax']['url'] = Url::current();
             $this->pluginOptions['ajax']['dataType'] = 'json';
@@ -73,10 +74,18 @@ class Select2 extends \kartik\select2\Select2
         }
 
         if ($this->model->{$this->idAttribute}) {
-            $resultQuery = $dataQuery->andWhere([$this->idAttribute => $this->model->{$this->idAttribute}])->asArray()->one();
-            $resultQuery[$this->attribute] = Uuid::uuid2str($resultQuery[$this->attribute]);
-            $this->initValueText = implode(', ', $resultQuery);
-            $this->value = Uuid::uuid2str($this->model->{$this->idAttribute});
+            if ($this->multiple) {
+                // Не фурычит
+                $resultQuery = $dataQuery->andWhere([$this->idAttribute => $this->model->{$this->idAttribute}])->asArray()->one();
+                $resultQuery[$this->attribute] = Uuid::uuid2str($resultQuery[$this->attribute]);
+                $this->data = [$resultQuery[$this->attribute] => implode(', ', $resultQuery)];
+                $this->value = [Uuid::uuid2str($this->model->{$this->idAttribute})];
+            } else {
+                $resultQuery = $dataQuery->andWhere([$this->idAttribute => $this->model->{$this->idAttribute}])->asArray()->one();
+                $resultQuery[$this->attribute] = Uuid::uuid2str($resultQuery[$this->attribute]);
+                $this->initValueText = implode(', ', $resultQuery);
+                $this->value = Uuid::uuid2str($this->model->{$this->idAttribute});
+            }
         }
 
         if ($this->wkkeep) {
@@ -90,6 +99,7 @@ class Select2 extends \kartik\select2\Select2
 
         if ($this->multiple === true) {
             $this->options['multiple'] = true;
+            $this->options['tags'] = true;
         }
 
         if ($this->selectionGridUrl) {
@@ -116,12 +126,18 @@ class Select2 extends \kartik\select2\Select2
     protected function selectedAttribute()
     {
         if (Yii::$app->request->get('grid') === $this->options['id'] && Yii::$app->request->get('selected')) {
-            $dataQuery = $this->getDataQuery();
-            /* ???????????????????????????????????????????????? */
-            $resultQuery = $dataQuery->andWhere([$this->idAttribute => Uuid::str2uuid(Yii::$app->request->get('selected'))])->asArray()->one();
-            $resultQuery[$this->attribute] = Yii::$app->request->get('selected');
-            $this->initValueText = implode(', ', $resultQuery);
-            $this->value[] = Yii::$app->request->get('selected');
+            if ($this->options['wk-ajax']) {
+                $dataQuery = $this->getDataQuery();
+                /* ???????????????????????????????????????????????? */
+                $resultQuery = $dataQuery->andWhere([$this->idAttribute => Uuid::str2uuid(Yii::$app->request->get('selected'))])->asArray()->one();
+                $resultQuery[$this->attribute] = Yii::$app->request->get('selected');
+                $this->initValueText = implode(', ', $resultQuery);
+                if ($this->multiple) {
+                    $this->value[] = Yii::$app->request->get('selected');
+                } else {
+                    $this->value = Yii::$app->request->get('selected');
+                }
+            }
 
             $this->options['wk-selected'] = Yii::$app->request->get('selected');
         }

@@ -137,16 +137,30 @@
                     } else if (input.prop("tagName") === 'SELECT') {
                         if (value[0]) {
                             if ($.isArray(value[0])) {
-                                $.each(value[0], function (key) {
-                                    var $option = $('<option selected></option>');
-                                    $option.text(value[1][key]).val(this);
-                                    input.append($option)
-                                });
+                                if (input.is('[wk-ajax]')) {
+                                    $.each(value[0], function (key) {
+                                        if (input.find('option[value="' + this + '"]').length === 0) {
+                                            var $option = $('<option selected></option>');
+                                            $option.text(value[1][key]).val(this);
+                                            input.append($option);
+                                        } else {
+                                            input.val(value[0]);
+                                        }
+                                    });
+                                } else {
+                                    input.val(value[0]);
+                                }
+
                                 input.trigger('change');
                             } else {
-                                var $option = $('<option selected></option>');
-                                $option.text(value[1]).val(value[0]);
-                                input.append($option).trigger('change');
+                                if (input.is('[wk-ajax]')) {
+                                    var $option = $('<option selected></option>');
+                                    $option.text(value[1]).val(value[0]);
+                                    input.append($option);
+                                } else {
+                                    input.val(value[0]);
+                                }
+                                input.trigger('change');
                             }
                         }
                     } else if (input.attr('type') === 'radio') {
@@ -196,7 +210,38 @@
 
     var eventsApply = function ($widget) {
 
-        $(document).on('change dp.change', 'input[wkkeep], select[wkkeep]', function () {
+        $('select[wkkeep]').on('change.select2', function (e) {
+            if ($(this).prop("wkSelected")) {
+                $(this).prop("wkSelected", false);
+                var $multiple = $(this).next('.select2.select2-container').find('.select2-selection.select2-selection--multiple ul li');
+                var lastBC = $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 1];
+
+                if ($multiple.length) {
+                    var textChoose = [];
+
+                    $.each($(this).find("option:selected"), function () {
+                        textChoose.push($(this).text());
+                    });
+
+                    lastBC.forms[$(this).attr("name")] = [$(this).val(), textChoose];
+                } else if ($(this).find('.select2-selection.select2-selection--single')) {
+                    lastBC.forms[$(this).attr("name")] = [$(this).val(), $(this).find('option:selected').text()];
+                }
+
+                $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 1] = lastBC;
+                saveCrumbs($widget);
+            }
+        });
+
+        $('select[wkkeep]').on('select2:unselecting', function (e) {
+            $(this).prop("wkSelected", true);
+        });
+
+        $('select[wkkeep]').on('select2:selecting', function (e) {
+            $(this).prop("wkSelected", true);
+        });
+
+        $(document).on('change dp.change', 'input[wkkeep]', function (e) {
             getFromSessionStorage($widget, {
                 fail: function () {
                     getFromLocalStorage($widget);
@@ -208,23 +253,6 @@
 
                 if ($(this).attr('type') === 'checkbox') {
                     lastBC.forms[$(this).attr("name")] = +$(this).prop('checked');
-                } else if ($(this).hasClass("select2-hidden-accessible") && $(this).prop("tagName") === "SELECT") {
-                    var $multiple = $(this).next('.select2.select2-container').find('.select2-selection.select2-selection--multiple ul li');
-
-                    if ($multiple.length) {
-                        var textChoose = [];
-
-                        $.each($multiple, function () {
-                            if ($(this).is('.select2-selection__choice')) {
-                                textChoose.push($(this).attr('title'));
-                            }
-                        });
-
-                        lastBC.forms[$(this).attr("name")] = [$(this).val(), textChoose];
-                    } else if ($(this).find('.select2-selection.select2-selection--single')) {
-                        lastBC.forms[$(this).attr("name")] = [$(this).val(), $(this).find('option:selected').text()];
-                    }
-
                 } else {
                     lastBC.forms[$(this).attr("name")] = $(this).val();
                 }

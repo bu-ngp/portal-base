@@ -15,4 +15,8 @@ class GridViewHelper
     {
         return preg_match('~[^\x20-\x7E\t\r\n]~', $value) > 0;
     }
+
+    public static function isBinaryValidString($string) {
+        return ctype_xdigit($string) && mb_strlen($string, 'UTF-8') === 32;
+    }
 }

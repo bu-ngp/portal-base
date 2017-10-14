@@ -28,8 +28,25 @@
     };
 
     var selectFromUrl = function ($widget) {
-        if ($widget.is('[wk-selected]') && $widget.attr('wk-selected') !== "") {
-            $widget.val($widget.attr('wk-selected')).trigger('change');
+        var lastCrumb = $(".wkbc-breadcrumb").wkbreadcrumbs('getLast');
+        var wkchoose = "wk-choose" in lastCrumb ? lastCrumb["wk-choose"] : {};
+
+        if ($widget.is('[wk-selected]') && $widget.attr('wk-selected') !== "" && wkchoose.fromGridSaved !== $widget[0].id) {
+            if (isMultiple($widget)) {
+                var selectedValues = $widget.val() ? $widget.val() : [];
+
+                if ($.inArray($widget.attr('wk-selected'), selectedValues) < 0) {
+                    selectedValues.push($widget.attr('wk-selected'));
+                }
+
+                $widget.prop("wkSelected", true);
+                $widget.val(selectedValues).trigger('change.select2');
+            } else {
+                $widget.val($widget.attr('wk-selected')).trigger('change');
+            }
+            wkchoose.fromGridSaved = $widget[0].id;
+            lastCrumb["wk-choose"] = wkchoose;
+            $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
         }
     };
 
@@ -38,73 +55,21 @@
             e.preventDefault();
 
             var lastCrumb = $(".wkbc-breadcrumb").wkbreadcrumbs('getLast');
-            var wkchoose = "wk-choose" in lastCrumb ? lastCrumb["wk-choose"] : {"wk-choose": {}};
-
+            var wkchoose = "wk-choose" in lastCrumb ? lastCrumb["wk-choose"] : {};
             wkchoose.gridID = $widget.data('wkselect2').select2ID;
-            if (!(wkchoose.gridID in wkchoose)) {
-                wkchoose[wkchoose.gridID] = [];
+            var initValue = isSingle($widget) ? '' : [];
+            wkchoose[wkchoose.gridID] = !!$widget.val() ? $widget.val() : initValue;
+
+
+            if ("fromGridSaved" in wkchoose && wkchoose.fromGridSaved === wkchoose.gridID) {
+                delete wkchoose.fromGridSaved;
             }
-            /*
-             if ("isSaved" in wkchoose && wkchoose.isSaved === wkchoose.gridID) {
-             delete wkchoose.isSaved;
-             }*/
             lastCrumb["wk-choose"] = wkchoose;
             $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
+
             window.location.href = $(this).attr("href");
         });
-
-        $widget.on('change', function (e) {
-            var lastCrumb = $(".wkbc-breadcrumb").wkbreadcrumbs('getLast');
-            var wkchoose = "wk-choose" in lastCrumb ? lastCrumb["wk-choose"] : {"wk-choose": {}};
-            var select2ID = $widget.data('wkselect2').select2ID;
-
-            wkchoose.gridID = select2ID;
-            console.debug($widget.val());
-            console.debug(wkchoose[select2ID]);
-
-            console.debug(!(select2ID in wkchoose));
-            console.debug(!($.isArray(wkchoose[select2ID])));
-            if ((select2ID in wkchoose)) {
-                console.debug(wkchoose[select2ID].length === 0);
-            }
-
-            console.debug(isSingle($widget));
-
-            if (!(select2ID in wkchoose) || !($.isArray(wkchoose[select2ID])) || wkchoose[select2ID].length === 0 || isSingle($widget)) {
-                wkchoose[select2ID] = isSingle($widget) ? [$widget.val()] : $widget.val();
-            } else {
-                console.debug("cool");
-                console.debug($widget.val()[0]);
-                console.debug(wkchoose[select2ID]);
-                console.debug($.inArray($widget.val()[0], wkchoose[select2ID]));
-                if ($.inArray($widget.val()[0], wkchoose[select2ID]) < 0) {
-                    console.debug(wkchoose[select2ID]);
-                    wkchoose[select2ID].push($widget.val()[0]);
-                }
-            }
-            console.debug("wkchoose[select2ID]");
-            console.debug(wkchoose[select2ID]);
-
-            lastCrumb["wk-choose"] = wkchoose;
-            $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
-        });
     };
-    /*
-     var getAjaxSelectValue = function ($widget) {
-     $.ajax({ // make the request for the selected data object
-     type: 'GET',
-     url: window.location.href + "&id=7741AF08ACBD11E79E9E902B3479B004",
-     dataType: 'json'
-     }).then(function (data) {
-     console.debug(data);
-     // Here we should have the data object
-     var $option = $('<option selected></option>');
-     $('#employeeform-dolzh_id').append($option).trigger('change');
-     $option.text(data.text).val(data.id); // update the text that is displayed (and maybe even the value)
-     $option.removeData(); // remove any caching data that might be associated
-     $('#employeeform-dolzh_id').trigger('change'); // notify JavaScript components of possible changes
-     });
-     };*/
 
     var methods = {
         init: function (options) {

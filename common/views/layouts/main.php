@@ -79,7 +79,7 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
                 . Html::beginForm(Yii::$app->urlManagerFrontend->createUrl(['/site/logout']), 'post')
                 . Html::submitButton(
                     'Выйти (' . Yii::$app->user->identity->person_fullname . ')',
-                    ['class' => 'btn btn-link logout', 'style' => 'padding-top: 20px; padding-bottom: 20px; line-height: 24px;']
+                    ['class' => 'btn btn-link logout', 'style' => 'line-height: 20px;']
                 )
                 . Html::endForm()
                 . '</li>';

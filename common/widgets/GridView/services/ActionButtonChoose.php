@@ -48,8 +48,14 @@ class ActionButtonChoose
             $func = $this->grid->gridExcludeIdsFunc;
 
             if (property_exists($_selected, 'exclude')) {
+                $_selected->exclude = is_array($_selected->exclude) ? $_selected->exclude : [$_selected->exclude];
+                $_selected->exclude = array_map(function ($id) {
+                    return GridViewHelper::isBinaryValidString($id) ? Uuid::str2uuid($id) : $id;
+                }, $_selected->exclude);
+
                 $func($this->grid->dataProvider->query, $_selected->exclude, GridView::ADD);
             } else {
+                $_selected->reject = GridViewHelper::isBinaryValidString($_selected->reject) ? Uuid::str2uuid($_selected->reject) : $_selected->reject;
                 $func($this->grid->dataProvider->query, [$_selected->reject], GridView::EDIT);
             }
         }
