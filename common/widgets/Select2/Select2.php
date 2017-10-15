@@ -9,6 +9,7 @@
 namespace common\widgets\Select2;
 
 
+use common\widgets\GridView\services\GridViewHelper;
 use common\widgets\PropellerAssets\Select2Asset AS PropellerSelect2Asset;
 use common\widgets\Select2\assets\Select2Asset;
 use common\widgets\PropellerAssets\TextFieldAsset;
@@ -18,6 +19,7 @@ use yii\bootstrap\Html;
 use yii\bootstrap\InputWidget;
 use yii\bootstrap\Widget;
 use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\JsExpression;
@@ -27,37 +29,78 @@ use yii\web\View;
 class Select2 extends \kartik\select2\Select2
 {
     public $theme = self::THEME_BOOTSTRAP;
+    /** @var \Closure анонимная функция с ActiveQuery поиска результатов
+     *
+     *  Используйте метод select() для выбора полей, которые будут отображаться в результатах через запятую
+     *
+     *  function(ActiveQuery $query) {
+     *      $query->select(['id', 'code', 'description']);
+     *  }
+     */
     public $queryCallback;
-    /** @var  ActiveQuery */
-    public $modelQuery;
+    /** @var \Closure анонимная функция ActiveQuery для задания условия поиска
+     *
+     *  function(ActiveQuery $query, $searchString) {
+     *      $query->andWhere(['like', 'description', $searchString])
+     *          ->orWhere(['like', 'code', $searchString]);
+     *  }
+     */
+    public $searchAjaxCallback;
+    /** @var string Полное имя класса ActiveRecord используемое для создания ActiveQuery */
     public $activeRecordClass;
-    public $idAttribute;
-    public $wkkeep;
+    /** @var  bool Если true, хранить выбранные значения в хлебных крошках, для восстановления при обновлении страницы, по умолчанию false */
+    public $wkkeep = false;
+    /** @var  string Имя класса иконок FontAwesome, для добавления иконки слева от select2
+     *  [
+     *      ...
+     *      'wkicon' => FA::_ADDRESS_BOOK,
+     *      ...
+     *  ]
+     */
     public $wkicon;
+    /** @var bool Если true, то разрешить мультивыбор значений, по умолчанию false */
     public $multiple = false;
+    /** @var  string Url грида common\widgets\GridView\GridView для выбора значений */
     public $selectionGridUrl;
-
-//    public $data;
-//    public $selectClass = 'select-with-search form-control pmd-select2';
+    /** @var bool Если true, исключить первичные ключи в результатах поиска, по умолчанию true */
+    public $exceptPrimaryKeyFromResult = true;
+    /** @var int Лимит количества записей результатов, при превышении которого включается Ajax поиск, по умолчанию 100 */
+    public $minRecordsCountForUseAjax = 100;
 
     public function init()
     {
+        /** Если ajax запрос, вернуть json с результатами */
         $this->returnAjaxData();
-
         parent::init();
     }
 
     public function run()
     {
-        $this->pluginOptions['allowClear'] = true;
-
+        $this->options['placeholder'] = ArrayHelper::getValue($this->options, 'placeholder', '');
+        $this->pluginOptions['allowClear'] = ArrayHelper::getValue($this->pluginOptions, 'allowClear', true);
         $dataQuery = $this->getDataQuery();
         $resultQueryCount = $dataQuery->count();
-        $this->options['placeholder'] = '';
 
-        if ($resultQueryCount > 1 /*100*/) {
+        /** Восстановление значений при обновлении страницы */
+        if ($this->wkkeep) {
+            $this->options['wkkeep'] = true;
+        }
+
+        /** Иконка перед select2 */
+        if ($this->wkicon) {
+            $this->addon['prepend']['content'] .= '<i class="fa fa-2x fa-' . $this->wkicon . ' pmd-sm"></i>';
+            $this->addon['groupOptions']['class'] .= ' wk-widget-input-prepend-icon';
+        }
+
+        /** Мультивыбор значений */
+        if ($this->multiple) {
+            $this->options['multiple'] = true;
+        }
+
+        /** Включить ajax загрузку результатов, если превышен лимит количества результатов */
+        if ($resultQueryCount > $this->minRecordsCountForUseAjax) {
             $this->options['wk-ajax'] = true;
-            $this->pluginOptions['minimumInputLength'] = 2;
+            $this->pluginOptions['minimumInputLength'] = ArrayHelper::getValue($this->pluginOptions, 'minimumInputLength', 3);
             $this->pluginOptions['ajax']['url'] = Url::current();
             $this->pluginOptions['ajax']['dataType'] = 'json';
             $this->pluginOptions['ajax']['data'] = new JsExpression('function(params) { return {q:params.term}; }');
@@ -67,56 +110,36 @@ class Select2 extends \kartik\select2\Select2
             $this->pluginOptions['templateSelection'] = new JsExpression('function (data) { return data.text; }');
         } else {
             $resultQuery = $dataQuery->asArray()->all();
+            /** @var array $row */
             foreach ($resultQuery as $row) {
-                $row[$this->attribute] = Uuid::uuid2str($row[$this->attribute]);
-                $this->data[$row[$this->attribute]] = implode(', ', $row);
+                $row[$this->attribute] = $this->filterBinaryToString($row[$this->attribute]);
+                $resultString = $this->filterPrimaryKeysAttributes($row);
+                $this->data[$row[$this->attribute]] = implode(', ', $resultString);
             }
         }
 
-        if ($this->model->{$this->idAttribute}) {
+        /** Инициализировать значения, если они есть в модели */
+        if ($this->model->{$this->attribute}) {
             if ($this->multiple) {
-                // Не фурычит
-                $resultQuery = $dataQuery->andWhere([$this->idAttribute => $this->model->{$this->idAttribute}])->asArray()->one();
-                $resultQuery[$this->attribute] = Uuid::uuid2str($resultQuery[$this->attribute]);
-                $this->data = [$resultQuery[$this->attribute] => implode(', ', $resultQuery)];
-                $this->value = [Uuid::uuid2str($this->model->{$this->idAttribute})];
+                $this->options['wk-ajax'] ? $this->initAjaxMultiple($dataQuery) : $this->initAjaxSingle();
             } else {
-                $resultQuery = $dataQuery->andWhere([$this->idAttribute => $this->model->{$this->idAttribute}])->asArray()->one();
-                $resultQuery[$this->attribute] = Uuid::uuid2str($resultQuery[$this->attribute]);
-                $this->initValueText = implode(', ', $resultQuery);
-                $this->value = Uuid::uuid2str($this->model->{$this->idAttribute});
+                if ($this->options['wk-ajax']) {
+                    $this->initDataMultiple($dataQuery);
+                }
+
+                $this->initSingle();
             }
         }
 
-        if ($this->wkkeep) {
-            $this->options['wkkeep'] = true;
-        }
-
-        if ($this->wkicon) {
-            $this->addon['prepend']['content'] = '<i class="fa fa-2x fa-' . $this->wkicon . ' pmd-sm"></i>';
-            $this->addon['groupOptions']['class'] .= ' wk-widget-input-prepend-icon';
-        }
-
-        if ($this->multiple === true) {
-            $this->options['multiple'] = true;
-            $this->options['tags'] = true;
-        }
-
+        /** Добавить кнопку выбора из грида */
         if ($this->selectionGridUrl) {
             $url = is_array($this->selectionGridUrl) ? Url::to($this->selectionGridUrl) : $this->selectionGridUrl;
-
-            $this->addon['append']['content'] = '<div class="input-group-addon wk-block-select2-choose-from-grid"><a class="btn btn-success wk-widget-select2-choose-from-grid" href="' . $url . '"><i class="glyphicon glyphicon-option-horizontal pmd-sm"></i></a></div>';
-//  $this->addon['contentAfter'] =
-//                Html::button(Html::icon('option-horizontal'), [
-//                'class' => 'btn btn-success',
-//                'title' => Yii::t('wk-widget-select2', 'Choose from Grid'),
-//                'data-toggle' => 'tooltip'
-//            ]);
-            //  $this->addon['groupOptions']['encode'] = false;
+            $this->addon['append']['content'] = '<div class="input-group-addon wk-block-select2-choose-from-grid"><a class="btn btn-sm btn-success wk-widget-select2-choose-from-grid pmd-btn-fab" href="' . $url . '"><i class="fa fa-2x fa-ellipsis-h pmd-sm"></i></a></div>' . ArrayHelper::getValue($this->addon, 'append.content', '');
             $this->addon['append']['asButton'] = true;
-        }
 
-        $this->selectedAttribute();
+            /** Проинициализировать выбранное значение из грида */
+            $this->selectedAttribute();
+        }
 
         $this->registerWKAssets1();
         parent::run();
@@ -126,20 +149,27 @@ class Select2 extends \kartik\select2\Select2
     protected function selectedAttribute()
     {
         if (Yii::$app->request->get('grid') === $this->options['id'] && Yii::$app->request->get('selected')) {
+            $this->options['wk-selected'] = Yii::$app->request->get('selected');
+
             if ($this->options['wk-ajax']) {
                 $dataQuery = $this->getDataQuery();
-                /* ???????????????????????????????????????????????? */
-                $resultQuery = $dataQuery->andWhere([$this->idAttribute => Uuid::str2uuid(Yii::$app->request->get('selected'))])->asArray()->one();
-                $resultQuery[$this->attribute] = Yii::$app->request->get('selected');
-                $this->initValueText = implode(', ', $resultQuery);
-                if ($this->multiple) {
-                    $this->value[] = Yii::$app->request->get('selected');
-                } else {
-                    $this->value = Yii::$app->request->get('selected');
-                }
-            }
+                $selectedID = $this->filterStringToBinary(Yii::$app->request->get('selected'));
 
-            $this->options['wk-selected'] = Yii::$app->request->get('selected');
+                $resultQuery = $dataQuery->andWhere([$this->attribute => $selectedID])->asArray()->one();
+                $resultQuery[$this->attribute] = $this->filterBinaryToString($resultQuery[$this->attribute]);
+                $resultString = $this->filterPrimaryKeysAttributes($resultQuery);
+                if ($this->multiple) {
+                    $this->data[$resultQuery[$this->attribute]] = implode(', ', $resultString);
+                } else {
+                    $this->initValueText = implode(', ', $resultString);
+                }
+
+                if ($this->multiple) {
+                    $this->value = $this->value ?: [];
+                }
+
+                $this->multiple ? array_push($this->value, $resultQuery[$this->attribute]) : $this->value = $resultQuery[$this->attribute];
+            }
         }
     }
 
@@ -148,13 +178,10 @@ class Select2 extends \kartik\select2\Select2
      */
     protected function getDataQuery()
     {
-        //$this->modelQuery->asArray();
+        $query = call_user_func([$this->activeRecordClass, 'find']);
+        call_user_func($this->queryCallback, $query);
 
-        $callBack = $this->queryCallback;
-
-        $query = new $this->activeRecordClass;
-
-        return $callBack($query::find());
+        return $query;
     }
 
     protected function registerWKAssets1()
@@ -169,7 +196,6 @@ class Select2 extends \kartik\select2\Select2
     {
         $view = $this->getView();
 
-//        Select2Asset::register($view);
         PropellerSelect2Asset::register($view);
         Select2Asset::register($view);
         $view->registerJs("$('#{$this->options['id']}').wkselect2();");
@@ -205,29 +231,32 @@ EOT
     {
         if (Yii::$app->request->isAjax) {
             Yii::$app->response->clearOutputBuffers();
-
             $jsonObj = [];
 
-            $id = Uuid::str2uuid($_GET['id']);
+            $id = $this->filterStringToBinary($_GET['id']);
             $q = $_GET['q'];
 
-            $queryCallback = $this->queryCallback;
-            $query = $queryCallback((new $this->activeRecordClass)->find());
+            /** @var ActiveQuery $query */
+            $query = call_user_func([$this->activeRecordClass, 'find']);
+            call_user_func($this->queryCallback, $query);
             $resultReturn = [];
 
             if ($id) {
                 $result = $query->andWhere([$this->attribute => $id])->asArray()->one();
-                $result[$this->attribute] = Uuid::uuid2str($result[$this->attribute]);
-                $resultReturn = ['id' => $result[$this->attribute], 'text' => implode(', ', $result)];
+
+                $result[$this->attribute] = $this->filterBinaryToString($result[$this->attribute]);
+                $resultString = $this->filterPrimaryKeysAttributes($result);
+                $resultReturn = ['id' => $result[$this->attribute], 'text' => implode(', ', $resultString)];
 
                 $jsonObj = $resultReturn;
-            }
-
-            if ($q) {
-                $result = $query->andWhere(['like', 'dolzh_name', $q])->asArray()->all();
+            } elseif ($q) {
+                call_user_func($this->searchAjaxCallback, $query, $q);
+                $result = $query->asArray()->all();
+                /** @var array $row */
                 foreach ($result as $row) {
-                    $row[$this->attribute] = Uuid::uuid2str($row[$this->attribute]);
-                    $resultReturn[] = ['id' => $row[$this->attribute], 'text' => implode(', ', $row)];
+                    $row[$this->attribute] = $this->filterBinaryToString($row[$this->attribute]);
+                    $resultString = $this->filterPrimaryKeysAttributes($row);
+                    $resultReturn[] = ['id' => $row[$this->attribute], 'text' => implode(', ', $resultString)];
                 }
 
                 $jsonObj = ['results' => $resultReturn];
@@ -236,12 +265,69 @@ EOT
             exit(json_encode($jsonObj));
         }
     }
-//
-//    public function init()
-//    {
-//
-//        echo Html::dropDownList('name', '', $this->data, ['id' => $this->id, 'class' => $this->selectClass]);
-//    }
 
+    protected function filterPrimaryKeysAttributes(array $resultArray)
+    {
+        /** @var ActiveRecord $activeRecord */
+        $activeRecord = new $this->activeRecordClass;
+        $exceptPrimaryKeyFromResult = $this->exceptPrimaryKeyFromResult;
 
+        return array_filter(array_map(function ($attribute, $value) use ($activeRecord, $exceptPrimaryKeyFromResult) {
+            if (!$exceptPrimaryKeyFromResult || $exceptPrimaryKeyFromResult && !$activeRecord->isPrimaryKey([$attribute])) {
+                return $value;
+            }
+
+            return false;
+        }, array_keys($resultArray), $resultArray));
+    }
+
+    protected function filterBinaryToString($value)
+    {
+        return GridViewHelper::isBinary($value) ? Uuid::uuid2str($value) : $value;
+    }
+
+    protected function filterStringToBinary($value)
+    {
+        return GridViewHelper::isBinaryValidString($value) ? Uuid::str2uuid($value) : $value;
+    }
+
+    protected function initAjaxMultiple(ActiveQuery $dataQuery)
+    {
+        $resultQuery = $dataQuery->andWhere([$this->attribute => $this->model->{$this->attribute}])->asArray()->all();
+
+        $attribute = $this->attribute;
+        $data = [];
+        $this->value = [];
+        $resultQuery = array_map(function ($value) use ($attribute, &$data) {
+            $value[$attribute] = $this->filterBinaryToString($value[$attribute]);
+            $resultString = $this->filterPrimaryKeysAttributes($value);
+            $data[$value[$attribute]] = implode(', ', $resultString);
+            array_push($this->value, $value[$attribute]);
+            return $value;
+        }, $resultQuery);
+
+        $this->model->{$this->attribute} = ArrayHelper::getColumn($resultQuery, $this->attribute);
+        $this->data = $data;
+    }
+
+    protected function initAjaxSingle()
+    {
+        $this->model->{$this->attribute} = array_map(function ($value) {
+            return $this->filterBinaryToString($value);
+        }, $this->model->{$this->attribute});
+    }
+
+    protected function initDataMultiple(ActiveQuery $dataQuery)
+    {
+        $resultQuery = $dataQuery->andWhere([$this->attribute => $this->model->{$this->attribute}])->asArray()->one();
+        $resultQuery[$this->attribute] = $this->filterBinaryToString($resultQuery[$this->attribute]);
+        $resultString = $this->filterPrimaryKeysAttributes($resultQuery);
+        $this->initValueText = implode(', ', $resultString);
+        $this->value = $resultQuery[$this->attribute];
+    }
+
+    protected function initSingle()
+    {
+        $this->model->{$this->attribute} = $this->filterBinaryToString($this->model->{$this->attribute});
+    }
 }

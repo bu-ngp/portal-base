@@ -16,7 +16,10 @@ use yii\db\ActiveQuery;
     'activeRecordClass' => Dolzh::className(),
     // 'queryCallback' => \domain\queries\DolzhQuery::getCallbackAllDolzhs(),
     'queryCallback' => function (ActiveQuery $query) {
-        return $query->select(['dolzh_id', 'dolzh_name']);
+        $query->select(['dolzh_id', 'dolzh_name']);
+    },
+    'searchAjaxCallback' => function (ActiveQuery $query, $searchString) {
+        $query->andWhere(['like', 'dolzh_name', $searchString]);
     },
     'wkkeep' => true,
     'wkicon' => FA::_ADDRESS_BOOK,

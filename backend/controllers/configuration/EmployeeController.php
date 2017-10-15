@@ -41,8 +41,15 @@ class EmployeeController extends Controller
         ) {
             return $this->redirect(Yii::$app->request->referrer);
         }
+//
+//        $form->dolzh_id = Dolzh::find()
+//            ->andWhere(['like', 'dolzh_name', 'сист'])
+//            ->orWhere(['like', 'dolzh_name', 'про'])
+//            ->column();
 
-        $form->dolzh_id = Dolzh::find()->andWhere(['like','dolzh_name','сист'])->one()->dolzh_id;
+//        $form->dolzh_id = Dolzh::find()
+//            ->andWhere(['like', 'dolzh_name', 'сист'])
+//            ->one()->dolzh_id;
 
         return $this->render('create', [
             'modelForm' => $form,

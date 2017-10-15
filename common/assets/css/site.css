@@ -157,6 +157,16 @@ div.wk-block-select2-choose-from-grid {
     padding-right: 0 !important;
 }
 
+a.wk-widget-select2-choose-from-grid {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+}
+
+a.wk-widget-select2-choose-from-grid > i {
+    line-height: 34px !important;
+}
+
 div.wk-widget-input-prepend-icon > span {
     min-width: 50px;
 }

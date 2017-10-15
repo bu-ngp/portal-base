@@ -124,47 +124,46 @@
         $widget.data('wkbreadcrumbs').crumbs = bc;
     };
 
+    var setOptionMultiple = function ($input, value) {
+        $.each(value[0], function (key) {
+            if ($input.find('option[value="' + this + '"]').length === 0) {
+                var $option = $('<option selected></option>');
+                $option.text(value[1][key]).val(this);
+                $input.append($option);
+            } else {
+                $input.val(value[0]);
+            }
+        });
+    };
+
+    var setOptionSingle = function ($input, value) {
+        var $option = $('<option selected></option>');
+        $option.text(value[1]).val(value[0]);
+        $input.append($option);
+    };
+
     var fillForms = function ($widget) {
         if ($widget.data('wkbreadcrumbs').crumbs.length) {
             var lastBC = $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 1];
 
             $.each(lastBC.forms, function (name, value) {
-                var input = $('[name="' + name + '"][wkkeep]');
-                if (input.length) {
+                var $input = $('[name="' + name + '"][wkkeep]');
+                if ($input.length) {
 
-                    if (input.attr('type') === 'checkbox') {
-                        input.prop('checked', value);
-                    } else if (input.prop("tagName") === 'SELECT') {
+                    if ($input.attr('type') === 'checkbox') {
+                        $input.prop('checked', value);
+                    } else if ($input.prop("tagName") === 'SELECT') {
                         if (value[0]) {
-                            if ($.isArray(value[0])) {
-                                if (input.is('[wk-ajax]')) {
-                                    $.each(value[0], function (key) {
-                                        if (input.find('option[value="' + this + '"]').length === 0) {
-                                            var $option = $('<option selected></option>');
-                                            $option.text(value[1][key]).val(this);
-                                            input.append($option);
-                                        } else {
-                                            input.val(value[0]);
-                                        }
-                                    });
-                                } else {
-                                    input.val(value[0]);
-                                }
-
-                                input.trigger('change');
+                            if ($input.is('[wk-ajax]')) {
+                                $.isArray(value[0]) ? setOptionMultiple($input, value) : setOptionSingle($input, value);
                             } else {
-                                if (input.is('[wk-ajax]')) {
-                                    var $option = $('<option selected></option>');
-                                    $option.text(value[1]).val(value[0]);
-                                    input.append($option);
-                                } else {
-                                    input.val(value[0]);
-                                }
-                                input.trigger('change');
+                                $input.val(value[0]);
                             }
+
+                            $input.trigger('change');
                         }
-                    } else if (input.attr('type') === 'radio') {
-                        $.each(input, function () {
+                    } else if ($input.attr('type') === 'radio') {
+                        $.each($input, function () {
                             if ($(this).val() == value) {
                                 $(this).prop('checked', true);
 
@@ -172,14 +171,14 @@
                             }
                         });
                     } else {
-                        input.val(value);
+                        $input.val(value);
                     }
                 }
             });
 
             if (lastBC.forms) {
                 // paper input
-                $(".pmd-textfield-focused").remove();
+                $(".pmd-textfield [wkkeep].form-control").next(".pmd-textfield-focused").remove();
                 $(".pmd-textfield [wkkeep].form-control").after('<span class="pmd-textfield-focused"></span>');
                 // floating label
                 $('.pmd-textfield input[wkkeep].form-control').each(function () {
@@ -210,22 +209,21 @@
 
     var eventsApply = function ($widget) {
 
-        $('select[wkkeep]').on('change.select2', function (e) {
+        $('select[wkkeep]').on('change.select2', function () {
             if ($(this).prop("wkSelected")) {
                 $(this).prop("wkSelected", false);
                 var $multiple = $(this).next('.select2.select2-container').find('.select2-selection.select2-selection--multiple ul li');
                 var lastBC = $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 1];
+                var textChoose = [];
 
-                if ($multiple.length) {
-                    var textChoose = [];
+                $.each($(this).find("option:selected"), function () {
+                    textChoose.push($(this).text());
+                });
 
-                    $.each($(this).find("option:selected"), function () {
-                        textChoose.push($(this).text());
-                    });
-
-                    lastBC.forms[$(this).attr("name")] = [$(this).val(), textChoose];
-                } else if ($(this).find('.select2-selection.select2-selection--single')) {
-                    lastBC.forms[$(this).attr("name")] = [$(this).val(), $(this).find('option:selected').text()];
+                if (textChoose.toString()) {
+                    lastBC.forms[$(this).attr("name")] = [$(this).val(), $multiple.length ? textChoose : textChoose[0]];
+                } else {
+                    delete lastBC.forms[$(this).attr("name")];
                 }
 
                 $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 1] = lastBC;
@@ -233,15 +231,15 @@
             }
         });
 
-        $('select[wkkeep]').on('select2:unselecting', function (e) {
+        $('select[wkkeep]').on('select2:unselecting', function () {
             $(this).prop("wkSelected", true);
         });
 
-        $('select[wkkeep]').on('select2:selecting', function (e) {
+        $('select[wkkeep]').on('select2:selecting', function () {
             $(this).prop("wkSelected", true);
         });
 
-        $(document).on('change dp.change', 'input[wkkeep]', function (e) {
+        $(document).on('change dp.change', 'input[wkkeep]', function () {
             getFromSessionStorage($widget, {
                 fail: function () {
                     getFromLocalStorage($widget);
@@ -314,6 +312,21 @@
 
             return false;
         },
+        getLastByObject: function (objectName, emptyObjectIfNotFound) {
+            var $widget = $(this);
+
+            if (typeof emptyObjectIfNotFound == "undefined") {
+                emptyObjectIfNotFound = true;
+            }
+
+            emptyObjectIfNotFound = emptyObjectIfNotFound ? {} : null;
+
+            if ($widget.data('wkbreadcrumbs').crumbs.length > 0) {
+                return objectName in $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 1] ? $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 1][objectName] : emptyObjectIfNotFound;
+            }
+
+            return false;
+        },
         getPreLast: function () {
             var $widget = $(this);
 
@@ -328,6 +341,17 @@
 
             if ($widget.data('wkbreadcrumbs').crumbs.length > 0) {
                 $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 1] = bcObj;
+                saveCrumbs($widget);
+                return true;
+            }
+
+            return false;
+        },
+        setLastByObject: function (objectName, lastObject) {
+            var $widget = $(this);
+
+            if ($widget.data('wkbreadcrumbs').crumbs.length > 0) {
+                $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 1][objectName] = lastObject;
                 saveCrumbs($widget);
                 return true;
             }

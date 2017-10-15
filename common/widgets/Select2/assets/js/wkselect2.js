@@ -11,14 +11,6 @@
 
     var defaults = {};
 
-    var isSingle = function ($widget) {
-        if ($widget.next('.select2.select2-container').find(".select2-selection.select2-selection--single").length) {
-            return true;
-        }
-
-        return false;
-    };
-
     var isMultiple = function ($widget) {
         if ($widget.next('.select2.select2-container').find(".select2-selection.select2-selection--multiple").length) {
             return true;
@@ -28,10 +20,10 @@
     };
 
     var selectFromUrl = function ($widget) {
-        var lastCrumb = $(".wkbc-breadcrumb").wkbreadcrumbs('getLast');
-        var wkchoose = "wk-choose" in lastCrumb ? lastCrumb["wk-choose"] : {};
+        var wkchoose = $(".wkbc-breadcrumb").wkbreadcrumbs('getLastByObject', 'wk-choose');
+        var select2ID = $widget.data('wkselect2').select2ID;
 
-        if ($widget.is('[wk-selected]') && $widget.attr('wk-selected') !== "" && wkchoose.fromGridSaved !== $widget[0].id) {
+        if ($widget.is('[wk-selected]') && $widget.attr('wk-selected') !== "" && wkchoose.fromGridSaved !== select2ID) {
             if (isMultiple($widget)) {
                 var selectedValues = $widget.val() ? $widget.val() : [];
 
@@ -39,14 +31,15 @@
                     selectedValues.push($widget.attr('wk-selected'));
                 }
 
-                $widget.prop("wkSelected", true);
-                $widget.val(selectedValues).trigger('change.select2');
+                $widget.val(selectedValues);
             } else {
-                $widget.val($widget.attr('wk-selected')).trigger('change');
+                $widget.val($widget.attr('wk-selected'));
             }
-            wkchoose.fromGridSaved = $widget[0].id;
-            lastCrumb["wk-choose"] = wkchoose;
-            $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
+
+            $widget.prop("wkSelected", true);
+            $widget.trigger('change.select2');
+            wkchoose.fromGridSaved = select2ID;
+            $(".wkbc-breadcrumb").wkbreadcrumbs('setLastByObject', 'wk-choose', wkchoose);
         }
     };
 
@@ -54,21 +47,25 @@
         $widget.nextAll('.input-group-btn').on('click', '.wk-widget-select2-choose-from-grid', function (e) {
             e.preventDefault();
 
-            var lastCrumb = $(".wkbc-breadcrumb").wkbreadcrumbs('getLast');
-            var wkchoose = "wk-choose" in lastCrumb ? lastCrumb["wk-choose"] : {};
+            var wkchoose = $(".wkbc-breadcrumb").wkbreadcrumbs('getLastByObject', 'wk-choose');
+            var initValue = isMultiple($widget) ? [] : '';
             wkchoose.gridID = $widget.data('wkselect2').select2ID;
-            var initValue = isSingle($widget) ? '' : [];
-            wkchoose[wkchoose.gridID] = !!$widget.val() ? $widget.val() : initValue;
-
+            wkchoose[wkchoose.gridID] = $widget.val() ? $widget.val() : initValue;
 
             if ("fromGridSaved" in wkchoose && wkchoose.fromGridSaved === wkchoose.gridID) {
                 delete wkchoose.fromGridSaved;
             }
-            lastCrumb["wk-choose"] = wkchoose;
-            $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
 
+            $(".wkbc-breadcrumb").wkbreadcrumbs('setLastByObject', 'wk-choose', wkchoose);
             window.location.href = $(this).attr("href");
         });
+    };
+
+    var initSelection = function ($widget) {
+        if ($widget.val() && $widget.val().toString()) {
+            $widget.prop("wkSelected", true);
+            $widget.trigger('change.select2');
+        }
     };
 
     var methods = {
@@ -87,7 +84,7 @@
                     select2ID: $widget.attr('id')
                 });
 
-
+                initSelection($widget);
                 eventsApply($widget);
                 selectFromUrl($widget);
             });
