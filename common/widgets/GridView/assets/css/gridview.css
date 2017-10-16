@@ -146,11 +146,6 @@ div.wk-filterDialog-content {
 }
 
 /*-/\----Filter----/\-*/
-
-.panel.pmd-z-depth {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-}
-
 .kv-grid-container {
     position: relative;
 }

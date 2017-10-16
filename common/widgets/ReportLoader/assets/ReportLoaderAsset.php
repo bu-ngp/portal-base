@@ -30,7 +30,6 @@ class ReportLoaderAsset extends AssetBundle
         $this->depends = [
             'yii\web\YiiAsset',
             'yii\bootstrap\BootstrapAsset',
-            'common\widgets\CardList\assets\PropellerAsset',
             'rmrevin\yii\fontawesome\AssetBundle',
             'common\widgets\ReportLoader\assets\ProgressbarAsset',
         ];

@@ -26,7 +26,6 @@ class CardListAsset extends AssetBundle
         $this->depends = [
             'yii\web\YiiAsset',
             'yii\bootstrap\BootstrapAsset',
-          //  'common\widgets\CardList\assets\PropellerAsset',
             'common\widgets\CardList\assets\MasonryAssets',
             'rmrevin\yii\fontawesome\AssetBundle',
         ];

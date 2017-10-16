@@ -10,6 +10,7 @@ namespace common\widgets\ActiveForm;
 
 
 use common\widgets\PropellerAssets\DateTimePickerAsset;
+use common\widgets\PropellerAssets\PropellerAsset;
 use common\widgets\PropellerAssets\RadioAsset;
 use common\widgets\Select2\Select2;
 use yii\bootstrap\Html;
@@ -38,6 +39,8 @@ class ActiveField extends \yii\bootstrap\ActiveField
             'labelOptions' => ['class' => 'pmd-checkbox'],
         ], $options);
 
+        PropellerAsset::setWidget('checkbox');
+
         return parent::checkbox($options, $enclosedByLabel);
     }
 
@@ -46,6 +49,8 @@ class ActiveField extends \yii\bootstrap\ActiveField
         $this->initWKIcon($options);
         $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield pmd-textfield-floating-label' : 'form-group pmd-textfield pmd-textfield-floating-label';
 
+        PropellerAsset::setWidget('input');
+
         return parent::textInput($options);
     }
 
@@ -53,6 +58,8 @@ class ActiveField extends \yii\bootstrap\ActiveField
     {
         $this->initWKIcon($options);
         $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield pmd-textfield-floating-label' : 'form-group pmd-textfield pmd-textfield-floating-label';
+
+        PropellerAsset::setWidget('input');
 
         return parent::passwordInput($options);
     }
@@ -81,7 +88,7 @@ class ActiveField extends \yii\bootstrap\ActiveField
             unset($options['titles']);
         }
 
-        RadioAsset::register($this->form->getView());
+        PropellerAsset::setWidget('radiolist');
 
         parent::radioList($items, $options);
 
@@ -117,7 +124,8 @@ class ActiveField extends \yii\bootstrap\ActiveField
             // 'extraFormats' => ['DD.MM.YYYY'],
         ]);
 
-        DateTimePickerAsset::register($view);
+        PropellerAsset::setWidget('datetimepicker');
+
         $view->registerJs("$('#$idInput').datetimepicker($JSOptions);");
 
         return $this->textInput($options);
@@ -152,8 +160,12 @@ class ActiveField extends \yii\bootstrap\ActiveField
 
     public function select2($options = [])
     {
-       // $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield pmd-textfield-floating-label' : 'form-group pmd-textfield pmd-textfield-floating-label';
-        $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield' : 'form-group pmd-textfield';
+        $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield-select2 pmd-textfield-select2-floating-label' : 'form-group pmd-textfield-select2 pmd-textfield-select2-floating-label';
+       // $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield' : 'form-group pmd-textfield';
+
+        if ($options['wkicon']) {
+            $this->labelOptions['class'] .= ' wk-label-with-icon';
+        }
 
         return $this->widget(Select2::className(), $options);
     }

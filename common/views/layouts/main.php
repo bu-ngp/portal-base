@@ -4,6 +4,7 @@
 /* @var $content string */
 
 use common\widgets\Breadcrumbs\Breadcrumbs;
+use common\widgets\PropellerAssets\PropellerAsset;
 use common\widgets\ReportLoader\assets\ReportLoaderAsset;
 use common\widgets\ReportLoader\ReportLoader;
 use lo\modules\noty\Wrapper;
@@ -111,8 +112,11 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
     'layerClass' => 'lo\modules\noty\layers\Toastr',
 ]) ?>
 
-<?php //\common\assets\PropellerAsset::register($this) ?>
-<?php $this->endBody() ?>
+<?php
+    PropellerAsset::setWidget('yii\bootstrap\NavBar');
+    PropellerAsset::register($this);
+    $this->endBody()
+?>
 </body>
 </html>
 <?php $this->endPage() ?>

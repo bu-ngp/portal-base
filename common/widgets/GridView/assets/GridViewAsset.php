@@ -30,7 +30,7 @@ class GridViewAsset extends AssetBundle
         $this->depends = [
             'yii\web\YiiAsset',
             'yii\bootstrap\BootstrapAsset',
-            'common\widgets\CardList\assets\PropellerAsset',
+           // 'common\widgets\CardList\assets\PropellerAsset',
             'rmrevin\yii\fontawesome\AssetBundle',
             'common\widgets\GridView\assets\SortableAsset',
             'common\widgets\wkdialog\WkDialogAsset',

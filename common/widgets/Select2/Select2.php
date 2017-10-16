@@ -10,6 +10,7 @@ namespace common\widgets\Select2;
 
 
 use common\widgets\GridView\services\GridViewHelper;
+use common\widgets\PropellerAssets\PropellerAsset;
 use common\widgets\PropellerAssets\Select2Asset AS PropellerSelect2Asset;
 use common\widgets\Select2\assets\Select2Asset;
 use common\widgets\PropellerAssets\TextFieldAsset;
@@ -38,14 +39,6 @@ class Select2 extends \kartik\select2\Select2
      *  }
      */
     public $queryCallback;
-    /** @var \Closure анонимная функция ActiveQuery для задания условия поиска
-     *
-     *  function(ActiveQuery $query, $searchString) {
-     *      $query->andWhere(['like', 'description', $searchString])
-     *          ->orWhere(['like', 'code', $searchString]);
-     *  }
-     */
-    public $searchAjaxCallback;
     /** @var string Полное имя класса ActiveRecord используемое для создания ActiveQuery */
     public $activeRecordClass;
     /** @var  bool Если true, хранить выбранные значения в хлебных крошках, для восстановления при обновлении страницы, по умолчанию false */
@@ -64,13 +57,26 @@ class Select2 extends \kartik\select2\Select2
     public $selectionGridUrl;
     /** @var bool Если true, исключить первичные ключи в результатах поиска, по умолчанию true */
     public $exceptPrimaryKeyFromResult = true;
-    /** @var int Лимит количества записей результатов, при превышении которого включается Ajax поиск, по умолчанию 100 */
-    public $minRecordsCountForUseAjax = 100;
+    /** @var array Конфигурация ajax поиска результатов
+     * 'enabled' (bool) Включить ajax поиск результатов, по умолчанию true, если сконфигурирован Callback 'searchAjaxCallback'
+     * 'searchAjaxCallback' => (\Closure) Анонимная функция ActiveQuery для задания условия поиска
+     *
+     *      function(ActiveQuery $query, $searchString) {
+     *          $query->andWhere(['like', 'description', $searchString])
+     *                ->orWhere(['like', 'code', $searchString]);
+     *      }
+     *
+     * 'minRecordsCountForUseAjax' => 100 (int) Лимит количества записей результатов, при превышении которого включается Ajax поиск, по умолчанию 100
+     * 'onlyAjax' => false (bool) Использовать только Ajax поиск результатов
+     */
+    public $ajaxConfig;
 
     public function init()
     {
         /** Если ajax запрос, вернуть json с результатами */
         $this->returnAjaxData();
+        $this->initConfig();
+
         parent::init();
     }
 
@@ -98,7 +104,7 @@ class Select2 extends \kartik\select2\Select2
         }
 
         /** Включить ajax загрузку результатов, если превышен лимит количества результатов */
-        if ($resultQueryCount > $this->minRecordsCountForUseAjax) {
+        if ($this->ajaxConfig['enabled'] && ($resultQueryCount > $this->ajaxConfig['minRecordsCountForUseAjax'] || $this->ajaxConfig['onlyAjax'])) {
             $this->options['wk-ajax'] = true;
             $this->pluginOptions['minimumInputLength'] = ArrayHelper::getValue($this->pluginOptions, 'minimumInputLength', 3);
             $this->pluginOptions['ajax']['url'] = Url::current();
@@ -134,7 +140,7 @@ class Select2 extends \kartik\select2\Select2
         /** Добавить кнопку выбора из грида */
         if ($this->selectionGridUrl) {
             $url = is_array($this->selectionGridUrl) ? Url::to($this->selectionGridUrl) : $this->selectionGridUrl;
-            $this->addon['append']['content'] = '<div class="input-group-addon wk-block-select2-choose-from-grid"><a class="btn btn-sm btn-success wk-widget-select2-choose-from-grid pmd-btn-fab" href="' . $url . '"><i class="fa fa-2x fa-ellipsis-h pmd-sm"></i></a></div>' . ArrayHelper::getValue($this->addon, 'append.content', '');
+            $this->addon['append']['content'] = '<div class="input-group-addon wk-block-select2-choose-from-grid"><a class="btn btn-sm btn-success wk-widget-select2-choose-from-grid pmd-ripple-effect pmd-btn-fab" href="' . $url . '"><i class="fa fa-2x fa-ellipsis-h pmd-sm"></i></a></div>' . ArrayHelper::getValue($this->addon, 'append.content', '');
             $this->addon['append']['asButton'] = true;
 
             /** Проинициализировать выбранное значение из грида */
@@ -196,35 +202,11 @@ class Select2 extends \kartik\select2\Select2
     {
         $view = $this->getView();
 
-        PropellerSelect2Asset::register($view);
+        //PropellerSelect2Asset::register($view);
         Select2Asset::register($view);
         $view->registerJs("$('#{$this->options['id']}').wkselect2();");
-
-
-        $view->registerJs(<<<EOT
-        
-//        $.ajax({ // make the request for the selected data object
-//          type: 'GET',
-//          url: window.location.href + "/?id=7741AF08ACBD11E79E9E902B3479B004",
-//          dataType: 'json'
-//        }).then(function (data) {
-//        console.debug(data);
-//          // Here we should have the data object
-//          var \$option = $('<option selected></option>');
-//          $('#employeeform-dolzh_id').append(\$option).trigger('change');
-//          \$option.text(data.text).val(data.id); // update the text that is displayed (and maybe even the value)
-//          \$option.removeData(); // remove any caching data that might be associated
-//          $('#employeeform-dolzh_id').trigger('change'); // notify JavaScript components of possible changes
-//        });
-EOT
-        );
-
-//
-//
-//        $view->registerJs(<<<EOT
-//$('#{$this->id}').select2({theme: "bootstrap"});
-//EOT
-//        );
+        PropellerAsset::setWidget(self::className());
+        //TextFieldAsset::assetDepend(self::className());
     }
 
     protected function returnAjaxData()
@@ -250,7 +232,7 @@ EOT
 
                 $jsonObj = $resultReturn;
             } elseif ($q) {
-                call_user_func($this->searchAjaxCallback, $query, $q);
+                call_user_func($this->ajaxConfig['searchAjaxCallback'], $query, $q);
                 $result = $query->asArray()->all();
                 /** @var array $row */
                 foreach ($result as $row) {
@@ -329,5 +311,12 @@ EOT
     protected function initSingle()
     {
         $this->model->{$this->attribute} = $this->filterBinaryToString($this->model->{$this->attribute});
+    }
+
+    protected function initConfig()
+    {
+        $this->ajaxConfig['enabled'] = ArrayHelper::getValue($this->ajaxConfig, 'enabled', $this->ajaxConfig['searchAjaxCallback'] instanceof \Closure);
+        $this->ajaxConfig['minRecordsCountForUseAjax'] = ArrayHelper::getValue($this->ajaxConfig, 'minRecordsCountForUseAjax', 100);
+        $this->ajaxConfig['onlyAjax'] = ArrayHelper::getValue($this->ajaxConfig, 'onlyAjax', false);
     }
 }

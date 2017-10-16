@@ -9,6 +9,7 @@
 namespace common\widgets\ReportLoader;
 
 
+use common\widgets\PropellerAssets\PropellerAsset;
 use common\widgets\ReportLoader\assets\ProgressbarAsset;
 use common\widgets\ReportLoader\assets\ReportLoaderAsset;
 use Yii;
@@ -50,6 +51,7 @@ class ReportLoader extends Widget
         $options = (object)array_filter($this->makeDialogMessages());
 
         $view->registerJs('$("#' . $this->id . '").wkreportloader(' . json_encode($options, JSON_UNESCAPED_UNICODE) . ');');
+        PropellerAsset::setWidget(self::className());
     }
 
     protected function makeDialogMessages()
@@ -65,7 +67,7 @@ class ReportLoader extends Widget
             'cancelConfirmMessage' => Yii::t('wk-widget-report-loader', 'Cancel Report. Are you sure?'),
             'clearConfirmMessage' => Yii::t('wk-widget-report-loader', 'Delete All Reports. Are you sure?'),
             'errorAlertMessage' => Yii::t('wk-widget-report-loader', 'Error'),
-            'emptyMessage' =>  Yii::t('wk-widget-report-loader', 'Empty'),
+            'emptyMessage' => Yii::t('wk-widget-report-loader', 'Empty'),
         ];
 
         return $messages;

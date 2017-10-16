@@ -11,6 +11,7 @@ use common\widgets\GridView\services\GWExportGridConfiguration;
 use common\widgets\GridView\services\GWFilterDialog;
 use common\widgets\GridView\services\GWFilterDialogConfiguration;
 use common\widgets\GridView\services\GWPrepareColumns;
+use common\widgets\PropellerAssets\PropellerAsset;
 use Yii;
 use yii\bootstrap\Html;
 use yii\data\ArrayDataProvider;
@@ -241,6 +242,8 @@ HTML;
         foreach ($this->js as $script) {
             $view->registerJs($script);
         }
+
+        PropellerAsset::setWidget(self::className());
     }
 
     protected function makeDialogMessagesJs()

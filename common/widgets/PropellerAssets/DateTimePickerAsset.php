@@ -16,14 +16,12 @@ class DateTimePickerAsset extends AssetBundle
     {
         $this->sourcePath = '@npm';
         $this->css = [
-            'propellerkit/components/textfield/css/textfield.css',
             'propellerkit/components/datetimepicker/css/bootstrap-datetimepicker.css',
             'propellerkit/components/datetimepicker/css/pmd-datetimepicker.css',
             'material-design-icons/iconfont/material-icons.css',
         ];
 
         $this->js = [
-            'propellerkit/components/textfield/js/textfield.js',
             'moment/min/moment-with-locales.min.js',
             'propellerkit/components/datetimepicker/js/bootstrap-datetimepicker.js',
         ];
@@ -31,6 +29,7 @@ class DateTimePickerAsset extends AssetBundle
         $this->depends = [
             'yii\web\YiiAsset',
             'yii\bootstrap\BootstrapAsset',
+            'common\widgets\PropellerAssets\TextFieldAsset',
         ];
 
         parent::init();

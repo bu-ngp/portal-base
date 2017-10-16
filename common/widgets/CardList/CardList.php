@@ -10,6 +10,7 @@ namespace common\widgets\CardList;
 
 
 use common\widgets\CardList\assets\CardListAsset;
+use common\widgets\PropellerAssets\PropellerAsset;
 use Exception;
 use Yii;
 use yii\bootstrap\Html;
@@ -79,6 +80,7 @@ class CardList extends Widget
 
         $options = json_encode(array_filter($options), JSON_UNESCAPED_UNICODE);
         $view->registerJs("$('#{$this->id}').wkcardlist($options);");
+        PropellerAsset::setWidget(self::className());
     }
 
     protected function searchConfig(&$options)

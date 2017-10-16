@@ -3,7 +3,7 @@ use common\widgets\PropellerAssets\Select2Asset;
 use common\widgets\PropellerAssets\TextFieldAsset;
 use kartik\select2\Select2;
 
-TextFieldAsset::register($this);
+
 ?>
 <div class="form-group">
     <button id="button1" class="btn btn-primary">Test</button>
@@ -17,16 +17,16 @@ TextFieldAsset::register($this);
         'data' => [1 => 'test1', 2 => 'test2', 3 => 'test3', 4 => 'test4'],
         'theme' => Select2::THEME_BOOTSTRAP,
         'options' => [
-            //'class' => 'form-control select-with-search form-control pmd-select2',
-            'class' => 'select-add-tags form-control select-with-search pmd-select2-tags',
+            'class' => 'form-control select-with-search pmd-select2',
+            //'class' => 'select-add-tags form-control select-with-search',
             'placeholder' => '',
             'multiple' => true,
         ],
         'pluginOptions' => [
             'allowClear' => true,
-            'tags' => true,
         ],
     ]) ?>
+    <?php \common\widgets\PropellerAssets\PropellerAsset::setWidget(Select2::className()) ?>
 </div>
 
 <?php
@@ -57,7 +57,7 @@ EOT
 );
 
 Select2Asset::register($this);
-
+//TextFieldAsset::register($this);
 ?>
 <style>
     .form-group.pmd-textfield {

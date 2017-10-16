@@ -9,6 +9,7 @@
 namespace common\widgets\Panel;
 
 
+use common\widgets\PropellerAssets\PropellerAsset;
 use yii\base\Widget;
 use yii\helpers\Html;
 
@@ -19,7 +20,7 @@ class Panel extends Widget
 
     public function run()
     {
-        return Html::tag('div', $this->label() . $this->content(), ['class' => 'panel panel-default pmd-z-depth']);
+        return Html::tag('div', $this->label() . $this->content(), ['class' => 'panel panel-default']);
     }
 
     protected function label()

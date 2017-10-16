@@ -170,3 +170,7 @@ a.wk-widget-select2-choose-from-grid > i {
 div.wk-widget-input-prepend-icon > span {
     min-width: 50px;
 }
+
+.nav.nav-tabs {
+    margin-bottom: 10px;
+}

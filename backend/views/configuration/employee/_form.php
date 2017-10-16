@@ -18,12 +18,15 @@ use yii\db\ActiveQuery;
     'queryCallback' => function (ActiveQuery $query) {
         $query->select(['dolzh_id', 'dolzh_name']);
     },
-    'searchAjaxCallback' => function (ActiveQuery $query, $searchString) {
-        $query->andWhere(['like', 'dolzh_name', $searchString]);
-    },
+    'ajaxConfig' => [
+        'searchAjaxCallback' => function (ActiveQuery $query, $searchString) {
+            $query->andWhere(['like', 'dolzh_name', $searchString]);
+        },
+        //'onlyAjax' => true,
+    ],
     'wkkeep' => true,
     'wkicon' => FA::_ADDRESS_BOOK,
-    'multiple' => true,
+    'multiple' => false,
     'selectionGridUrl' => ['configuration/spravochniki/dolzh/index'],
 ]); ?>
 
