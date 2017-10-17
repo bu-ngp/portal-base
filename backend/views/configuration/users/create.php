@@ -22,7 +22,7 @@ $this->title = Yii::t('common/person', 'Create User');
     <div class="user-form">
         <?php $userForm = ActiveForm::begin(['id' => $modelUserForm->formName()]); ?>
 
-        <?= Tabs::widget([
+        <?= ''/*Tabs::widget([
             'items' => [
                 [
                     'label' => Yii::t('common/employee', 'User'),
@@ -39,13 +39,23 @@ $this->title = Yii::t('common/person', 'Create User');
                     ]),
                 ],
             ],
+        ])*/ ?>
+
+        <?= Panel::widget([
+            'label' => Yii::t('common/employee', 'User'),
+            'content' => $this->render('_personForm', ['modelUserForm' => $modelUserForm, 'userForm' => $userForm]),
+        ]) ?>
+
+        <?= Panel::widget([
+            'label' => Yii::t('common/employee', 'Profile'),
+            'content' => $this->render('_profileForm', ['modelProfileForm' => $modelProfileForm, 'profileForm' => $userForm]),
         ]) ?>
 
         <?php ActiveForm::end(); ?>
 
         <?= Tabs::widget([
             'items' => [
-                [
+               /* [
                     'label' => Yii::t('common/employee', 'Employees'),
                     'content' => $this->render('_employeeGrid', [
                         'searchModel' => $searchModelEmployee,
@@ -62,7 +72,7 @@ $this->title = Yii::t('common/person', 'Create User');
                             ],
                         ],
                     ]),
-                ],
+                ],*/
                 [
                     'label' => Yii::t('common/employee', 'Roles'),
                     'content' => $this->render('_roleGrid', [
@@ -85,11 +95,11 @@ $this->title = Yii::t('common/person', 'Create User');
         ]) ?>
 
         <div class="form-group">
-            <?= Html::submitButton(Yii::t('common/podraz', 'Create'), ['class' => 'btn btn-success', 'form' => $modelUserForm->formName()]) ?>
+            <?= Html::submitButton(Yii::t('common/podraz', 'Next'), ['class' => 'btn btn-primary', 'form' => $modelUserForm->formName()]) ?>
         </div>
 
         <?php
-        $this->registerJs(<<<EOT
+    /*    $this->registerJs(<<<EOT
             findErrors = function() {
                 var tabError = $('#{$modelUserForm->formName()}').find('div.has-error').first().parents('div.tab-pane');     
                 
@@ -106,7 +116,7 @@ $this->title = Yii::t('common/person', 'Create User');
                 }, 2000);
             });
 EOT
-        )
+        )*/
         ?>
 
     </div>

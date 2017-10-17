@@ -12,6 +12,7 @@ namespace domain\services\base;
 use common\models\base\Person;
 use domain\forms\base\ProfileForm;
 use domain\forms\base\UserForm;
+use domain\forms\base\UserFormUpdate;
 use domain\models\base\AuthAssignment;
 use domain\models\base\Profile;
 use domain\repositories\base\AuthAssignmentRepository;
@@ -19,6 +20,7 @@ use domain\repositories\base\PersonRepository;
 use domain\repositories\base\ProfileRepository;
 use domain\services\TransactionManager;
 use domain\services\WKService;
+use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 
 class PersonService extends WKService
@@ -39,6 +41,21 @@ class PersonService extends WKService
         $this->personRepository = $personRepository;
         $this->profileRepository = $profileRepository;
         $this->authAssignmentRepository = $authAssignmentRepository;
+    }
+
+    public function get($id)
+    {
+        return $this->personRepository->find(Uuid::str2uuid($id));
+    }
+
+    public function getProfile($id)
+    {
+        $uuid = Uuid::str2uuid($id);
+        if ($this->profileRepository->has($uuid)) {
+            return $this->profileRepository->find($uuid);
+        }
+
+        return false;
     }
 
     public function create(UserForm $userForm, ProfileForm $profileForm)
@@ -67,6 +84,36 @@ class PersonService extends WKService
 
             foreach ($authAssignment as $item) {
                 $this->authAssignmentRepository->add($item);
+            }
+
+            return $person->primaryKey;
+        });
+    }
+
+    public function update($id, UserFormUpdate $userFormUpdate, ProfileForm $profileForm)
+    {
+        $person = $this->personRepository->find($id);
+        $person->edit($userFormUpdate);
+        $personValidate = $this->validateModels($person, $userFormUpdate);
+
+        if ($this->profileRepository->has($id)) {
+            $profile = $this->profileRepository->find($id);
+            $profile->edit($profileForm);
+        } else {
+            $profileForm->setAttributes(array_map(function ($value) {
+                return empty($value) ? null : $value;
+            }, $profileForm->getAttributes()));
+            $profile = Profile::create($id, $profileForm);
+        }
+
+        if (!($personValidate && $this->validateModels($profile, $profileForm))) {
+            throw new \DomainException();
+        }
+
+        $this->transactionManager->execute(function () use ($person, $profile) {
+            $this->personRepository->save($person);
+            if ($profile->isNotEmpty()) {
+                $profile->isNewRecord ? $this->profileRepository->add($profile) : $this->profileRepository->save($profile);
             }
         });
     }

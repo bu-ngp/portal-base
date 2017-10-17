@@ -3,6 +3,7 @@
 use common\widgets\ActiveForm\ActiveForm;
 use domain\models\base\Dolzh;
 use common\widgets\Select2\Select2;
+use domain\models\base\Podraz;
 use rmrevin\yii\fontawesome\FA;
 use yii\db\ActiveQuery;
 
@@ -30,9 +31,22 @@ use yii\db\ActiveQuery;
     'selectionGridUrl' => ['configuration/spravochniki/dolzh/index'],
 ]); ?>
 
-<?= $form->field($modelForm, 'podraz_id')->textInput(['wkkeep' => true, 'maxlength' => true, 'wkicon' => FA::_USER_SECRET]) ?>
 
-<?= $form->field($modelForm, 'build_id')->textInput(['wkkeep' => true, 'maxlength' => true, 'wkicon' => FA::_USER_SECRET]) ?>
+<?= $form->field($modelForm, 'podraz_id')->select2([
+    'activeRecordClass' => Podraz::className(),
+    'queryCallback' => function (ActiveQuery $query) {
+        $query->select(['podraz_id', 'podraz_name']);
+    },
+    'ajaxConfig' => [
+        'searchAjaxCallback' => function (ActiveQuery $query, $searchString) {
+            $query->andWhere(['like', 'podraz_name', $searchString]);
+        },
+    ],
+    'wkkeep' => true,
+    'wkicon' => FA::_ADDRESS_BOOK,
+    'multiple' => false,
+    'selectionGridUrl' => ['configuration/spravochniki/podraz/index'],
+]); ?>
 
 <?= $form->field($modelForm, 'employee_begin')->datetime(['wkkeep' => true, 'wkicon' => FA::_CALENDAR]) ?>
 

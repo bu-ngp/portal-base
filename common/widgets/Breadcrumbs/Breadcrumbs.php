@@ -17,16 +17,13 @@ use yii\web\View;
 class Breadcrumbs extends Widget
 {
     public static $show;
-    public static $removeLastCrumb;
     public $defaultShow = true;
-    public $defaultRemoveLastCrumb = false;
 
     public function init()
     {
         $this->id = 'wkbc_' . Yii::$app->id;
         $this->registerTranslations();
         static::$show = static::$show !== null ? static::$show : $this->defaultShow;
-        static::$removeLastCrumb = static::$removeLastCrumb !== null ? static::$removeLastCrumb : $this->defaultRemoveLastCrumb;
         parent::init();
     }
 
@@ -37,7 +34,7 @@ class Breadcrumbs extends Widget
             'home-crumb-url' => Yii::$app->getHomeUrl(),
             'current-crumb-id' => $this->getCurrentCrumbId(),
             'current-crumb-title' => $this->getView()->title,
-            'remove-last-crumb' => static::$removeLastCrumb ? '1' : '0',
+            'remove-last-crumb' => $this->getRemoveLastCrumb() ? '1' : '0',
             'class' => 'wkbc-breadcrumb',
         ]);
         $this->registerAssets();
@@ -74,5 +71,21 @@ class Breadcrumbs extends Widget
         $currentId = Yii::$app->controller->id . '/' . Yii::$app->controller->action->id . '/';
 
         return $homeId === $currentId || !static::$show ?: $currentId;
+    }
+
+    public static function removeLastCrumb()
+    {
+        Yii::$app->session->set('_wkbc_remove_last_crumb', true);
+    }
+
+    protected function getRemoveLastCrumb()
+    {
+        if (Yii::$app->session->get('_wkbc_remove_last_crumb') === true) {
+            Yii::$app->session->remove('_wkbc_remove_last_crumb');
+
+            return true;
+        }
+
+        return false;
     }
 }

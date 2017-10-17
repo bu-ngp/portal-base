@@ -45,13 +45,24 @@
         $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
     };
 
+    var validJSON = function (value) {
+        try {
+            $.parseJSON(selected);
+        } catch (e) {
+            return false;
+        }
+
+        return true;
+    };
+
     var gridSelectedToBreadcrumbs = function (opts) {
         var $grid = opts.grid;
 
         if ($grid.is('[wk-selected]')) {
             var lastCrumb = $(".wkbc-breadcrumb").length === 1 ? $(".wkbc-breadcrumb").wkbreadcrumbs('getLast') : {};
             var gridID = $grid.attr('id');
-            var selected = $grid.attr('wk-selected');
+            var isSelectedJSON = validJSON($grid.attr('wk-selected'));
+            var selected = isSelectedJSON ? $.parseJSON($grid.attr('wk-selected')) : $grid.attr('wk-selected');
 
             if (!("wk-choose" in lastCrumb)) {
                 return;
@@ -59,7 +70,7 @@
 
             var wkchoose = lastCrumb["wk-choose"];
 
-            if (gridID in wkchoose) {
+            if (gridID in wkchoose && !isSelectedJSON) {
                 if (wkchoose[gridID].indexOf(selected) < 0 && wkchoose.isSaved !== gridID) {
                     wkchoose[gridID].push(selected);
                 }

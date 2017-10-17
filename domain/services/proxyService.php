@@ -25,9 +25,9 @@ class proxyService
     public function __call($method, $arguments)
     {
         try {
-            call_user_func_array([$this->serviceClass, $method], $arguments);
-
-            return true;
+            $result = call_user_func_array([$this->serviceClass, $method], $arguments);
+            
+            return $result === null ?: $result;
         } catch (\DomainException $e) {
             if ($e->getMessage()) {
                 $this->storeErrors[] = $e->getMessage();

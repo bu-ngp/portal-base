@@ -13,6 +13,7 @@ use domain\forms\base\EmployeeForm;
 use domain\models\base\Dolzh;
 use domain\queries\DolzhQuery;
 use domain\services\base\EmployeeService;
+use domain\services\proxyService;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\web\Controller;
@@ -27,7 +28,7 @@ class EmployeeController extends Controller
 
     public function __construct($id, $module, EmployeeService $employeeService, $config = [])
     {
-        $this->employeeService = $employeeService;
+        $this->employeeService = new proxyService($employeeService);
         parent::__construct($id, $module, $config = []);
     }
 
@@ -37,9 +38,15 @@ class EmployeeController extends Controller
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $this->employeeService->create($form)
+            //&& $this->employeeService->create($form)
         ) {
-            return $this->redirect(Yii::$app->request->referrer);
+            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
+
+            return $this->redirect(['configuration/users/create', 'grid' => 'EmployeesUserGrid', 'selected' => [
+                'dolzh_id' => $form->dolzh_id,
+                'podraz_id' => $form->podraz_id,
+                'employee_begin' => $form->employee_begin,
+            ]]);
         }
 //
 //        $form->dolzh_id = Dolzh::find()

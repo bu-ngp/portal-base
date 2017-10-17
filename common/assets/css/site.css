@@ -110,7 +110,8 @@ a.desc:after {
 
 /* align the logout "link" (button in form) of the navbar */
 .nav li > form > button.logout {
-    padding: 15px;
+    padding: 20px 15px;
+    line-height: 24px;
     border: none;
 }
 
@@ -148,7 +149,8 @@ a.desc:after {
     padding-left: 45px;
 }
 
-div.form-group.pmd-textfield.required > label.control-label:after {
+div.form-group.pmd-textfield.required > label.control-label:after,
+div.form-group.pmd-textfield-select2.required > label.control-label:after {
     content: ' *';
     color: red;
 }
@@ -173,4 +175,8 @@ div.wk-widget-input-prepend-icon > span {
 
 .nav.nav-tabs {
     margin-bottom: 10px;
+}
+
+.nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+    border: none;
 }

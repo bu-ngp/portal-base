@@ -9,6 +9,7 @@
 namespace common\widgets\GridView\services;
 
 use common\widgets\GridView\GridView;
+use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\bootstrap\Html;
 use yii\helpers\Url;
@@ -76,7 +77,7 @@ class ActionButtonDelete
             $this->actionButtons['delete'] = function ($url, $model) use ($crudProp, $options) {
                 $urlArr = count($crudProp) === 1 && isset($crudProp[0]) ? $crudProp : [$crudProp['url']];
 
-                $urlArr['id'] = $model->primaryKey;
+                $urlArr['id'] = GridViewHelper::isBinary($model->primaryKey) ? Uuid::uuid2str($model->primaryKey) : $model->primaryKey;
                 $urlArr['mainId'] = Yii::$app->request->get('id');
 
                 return $this->beforeRender($model) ? Html::a('<i class="fa fa-2x fa-trash-o"></i>', Url::to($urlArr), $options) : '';

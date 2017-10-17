@@ -14,15 +14,15 @@ class TransactionManager
     {
         $transaction = \Yii::$app->db->beginTransaction();
         try {
-            call_user_func($function);
+            $result = call_user_func($function);
             $transaction->commit();
 
-            return true;
+            return $result;
         } catch (\Exception $e) {
             $transaction->rollBack();
             if ($functionError) {
                 call_user_func($functionError, $e);
-                
+
                 return false;
             } else {
                 throw $e;

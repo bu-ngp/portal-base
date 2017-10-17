@@ -7,6 +7,7 @@ use common\classes\Ldap;
 use common\classes\LdapModelInterface;
 use common\classes\validators\WKDateValidator;
 use domain\forms\base\UserForm;
+use domain\forms\base\UserFormUpdate;
 use domain\models\base\AuthAssignment;
 use domain\models\base\AuthItem;
 use domain\models\base\ConfigLdap;
@@ -129,6 +130,13 @@ class Person extends \yii\db\ActiveRecord implements LdapModelInterface
             'person_email' => $userForm->person_email,
             'person_hired' => date('Y-m-d'),
         ]);
+    }
+
+    public function edit(UserFormUpdate $userFormUpdate)
+    {
+        $this->person_fullname = $userFormUpdate->person_fullname;
+        $this->person_username = $userFormUpdate->person_username;
+        $this->person_email = $userFormUpdate->person_email;
     }
 
     /**

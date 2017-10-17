@@ -18,6 +18,10 @@ class PersonRepository implements RepositoryInterface
 {
     private $_person;
 
+    /**
+     * @param $id
+     * @return Person
+     */
     public function find($id)
     {
         if (!$person = Person::findOne($id)) {

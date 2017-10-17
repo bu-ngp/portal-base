@@ -1,5 +1,6 @@
 <?php
 
+use yii\db\ActiveQuery;
 use yii\helpers\Html;
 use rmrevin\yii\fontawesome\FA;
 use common\widgets\GridView\GridView;
@@ -33,6 +34,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'icon' => FA::icon(FA::_BARS),
                 'title' => Yii::t('common/podraz', 'Podrazs'),
             ],
+            'gridExcludeIdsFunc' => function (ActiveQuery $activeQuery, array $ids) {
+                $activeQuery->andWhere(['not in', 'podraz_id', $ids]);
+            }
     ]); ?>
 
 </div>

@@ -3,6 +3,7 @@
 namespace domain\forms\base;
 
 use domain\models\base\Employee;
+use domain\rules\base\EmployeeRules;
 use yii\base\Model;
 
 class EmployeeForm extends Model
@@ -19,6 +20,8 @@ class EmployeeForm extends Model
 
     public function __construct(Employee $employee = null, $config = [])
     {
+        $this->employee_begin = date('Y-m-d');
+
         if ($employee) {
             $this->load($employee->attributes, '');
         }
@@ -28,7 +31,7 @@ class EmployeeForm extends Model
 
     public function rules()
     {
-        return (new Employee())->rules();
+        return EmployeeRules::client();
     }
 
     public function attributeLabels()

@@ -22,6 +22,11 @@ class ProfileRepository implements RepositoryInterface
         return $profile;
     }
 
+    public function has($id)
+    {
+        return !!Profile::findOne($id);
+    }
+
     /**
      * @param Profile $profile
      */

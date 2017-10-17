@@ -9,13 +9,16 @@
 namespace backend\controllers\configuration;
 
 
+use common\widgets\Breadcrumbs\Breadcrumbs;
 use domain\forms\base\ProfileForm;
 use domain\forms\base\UserForm;
+use domain\forms\base\UserFormUpdate;
 use domain\models\base\search\AuthItemSearch;
 use domain\models\base\search\EmployeeSearch;
 use domain\models\base\search\UsersSearch;
 use domain\services\base\PersonService;
 use domain\services\proxyService;
+use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\web\Controller;
 
@@ -50,8 +53,6 @@ class UsersController extends Controller
         $userForm = new UserForm();
         $profileForm = new ProfileForm();
 
-        $searchModelEmployee = new EmployeeSearch();
-        $dataProviderEmployee = $searchModelEmployee->search(Yii::$app->request->queryParams);
         $searchModelAuthItem = new AuthItemSearch();
         $dataProviderAuthItem = $searchModelAuthItem->searchForCreate(Yii::$app->request->queryParams);
 
@@ -59,11 +60,12 @@ class UsersController extends Controller
             && $userForm->validate()
             && $profileForm->load(Yii::$app->request->post())
             && $profileForm->validate()
-            && $this->personService->create($userForm, $profileForm)
+            && $newPersonId = $this->personService->create($userForm, $profileForm)
         ) {
-            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
+            Yii::$app->session->setFlash('success', Yii::t('domain/person', 'Person is saved. Add speciality.'));
+            Breadcrumbs::removeLastCrumb();
 
-            return $this->redirect(['index']);
+            return $this->redirect(['update', 'id' => Uuid::uuid2str($newPersonId)]);
         }
 
         $userForm->person_password = null;
@@ -71,6 +73,38 @@ class UsersController extends Controller
 
         return $this->render('create', [
             'modelUserForm' => $userForm,
+            'modelProfileForm' => $profileForm,
+            'searchModelAuthItem' => $searchModelAuthItem,
+            'dataProviderAuthItem' => $dataProviderAuthItem,
+        ]);
+    }
+
+    public function actionUpdate($id)
+    {
+        $user = $this->personService->get($id);
+        $userFormUpdate = new UserFormUpdate($user);
+
+        $profile = $this->personService->getProfile($id);
+        $profileForm = new ProfileForm($this->personService->getProfile($id) === false ? null : $profile);
+
+        $searchModelEmployee = new EmployeeSearch();
+        $dataProviderEmployee = $searchModelEmployee->search(Yii::$app->request->queryParams);
+        $searchModelAuthItem = new AuthItemSearch();
+        $dataProviderAuthItem = $searchModelAuthItem->searchForUpdate(Yii::$app->request->queryParams);
+
+        if ($userFormUpdate->load(Yii::$app->request->post())
+            && $userFormUpdate->validate()
+            && $profileForm->load(Yii::$app->request->post())
+            && $profileForm->validate()
+            && $this->personService->update(Uuid::str2uuid($id), $userFormUpdate, $profileForm)
+        ) {
+            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
+
+            return $this->redirect(['index']);
+        }
+
+        return $this->render('update', [
+            'modelUserFormUpdate' => $userFormUpdate,
             'modelProfileForm' => $profileForm,
             'searchModelEmployee' => $searchModelEmployee,
             'dataProviderEmployee' => $dataProviderEmployee,

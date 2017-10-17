@@ -2,6 +2,7 @@
 
 namespace domain\services\base;
 
+use domain\forms\base\EmployeeForm;
 use domain\models\base\Employee;
 use domain\repositories\base\EmployeeRepository;
 use domain\services\WKService;
@@ -17,18 +18,14 @@ class EmployeeService extends WKService
         $this->employeeRepository = $employeeRepository;
     }
 
-    public function create($form)
+    public function create(EmployeeForm $form)
     {
-        $employee = Employee::create(
-            $form->person_id,
-            $form->dolzh_id,
-            $form->podraz_id,
-            $form->build_id,
-            $form->employee_begin
-        );
-        $this->employeeRepository->add($employee);
+        $employee = Employee::create($form);
+        if (!$this->validateModels($employee, $form)) {
+            throw new \DomainException();
+        }
 
-        return true;
+        $this->employeeRepository->add($employee);
     }
 
     public function update($id, $person_id, $dolzh_id, $podraz_id, $build_id, $employee_begin, $created_at, $updated_at, $created_by, $updated_by)

@@ -4,6 +4,7 @@ namespace domain\models\base;
 
 use common\classes\BlameableBehavior;
 use common\models\base\Person;
+use domain\forms\base\EmployeeForm;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
@@ -85,9 +86,14 @@ class Employee extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function create($person_id, $dolzh_id, $podraz_id, $build_id, $employee_begin)
+    public static function create(EmployeeForm $form)
     {
-
+        return new self([
+            'person_id' => $form->person_id,
+            'dolzh_id' => $form->dolzh_id,
+            'podraz_id' => $form->podraz_id,
+            'employee_begin' => $form->employee_begin,
+        ]);
     }
 
     /**

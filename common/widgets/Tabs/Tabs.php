@@ -102,7 +102,7 @@ class Tabs extends \yii\bootstrap\Tabs
         return Html::tag('div',
             Html::tag('div', Html::tag('div', '', ['class' => 'pmd-tab-active-bar']) . $ul, ['class' => 'pmd-tabs']) .
             Html::tag('div', $tabContent, ['class' => 'pmd-card-body'])
-            , ['class' => 'pmd-card pmd-z-depth']);
+            , ['class' => 'pmd-card']);
     }
 
     protected function registerAssets()

@@ -103,6 +103,15 @@ class Profile extends \yii\db\ActiveRecord
         ]);
     }
 
+    public function edit(ProfileForm $profileForm)
+    {
+        $this->profile_inn = $profileForm->profile_inn;
+        $this->profile_dr = $profileForm->profile_dr;
+        $this->profile_pol = $profileForm->profile_pol;
+        $this->profile_snils = $profileForm->profile_snils;
+        $this->profile_address = $profileForm->profile_address;
+    }
+
     public function isNotEmpty()
     {
         return $this->profile_inn

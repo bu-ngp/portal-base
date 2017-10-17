@@ -3,8 +3,10 @@
 namespace domain\models\base\search;
 
 use common\widgets\CardList\CardListHelper;
+use common\widgets\GridView\services\GridViewHelper;
 use DateTime;
 use domain\models\base\filter\AuthItemFilter;
+use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -18,6 +20,14 @@ use yii\db\Query;
  */
 class AuthItemSearch extends AuthItem
 {
+    public function attributes()
+    {
+        // add related fields to searchable attributes
+        return array_merge(parent::attributes(), [
+            'authAssignments.user_id',
+        ]);
+    }
+
     /**
      * @inheritdoc
      */
@@ -26,6 +36,7 @@ class AuthItemSearch extends AuthItem
         return [
             [['name', 'description', 'ldap_group', 'rule_name', 'data', 'updated_at'], 'safe'],
             [['type', 'view', 'created_at'], 'integer'],
+            [['authAssignments.user_id'], 'safe']
         ];
     }
 
@@ -206,7 +217,7 @@ class AuthItemSearch extends AuthItem
 
         $this->load($params);
 
-        $query->joinWith(['authItemChildren']);
+        $query->joinWith(['authAssignments']);
 
 //        if (!$this->validate()) {
 //            // uncomment the following line if you do not want to return any records when validation fails
@@ -214,17 +225,21 @@ class AuthItemSearch extends AuthItem
 //            return $dataProvider;
 //        }
 
-        $query->andWhere([
-            'authItemChildren.parent' => $params['id'],
-        ]);
+        if (GridViewHelper::isBinaryValidString($params['id'])) {
+            $query->andWhere([
+                'authAssignments.user_id' => new Expression("UNHEX('{$params['id']}')"),
+            ]);
+        }
 
         // grid filtering conditions
         $query->andFilterWhere([
-            //   'type' => 1,
+            'type' => 1,
         ]);
 
         $query->andFilterWhere(['like', 'description', $this->description]);
         $query->andFilterWhere(['like', 'ldap_group', $this->ldap_group, false]);
+
+        $a = $query->createCommand()->getRawSql();
 
         return $dataProvider;
     }
