@@ -86,9 +86,9 @@ class Build extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getEmployeeHistories()
+    public function getEmployeeHistoryBuilds()
     {
-        return $this->hasMany(EmployeeHistory::className(), ['build_id' => 'build_id'])->from(['employeeHistories' => EmployeeHistory::tableName()]);
+        return $this->hasMany(EmployeeHistoryBuild::className(), ['build_id' => 'build_id'])->from(['employeeHistoryBuilds' => EmployeeHistoryBuild::tableName()]);
     }
 
     /**

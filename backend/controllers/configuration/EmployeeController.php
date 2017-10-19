@@ -9,9 +9,15 @@
 namespace backend\controllers\configuration;
 
 
+use common\widgets\Breadcrumbs\Breadcrumbs;
 use domain\forms\base\EmployeeForm;
+use domain\forms\base\EmployeeHistoryForm;
 use domain\models\base\Dolzh;
+use domain\models\base\EmployeeHistory;
+use domain\models\base\search\BuildSearch;
+use domain\models\base\search\EmployeeHistoryBuildSearch;
 use domain\queries\DolzhQuery;
+use domain\services\base\EmployeeHistoryService;
 use domain\services\base\EmployeeService;
 use domain\services\proxyService;
 use wartron\yii2uuid\helpers\Uuid;
@@ -23,27 +29,31 @@ use yii\web\Response;
 class EmployeeController extends Controller
 {
     /**
-     * @var EmployeeService
+     * @var EmployeeHistoryService
      */
-    private $employeeService;
+    private $employeeHistoryService;
 
-    public function __construct($id, $module, EmployeeService $employeeService, $config = [])
+    public function __construct($id, $module, EmployeeHistoryService $employeeHistoryService, $config = [])
     {
-        $this->employeeService = new proxyService($employeeService);
+        $this->employeeHistoryService = new proxyService($employeeHistoryService);
         parent::__construct($id, $module, $config = []);
     }
 
     public function actionCreate()
     {
-        $form = new EmployeeForm();
+        $form = new EmployeeHistoryForm();
+
+//        $searchModelBuild = new BuildSearch();
+//        $dataProviderBuild = $searchModelBuild->searchForEmployee(Yii::$app->request->queryParams);
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $this->employeeService->create($form)
+            && $employeeId = $this->employeeHistoryService->create($form)
         ) {
-            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
+            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved. Add Builds.'));
+            Breadcrumbs::removeLastCrumb();
 
-            return $this->redirect(Url::previous());
+            return $this->redirect(['update', 'id' => $employeeId]);
         }
 //
 //        $form->dolzh_id = Dolzh::find()
@@ -57,6 +67,32 @@ class EmployeeController extends Controller
 
         return $this->render('create', [
             'modelForm' => $form,
+//            'searchModelBuild' => $searchModelBuild,
+//            'dataProviderBuild' => $dataProviderBuild,
+        ]);
+    }
+
+    public function actionUpdate($id)
+    {
+        $employee = $this->employeeHistoryService->get($id);
+        $form = new EmployeeHistoryForm($employee);
+
+        $searchModelEmployeeHB = new EmployeeHistoryBuildSearch();
+        $dataProviderEmployeeHB = $searchModelEmployeeHB->search(Yii::$app->request->queryParams);
+
+        if ($form->load(Yii::$app->request->post())
+            && $form->validate()
+            && $this->employeeHistoryService->update($id, $form)
+        ) {
+            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
+
+            return $this->redirect(Url::previous());
+        }
+
+        return $this->render('update', [
+            'modelForm' => $form,
+            'searchModelEmployeeHB' => $searchModelEmployeeHB,
+            'dataProviderEmployeeHB' => $dataProviderEmployeeHB,
         ]);
     }
 

@@ -3,7 +3,11 @@
 namespace domain\models\base;
 
 use common\classes\BlameableBehavior;
+use common\classes\validators\WKDateValidator;
 use common\models\base\Person;
+use domain\forms\base\EmployeeHistoryForm;
+use domain\rules\base\EmployeeHistoryRules;
+use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
@@ -42,15 +46,14 @@ class EmployeeHistory extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
-            [['person_id', 'dolzh_id', 'podraz_id', 'employee_history_begin'], 'required'],
-            [['employee_history_begin'], 'date', 'format' => 'yyyy-MM-dd'],
-            //   [['person_id', 'dolzh_id', 'podraz_id', 'build_id'], 'string', 'max' => 16],
-            [['build_id'], 'exist', 'skipOnError' => true, 'targetClass' => Build::className(), 'targetAttribute' => ['build_id' => 'build_id']],
+        return array_merge(EmployeeHistoryRules::client(), [
+            [['person_id'], 'required'],
+            [['employee_history_begin'], WKDateValidator::className()],
             [['dolzh_id'], 'exist', 'skipOnError' => true, 'targetClass' => Dolzh::className(), 'targetAttribute' => ['dolzh_id' => 'dolzh_id']],
             [['person_id'], 'exist', 'skipOnError' => true, 'targetClass' => Person::className(), 'targetAttribute' => ['person_id' => 'person_id']],
             [['podraz_id'], 'exist', 'skipOnError' => true, 'targetClass' => Podraz::className(), 'targetAttribute' => ['podraz_id' => 'podraz_id']],
-        ];
+            [['employee_history_begin'], 'unique', 'targetAttribute' => ['employee_history_begin']],
+        ]);
     }
 
     /**
@@ -77,7 +80,8 @@ class EmployeeHistory extends \yii\db\ActiveRecord
         return [
             [
                 'class' => TimestampBehavior::className(),
-                'value' => new Expression('NOW()'),
+                //'value' => new Expression('NOW()'),
+                'value' => time(),
             ],
             [
                 'class' => BlameableBehavior::className(),
@@ -85,13 +89,23 @@ class EmployeeHistory extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getBuild()
+    public static function create(EmployeeHistoryForm $form)
     {
-        return $this->hasOne(Build::className(), ['build_id' => 'build_id'])->from(['build' => Build::tableName()]);
+        return new self([
+            'person_id' => Uuid::str2uuid($form->person_id),
+            'dolzh_id' => Uuid::str2uuid($form->dolzh_id),
+            'podraz_id' => Uuid::str2uuid($form->podraz_id),
+            'employee_history_begin' => $form->employee_history_begin,
+        ]);
     }
+
+    public function edit(EmployeeHistoryForm $form)
+    {
+        $this->dolzh_id = $form->dolzh_id;
+        $this->podraz_id = $form->podraz_id;
+        $this->employee_history_begin = $form->employee_history_begin;
+    }
+
 
     /**
      * @return \yii\db\ActiveQuery

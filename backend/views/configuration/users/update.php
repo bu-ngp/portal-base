@@ -53,7 +53,7 @@ $this->title = Yii::t('common/person', $modelUserFormUpdate->person_fullname);
                         'dataProvider' => $dataProviderEmployee,
                         'gridConfig' => [
                             'crudSettings' => [
-                                'create' => ['configuration/employee/create', 'person_id' => Yii::$app->request->get('id')],
+                                'create' => ['configuration/employee/create', 'person' => Yii::$app->request->get('id')],
                                 'update' => 'configuration/employee/update',
                                 'delete' => 'configuration/employee/delete',
                             ],

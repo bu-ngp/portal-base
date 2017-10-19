@@ -3,11 +3,12 @@
 namespace domain\repositories\base;
 
 use domain\models\base\Employee;
+use domain\models\base\EmployeeHistory;
 use domain\repositories\RepositoryInterface;
 use RuntimeException;
 use Yii;
 
-class EmployeeRepository implements RepositoryInterface
+class EmployeeRepository
 {
     /**
      * @param $id
@@ -22,39 +23,44 @@ class EmployeeRepository implements RepositoryInterface
         return $employee;
     }
 
+    public function has($id)
+    {
+        return !!Employee::findOne($id);
+    }
+
     /**
      * @param Employee $employee
      */
-    public function add($employee)
+    public function add(Employee $employee)
     {
         if (!$employee->getIsNewRecord()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Adding existing model.'));
+            throw new \DomainException(Yii::t('domain/base', 'Adding existing model.'));
         }
         if (!$employee->insert(false)) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Saving error.'));
         }
     }
 
     /**
      * @param Employee $employee
      */
-    public function save($employee)
+    public function save(Employee $employee)
     {
         if ($employee->getIsNewRecord()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Adding existing model.'));
+            throw new \DomainException(Yii::t('domain/base', 'Adding existing model.'));
         }
         if ($employee->update(false) === false) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Saving error.'));
         }
     }
 
     /**
      * @param Employee $employee
      */
-    public function delete($employee)
+    public function delete(Employee $employee)
     {
         if (!$employee->delete()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Deleting error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Deleting error.'));
         }
     }
 }

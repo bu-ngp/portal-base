@@ -211,7 +211,7 @@ class Select2 extends \kartik\select2\Select2
 
     protected function returnAjaxData()
     {
-        if (Yii::$app->request->isAjax) {
+        if (Yii::$app->request->isAjax && Yii::$app->request->get('q')) {
             Yii::$app->response->clearOutputBuffers();
             $jsonObj = [];
 

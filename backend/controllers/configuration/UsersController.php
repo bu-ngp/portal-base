@@ -15,6 +15,7 @@ use domain\forms\base\UserForm;
 use domain\forms\base\UserFormUpdate;
 use domain\models\base\Employee;
 use domain\models\base\search\AuthItemSearch;
+use domain\models\base\search\EmployeeHistorySearch;
 use domain\models\base\search\EmployeeSearch;
 use domain\models\base\search\UsersSearch;
 use domain\services\base\PersonService;
@@ -88,7 +89,7 @@ class UsersController extends Controller
         $profile = $this->personService->getProfile($id);
         $profileForm = new ProfileForm($this->personService->getProfile($id) === false ? null : $profile);
 
-        $searchModelEmployee = new EmployeeSearch();
+        $searchModelEmployee = new EmployeeHistorySearch();
         $dataProviderEmployee = $searchModelEmployee->search(Yii::$app->request->queryParams);
         $searchModelAuthItem = new AuthItemSearch();
         $dataProviderAuthItem = $searchModelAuthItem->searchForUpdate(Yii::$app->request->queryParams);

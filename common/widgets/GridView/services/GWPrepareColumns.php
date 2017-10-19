@@ -158,7 +158,7 @@ class GWPrepareColumns
                     $resultValue = $model;
                     $splitAttributes = explode('.', $column->attribute);
                     array_walk($splitAttributes, function ($value) use (&$resultValue) {
-                        $resultValue = $resultValue->$value;
+                        $resultValue = $resultValue[$value];
                     });
                 } catch (\Exception $e) {
                     $resultValue = $model->getAttribute($column->attribute);

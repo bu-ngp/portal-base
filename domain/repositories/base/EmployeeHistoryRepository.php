@@ -16,7 +16,7 @@ class EmployeeHistoryRepository implements RepositoryInterface
     public function find($id)
     {
         if (!$employeeHistory = EmployeeHistory::findOne($id)) {
-            throw new RuntimeException('Model not found.');
+            throw new \RuntimeException('Model not found.');
         }
 
         return $employeeHistory;
@@ -28,10 +28,10 @@ class EmployeeHistoryRepository implements RepositoryInterface
     public function add($employeeHistory)
     {
         if (!$employeeHistory->getIsNewRecord()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Adding existing model.'));
+            throw new \DomainException(Yii::t('domain/base', 'Adding existing model.'));
         }
         if (!$employeeHistory->insert(false)) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Saving error.'));
         }
     }
 
@@ -41,10 +41,10 @@ class EmployeeHistoryRepository implements RepositoryInterface
     public function save($employeeHistory)
     {
         if ($employeeHistory->getIsNewRecord()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Adding existing model.'));
+            throw new \DomainException(Yii::t('domain/base', 'Adding existing model.'));
         }
         if ($employeeHistory->update(false) === false) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Saving error.'));
         }
     }
 
@@ -54,7 +54,7 @@ class EmployeeHistoryRepository implements RepositoryInterface
     public function delete($employeeHistory)
     {
         if (!$employeeHistory->delete()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Deleting error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Deleting error.'));
         }
     }
 }

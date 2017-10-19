@@ -2,59 +2,57 @@
 
 namespace domain\repositories\base;
 
-use domain\models\base\EmployeeHistory;
-use domain\models\base\Parttime;
-use domain\repositories\RepositoryInterface;
+use domain\models\base\ParttimeBuild;
 use RuntimeException;
 use Yii;
 
-class ParttimeRepository
+class ParttimeBuildRepository
 {
     /**
      * @param $id
-     * @return Parttime
+     * @return ParttimeBuild
      */
     public function find($id)
     {
-        if (!$parttime = Parttime::findOne($id)) {
+        if (!$parttimeBuild = ParttimeBuild::findOne($id)) {
             throw new \RuntimeException('Model not found.');
         }
 
-        return $parttime;
+        return $parttimeBuild;
     }
 
     /**
-     * @param Parttime $parttime
+     * @param ParttimeBuild $parttimeBuild
      */
-    public function add(Parttime $parttime)
+    public function add(ParttimeBuild $parttimeBuild)
     {
-        if (!$parttime->getIsNewRecord()) {
+        if (!$parttimeBuild->getIsNewRecord()) {
             throw new \DomainException(Yii::t('domain/base', 'Adding existing model.'));
         }
-        if (!$parttime->insert(false)) {
+        if (!$parttimeBuild->insert(false)) {
             throw new \DomainException(Yii::t('domain/base', 'Saving error.'));
         }
     }
 
     /**
-     * @param Parttime $parttime
+     * @param ParttimeBuild $parttimeBuild
      */
-    public function save(Parttime $parttime)
+    public function save(ParttimeBuild $parttimeBuild)
     {
-        if ($parttime->getIsNewRecord()) {
+        if ($parttimeBuild->getIsNewRecord()) {
             throw new \DomainException(Yii::t('domain/base', 'Adding existing model.'));
         }
-        if ($parttime->update(false) === false) {
+        if ($parttimeBuild->update(false) === false) {
             throw new \DomainException(Yii::t('domain/base', 'Saving error.'));
         }
     }
 
     /**
-     * @param Parttime $parttime
+     * @param ParttimeBuild $parttimeBuild
      */
-    public function delete($parttime)
+    public function delete(ParttimeBuild $parttimeBuild)
     {
-        if (!$parttime->delete()) {
+        if (!$parttimeBuild->delete()) {
             throw new \DomainException(Yii::t('domain/base', 'Deleting error.'));
         }
     }

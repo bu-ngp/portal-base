@@ -129,7 +129,7 @@ class m130524_201442_init extends Migration
         $this->dropTable($authManager->itemTable);
         $this->dropTable($authManager->ruleTable);
 
-        $this->dropTable('{{%person}}');
         $this->dropTable('{{%profile}}');
+        $this->dropTable('{{%person}}');
     }
 }

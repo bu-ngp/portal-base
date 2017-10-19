@@ -11,13 +11,13 @@ namespace domain\rules\base;
 
 use common\classes\validators\WKDateValidator;
 
-class EmployeeRules
+class EmployeeHistoryRules
 {
     public static function client()
     {
         return [
-            [['dolzh_id', 'podraz_id', 'employee_begin'], 'required'],
-            [['employee_begin'], WKDateValidator::className()],
+            [['dolzh_id', 'podraz_id', 'employee_history_begin'], 'required'],
+            [['employee_history_begin'], WKDateValidator::className()],
         ];
     }
 }

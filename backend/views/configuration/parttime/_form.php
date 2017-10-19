@@ -8,14 +8,13 @@ use rmrevin\yii\fontawesome\FA;
 use yii\db\ActiveQuery;
 
 /* @var $this yii\web\View */
-/* @var $modelForm domain\forms\base\EmployeeForm */
+/* @var $modelForm domain\forms\base\ParttimeForm */
 ?>
 
 <?php $form = ActiveForm::begin(['id' => $modelForm->formName()]); ?>
 
 <?= $form->field($modelForm, 'dolzh_id')->select2([
     'activeRecordClass' => Dolzh::className(),
-    // 'queryCallback' => \domain\queries\DolzhQuery::getCallbackAllDolzhs(),
     'queryCallback' => function (ActiveQuery $query) {
         $query->select(['dolzh_id', 'dolzh_name']);
     },
@@ -23,7 +22,6 @@ use yii\db\ActiveQuery;
         'searchAjaxCallback' => function (ActiveQuery $query, $searchString) {
             $query->andWhere(['like', 'dolzh_name', $searchString]);
         },
-        //'onlyAjax' => true,
     ],
     'wkkeep' => true,
     'wkicon' => FA::_ADDRESS_BOOK,
@@ -48,8 +46,8 @@ use yii\db\ActiveQuery;
     'selectionGridUrl' => ['configuration/spravochniki/podraz/index'],
 ]); ?>
 
-<?= $form->field($modelForm, 'employee_history_begin')->datetime(['wkkeep' => true, 'wkicon' => FA::_CALENDAR]) ?>
+<?= $form->field($modelForm, 'parttime_begin')->datetime(['wkkeep' => true, 'wkicon' => FA::_CALENDAR]) ?>
 
-<?= ''//$form->field($modelForm, 'assignBuilds', ['enableClientValidation' => false])->hiddenInput()->label(false) ?>
+<?= $form->field($modelForm, 'parttime_end')->datetime(['wkkeep' => true, 'wkicon' => FA::_CALENDAR]) ?>
 
 <?php ActiveForm::end(); ?>

@@ -31,8 +31,8 @@ use yii\db\Expression;
  */
 class Profile extends \yii\db\ActiveRecord
 {
-    const MALE = 0;
-    const FEMALE = 1;
+    const MALE = 1;
+    const FEMALE = 2;
 
     /**
      * @inheritdoc

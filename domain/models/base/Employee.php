@@ -6,6 +6,7 @@ use common\classes\BlameableBehavior;
 use common\models\base\Person;
 use common\widgets\GridView\services\GridViewHelper;
 use domain\forms\base\EmployeeForm;
+use domain\forms\base\EmployeeHistoryForm;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -87,14 +88,22 @@ class Employee extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function create(EmployeeForm $form)
+    public static function create(EmployeeHistoryForm $form)
     {
         return new self([
             'person_id' => Uuid::str2uuid($form->person_id),
             'dolzh_id' => Uuid::str2uuid($form->dolzh_id),
             'podraz_id' => Uuid::str2uuid($form->podraz_id),
-            'employee_begin' => $form->employee_begin,
+            'employee_begin' => $form->employee_history_begin,
         ]);
+    }
+
+    public function edit(EmployeeHistoryForm $form)
+    {
+        $this->person_id = Uuid::str2uuid($form->person_id);
+        $this->dolzh_id = Uuid::str2uuid($form->dolzh_id);
+        $this->podraz_id = Uuid::str2uuid($form->podraz_id);
+        $this->employee_begin = $form->employee_history_begin;
     }
 
     /**

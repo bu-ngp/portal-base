@@ -3,6 +3,8 @@
 namespace domain\forms\base;
 
 use domain\models\base\EmployeeHistory;
+use domain\rules\base\EmployeeHistoryRules;
+use Yii;
 use yii\base\Model;
 
 class EmployeeHistoryForm extends Model
@@ -17,10 +19,15 @@ class EmployeeHistoryForm extends Model
     public $created_by;
     public $updated_by;
 
-    public function __construct(EmployeeHistory $employeeHistory = null, $config = [])
+   // public $assignBuilds;
+
+    public function __construct(EmployeeHistory $employee = null, $config = [])
     {
-        if ($employeeHistory) {
-            $this->load($employeeHistory->attributes, '');
+        if ($employee) {
+            $this->load($employee->attributes, '');
+        } else {
+            $this->person_id = Yii::$app->request->get('person');
+            $this->employee_history_begin = date('Y-m-d');
         }
 
         parent::__construct($config);
@@ -28,7 +35,9 @@ class EmployeeHistoryForm extends Model
 
     public function rules()
     {
-        return (new EmployeeHistory())->rules();
+        return array_merge(EmployeeHistoryRules::client(), [
+           // [['assignBuilds'], 'safe'],
+        ]);
     }
 
     public function attributeLabels()

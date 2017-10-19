@@ -3,6 +3,8 @@
 namespace domain\forms\base;
 
 use domain\models\base\Parttime;
+use domain\rules\base\ParttimeRules;
+use Yii;
 use yii\base\Model;
 
 class ParttimeForm extends Model
@@ -22,6 +24,9 @@ class ParttimeForm extends Model
     {
         if ($parttime) {
             $this->load($parttime->attributes, '');
+        } else {
+            $this->person_id = Yii::$app->request->get('person');
+            $this->parttime_begin = date('Y-m-d');
         }
 
         parent::__construct($config);
@@ -29,7 +34,7 @@ class ParttimeForm extends Model
 
     public function rules()
     {
-        return (new Parttime())->rules();
+        return ParttimeRules::client();
     }
 
     public function attributeLabels()

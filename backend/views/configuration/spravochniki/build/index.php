@@ -1,5 +1,6 @@
 <?php
 
+use yii\db\ActiveQuery;
 use yii\helpers\Html;
 use rmrevin\yii\fontawesome\FA;
 use common\widgets\GridView\GridView;
@@ -15,24 +16,27 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-        <?= GridView::widget([
-            'dataProvider' => $dataProvider,
-            'filterModel' => $searchModel,
-            'exportGrid' => [
-                'idReportLoader' => 'wk-Report-Loader',
-            ],
-            'columns' => [
-                'build_name',
-            ],
-            'crudSettings' => [
-                'create' => 'configuration/spravochniki/build/create',
-                'update' => 'configuration/spravochniki/build/update',
-                'delete' => 'configuration/spravochniki/build/delete',
-            ],
-            'panelHeading' => [
-                'icon' => FA::icon(FA::_BARS),
-                'title' => Yii::t('common/build', 'Builds'),
-            ],
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'exportGrid' => [
+            'idReportLoader' => 'wk-Report-Loader',
+        ],
+        'columns' => [
+            'build_name',
+        ],
+        'crudSettings' => [
+            'create' => 'configuration/spravochniki/build/create',
+            'update' => 'configuration/spravochniki/build/update',
+            'delete' => 'configuration/spravochniki/build/delete',
+        ],
+        'panelHeading' => [
+            'icon' => FA::icon(FA::_BARS),
+            'title' => Yii::t('common/build', 'Builds'),
+        ],
+        'gridExcludeIdsFunc' => function (ActiveQuery $activeQuery, array $ids) {
+            $activeQuery->andWhere(['not in', 'build_id', $ids]);
+        }
     ]); ?>
 
 </div>

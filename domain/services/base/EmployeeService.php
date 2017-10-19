@@ -3,7 +3,10 @@
 namespace domain\services\base;
 
 use domain\forms\base\EmployeeForm;
+use domain\forms\base\EmployeeHistoryForm;
 use domain\models\base\Employee;
+use domain\models\base\EmployeeHistory;
+use domain\repositories\base\EmployeeHistoryRepository;
 use domain\repositories\base\EmployeeRepository;
 use domain\services\WKService;
 use Yii;
@@ -13,32 +16,42 @@ class EmployeeService extends WKService
     private $employeeRepository;
 
     public function __construct(
-        EmployeeRepository $employeeRepository
+        EmployeeHistoryRepository $employeeRepository
     )
     {
         $this->employeeRepository = $employeeRepository;
     }
 
-    public function create(EmployeeForm $form)
+    public function get($id)
+    {
+        return $this->employeeRepository->find($id);
+    }
+
+    public function create(EmployeeHistoryForm $form)
     {
         $this->guardPersonExists($form);
 
-        $employee = Employee::create($form);
+        $employee = EmployeeHistory::create($form);
         if (!$this->validateModels($employee, $form)) {
             throw new \DomainException();
         }
 
         $this->employeeRepository->add($employee);
+
+        return $employee->primaryKey;
     }
 
-    public function update($id, $person_id, $dolzh_id, $podraz_id, $build_id, $employee_begin, $created_at, $updated_at, $created_by, $updated_by)
+    public function update($id, EmployeeHistoryForm $form)
     {
         $employee = $this->employeeRepository->find($id);
 
-        $employee->editData($person_id, $dolzh_id, $podraz_id, $build_id, $employee_begin, $created_at, $updated_at, $created_by, $updated_by);
-        $this->employeeRepository->save($employee);
+        $employee->edit($form);
 
-        return true;
+        if (!$this->validateModels($employee, $form)) {
+            throw new \DomainException();
+        }
+
+        $this->employeeRepository->save($employee);
     }
 
     public function delete($id)
@@ -47,10 +60,10 @@ class EmployeeService extends WKService
         $this->employeeRepository->delete($employee);
     }
 
-    protected function guardPersonExists(EmployeeForm $form)
+    protected function guardPersonExists(EmployeeHistoryForm $form)
     {
         if (!$form->person_id) {
-            throw new \DomainException(Yii::t('domain/employee', 'URL parameter "person_id" is missed.'));
+            throw new \DomainException(Yii::t('domain/employee', 'URL parameter "person" is missed.'));
         }
     }
 }
