@@ -6,6 +6,7 @@ use domain\forms\base\EmployeeForm;
 use domain\models\base\Employee;
 use domain\repositories\base\EmployeeRepository;
 use domain\services\WKService;
+use Yii;
 
 class EmployeeService extends WKService
 {
@@ -20,6 +21,8 @@ class EmployeeService extends WKService
 
     public function create(EmployeeForm $form)
     {
+        $this->guardPersonExists($form);
+
         $employee = Employee::create($form);
         if (!$this->validateModels($employee, $form)) {
             throw new \DomainException();
@@ -42,5 +45,12 @@ class EmployeeService extends WKService
     {
         $employee = $this->employeeRepository->find($id);
         $this->employeeRepository->delete($employee);
+    }
+
+    protected function guardPersonExists(EmployeeForm $form)
+    {
+        if (!$form->person_id) {
+            throw new \DomainException(Yii::t('domain/employee', 'URL parameter "person_id" is missed.'));
+        }
     }
 }

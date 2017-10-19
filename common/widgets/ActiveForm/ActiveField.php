@@ -121,6 +121,7 @@ class ActiveField extends \yii\bootstrap\ActiveField
         $JSOptions = Json::encode([
             'locale' => 'ru',
             'format' => $format,
+            'useCurrent' => false,
             // 'extraFormats' => ['DD.MM.YYYY'],
         ]);
 
@@ -161,7 +162,7 @@ class ActiveField extends \yii\bootstrap\ActiveField
     public function select2($options = [])
     {
         $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield-select2 pmd-textfield-select2-floating-label' : 'form-group pmd-textfield-select2 pmd-textfield-select2-floating-label';
-       // $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield' : 'form-group pmd-textfield';
+        // $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield' : 'form-group pmd-textfield';
 
         if ($options['wkicon']) {
             $this->labelOptions['class'] .= ' wk-label-with-icon';

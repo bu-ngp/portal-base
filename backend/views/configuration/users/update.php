@@ -7,14 +7,14 @@ use common\widgets\Tabs\Tabs;
 use yii\bootstrap\Html;
 
 /* @var $this yii\web\View */
-/* @var $modelUserFormUpdate domain\forms\base\UserForm */
+/* @var $modelUserFormUpdate domain\forms\base\UserFormUpdate */
 /* @var $modelProfileForm domain\forms\base\ProfileForm */
 /* @var $searchModelEmployee domain\models\base\search\EmployeeSearch */
 /* @var $searchModelAuthItem domain\models\base\search\AuthItemSearch */
 /* @var $dataProviderEmployee yii\data\ActiveDataProvider */
 /* @var $dataProviderAuthItem yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('common/person', 'Update User');
+$this->title = Yii::t('common/person', $modelUserFormUpdate->person_fullname);
 ?>
 <div class="user-update">
 
@@ -53,7 +53,7 @@ $this->title = Yii::t('common/person', 'Update User');
                         'dataProvider' => $dataProviderEmployee,
                         'gridConfig' => [
                             'crudSettings' => [
-                                'create' => 'configuration/employee/create',
+                                'create' => ['configuration/employee/create', 'person_id' => Yii::$app->request->get('id')],
                                 'update' => 'configuration/employee/update',
                                 'delete' => 'configuration/employee/delete',
                             ],

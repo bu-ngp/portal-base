@@ -2,6 +2,7 @@
 
 namespace domain\models\base\search;
 
+use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -17,7 +18,6 @@ class EmployeeSearch extends Employee
         return array_merge(parent::attributes(), [
             'dolzh.dolzh_name',
             'podraz.podraz_name',
-            'build.build_name',
         ]);
     }
 
@@ -28,11 +28,10 @@ class EmployeeSearch extends Employee
     {
         return [
             [['employee_id', 'created_at', 'updated_at'], 'integer'],
-            [['person_id', 'dolzh_id', 'podraz_id', 'build_id', 'employee_begin', 'created_by', 'updated_by'], 'safe'],
+            [['person_id', 'dolzh_id', 'podraz_id', 'employee_begin', 'created_by', 'updated_by'], 'safe'],
             [[
                 'dolzh.dolzh_name',
                 'podraz.podraz_name',
-                'build.build_name',
             ], 'safe'],
         ];
     }
@@ -66,7 +65,6 @@ class EmployeeSearch extends Employee
         $query->joinWith([
             'dolzh',
             'podraz',
-            'build',
         ]);
 
         $this->load($params);
@@ -78,6 +76,8 @@ class EmployeeSearch extends Employee
 //        }
 
         // grid filtering conditions
+        $query->andWhere(['person_id' => Uuid::str2uuid(Yii::$app->request->get('id'))]);
+
         $query->andFilterWhere([
             'employee_id' => $this->employee_id,
             'employee_begin' => $this->employee_begin,
@@ -88,7 +88,6 @@ class EmployeeSearch extends Employee
         $query->andFilterWhere(['like', 'person_id', $this->person_id])
             ->andFilterWhere(['like', 'dolzh_id', $this->dolzh_id])
             ->andFilterWhere(['like', 'podraz_id', $this->podraz_id])
-            ->andFilterWhere(['like', 'build_id', $this->build_id])
             ->andFilterWhere(['like', 'created_by', $this->created_by])
             ->andFilterWhere(['like', 'updated_by', $this->updated_by]);
 
@@ -100,11 +99,6 @@ class EmployeeSearch extends Employee
         $dataProvider->sort->attributes['podraz.podraz_name'] = [
             'asc' => ['podraz.podraz_name' => SORT_ASC],
             'desc' => ['podraz.podraz_name' => SORT_DESC],
-        ];
-
-        $dataProvider->sort->attributes['build.build_name'] = [
-            'asc' => ['build.build_name' => SORT_ASC],
-            'desc' => ['build.build_name' => SORT_DESC],
         ];
 
         return $dataProvider;

@@ -43,7 +43,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'employee.dolzh.dolzh_name',
             'employee.podraz.podraz_name',
-            'employee.build.build_name',
             [
                 'attribute' => 'person_fired',
                 'format' => 'datetime',

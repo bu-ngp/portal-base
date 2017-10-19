@@ -25,7 +25,6 @@ class UsersSearch extends Person
         return array_merge(parent::attributes(), [
             'employee.dolzh.dolzh_name',
             'employee.podraz.podraz_name',
-            'employee.build.build_name',
         ]);
     }
 
@@ -40,7 +39,6 @@ class UsersSearch extends Person
             [[
                 'employee.dolzh.dolzh_name',
                 'employee.podraz.podraz_name',
-                'employee.build.build_name',
             ], 'safe'],
         ];
     }
@@ -74,7 +72,6 @@ class UsersSearch extends Person
         $query->joinWith([
             'employee.dolzh',
             'employee.podraz',
-            'employee.build',
         ]);
 
         $this->load($params);
@@ -111,11 +108,6 @@ class UsersSearch extends Person
         $dataProvider->sort->attributes['employee.podraz.podraz_name'] = [
             'asc' => ['podraz.podraz_name' => SORT_ASC],
             'desc' => ['podraz.podraz_name' => SORT_DESC],
-        ];
-
-        $dataProvider->sort->attributes['employee.build.build_name'] = [
-            'asc' => ['build.build_name' => SORT_ASC],
-            'desc' => ['build.build_name' => SORT_DESC],
         ];
 
         return $dataProvider;

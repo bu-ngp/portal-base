@@ -154,7 +154,17 @@ class GWPrepareColumns
             'format' => 'html',
             'value' => function ($model, $key, $index, $column) {
                 /** @var $model ActiveRecord */
-                return '<span>' . Html::encode($model->getAttribute($column->attribute)) . '</span>';
+                try {
+                    $resultValue = $model;
+                    $splitAttributes = explode('.', $column->attribute);
+                    array_walk($splitAttributes, function ($value) use (&$resultValue) {
+                        $resultValue = $resultValue->$value;
+                    });
+                } catch (\Exception $e) {
+                    $resultValue = $model->getAttribute($column->attribute);
+                }
+
+                return '<span>' . Html::encode($resultValue) . '</span>';
             },
         ];
     }
@@ -179,7 +189,7 @@ class GWPrepareColumns
             $column['value'] = function ($model, $key, $index, $column) use ($items) {
                 /** @var $model ActiveRecord */
                 $value = $model->getAttribute($column->attribute);
-                
+
                 return '<span>' . (isset($value) ? $items[$value] : '') . '</span>';
             };
         }

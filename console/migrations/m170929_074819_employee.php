@@ -11,12 +11,16 @@ class m170929_074819_employee extends yii\db\Migration
 
         $this->addPrimaryKey('dolzh_id', '{{%dolzh}}', 'dolzh_id');
 
+        /*==============================*/
+
         $this->createTable('{{%podraz}}', [
             'podraz_id' => $this->binary(16)->notNull(),
             'podraz_name' => $this->string()->notNull()->unique(),
         ]);
 
         $this->addPrimaryKey('podraz_id', '{{%podraz}}', 'podraz_id');
+
+        /*==============================*/
 
         $this->createTable('{{%build}}', [
             'build_id' => $this->binary(16)->notNull(),
@@ -25,12 +29,13 @@ class m170929_074819_employee extends yii\db\Migration
 
         $this->addPrimaryKey('build_id', '{{%build}}', 'build_id');
 
+        /*==============================*/
+
         $this->createTable('{{%employee}}', [
             'employee_id' => $this->primaryKey(),
             'person_id' => $this->binary(16)->notNull()->unique(),
             'dolzh_id' => $this->binary(16)->notNull(),
             'podraz_id' => $this->binary(16)->notNull(),
-            'build_id' => $this->binary(16)->null(),
             'employee_begin' => $this->date()->notNull(),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
@@ -41,14 +46,14 @@ class m170929_074819_employee extends yii\db\Migration
         $this->addForeignKey('person_id_employee', '{{%employee}}', 'person_id', '{{%person}}', 'person_id');
         $this->addForeignKey('dolzh_id_employee', '{{%employee}}', 'dolzh_id', '{{%dolzh}}', 'dolzh_id');
         $this->addForeignKey('podraz_id_employee', '{{%employee}}', 'podraz_id', '{{%podraz}}', 'podraz_id');
-        $this->addForeignKey('build_id_employee', '{{%employee}}', 'build_id', '{{%build}}', 'build_id');
+
+        /*==============================*/
 
         $this->createTable('{{%employee_history}}', [
             'employee_history_id' => $this->primaryKey(),
             'person_id' => $this->binary(16)->notNull(),
             'dolzh_id' => $this->binary(16)->notNull(),
             'podraz_id' => $this->binary(16)->notNull(),
-            'build_id' => $this->binary(16)->null(),
             'employee_history_begin' => $this->date()->notNull(),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
@@ -59,14 +64,29 @@ class m170929_074819_employee extends yii\db\Migration
         $this->addForeignKey('person_id_employee_history', '{{%employee_history}}', 'person_id', '{{%person}}', 'person_id');
         $this->addForeignKey('dolzh_id_employee_history', '{{%employee_history}}', 'dolzh_id', '{{%dolzh}}', 'dolzh_id');
         $this->addForeignKey('podraz_id_employee_history', '{{%employee_history}}', 'podraz_id', '{{%podraz}}', 'podraz_id');
-        $this->addForeignKey('build_id_employee_history', '{{%employee_history}}', 'build_id', '{{%build}}', 'build_id');
+
+        $this->createIndex('idx_employee_history', '{{%employee_history}}', ['person_id', 'dolzh_id', 'podraz_id', 'employee_history_begin'], true);
+
+        /*==============================*/
+
+        $this->createTable('{{%employee_history_build}}', [
+            'employee_history_id' => $this->integer()->notNull(),
+            'build_id' => $this->binary(16)->notNull(),
+            'employee_history_build_deactive' => $this->date(),
+        ]);
+
+        $this->addPrimaryKey('pk_employee_history_build', '{{%employee_history_build}}', ['employee_history_id', 'build_id']);
+
+        $this->addForeignKey('employee_history_id_employee_history_build', '{{%employee_history_build}}', 'employee_history_id', '{{%employee_history}}', 'employee_history_id', 'CASCADE');
+        $this->addForeignKey('build_id_employee_history_build', '{{%employee_history_build}}', 'build_id', '{{%build}}', 'build_id');
+
+        /*==============================*/
 
         $this->createTable('{{%parttime}}', [
             'parttime_id' => $this->primaryKey(),
             'person_id' => $this->binary(16)->notNull(),
             'dolzh_id' => $this->binary(16)->notNull(),
             'podraz_id' => $this->binary(16)->notNull(),
-            'build_id' => $this->binary(16)->null(),
             'parttime_begin' => $this->date()->notNull(),
             'parttime_end' => $this->date(),
             'created_at' => $this->integer()->notNull(),
@@ -78,12 +98,28 @@ class m170929_074819_employee extends yii\db\Migration
         $this->addForeignKey('person_id_parttime', '{{%parttime}}', 'person_id', '{{%person}}', 'person_id');
         $this->addForeignKey('dolzh_id_parttime', '{{%parttime}}', 'dolzh_id', '{{%dolzh}}', 'dolzh_id');
         $this->addForeignKey('podraz_id_parttime', '{{%parttime}}', 'podraz_id', '{{%podraz}}', 'podraz_id');
-        $this->addForeignKey('build_id_parttime', '{{%parttime}}', 'build_id', '{{%build}}', 'build_id');
+
+        $this->createIndex('idx_parttime', '{{%parttime}}', ['person_id', 'dolzh_id', 'podraz_id', 'parttime_begin', 'parttime_end'], true);
+
+        /*==============================*/
+
+        $this->createTable('{{%parttime_build}}', [
+            'parttime_id' => $this->integer()->notNull(),
+            'build_id' => $this->binary(16)->notNull(),
+            'parttime_build_deactive' => $this->date(),
+        ]);
+
+        $this->addPrimaryKey('pk_parttime_build', '{{%parttime_build}}', ['parttime_id', 'build_id']);
+
+        $this->addForeignKey('parttime_id_parttime_build', '{{%parttime_build}}', 'parttime_id', '{{%parttime}}', 'parttime_id', 'CASCADE');
+        $this->addForeignKey('build_id_parttime_build', '{{%parttime_build}}', 'build_id', '{{%build}}', 'build_id');
     }
 
     public function safeDown()
     {
+        $this->dropTable('{{%parttime_build}}');
         $this->dropTable('{{%parttime}}');
+        $this->dropTable('{{%employee_history_build}}');
         $this->dropTable('{{%employee_history}}');
         $this->dropTable('{{%employee}}');
         $this->dropTable('{{%dolzh}}');

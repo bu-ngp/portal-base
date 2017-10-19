@@ -16,6 +16,7 @@ use domain\services\base\EmployeeService;
 use domain\services\proxyService;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 
@@ -38,15 +39,11 @@ class EmployeeController extends Controller
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            //&& $this->employeeService->create($form)
+            && $this->employeeService->create($form)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
 
-            return $this->redirect(['configuration/users/create', 'grid' => 'EmployeesUserGrid', 'selected' => [
-                'dolzh_id' => $form->dolzh_id,
-                'podraz_id' => $form->podraz_id,
-                'employee_begin' => $form->employee_begin,
-            ]]);
+            return $this->redirect(Url::previous());
         }
 //
 //        $form->dolzh_id = Dolzh::find()

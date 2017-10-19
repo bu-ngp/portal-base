@@ -16,7 +16,6 @@ GridView::widget(array_replace([
     'columns' => [
         'dolzh.dolzh_name',
         'podraz.podraz_name',
-        'build.build_name',
     ],
     'panelHeading' => array(
         'icon' => FA::icon(FA::_LIST_ALT),

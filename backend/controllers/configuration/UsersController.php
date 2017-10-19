@@ -13,6 +13,7 @@ use common\widgets\Breadcrumbs\Breadcrumbs;
 use domain\forms\base\ProfileForm;
 use domain\forms\base\UserForm;
 use domain\forms\base\UserFormUpdate;
+use domain\models\base\Employee;
 use domain\models\base\search\AuthItemSearch;
 use domain\models\base\search\EmployeeSearch;
 use domain\models\base\search\UsersSearch;
