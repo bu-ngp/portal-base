@@ -47,7 +47,7 @@ class ActionButtons
 
     public function template()
     {
-        return '{' . implode("} {", array_keys($this->actionButtons)) . '}';
+        return $this->actionButtons ? '{' . implode("} {", array_keys($this->actionButtons)) . '}' : '';
     }
 
     public function getCreateButton()

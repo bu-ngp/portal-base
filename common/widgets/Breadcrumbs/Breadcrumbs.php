@@ -12,12 +12,14 @@ use common\widgets\Breadcrumbs\assets\BreadcrumbsAsset;
 use Yii;
 use yii\bootstrap\Html;
 use yii\bootstrap\Widget;
+use yii\helpers\Url;
 use yii\web\View;
 
 class Breadcrumbs extends Widget
 {
     public static $show;
     public $defaultShow = true;
+    public static $cookieId = 'wk_breadcrumb';
 
     public function init()
     {
@@ -35,6 +37,7 @@ class Breadcrumbs extends Widget
             'current-crumb-id' => $this->getCurrentCrumbId(),
             'current-crumb-title' => $this->getView()->title,
             'remove-last-crumb' => $this->getRemoveLastCrumb() ? '1' : '0',
+            'cookie-id' => self::$cookieId,
             'class' => 'wkbc-breadcrumb',
         ]);
         $this->registerAssets();
@@ -87,5 +90,14 @@ class Breadcrumbs extends Widget
         }
 
         return false;
+    }
+
+    public static function previousUrl()
+    {
+        if ($wkbcObject = json_decode($_COOKIE[self::$cookieId])) {
+            return $wkbcObject->previousUrl;
+        } else {
+            return Url::previous();
+        }
     }
 }

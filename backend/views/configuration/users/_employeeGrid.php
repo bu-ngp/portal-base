@@ -13,26 +13,48 @@ use yii\bootstrap\Html;
 
 GridView::widget(array_replace([
     'id' => 'EmployeesUserGrid',
-//    'dataProvider' => $dataProvider,
-//    'filterModel' => $searchModel,
-    'dataProvider' => (new searchModel)->getDataProvider(),
-    'filterModel' => new searchModel,
+    'dataProvider' => $dataProvider,
+    'filterModel' => $searchModel,
+//    'dataProvider' => (new searchModel)->getDataProvider(),
+//    'filterModel' => new searchModel,
     'columns' => [
 //        'dolzh.dolzh_name',
 //        'podraz.podraz_name',
         'dolzh_name',
         'podraz_name',
-        'employee_history_begin',
-        'employee_history_end',
-        'employee_type'
+        [
+            'attribute' => 'employee_history_begin',
+            'format' => 'datetime',
+            'filterWidgetOptions' => [
+                //    'convertFormat' => true,
+                'pluginEvents' => [
+                    'apply.daterangepicker' => 'function(event, picker) {
+                              console.debug(picker.startDate.format("YYYY-MM-DD"));
+                              console.debug(event);
+                            }',
+                ],
+            ],
+        ],
+        [
+            'attribute' => 'employee_history_end',
+            'format' => 'datetime',
+            'filterWidgetOptions' => [
+                //    'convertFormat' => true,
+                'pluginEvents' => [
+                    'apply.daterangepicker' => 'function(event, picker) {
+                              console.debug(picker.startDate.format("YYYY-MM-DD"));
+                              console.debug(event);
+                            }',
+                ],
+            ],
+        ],
+        'employee_type',
+
     ],
     'panelHeading' => array(
         'icon' => FA::icon(FA::_LIST_ALT),
         'title' => Yii::t('common/employee', 'Employees'),
     ),
-    'toolbar' => [
-        'content' => \yii\helpers\Html::a('Добавить совмещение', ['configuration/parttime/create', 'person' => Yii::$app->request->get('id')], ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-success', 'data-pjax' => '0'])
-    ],
     //'pjaxSettings' => ['options' => ['clientOptions' => ['async' => false]]],
 ], $gridConfig));
 ?>

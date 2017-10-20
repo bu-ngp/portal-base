@@ -2,6 +2,7 @@
 
 namespace backend\controllers\configuration;
 
+use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\GridView\services\AjaxResponse;
 use domain\forms\base\ParttimeBuildForm;
 use domain\services\base\ParttimeBuildService;
@@ -33,7 +34,7 @@ class ParttimeBuildController extends Controller
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
 
-            return $this->redirect(Url::previous());
+            return $this->redirect(Breadcrumbs::previousUrl());
         }
 
         return $this->render('create', [
@@ -52,7 +53,7 @@ class ParttimeBuildController extends Controller
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
 
-            return $this->redirect(Url::previous());
+            return $this->redirect(Breadcrumbs::previousUrl());
         }
 
         return $this->render('update', [

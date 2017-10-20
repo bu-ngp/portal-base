@@ -124,6 +124,50 @@
         $widget.data('wkbreadcrumbs').crumbs = bc;
     };
 
+    var setCookie = function (name, value, options) {
+        options = options || {};
+
+        var expires = options.expires;
+
+        if (typeof expires == "number" && expires) {
+            var d = new Date();
+            d.setTime(d.getTime() + expires * 1000);
+            expires = options.expires = d;
+        }
+        if (expires && expires.toUTCString) {
+            options.expires = expires.toUTCString();
+        }
+
+        value = encodeURIComponent(value);
+
+        var updatedCookie = name + "=" + value;
+
+        for (var propName in options) {
+            updatedCookie += "; " + propName;
+            var propValue = options[propName];
+            if (propValue !== true) {
+                updatedCookie += "=" + propValue;
+            }
+        }
+
+        document.cookie = updatedCookie;
+    };
+
+    var deleteCookie = function (name) {
+        setCookie(name, "", {
+            expires: -1
+        })
+    };
+
+    var setPreviousUrlToCookie = function ($widget) {
+        $PreviousCrumb = $widget.wkbreadcrumbs('getPreLast');
+        if ($PreviousCrumb === false) {
+            deleteCookie($widget.attr('cookie-id'));
+        } else {
+            setCookie($widget.attr('cookie-id'), JSON.stringify({previousUrl: $PreviousCrumb.url}), {expires: 3600});
+        }
+    };
+
     var setOptionMultiple = function ($input, value) {
         $.each(value[0], function (key) {
             if ($input.find('option[value="' + this + '"]').length === 0) {
@@ -296,6 +340,8 @@
                 saveCrumbs($widget);
 
                 $widget.append(constructBreadcrumbs($widget));
+
+                setPreviousUrlToCookie($widget);
 
                 fillForms($widget);
 

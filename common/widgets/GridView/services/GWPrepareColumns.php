@@ -136,7 +136,7 @@ class GWPrepareColumns
             } elseif (empty($column['value'])) {
                 $column['value'] = function ($model, $key, $index, $column) {
                     /** @var $model ActiveRecord */
-                    return '<span>' . Html::encode($model->getAttribute($column->attribute)) . '</span>';
+                    return '<span>' . Html::encode($model[$column->attribute]) . '</span>';
                 };
             }
         }
@@ -161,7 +161,7 @@ class GWPrepareColumns
                         $resultValue = $resultValue[$value];
                     });
                 } catch (\Exception $e) {
-                    $resultValue = $model->getAttribute($column->attribute);
+                    $resultValue = $model[$column->attribute];
                 }
 
                 return '<span>' . Html::encode($resultValue) . '</span>';
@@ -188,7 +188,7 @@ class GWPrepareColumns
             $column['filter'] = $items;
             $column['value'] = function ($model, $key, $index, $column) use ($items) {
                 /** @var $model ActiveRecord */
-                $value = $model->getAttribute($column->attribute);
+                $value = $model[$column->attribute];
 
                 return '<span>' . (isset($value) ? $items[$value] : '') . '</span>';
             };

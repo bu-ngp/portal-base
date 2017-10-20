@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             }',
                     ],
                 ],
-            ],
+            ]
         ],
         'crudSettings' => [
             'create' => 'configuration/users/create',

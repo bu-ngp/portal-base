@@ -64,7 +64,7 @@ class ParttimeController extends Controller
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
 
-            return $this->redirect(Url::previous());
+            return $this->redirect(Breadcrumbs::previousUrl());
         }
 
         return $this->render('update', [

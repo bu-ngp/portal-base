@@ -49,8 +49,8 @@ class GridView extends \kartik\grid\GridView
     public $rightBottomToolbar = '';
     public $pjaxSettings = [
         'loadingCssClass' => 'wk-widget-grid-loading',
-      //  'loadingCssClass' => false,
-       // 'options' => ['clientOptions' => ['async' => false]],
+        //  'loadingCssClass' => false,
+        // 'options' => ['clientOptions' => ['async' => false]],
     ];
     public $panelAfterTemplate = <<< HTML
         <div class="btn-toolbar kv-grid-toolbar" role="toolbar" style="display: inline-block;">
@@ -96,6 +96,7 @@ HTML;
         <div class="clearfix"></div>
 HTML;
     public $customButtons = [];
+    public $customActionButtons = [];
     public $gridExcludeIdsFunc;
     public $gridInject;
     protected $js = [];
@@ -203,14 +204,20 @@ HTML;
     protected function createCrudButtons()
     {
         $actionButtons = new ActionButtons($this);
+        $customActionButtons = $this->customActionButtons;
+        $customActionButtonsTemplate = '';
 
-        if ($actionButtons->exists()) {
+        if ($actionButtons->exists() || $customActionButtons) {
+            if ($customActionButtons) {
+                $customActionButtonsTemplate = $customActionButtons ? '{' . implode('} {', array_keys($customActionButtons)) . '}' : '';
+            }
+
             array_unshift($this->columns, [
                 'class' => 'kartik\grid\ActionColumn',
                 'header' => Html::encode('Действия'),
                 'contentOptions' => ['class' => 'wk-grid-action-buttons'],
-                'buttons' => $actionButtons->getButtons(),
-                'template' => $actionButtons->template(),
+                'buttons' => array_merge($actionButtons->getButtons(), $customActionButtons),
+                'template' => $actionButtons->template() . $customActionButtonsTemplate,
                 'options' => ['wk-widget' => true],
             ]);
         }
@@ -268,7 +275,10 @@ HTML;
         $id = $this->id;
         $this->js[] = <<<EOT
             if ($("#$id").length) {
-                $("#$id").yiiGridView({"filterUrl": window.location.search}); /* сокращает url purifyingUrl() */
+                $("#$id").yiiGridView({
+                    "filterUrl": window.location.search,
+                    "filterSelector": "#$id-filters input, #$id-filters select"
+                }); /* сокращает url purifyingUrl() */
                 
                 function Func_$id() {
                     var busy = false;

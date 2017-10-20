@@ -4,7 +4,9 @@ use common\widgets\ActiveForm\ActiveForm;
 use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\Panel\Panel;
 use common\widgets\Tabs\Tabs;
+use wartron\yii2uuid\helpers\Uuid;
 use yii\bootstrap\Html;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $modelUserFormUpdate domain\forms\base\UserFormUpdate */
@@ -52,10 +54,26 @@ $this->title = Yii::t('common/person', $modelUserFormUpdate->person_fullname);
                         'searchModel' => $searchModelEmployee,
                         'dataProvider' => $dataProviderEmployee,
                         'gridConfig' => [
-                            'crudSettings' => [
-                                'create' => ['configuration/employee/create', 'person' => Yii::$app->request->get('id')],
-                                'update' => 'configuration/employee/update',
-                                'delete' => 'configuration/employee/delete',
+                            'customActionButtons' => [
+                                'customUpdate' => function ($url, $model) {
+                                    $customurl = Url::to([$model['employee_type'] == 1 ? 'configuration/employee/update' : 'configuration/parttime/update', 'id' => $model['primary_key']]);
+                                    return Html::a('<i class="fa fa-2x fa-pencil-square-o"></i>', $customurl, ['title' => Yii::t('wk-widget-gridview', 'Update'), 'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-primary', 'data-pjax' => '0']);
+                                },
+                                'customDelete' => function ($url, $model) {
+                                    $urlArr[] = Url::to([$model['employee_type'] == 1 ? 'configuration/employee/delete' : 'configuration/parttime/delete', 'id' => $model['primary_key']]);
+                                    $urlArr['id'] = $model['primary_key'];
+                                    $urlArr['mainId'] = Yii::$app->request->get('id');
+
+                                    return Html::a('<i class="fa fa-2x fa-trash-o"></i>', Url::to($urlArr), [
+                                        'title' => Yii::t('wk-widget-gridview', 'Delete'),
+                                        'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-danger wk-gridview-crud-delete',
+                                        'data-pjax' => '0'
+                                    ]);
+                                }
+                            ],
+                            'toolbar' => [
+                                'content' => \yii\helpers\Html::a('Добавить основную специальность', ['configuration/employee/create', 'person' => Yii::$app->request->get('id')], ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-success', 'data-pjax' => '0']) .
+                                    \yii\helpers\Html::a('Добавить совмещение', ['configuration/parttime/create', 'person' => Yii::$app->request->get('id')], ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-success', 'data-pjax' => '0'])
                             ],
                         ],
                     ]),
