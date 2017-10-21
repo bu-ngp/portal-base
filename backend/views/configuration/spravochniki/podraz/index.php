@@ -1,5 +1,6 @@
 <?php
 
+use console\helpers\RbacHelper;
 use yii\db\ActiveQuery;
 use yii\helpers\Html;
 use rmrevin\yii\fontawesome\FA;
@@ -16,27 +17,42 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-        <?= GridView::widget([
-            'dataProvider' => $dataProvider,
-            'filterModel' => $searchModel,
-            'exportGrid' => [
-                'idReportLoader' => 'wk-Report-Loader',
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'exportGrid' => [
+            'idReportLoader' => 'wk-Report-Loader',
+        ],
+        'columns' => [
+            'podraz_name',
+        ],
+        'crudSettings' => [
+            'create' => [
+                'url' => 'configuration/spravochniki/podraz/create',
+                'beforeRender' => function () {
+                    return Yii::$app->user->can(RbacHelper::PODRAZ_EDIT);
+                },
             ],
-            'columns' => [
-                'podraz_name',
+            'update' => [
+                'url' => 'configuration/spravochniki/podraz/update',
+                'beforeRender' => function () {
+                    return Yii::$app->user->can(RbacHelper::PODRAZ_EDIT);
+                },
             ],
-            'crudSettings' => [
-                'create' => 'configuration/spravochniki/podraz/create',
-                'update' => 'configuration/spravochniki/podraz/update',
-                'delete' => 'configuration/spravochniki/podraz/delete',
+            'delete' => [
+                'url' => 'configuration/spravochniki/podraz/delete',
+                'beforeRender' => function () {
+                    return Yii::$app->user->can(RbacHelper::PODRAZ_EDIT);
+                },
             ],
-            'panelHeading' => [
-                'icon' => FA::icon(FA::_BARS),
-                'title' => Yii::t('common/podraz', 'Podrazs'),
-            ],
-            'gridExcludeIdsFunc' => function (ActiveQuery $activeQuery, array $ids) {
-                $activeQuery->andWhere(['not in', 'podraz_id', $ids]);
-            }
-    ]); ?>
+        ],
+        'panelHeading' => [
+            'icon' => FA::icon(FA::_BARS),
+            'title' => Yii::t('common/podraz', 'Podrazs'),
+        ],
+        'gridExcludeIdsFunc' => function (ActiveQuery $activeQuery, array $ids) {
+            $activeQuery->andWhere(['not in', 'podraz_id', $ids]);
+        }
+    ]) ?>
 
 </div>

@@ -10,28 +10,20 @@ namespace domain\forms\base;
 
 
 use common\models\base\Person;
-use domain\models\base\Profile;
 use domain\rules\base\UserRules;
-use Yii;
 use yii\base\Model;
-use yii\helpers\ArrayHelper;
 
 class UserFormUpdate extends Model
 {
     public $person_fullname;
     public $person_username;
     public $person_email;
-    public $person_fired;
 
-    public $assignEmployees;
-    public $assignRoles;
-
-    public function __construct(Person $person = null, $config = [])
+    public function __construct(Person $person, $config = [])
     {
         $this->person_fullname = $person->person_fullname;
         $this->person_username = $person->person_username;
         $this->person_email = $person->person_email;
-        $this->person_fired = $person->person_fired;
 
         parent::__construct($config);
     }
@@ -43,10 +35,6 @@ class UserFormUpdate extends Model
 
     public function attributeLabels()
     {
-        return array_merge((new Person())->attributeLabels(), (new Profile())->attributeLabels(), [
-            'person_password' => Yii::t('domain/person', 'Person Password'),
-            'person_password_repeat' => Yii::t('domain/person', 'Person Password Repeat'),
-        ]);
+        return (new Person())->attributeLabels();
     }
-
 }

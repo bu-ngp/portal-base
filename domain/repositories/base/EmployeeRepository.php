@@ -23,6 +23,20 @@ class EmployeeRepository
         return $employee;
     }
 
+    /**
+     * @param $personUUID
+     * @return Employee
+     */
+    public function findByPerson($personUUID)
+    {
+        /** @var Employee $employee */
+        if (!$employee = Employee::find()->andWhere(['person_id' => $personUUID])->one()) {
+            throw new RuntimeException('Model not found.');
+        }
+
+        return $employee;
+    }
+
     public function has($id)
     {
         return !!Employee::findOne($id);

@@ -2,12 +2,12 @@
 
 namespace backend\controllers\configuration\spravochniki;
 
+use common\widgets\Breadcrumbs\Breadcrumbs;
+use console\helpers\RbacHelper;
 use domain\services\proxyService;
 use Yii;
-use domain\models\base\Build;
 use domain\models\base\search\BuildSearch;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use common\widgets\GridView\services\AjaxResponse;
 use domain\forms\base\BuildForm;
 use domain\services\AjaxFilter;
@@ -22,13 +22,13 @@ use yii\web\Response;
 class BuildController extends Controller
 {
     /**
-     * @var BuildService $buildService
+     * @var BuildService $service
      */
-    private $buildService;
+    private $service;
 
-    public function __construct($id, $module, BuildService $buildService, $config = [])
+    public function __construct($id, $module, BuildService $service, $config = [])
     {
-        $this->buildService = new proxyService($buildService);
+        $this->service = new proxyService($service);
         parent::__construct($id, $module, $config = []);
     }
 
@@ -38,6 +38,21 @@ class BuildController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index'],
+                        'roles' => [RbacHelper::AUTHORIZED],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create', 'update', 'delete'],
+                        'roles' => [RbacHelper::BUILD_EDIT],
+                    ],
+                ],
+            ],
             [
                 'class' => AjaxFilter::className(),
                 'actions' => ['delete'],
@@ -52,10 +67,6 @@ class BuildController extends Controller
         ];
     }
 
-    /**
-     * Lists all Build models.
-     * @return mixed
-     */
     public function actionIndex()
     {
         $searchModel = new BuildSearch();
@@ -67,22 +78,16 @@ class BuildController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new Build model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
     public function actionCreate()
     {
         $form = new BuildForm();
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $this->buildService->create($form)
+            && $this->service->create($form)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
-
-            return $this->redirect(['index']);
+            return $this->redirect(Breadcrumbs::previousUrl());
         }
 
         return $this->render('create', [
@@ -90,23 +95,17 @@ class BuildController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing Build model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param resource $id
-     * @return mixed
-     */
     public function actionUpdate($id)
     {
-        $buildModel = $this->buildService->find($id);
-        $form = new BuildForm($buildModel);
+        $build = $this->service->find($id);
+        $form = new BuildForm($build);
 
-        if ($form->load(Yii::$app->request->post()) && $form->validate()
-            && $this->buildService->update($buildModel->primaryKey, $form)
+        if ($form->load(Yii::$app->request->post())
+            && $form->validate()
+            && $this->service->update($build->primaryKey, $form)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
-
-            return $this->redirect(['index']);
+            return $this->redirect(Breadcrumbs::previousUrl());
         }
 
         return $this->render('update', [
@@ -114,16 +113,10 @@ class BuildController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing Build model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param resource $id
-     * @return mixed
-     */
     public function actionDelete($id)
     {
         try {
-            $this->buildService->delete($id);
+            $this->service->delete($id);
         } catch (\Exception $e) {
             return AjaxResponse::init(AjaxResponse::ERROR, $e->getMessage());
         }

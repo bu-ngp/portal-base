@@ -31,15 +31,27 @@ class ActiveField extends \yii\bootstrap\ActiveField
         $model = $this->model;
         $attribute = $this->attribute;
 
-        $options = empty($options) ? [
-            'label' => "<span class=\"control-label\">{$model->getAttributeLabel($attribute)}</span>",
-            'labelOptions' => ['class' => 'pmd-checkbox'],
-        ] : array_replace([
+        $options = array_replace([
             'label' => "<span class=\"control-label\">{$model->getAttributeLabel($attribute)}</span>",
             'labelOptions' => ['class' => 'pmd-checkbox'],
         ], $options);
 
         PropellerAsset::setWidget('checkbox');
+
+        return parent::checkbox($options, $enclosedByLabel);
+    }
+
+    public function toggleSwitch($options = [], $enclosedByLabel = true)
+    {
+        $model = $this->model;
+        $attribute = $this->attribute;
+        $this->checkboxTemplate = "<div style=\"margin-top: 30px;\" class=\"pmd-switch\">\n{beginLabel}\n{input}\n{labelTitle}\n{endLabel}\n{error}\n{hint}\n</div>";
+
+        $options = array_replace([
+            'label' => "<span style=\"float: left; margin-right: 10px;\" class=\"pmd-switch-label\"></span><span style=\"float: right;\" class=\"control-label\">{$model->getAttributeLabel($attribute)}</span>",
+        ], $options);
+
+        PropellerAsset::setWidget('toggleswitch');
 
         return parent::checkbox($options, $enclosedByLabel);
     }

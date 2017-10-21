@@ -54,7 +54,7 @@ class EmployeeHistoryBuildController extends Controller
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
 
-            return $this->redirect(Url::previous());
+            return $this->redirect(Url::previous()/* ['configuration/users/index']*/);
         }
 
         return $this->render('update', [

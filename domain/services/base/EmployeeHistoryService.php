@@ -16,81 +16,68 @@ use Yii;
 class EmployeeHistoryService extends WKService
 {
     private $transactionManager;
-    private $employeeHistoryRepository;
-    private $employeeRepository;
-    private $employeeHistoryBuildRepository;
+    private $employeeHistories;
+    private $employees;
+    private $employeeHistoryBuilds;
 
     public function __construct(
         TransactionManager $transactionManager,
-        EmployeeHistoryRepository $employeeHistoryRepository,
-        EmployeeRepository $employeeRepository,
-        EmployeeHistoryBuildRepository $employeeHistoryBuildRepository
+        EmployeeHistoryRepository $employeeHistories,
+        EmployeeRepository $employees,
+        EmployeeHistoryBuildRepository $employeeHistoryBuilds
     )
     {
         $this->transactionManager = $transactionManager;
-        $this->employeeHistoryRepository = $employeeHistoryRepository;
-        $this->employeeRepository = $employeeRepository;
-        $this->employeeHistoryBuildRepository = $employeeHistoryBuildRepository;
+        $this->employeeHistories = $employeeHistories;
+        $this->employees = $employees;
+        $this->employeeHistoryBuilds = $employeeHistoryBuilds;
     }
 
     public function get($id)
     {
-        return $this->employeeHistoryRepository->find($id);
+        return $this->employeeHistories->find($id);
     }
 
     public function create(EmployeeHistoryForm $form)
     {
         $this->guardPersonExists($form);
-//        $assignedKeysBuilds = $this->guardAssignBuilds($form);
-
         $employeeHistory = EmployeeHistory::create($form);
+
         if (!$this->validateModels($employeeHistory, $form)) {
             throw new \DomainException();
         }
 
         /** @var Employee $employee */
-        if ($employee = Employee::find()->andWhere(['person_id' => $employeeHistory->person_id])->one()) {
+        if ($employee = $this->employees->findByPerson($employeeHistory->person_id)) {
             $employee->edit($form);
         } else {
             $employee = Employee::create($form);
         }
 
-//        $employeeHistoryBuild = EmployeeHistoryBuild::create($employeeHistory, $assignedKeysBuilds);
-
-        $this->transactionManager->execute(function () use ($employeeHistory, $employee/*, $employeeHistoryBuild*/) {
-            $this->employeeHistoryRepository->add($employeeHistory);
-
-            if ($employee->isNewRecord) {
-                $this->employeeRepository->add($employee);
-            } else {
-                $this->employeeRepository->save($employee);
-            }
+        return $this->transactionManager->execute(function () use ($employeeHistory, $employee) {
+            $this->employeeHistories->add($employeeHistory);
+            $employee->isNewRecord ? $this->employees->add($employee) : $this->employees->save($employee);
 
             return $employeeHistory->primaryKey;
-
-//            foreach ($employeeHistoryBuild as $item) {
-//                $this->employeeHistoryBuildRepository->add($item);
-//            }
         });
     }
 
     public function update($id, EmployeeHistoryForm $form)
     {
-        $employee = $this->employeeHistoryRepository->find($id);
-
+        $employee = $this->employeeHistories->find($id);
         $employee->edit($form);
 
         if (!$this->validateModels($employee, $form)) {
             throw new \DomainException();
         }
 
-        $this->employeeHistoryRepository->save($employee);
+        $this->employeeHistories->save($employee);
     }
 
     public function delete($id)
     {
-        $employeeHistory = $this->employeeHistoryRepository->find($id);
-        $this->employeeHistoryRepository->delete($employeeHistory);
+        $employeeHistory = $this->employeeHistories->find($id);
+        $this->employeeHistories->delete($employeeHistory);
     }
 
     protected function guardPersonExists(EmployeeHistoryForm $form)
@@ -98,14 +85,5 @@ class EmployeeHistoryService extends WKService
         if (!$form->person_id) {
             throw new \DomainException(Yii::t('domain/employee', 'URL parameter "person" is missed.'));
         }
-    }
-
-    private function guardAssignBuilds(EmployeeHistoryForm $form)
-    {
-        if (!is_string($form->assignBuilds) || ($assignedKeys = json_decode($form->assignBuilds)) === null) {
-            throw new \DomainException(\Yii::t('domain/employee', 'Error when recognizing selected items'));
-        }
-
-        return $assignedKeys;
     }
 }

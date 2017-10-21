@@ -10,6 +10,7 @@
 namespace domain\services\base;
 
 use common\classes\Ldap;
+use domain\forms\base\ConfigLdapUpdateForm;
 use domain\repositories\base\ConfigLdapRepository;
 use Yii;
 
@@ -24,29 +25,34 @@ class ConfigLdapService
         $this->configLdapRepository = $configLdapRepository;
     }
 
-    public function update($ldapHost, $ldapPort = 389, $ldapAdminLogin, $ldapAdminPassword, $ldapActive = false)
+    public function get()
     {
-        $domain = Ldap::getDomain($ldapHost);
+        return $this->configLdapRepository->find();
+    }
 
-        if ($ds = ldap_connect($ldapHost, $ldapPort)) {
+    public function update(ConfigLdapUpdateForm $form)
+    {
+        $domain = Ldap::getDomain($form->config_ldap_host);
+
+        if ($ds = ldap_connect($form->config_ldap_host, $form->config_ldap_port)) {
             ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
             ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
 
             try {
-                if (ldap_bind($ds, $domain . $ldapAdminLogin, $ldapAdminPassword)) {
+                if (ldap_bind($ds, $domain . $form->config_ldap_admin_login, $form->config_ldap_admin_password)) {
                     ldap_close($ds);
                     $configLdap = $this->configLdapRepository->find();
-                    $configLdap->editData($ldapHost, $ldapPort, $ldapAdminLogin, $ldapAdminPassword, $ldapActive);
+                    $configLdap->edit($form);
 
                     $this->configLdapRepository->save($configLdap);
                 } else {
-                    throw new \DomainException(\Yii::t('common/config-ldap', "LDAP can't connect"));
+                    throw new \DomainException(Yii::t('common/config-ldap', "LDAP can't connect"));
                 }
             } catch (\Exception $e) {
-                throw new \DomainException(\Yii::t('common/config-ldap', "LDAP can't connect"));
+                throw new \DomainException(Yii::t('common/config-ldap', "LDAP can't connect"));
             }
         } else {
-            throw new \DomainException(\Yii::t('common/config-ldap', 'Ldap config not correct'));
+            throw new \DomainException(Yii::t('common/config-ldap', 'Ldap config not correct'));
         }
     }
 }

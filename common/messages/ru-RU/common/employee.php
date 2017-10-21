@@ -17,7 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Create' => 'Создать',
+    'Builds' => '',
+    'Parttime' => '',
+    'Create' => '@@Создать@@',
     'Employee' => 'Специальность',
     'Employees' => 'Специальности',
     'Profile' => 'Профиль',

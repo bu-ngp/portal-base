@@ -51,14 +51,15 @@ class AuthAssignment extends \yii\db\ActiveRecord
             'created_at' => Yii::t('domain/authitem', 'Created At'),
         ];
     }
-    
-    public static function create(Person $person, array $assignedKeys) {
+
+    public static function create(Person $person, array $assignedKeys)
+    {
         $items = [];
+        /** @var AuthItem[] $authitems */
         $authitems = AuthItem::find()
             ->andWhere(['in', 'name', $assignedKeys])
             ->all();
 
-        /** @var AuthItem $authitem */
         foreach ($authitems as $authitem) {
             $items[] = new self([
                 'user_id' => $person->primaryKey,
@@ -74,7 +75,7 @@ class AuthAssignment extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(Person::className(), ['person_id' => 'user_id'])->from(['User' => Person::tableName()]);
+        return $this->hasOne(Person::className(), ['person_id' => 'user_id'])->from(['user' => Person::tableName()]);
     }
 
     /**
@@ -82,6 +83,6 @@ class AuthAssignment extends \yii\db\ActiveRecord
      */
     public function getItemName()
     {
-        return $this->hasOne(AuthItem::className(), ['name' => 'item_name'])->from(['ItemName' => AuthItem::tableName()]);
+        return $this->hasOne(AuthItem::className(), ['name' => 'item_name'])->from(['itemName' => AuthItem::tableName()]);
     }
 }

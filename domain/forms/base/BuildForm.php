@@ -22,7 +22,6 @@ class BuildForm extends Model
     public function rules()
     {
         return BuildRules::client();
-
     }
 
     public function attributeLabels()

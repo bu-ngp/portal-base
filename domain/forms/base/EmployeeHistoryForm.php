@@ -12,19 +12,14 @@ class EmployeeHistoryForm extends Model
     public $person_id;
     public $dolzh_id;
     public $podraz_id;
-    public $build_id;
     public $employee_history_begin;
-    public $created_at;
-    public $updated_at;
-    public $created_by;
-    public $updated_by;
-
-   // public $assignBuilds;
 
     public function __construct(EmployeeHistory $employee = null, $config = [])
     {
         if ($employee) {
-            $this->load($employee->attributes, '');
+            $this->dolzh_id = $employee->dolzh_id;
+            $this->podraz_id = $employee->podraz_id;
+            $this->employee_history_begin = $employee->employee_history_begin;
         } else {
             $this->person_id = Yii::$app->request->get('person');
             $this->employee_history_begin = date('Y-m-d');
@@ -35,9 +30,7 @@ class EmployeeHistoryForm extends Model
 
     public function rules()
     {
-        return array_merge(EmployeeHistoryRules::client(), [
-           // [['assignBuilds'], 'safe'],
-        ]);
+        return EmployeeHistoryRules::client();
     }
 
     public function attributeLabels()

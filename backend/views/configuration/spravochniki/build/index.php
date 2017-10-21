@@ -1,5 +1,6 @@
 <?php
 
+use console\helpers\RbacHelper;
 use yii\db\ActiveQuery;
 use yii\helpers\Html;
 use rmrevin\yii\fontawesome\FA;
@@ -26,9 +27,24 @@ $this->params['breadcrumbs'][] = $this->title;
             'build_name',
         ],
         'crudSettings' => [
-            'create' => 'configuration/spravochniki/build/create',
-            'update' => 'configuration/spravochniki/build/update',
-            'delete' => 'configuration/spravochniki/build/delete',
+            'create' => [
+                'url' => 'configuration/spravochniki/build/create',
+                'beforeRender' => function () {
+                    return Yii::$app->user->can(RbacHelper::BUILD_EDIT);
+                },
+            ],
+            'update' => [
+                'url' => 'configuration/spravochniki/build/update',
+                'beforeRender' => function () {
+                    return Yii::$app->user->can(RbacHelper::BUILD_EDIT);
+                },
+            ],
+            'delete' => [
+                'url' => 'configuration/spravochniki/build/delete',
+                'beforeRender' => function () {
+                    return Yii::$app->user->can(RbacHelper::BUILD_EDIT);
+                },
+            ],
         ],
         'panelHeading' => [
             'icon' => FA::icon(FA::_BARS),

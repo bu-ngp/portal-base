@@ -9,43 +9,57 @@
 namespace backend\controllers\configuration;
 
 
+use common\widgets\Breadcrumbs\Breadcrumbs;
+use console\helpers\RbacHelper;
 use domain\forms\base\ConfigLdapUpdateForm;
-use domain\models\base\ConfigLdap;
 use domain\services\base\ConfigLdapService;
 use domain\services\proxyService;
 use Yii;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 
 class ConfigLdapController extends Controller
 {
     /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['update'],
+                        'roles' => [RbacHelper::ROLE_EDIT],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
      * @var ConfigLdapService
      */
-    private $configLdapService;
+    private $service;
 
-    public function __construct($id, $module, ConfigLdapService $configLdapService, $config = [])
+    public function __construct($id, $module, ConfigLdapService $service, $config = [])
     {
-        $this->configLdapService = new proxyService($configLdapService);
+        $this->service = new proxyService($service);
         parent::__construct($id, $module, $config = []);
     }
 
     public function actionUpdate()
     {
-        $configLdapModel = ConfigLdap::findOne(1);
-        $form = new ConfigLdapUpdateForm($configLdapModel);
+        $configLdap = $this->service->get();
+        $form = new ConfigLdapUpdateForm($configLdap);
 
         if ($form->load(Yii::$app->request->post()) && $form->validate()
-            && $this->configLdapService->update(
-                $form->config_ldap_host,
-                $form->config_ldap_port,
-                $form->config_ldap_admin_login,
-                $form->config_ldap_admin_password,
-                $form->config_ldap_active
-            )
+            && $this->service->update($form)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
-
-            return $this->redirect(['configuration/config-auth/index']);
+            return $this->redirect(Breadcrumbs::previousUrl());
         }
 
         $form->config_ldap_admin_password = NULL;

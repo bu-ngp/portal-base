@@ -8,7 +8,6 @@
 
 namespace domain\forms\base;
 
-use common\classes\validators\WKDateValidator;
 use common\models\base\Person;
 use domain\models\base\Profile;
 use domain\rules\base\UserRules;
@@ -23,9 +22,7 @@ class UserForm extends Model
     public $person_password;
     public $person_password_repeat;
     public $person_email;
-    public $person_fired;
 
-    public $assignEmployees;
     public $assignRoles;
 
     public function rules()

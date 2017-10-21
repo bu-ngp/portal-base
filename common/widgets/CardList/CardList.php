@@ -64,6 +64,7 @@ class CardList extends Widget
         $this->registerAssets();
         echo $this->initLayout();
         $view = $this->getView();
+        $this->filterByRoles();
 
         $options = [
             'url' => $this->url,
@@ -108,6 +109,25 @@ class CardList extends Widget
     protected function initLayout()
     {
         return Html::tag('div', '', ['id' => $this->id]);
+    }
+
+    protected function filterByRoles()
+    {
+        $this->items = array_filter($this->items, function ($item) {
+            if (isset($item['roles'])) {
+                $item['roles'] = is_array($item['roles']) ? $item['roles'] : [$item['roles']];
+
+                foreach ($item['roles'] as $role) {
+                    if (Yii::$app->user->can($role)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            return true;
+        });
     }
 
 }

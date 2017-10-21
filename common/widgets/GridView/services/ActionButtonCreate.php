@@ -49,7 +49,7 @@ class ActionButtonCreate
             'data-pjax' => '0'
         ];
 
-        $isTypeObject = is_array($this->crudProp) && !isset($this->crudProp[0]);
+        $isTypeObject = is_array($this->crudProp) && !isset($this->crudProp[0]) && isset($this->crudProp['urlGrid']);
 
         if ($isTypeObject) {
             $class = $this->crudProp['inputName']
@@ -71,10 +71,23 @@ class ActionButtonCreate
 
             $this->addCrudCreateSelectedToQuery();
         } else {
-            $crudUrl = is_array($this->crudProp) ? Url::to($this->crudProp) : $this->crudProp;
+            if (is_string($this->crudProp)) {
+                $this->crudProp = ['url' => [$this->crudProp]];
+            }
+
+            if (is_array($this->crudProp) && !isset($this->crudProp['url'])) {
+                $this->crudProp['url'] = $this->crudProp;
+            }
+
+            if (is_string($this->crudProp['url'])) {
+                $this->crudProp['url'] = [$this->crudProp['url']];
+            }
+
+            $crudUrl = Url::to($this->crudProp['url']);
+
         }
 
-        return Html::a(Yii::t('wk-widget-gridview', 'Create'), $crudUrl, $options);
+        return $this->beforeRender() ? Html::a(Yii::t('wk-widget-gridview', 'Create'), $crudUrl, $options) : '';
     }
 
     protected function addCrudCreateSelectedToQuery()
@@ -101,5 +114,14 @@ class ActionButtonCreate
             }
 
         }
+    }
+
+    protected function beforeRender()
+    {
+        if (!empty($this->crudProp['url']) && $this->crudProp['beforeRender'] instanceof \Closure) {
+            return $this->crudProp['beforeRender']();
+        }
+
+        return true;
     }
 }

@@ -9,15 +9,10 @@
 namespace domain\repositories\base;
 
 use common\models\base\Person;
-use domain\exceptions\ServiceErrorsException;
-use domain\models\base\Profile;
-use domain\repositories\RepositoryInterface;
 use Yii;
 
-class PersonRepository implements RepositoryInterface
+class PersonRepository
 {
-    private $_person;
-
     /**
      * @param $id
      * @return Person
@@ -31,38 +26,38 @@ class PersonRepository implements RepositoryInterface
     }
 
     /**
-     * @param $person Person
+     * @param Person $person
      */
-    public function add($person)
+    public function add(Person $person)
     {
         if (!$person->getIsNewRecord()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Adding existing model.'));
+            throw new \DomainException(Yii::t('domain/base', 'Adding existing model.'));
         }
         if (!$person->insert(false)) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Saving error.'));
         }
     }
 
     /**
-     * @param $person Person
+     * @param Person $person
      */
-    public function save($person)
+    public function save(Person $person)
     {
         if ($person->getIsNewRecord()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Adding existing model.'));
+            throw new \DomainException(Yii::t('domain/base', 'Adding existing model.'));
         }
         if ($person->update(false) === false) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Saving error.'));
         }
     }
 
     /**
-     * @param $person Person
+     * @param Person $person
      */
-    public function delete($person)
+    public function delete(Person $person)
     {
         if (!$person->delete()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Deleting error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Deleting error.'));
         }
     }
 }

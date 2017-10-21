@@ -18,8 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?=
-    GridView::widget([
+    <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'filterDialog' => [
@@ -40,16 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'updated_at',
-                'format' => 'datetime',
-                'filterWidgetOptions' => [
-                    //    'convertFormat' => true,
-                    'pluginEvents' => [
-                        'apply.daterangepicker' => 'function(event, picker) { 
-                          console.debug(picker.startDate.format("YYYY-MM-DD"));
-                          console.debug(event);
-                        }',
-                    ],
-                ],
+                'format' => 'date',
             ],
         ],
         'crudSettings' => [
@@ -72,6 +62,5 @@ $this->params['breadcrumbs'][] = $this->title;
 //                'data-pjax' => '0',
 //                'wk-loading' => true,
 //            ]),
-    ]);
-    ?>
+    ]) ?>
 </div>

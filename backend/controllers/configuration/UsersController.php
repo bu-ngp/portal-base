@@ -10,32 +10,66 @@ namespace backend\controllers\configuration;
 
 
 use common\widgets\Breadcrumbs\Breadcrumbs;
+use common\widgets\GridView\services\AjaxResponse;
+use console\helpers\RbacHelper;
 use domain\forms\base\ProfileForm;
 use domain\forms\base\UserForm;
 use domain\forms\base\UserFormUpdate;
-use domain\models\base\Employee;
 use domain\models\base\search\AllEmployeeSearch;
 use domain\models\base\search\AuthItemSearch;
-use domain\models\base\search\EmployeeHistorySearch;
-use domain\models\base\search\EmployeeSearch;
 use domain\models\base\search\UsersSearch;
+use domain\services\AjaxFilter;
 use domain\services\base\PersonService;
 use domain\services\proxyService;
-use wartron\yii2uuid\helpers\Uuid;
 use Yii;
+use yii\filters\AccessControl;
+use yii\filters\ContentNegotiator;
 use yii\web\Controller;
+use yii\web\Response;
 
 class UsersController extends Controller
 {
     /**
      * @var PersonService
      */
-    private $personService;
+    private $service;
 
-    public function __construct($id, $module, PersonService $personService, $config = [])
+    public function __construct($id, $module, PersonService $service, $config = [])
     {
-        $this->personService = new proxyService($personService);
+        $this->service = new proxyService($service);
         parent::__construct($id, $module, $config = []);
+    }
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index'],
+                        'roles' => [RbacHelper::AUTHORIZED],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create', 'update', 'delete'],
+                        'roles' => [RbacHelper::USER_EDIT],
+                    ],
+                ],
+            ],
+            [
+                'class' => AjaxFilter::className(),
+                'actions' => ['delete'],
+            ],
+            [
+                'class' => ContentNegotiator::className(),
+                'only' => ['delete'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
+        ];
     }
 
     public function actionIndex()
@@ -60,15 +94,14 @@ class UsersController extends Controller
         $dataProviderAuthItem = $searchModelAuthItem->searchForCreate(Yii::$app->request->queryParams);
 
         if ($userForm->load(Yii::$app->request->post())
-            && $userForm->validate()
             && $profileForm->load(Yii::$app->request->post())
-            && $profileForm->validate()
-            && $newPersonId = $this->personService->create($userForm, $profileForm)
+            && $userForm->validate() & $profileForm->validate()
+            && $newPersonId = $this->service->create($userForm, $profileForm)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('domain/person', 'Person is saved. Add speciality.'));
             Breadcrumbs::removeLastCrumb();
 
-            return $this->redirect(['update', 'id' => Uuid::uuid2str($newPersonId)]);
+            return $this->redirect(['update', 'id' => $newPersonId]);
         }
 
         $userForm->person_password = null;
@@ -84,28 +117,25 @@ class UsersController extends Controller
 
     public function actionUpdate($id)
     {
-        $user = $this->personService->get($id);
+        $user = $this->service->getUser($id);
         $userFormUpdate = new UserFormUpdate($user);
 
-        $profile = $this->personService->getProfile($id);
-        $profileForm = new ProfileForm($this->personService->getProfile($id) === false ? null : $profile);
+        $profile = $this->service->getProfile($id);
+        $profileForm = new ProfileForm($this->service->getProfile($id) === false ? null : $profile);
 
-//        $searchModelEmployee = new EmployeeHistorySearch();
-//        $dataProviderEmployee = $searchModelEmployee->search(Yii::$app->request->queryParams);
         $searchModelEmployee = new AllEmployeeSearch();
         $dataProviderEmployee = $searchModelEmployee->search(Yii::$app->request->queryParams);
         $searchModelAuthItem = new AuthItemSearch();
         $dataProviderAuthItem = $searchModelAuthItem->searchForUpdate(Yii::$app->request->queryParams);
 
         if ($userFormUpdate->load(Yii::$app->request->post())
-            && $userFormUpdate->validate()
             && $profileForm->load(Yii::$app->request->post())
-            && $profileForm->validate()
-            && $this->personService->update(Uuid::str2uuid($id), $userFormUpdate, $profileForm)
+            && $userFormUpdate->validate() & $profileForm->validate()
+            && $this->service->update($user->primaryKey, $userFormUpdate, $profileForm)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
 
-            return $this->redirect(['index']);
+            return $this->redirect(Breadcrumbs::previousUrl());
         }
 
         return $this->render('update', [
@@ -116,5 +146,16 @@ class UsersController extends Controller
             'searchModelAuthItem' => $searchModelAuthItem,
             'dataProviderAuthItem' => $dataProviderAuthItem,
         ]);
+    }
+
+    public function actionDelete($id)
+    {
+        try {
+            $this->service->delete($id);
+        } catch (\Exception $e) {
+            return AjaxResponse::init(AjaxResponse::ERROR, $e->getMessage());
+        }
+
+        return AjaxResponse::init(AjaxResponse::SUCCESS);
     }
 }

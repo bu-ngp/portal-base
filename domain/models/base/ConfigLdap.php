@@ -2,6 +2,8 @@
 
 namespace domain\models\base;
 
+use domain\forms\base\ConfigLdapUpdateForm;
+use domain\rules\base\ConfigLdapRules;
 use Yii;
 
 /**
@@ -29,16 +31,7 @@ class ConfigLdap extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
-            [['config_ldap_port'], 'default', 'value' => 389],
-            [['config_ldap_active'], 'default', 'value' => 0],
-            [['config_ldap_port', 'config_ldap_active'], 'required'],
-            [['config_ldap_port', 'config_ldap_active'], 'integer'],
-            [['config_ldap_host', 'config_ldap_admin_login', 'config_ldap_admin_password'], 'string', 'max' => 255],
-            [['config_ldap_host', 'config_ldap_port', 'config_ldap_admin_login', 'config_ldap_admin_password'], 'required', 'when' => function ($model) {
-                return $model->config_ldap_active;
-            }, 'enableClientValidation' => false],
-        ];
+        return ConfigLdapRules::client();
     }
 
     /**
@@ -56,13 +49,13 @@ class ConfigLdap extends \yii\db\ActiveRecord
         ];
     }
 
-    public function editData($config_ldap_host, $config_ldap_port, $config_ldap_admin_login, $config_ldap_admin_password, $config_ldap_active)
+    public function edit(ConfigLdapUpdateForm $form)
     {
-        $this->config_ldap_host = $config_ldap_host;
-        $this->config_ldap_port = $config_ldap_port;
-        $this->config_ldap_admin_login = $config_ldap_admin_login;
-        $this->config_ldap_admin_password = Yii::$app->security->encryptByPassword($config_ldap_admin_password, Yii::$app->request->cookieValidationKey);
-        $this->config_ldap_active = $config_ldap_active;
+        $this->config_ldap_host = $form->config_ldap_host;
+        $this->config_ldap_port = $form->config_ldap_port;
+        $this->config_ldap_admin_login = $form->config_ldap_admin_login;
+        $this->config_ldap_admin_password = Yii::$app->security->encryptByPassword($form->config_ldap_admin_password, Yii::$app->request->cookieValidationKey);
+        $this->config_ldap_active = $form->config_ldap_active;
     }
 
     public static function isLdapActive()

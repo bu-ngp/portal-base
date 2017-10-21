@@ -50,7 +50,7 @@ $this->title = Yii::t('common/person', 'Create Employee');
         ?>
 
         <div class="form-group">
-            <?= Html::submitButton(Yii::t('common', 'Next'), ['class' => 'btn btn-success', 'form' => $modelForm->formName()]) ?>
+            <?= Html::submitButton(Yii::t('common', 'Next'), ['class' => 'btn btn-primary', 'form' => $modelForm->formName()]) ?>
         </div>
 
     </div>

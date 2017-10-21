@@ -9,7 +9,7 @@
 namespace domain\forms\base;
 
 use domain\models\base\ConfigLdap;
-use Yii;
+use domain\rules\base\ConfigLdapRules;
 use yii\base\Model;
 
 class ConfigLdapUpdateForm extends Model
@@ -20,12 +20,13 @@ class ConfigLdapUpdateForm extends Model
     public $config_ldap_admin_password;
     public $config_ldap_active;
 
-    private $configLdap;
-
-    public function __construct(ConfigLdap $configLdap = null, $config = [])
+    public function __construct(ConfigLdap $configLdap, $config = [])
     {
-        $this->configLdap = $configLdap;
-        $this->load($configLdap->attributes, '');
+        $this->config_ldap_host = $configLdap->config_ldap_host;
+        $this->config_ldap_port = $configLdap->config_ldap_port;
+        $this->config_ldap_admin_login = $configLdap->config_ldap_admin_login;
+        $this->config_ldap_admin_password = $configLdap->config_ldap_admin_password;
+        $this->config_ldap_active = $configLdap->config_ldap_active;
         parent::__construct($config);
     }
 
@@ -34,7 +35,7 @@ class ConfigLdapUpdateForm extends Model
      */
     public function rules()
     {
-        return (new ConfigLdap())->rules();
+        return ConfigLdapRules::client();
     }
 
     /**

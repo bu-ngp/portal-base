@@ -60,10 +60,10 @@ class EmployeeHistoryBuildSearch extends EmployeeHistoryBuild
 
         $this->load($params);
 
+        $query->andWhere(['employee_history_id' => $params['id']]);
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'employee_history_id' => $this->employee_history_id,
             'employee_history_build_deactive' => $this->employee_history_build_deactive,
         ]);
 

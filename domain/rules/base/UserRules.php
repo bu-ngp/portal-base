@@ -21,7 +21,6 @@ class UserRules
         return
             [
                 [['person_fullname', 'person_username'], 'required'],
-                [['person_fired'], WKDateValidator::className()],
                 [['person_username'], LoginValidator::className()],
                 [['person_username', 'person_fullname'], 'string', 'min' => 3],
                 [['person_fullname', 'person_username', 'person_email'], 'string', 'max' => 255],

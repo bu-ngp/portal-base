@@ -101,8 +101,8 @@ class EmployeeHistory extends \yii\db\ActiveRecord
 
     public function edit(EmployeeHistoryForm $form)
     {
-        $this->dolzh_id = $form->dolzh_id;
-        $this->podraz_id = $form->podraz_id;
+        $this->dolzh_id = Uuid::str2uuid($form->dolzh_id);
+        $this->podraz_id = Uuid::str2uuid($form->podraz_id);
         $this->employee_history_begin = $form->employee_history_begin;
     }
 

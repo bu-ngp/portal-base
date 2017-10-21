@@ -3,6 +3,7 @@
 namespace domain\models\base;
 
 use domain\behaviors\UpperCaseBehavior;
+use domain\forms\base\BuildForm;
 use domain\rules\base\BuildRules;
 use domain\behaviors\UUIDBehavior;
 use Yii;
@@ -63,16 +64,16 @@ class Build extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function create($build_name)
+    public static function create(BuildForm $form)
     {
         return new self([
-            'build_name' => $build_name,
+            'build_name' => $form->build_name,
         ]);
     }
 
-    public function editData($build_name)
+    public function edit(BuildForm $form)
     {
-        $this->build_name = $build_name;
+        $this->build_name = $form->build_name;
     }
 
     /**

@@ -14,7 +14,7 @@ trait GWItemsTrait
     {
         $class = get_called_class();
         if (method_exists($class, 'items')) {
-            $items = self::items();
+            $items = call_user_func([$class, 'items']);
             return $items[$attribute];
         } else {
             throw new \Exception('Static Method "items" not exists in class ' . get_class($class));

@@ -2,10 +2,8 @@
 
 namespace domain\forms\base;
 
-use common\classes\validators\SnilsValidator;
-use common\classes\validators\WKDateValidator;
 use domain\models\base\Profile;
-use Yii;
+use domain\rules\base\ProfileRules;
 use yii\base\Model;
 
 class ProfileForm extends Model
@@ -19,7 +17,11 @@ class ProfileForm extends Model
     public function __construct(Profile $profile = null, $config = [])
     {
         if ($profile) {
-            $this->load($profile->attributes, '');
+            $this->profile_inn = $profile->profile_inn;
+            $this->profile_dr = $profile->profile_dr;
+            $this->profile_pol = $profile->profile_pol;
+            $this->profile_snils = $profile->profile_snils;
+            $this->profile_address = $profile->profile_address;
         }
 
         parent::__construct($config);
@@ -27,13 +29,7 @@ class ProfileForm extends Model
 
     public function rules()
     {
-        return [
-            [['profile_dr'], WKDateValidator::className()],
-            [['profile_pol'], 'in', 'range' => [Profile::MALE, Profile::FEMALE]],
-            [['profile_inn'], 'match', 'pattern' => '/\d{12}/', 'message' => Yii::t('domain/profile', 'INN required 12 digits')],
-            [['profile_snils'], SnilsValidator::className()],
-            [['profile_address'], 'string', 'max' => 400],
-        ];
+        return ProfileRules::client();
     }
 
     public function attributeLabels()

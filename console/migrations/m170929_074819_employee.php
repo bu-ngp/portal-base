@@ -43,7 +43,7 @@ class m170929_074819_employee extends yii\db\Migration
             'updated_by' => $this->string()->notNull(),
         ]);
 
-        $this->addForeignKey('person_id_employee', '{{%employee}}', 'person_id', '{{%person}}', 'person_id');
+        $this->addForeignKey('person_id_employee', '{{%employee}}', 'person_id', '{{%person}}', 'person_id', 'CASCADE');
         $this->addForeignKey('dolzh_id_employee', '{{%employee}}', 'dolzh_id', '{{%dolzh}}', 'dolzh_id');
         $this->addForeignKey('podraz_id_employee', '{{%employee}}', 'podraz_id', '{{%podraz}}', 'podraz_id');
 
@@ -61,7 +61,7 @@ class m170929_074819_employee extends yii\db\Migration
             'updated_by' => $this->string()->notNull(),
         ]);
 
-        $this->addForeignKey('person_id_employee_history', '{{%employee_history}}', 'person_id', '{{%person}}', 'person_id');
+        $this->addForeignKey('person_id_employee_history', '{{%employee_history}}', 'person_id', '{{%person}}', 'person_id', 'CASCADE');
         $this->addForeignKey('dolzh_id_employee_history', '{{%employee_history}}', 'dolzh_id', '{{%dolzh}}', 'dolzh_id');
         $this->addForeignKey('podraz_id_employee_history', '{{%employee_history}}', 'podraz_id', '{{%podraz}}', 'podraz_id');
 
@@ -96,7 +96,7 @@ class m170929_074819_employee extends yii\db\Migration
             'updated_by' => $this->string()->notNull(),
         ]);
 
-        $this->addForeignKey('person_id_parttime', '{{%parttime}}', 'person_id', '{{%person}}', 'person_id');
+        $this->addForeignKey('person_id_parttime', '{{%parttime}}', 'person_id', '{{%person}}', 'person_id', 'CASCADE');
         $this->addForeignKey('dolzh_id_parttime', '{{%parttime}}', 'dolzh_id', '{{%dolzh}}', 'dolzh_id');
         $this->addForeignKey('podraz_id_parttime', '{{%parttime}}', 'podraz_id', '{{%podraz}}', 'podraz_id');
 

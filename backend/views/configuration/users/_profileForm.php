@@ -6,6 +6,7 @@ use rmrevin\yii\fontawesome\FA;
 
 /* @var $this yii\web\View */
 /* @var $modelProfileForm domain\forms\base\UserForm */
+/* @var $profileForm ActiveForm */
 ?>
 <div class="form-group">
     <div class="row">
@@ -20,7 +21,7 @@ use rmrevin\yii\fontawesome\FA;
                 ], [
                     'wkkeep' => true,
                     'encode' => false,
-                    'titles' => Profile::items()['profile_pol']
+                    'titles' => Profile::itemsValues('profile_pol'),
                 ])
                 ->inline()
             ?>

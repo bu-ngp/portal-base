@@ -9,6 +9,9 @@ class m170922_104145_rbac extends Migration
 {
     public function safeUp()
     {
+        $authorized = RbacHelper::createRole(RbacHelper::BASE_AUTHORIZED, 'Авторизованный пользователь',
+            RbacHelper::createPermission(RbacHelper::AUTHORIZED, 'Права авторизованного пользователя'));
+
         $userOperator = RbacHelper::createRole(RbacHelper::USER_OPERATOR, 'Оператор менеджера пользователей',
             RbacHelper::createPermission(RbacHelper::USER_EDIT, 'Редактирование пользователей'));
 
@@ -21,12 +24,17 @@ class m170922_104145_rbac extends Migration
         $baseDolzhEdit = RbacHelper::createRole(RbacHelper::BASE_DOLZH_EDIT, 'Оператор справочника "Должности"',
             RbacHelper::createPermission(RbacHelper::DOLZH_EDIT, 'Редактирование справочника "Должности"'));
 
+        $baseBuildEdit = RbacHelper::createRole(RbacHelper::BASE_BUILD_EDIT, 'Оператор справочника "Здания"',
+            RbacHelper::createPermission(RbacHelper::BUILD_EDIT, 'Редактирование справочника "Здания"'));
+
         $baseAdministrator = RbacHelper::createRole(RbacHelper::BASE_ADMINISTRATOR, 'Администратор базовой конфигурации',
             [
+                $authorized,
                 $userOperator,
                 $roleOperator,
                 $basePodrazEdit,
                 $baseDolzhEdit,
+                $baseBuildEdit,
             ]);
 
         $administrator = RbacHelper::createRole(RbacHelper::ADMINISTRATOR, 'Администратор системы', $baseAdministrator);

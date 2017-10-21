@@ -5,8 +5,8 @@ use rmrevin\yii\fontawesome\FA;
 
 /* @var $this yii\web\View */
 /* @var $modelUserFormUpdate domain\forms\base\UserFormUpdate */
+/* @var $userForm ActiveForm */
 ?>
-
 <div class="form-group">
     <div class="row">
         <div class="col-xs-6">

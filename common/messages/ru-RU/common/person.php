@@ -17,19 +17,21 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Add Build' => '',
+    'Create Parttime' => '',
+    'Person Auth Key' => '',
+    'Person ID' => '',
+    'Person Password Hash' => '',
     'Create Employee' => 'Добавить специальность',
     'Create User' => 'Добавить пользователя',
     'Created At' => 'Дата создания',
-    'Person Auth Key' => '',
     'Person Code' => 'Код',
-    'Person ID' => '',
-    'Person Password Hash' => '',
-    'Remember Me' => 'Запомнить',
-    'Updated At' => 'Дата обновления',
     'Person Email' => 'Электронная почта',
     'Person Fired' => 'Дата увольнения',
     'Person Fullname' => 'Фамилия Имя Отчество',
     'Person Hired' => 'Дата приема на работу',
     'Person Password' => 'Пароль',
     'Person Username' => 'Логин',
+    'Remember Me' => 'Запомнить',
+    'Updated At' => 'Дата обновления',
 ];

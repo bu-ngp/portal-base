@@ -2,12 +2,11 @@
 
 namespace backend\controllers\configuration\spravochniki;
 
+use console\helpers\RbacHelper;
 use domain\services\proxyService;
 use Yii;
-use domain\models\base\Podraz;
 use domain\models\base\search\PodrazSearch;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use common\widgets\GridView\services\AjaxResponse;
 use domain\forms\base\PodrazForm;
 use domain\services\AjaxFilter;
@@ -22,13 +21,13 @@ use yii\web\Response;
 class PodrazController extends Controller
 {
     /**
-     * @var PodrazService $podrazService
+     * @var PodrazService $service
      */
-    private $podrazService;
+    private $service;
 
-    public function __construct($id, $module, PodrazService $podrazService, $config = [])
+    public function __construct($id, $module, PodrazService $service, $config = [])
     {
-        $this->podrazService = new proxyService($podrazService);
+        $this->service = new proxyService($service);
         parent::__construct($id, $module, $config = []);
     }
 
@@ -38,6 +37,21 @@ class PodrazController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index'],
+                        'roles' => [RbacHelper::AUTHORIZED],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create', 'update', 'delete'],
+                        'roles' => [RbacHelper::PODRAZ_EDIT],
+                    ],
+                ],
+            ],
             [
                 'class' => AjaxFilter::className(),
                 'actions' => ['delete'],
@@ -52,10 +66,6 @@ class PodrazController extends Controller
         ];
     }
 
-    /**
-     * Lists all Podraz models.
-     * @return mixed
-     */
     public function actionIndex()
     {
         $searchModel = new PodrazSearch();
@@ -67,21 +77,15 @@ class PodrazController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new Podraz model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
     public function actionCreate()
     {
         $form = new PodrazForm();
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $this->podrazService->create($form)
+            && $this->service->create($form)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
-
             return $this->redirect(['index']);
         }
 
@@ -90,22 +94,15 @@ class PodrazController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing Podraz model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param resource $id
-     * @return mixed
-     */
     public function actionUpdate($id)
     {
-        $podrazModel = $this->podrazService->find($id);
-        $form = new PodrazForm($podrazModel);
+        $podraz = $this->service->find($id);
+        $form = new PodrazForm($podraz);
 
         if ($form->load(Yii::$app->request->post()) && $form->validate()
-            && $this->podrazService->update($podrazModel->primaryKey, $form)
+            && $this->service->update($podraz->primaryKey, $form)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
-
             return $this->redirect(['index']);
         }
 
@@ -114,16 +111,10 @@ class PodrazController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing Podraz model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param resource $id
-     * @return mixed
-     */
     public function actionDelete($id)
     {
         try {
-            $this->podrazService->delete($id);
+            $this->service->delete($id);
         } catch (\Exception $e) {
             return AjaxResponse::init(AjaxResponse::ERROR, $e->getMessage());
         }

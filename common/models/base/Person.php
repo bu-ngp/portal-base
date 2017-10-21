@@ -14,15 +14,13 @@ use domain\models\base\ConfigLdap;
 use domain\models\base\Employee;
 use domain\models\base\EmployeeHistory;
 use domain\models\base\Parttime;
+use domain\models\base\Profile;
 use domain\rules\base\UserRules;
-use domain\services\base\dto\PersonData;
 use Exception;
 use domain\behaviors\UUIDBehavior;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
-use yii\db\Expression;
-use yii\debug\models\search\Profile;
 use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 
@@ -73,7 +71,7 @@ class Person extends \yii\db\ActiveRecord implements LdapModelInterface
         return ArrayHelper::merge(UserRules::client(), [
             [['person_auth_key', 'person_password_hash'], 'required'],
             [['person_code'], 'safe'],
-            [['person_hired'], WKDateValidator::className()],
+            [['person_hired', 'person_fired'], WKDateValidator::className()],
             [['person_password_hash'], 'string', 'max' => 255],
             [['person_auth_key'], 'string', 'max' => 32],
             [['person_username'], 'unique'],
@@ -105,14 +103,8 @@ class Person extends \yii\db\ActiveRecord implements LdapModelInterface
     public function behaviors()
     {
         return [
-            [
-                'class' => TimestampBehavior::className(),
-                //   'value' => new Expression('NOW()'),
-                'value' => time(),
-            ],
-            [
-                'class' => BlameableBehavior::className(),
-            ],
+            TimestampBehavior::className(),
+            BlameableBehavior::className(),
             [
                 'class' => UUIDBehavior::className(),
                 'column' => 'person_id',
@@ -128,7 +120,6 @@ class Person extends \yii\db\ActiveRecord implements LdapModelInterface
             'person_auth_key' => Yii::$app->security->generateRandomString(),
             'person_password_hash' => $userForm->person_password ? Yii::$app->security->generatePasswordHash($userForm->person_password) : null,
             'person_email' => $userForm->person_email,
-            'person_hired' => date('Y-m-d'),
         ]);
     }
 
@@ -182,9 +173,9 @@ class Person extends \yii\db\ActiveRecord implements LdapModelInterface
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPerson()
+    public function getProfile()
     {
-        return $this->hasOne(Profile::className(), ['profile_id' => 'person_id']);
+        return $this->hasOne(Profile::className(), ['profile_id' => 'person_id'])->from(['profile' => Profile::tableName()]);
     }
 
     /**

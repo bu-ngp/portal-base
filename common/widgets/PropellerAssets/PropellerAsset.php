@@ -45,6 +45,9 @@ class PropellerAsset extends AssetBundlePropeller
             'yii\bootstrap\NavBar' => [
                 'common\widgets\PropellerAssets\NavBarAsset',
             ],
+            'toggleswitch' => [
+                'common\widgets\PropellerAssets\ToggleSwitchAsset',
+            ],
             'checkbox' => [
                 'common\widgets\PropellerAssets\CheckboxAsset',
             ],

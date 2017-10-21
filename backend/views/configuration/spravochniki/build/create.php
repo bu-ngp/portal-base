@@ -13,7 +13,6 @@ $this->title = Yii::t('common/build', 'Create Build');
     <h1><?= Html::encode($this->title) ?></h1>
 
     <div class="build-form">
-
         <?php $form = ActiveForm::begin(); ?>
 
         <?= $form->field($modelForm, 'build_name')->textInput(['wkkeep' => true, 'maxlength' => true]) ?>
@@ -23,6 +22,5 @@ $this->title = Yii::t('common/build', 'Create Build');
         </div>
 
         <?php ActiveForm::end(); ?>
-
     </div>
 </div>

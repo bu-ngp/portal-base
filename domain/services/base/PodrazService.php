@@ -9,43 +9,44 @@ use domain\services\WKService;
 
 class PodrazService extends WKService
 {
-    private $podrazRepository;
+    private $podrazs;
 
     public function __construct(
-        PodrazRepository $podrazRepository
+        PodrazRepository $podrazs
     )
     {
-        $this->podrazRepository = $podrazRepository;
+        $this->podrazs = $podrazs;
     }
 
-    public function find($id) {
-        return $this->podrazRepository->find($id);
+    public function find($id)
+    {
+        return $this->podrazs->find($id);
     }
 
     public function create(PodrazForm $form)
     {
-        $podraz = Podraz::create($form->podraz_name);
+        $podraz = Podraz::create($form);
         if (!$this->validateModels($podraz, $form)) {
             throw new \DomainException();
         }
 
-        $this->podrazRepository->add($podraz);
+        $this->podrazs->add($podraz);
     }
 
     public function update($id, PodrazForm $form)
     {
-        $podraz = $this->podrazRepository->find($id);
-        $podraz->editData($form->podraz_name);
+        $podraz = $this->podrazs->find($id);
+        $podraz->edit($form);
         if (!$this->validateModels($podraz, $form)) {
             throw new \DomainException();
         }
 
-        $this->podrazRepository->save($podraz);
+        $this->podrazs->save($podraz);
     }
 
     public function delete($id)
     {
-        $podraz = $this->podrazRepository->find($id);
-        $this->podrazRepository->delete($podraz);
+        $podraz = $this->podrazs->find($id);
+        $this->podrazs->delete($podraz);
     }
 }

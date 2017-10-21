@@ -118,7 +118,7 @@
         }
 
         if ($widget.attr("remove-last-crumb") === '1' && bc[bc.length - 2]) {
-            bc[bc.length - 2].visible = false;
+            bc.splice(bc.length - 2, 1);
         }
 
         $widget.data('wkbreadcrumbs').crumbs = bc;
@@ -160,11 +160,11 @@
     };
 
     var setPreviousUrlToCookie = function ($widget) {
-        $PreviousCrumb = $widget.wkbreadcrumbs('getPreLast');
-        if ($PreviousCrumb === false) {
+        var PreviousCrumb = $widget.wkbreadcrumbs('getPreLast');
+        if (PreviousCrumb === false) {
             deleteCookie($widget.attr('cookie-id'));
         } else {
-            setCookie($widget.attr('cookie-id'), JSON.stringify({previousUrl: $PreviousCrumb.url}), {expires: 3600});
+            setCookie($widget.attr('cookie-id'), JSON.stringify({previousUrl: PreviousCrumb.url}), {expires: 3600});
         }
     };
 
@@ -358,6 +358,14 @@
 
             return false;
         },
+        removeLast: function () {
+            var $widget = $(this);
+
+            if ($widget.data('wkbreadcrumbs').crumbs.length > 0) {
+                $widget.data('wkbreadcrumbs').crumbs.splice($widget.data('wkbreadcrumbs').crumbs.length - 1, 1);
+                saveCrumbs($widget);
+            }
+        },
         getLastByObject: function (objectName, emptyObjectIfNotFound) {
             var $widget = $(this);
 
@@ -381,6 +389,14 @@
             }
 
             return false;
+        },
+        removePreLast: function () {
+            var $widget = $(this);
+
+            if ($widget.data('wkbreadcrumbs').crumbs.length > 1) {
+                $widget.data('wkbreadcrumbs').crumbs.splice($widget.data('wkbreadcrumbs').crumbs.length - 2, 1);
+                saveCrumbs($widget);
+            }
         },
         setLast: function (bcObj) {
             var $widget = $(this);

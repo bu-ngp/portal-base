@@ -26,36 +26,33 @@ use Yii;
 class PersonService extends WKService
 {
     private $transactionManager;
-    private $personRepository;
-    private $profileRepository;
-    private $authAssignmentRepository;
+    private $persons;
+    private $profiles;
+    private $authAssignments;
 
     public function __construct(
         TransactionManager $transactionManager,
-        PersonRepository $personRepository,
-        ProfileRepository $profileRepository,
-        AuthAssignmentRepository $authAssignmentRepository
+        PersonRepository $persons,
+        ProfileRepository $profiles,
+        AuthAssignmentRepository $authAssignments
     )
     {
         $this->transactionManager = $transactionManager;
-        $this->personRepository = $personRepository;
-        $this->profileRepository = $profileRepository;
-        $this->authAssignmentRepository = $authAssignmentRepository;
+        $this->persons = $persons;
+        $this->profiles = $profiles;
+        $this->authAssignments = $authAssignments;
     }
 
-    public function get($id)
+    public function getUser($id)
     {
-        return $this->personRepository->find(Uuid::str2uuid($id));
+        $uuid = Uuid::str2uuid($id);
+        return $this->persons->find($uuid);
     }
 
     public function getProfile($id)
     {
         $uuid = Uuid::str2uuid($id);
-        if ($this->profileRepository->has($uuid)) {
-            return $this->profileRepository->find($uuid);
-        }
-
-        return false;
+        return $this->profiles->has($uuid) ? $this->profiles->find($uuid) : false;
     }
 
     public function create(UserForm $userForm, ProfileForm $profileForm)
@@ -65,10 +62,8 @@ class PersonService extends WKService
         $person = Person::create($userForm);
         $personValidate = $this->validateModels($person, $userForm);
 
-        $profileForm->setAttributes(array_map(function ($value) {
-            return empty($value) ? null : $value;
-        }, $profileForm->getAttributes()));
-        $profile = Profile::create($person->person_id, $profileForm);
+        $this->filterEmptyValues($profileForm);
+        $profile = Profile::create($person->primaryKey, $profileForm);
 
         if (!($personValidate && $this->validateModels($profile, $profileForm))) {
             throw new \DomainException();
@@ -77,33 +72,31 @@ class PersonService extends WKService
         $authAssignment = AuthAssignment::create($person, $assignedKeysUser);
 
         return $this->transactionManager->execute(function () use ($person, $profile, $authAssignment) {
-            $this->personRepository->add($person);
+            $this->persons->add($person);
             if ($profile->isNotEmpty()) {
-                $this->profileRepository->add($profile);
+                $this->profiles->add($profile);
             }
 
             foreach ($authAssignment as $item) {
-                $this->authAssignmentRepository->add($item);
+                $this->authAssignments->add($item);
             }
 
-            return $person->primaryKey;
+            return Uuid::uuid2str($person->primaryKey);
         });
     }
 
-    public function update($id, UserFormUpdate $userFormUpdate, ProfileForm $profileForm)
+    public function update($uuid, UserFormUpdate $userFormUpdate, ProfileForm $profileForm)
     {
-        $person = $this->personRepository->find($id);
+        $person = $this->persons->find($uuid);
         $person->edit($userFormUpdate);
         $personValidate = $this->validateModels($person, $userFormUpdate);
 
-        if ($this->profileRepository->has($id)) {
-            $profile = $this->profileRepository->find($id);
+        if ($this->profiles->has($uuid)) {
+            $profile = $this->profiles->find($uuid);
             $profile->edit($profileForm);
         } else {
-            $profileForm->setAttributes(array_map(function ($value) {
-                return empty($value) ? null : $value;
-            }, $profileForm->getAttributes()));
-            $profile = Profile::create($id, $profileForm);
+            $this->filterEmptyValues($profileForm);
+            $profile = Profile::create($uuid, $profileForm);
         }
 
         if (!($personValidate && $this->validateModels($profile, $profileForm))) {
@@ -111,26 +104,40 @@ class PersonService extends WKService
         }
 
         $this->transactionManager->execute(function () use ($person, $profile) {
-            $this->personRepository->save($person);
+            $this->persons->save($person);
             if ($profile->isNotEmpty()) {
-                $profile->isNewRecord ? $this->profileRepository->add($profile) : $this->profileRepository->save($profile);
+                $profile->isNewRecord ? $this->profiles->add($profile) : $this->profiles->save($profile);
             }
         });
+    }
+
+    public function delete($id)
+    {
+        $uuid = Uuid::str2uuid($id);
+        $person = $this->persons->find($uuid);
+        $this->persons->delete($person);
     }
 
     public function guardPasswordLength(UserForm $userForm)
     {
         if (mb_strlen($userForm->person_password, 'UTF-8') < 6) {
-            Yii::$app->session->addFlash('error', Yii::t('domain/person', 'Password very short. Need minimum 6 characters.'));
+            throw new \DomainException(Yii::t('domain/person', 'Password very short. Need minimum 6 characters.'));
         }
     }
 
     private function guardAssignRoles($form)
     {
         if (!is_string($form->assignRoles) || ($assignedKeys = json_decode($form->assignRoles)) === null) {
-            throw new \DomainException(\Yii::t('domain/person', 'Error when recognizing selected items'));
+            throw new \DomainException(Yii::t('domain/person', 'Error when recognizing selected items'));
         }
 
         return $assignedKeys;
+    }
+
+    private function filterEmptyValues(ProfileForm $profileForm)
+    {
+        $profileForm->setAttributes(array_map(function ($value) {
+            return $value === null || $value === '' ? null : $value;
+        }, $profileForm->getAttributes()));
     }
 }

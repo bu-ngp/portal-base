@@ -199,8 +199,11 @@ class GWPrepareColumns
     {
         if ($column['format'] === 'datetime') {
             $column['filterType'] = GridView::FILTER_DATE_RANGE;
+            $column['filterWidgetOptions']['pluginOptions']['locale']['format'] = 'DD.MM.YYYY HH:mm:ss';
+        }
+        if ($column['format'] === 'date') {
+            $column['filterType'] = GridView::FILTER_DATE_RANGE;
             $column['filterWidgetOptions']['pluginOptions']['locale']['format'] = 'DD.MM.YYYY';
         }
     }
-
 }

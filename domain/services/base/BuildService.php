@@ -9,43 +9,44 @@ use domain\services\WKService;
 
 class BuildService extends WKService
 {
-    private $buildRepository;
+    private $builds;
 
     public function __construct(
-        BuildRepository $buildRepository
+        BuildRepository $builds
     )
     {
-        $this->buildRepository = $buildRepository;
+        $this->builds = $builds;
     }
 
-    public function find($id) {
-        return $this->buildRepository->find($id);
+    public function find($id)
+    {
+        return $this->builds->find($id);
     }
 
     public function create(BuildForm $form)
     {
-        $build = Build::create($form->build_name);
+        $build = Build::create($form);
         if (!$this->validateModels($build, $form)) {
             throw new \DomainException();
         }
 
-        $this->buildRepository->add($build);
+        $this->builds->add($build);
     }
 
     public function update($id, BuildForm $form)
     {
-        $build = $this->buildRepository->find($id);
-        $build->editData($form->build_name);
+        $build = $this->builds->find($id);
+        $build->edit($form);
         if (!$this->validateModels($build, $form)) {
             throw new \DomainException();
         }
 
-        $this->buildRepository->save($build);
+        $this->builds->save($build);
     }
 
     public function delete($id)
     {
-        $build = $this->buildRepository->find($id);
-        $this->buildRepository->delete($build);
+        $build = $this->builds->find($id);
+        $this->builds->delete($build);
     }
 }

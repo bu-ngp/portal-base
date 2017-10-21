@@ -100,7 +100,7 @@ class m130524_201442_init extends Migration
 
         $this->addPrimaryKey('item_name_user_id', $authManager->assignmentTable, ['item_name', 'user_id']);
         $this->addForeignKey('item_name', $authManager->assignmentTable, 'item_name', $authManager->itemTable, 'name', 'CASCADE', 'CASCADE');
-        $this->addForeignKey('user_id', $authManager->assignmentTable, 'user_id', '{{%person}}', 'person_id');
+        $this->addForeignKey('user_id', $authManager->assignmentTable, 'user_id', '{{%person}}', 'person_id', 'CASCADE');
 
         $this->insert('{{%person}}', [
             'person_id' => Uuid::uuid(),

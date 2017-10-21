@@ -5,9 +5,8 @@ use rmrevin\yii\fontawesome\FA;
 
 /* @var $this yii\web\View */
 /* @var $modelUserForm domain\forms\base\UserForm */
+/* @var $userForm ActiveForm */
 ?>
-
-<?php //$userForm = ActiveForm::begin(['id' => $modelUserForm->formName()]); ?>
 
 <div class="form-group">
     <div class="row">
@@ -39,7 +38,4 @@ use rmrevin\yii\fontawesome\FA;
     </div>
 </div>
 
-<?= $userForm->field($modelUserForm, 'assignEmployees', ['enableClientValidation' => false])->hiddenInput()->label(false) ?>
 <?= $userForm->field($modelUserForm, 'assignRoles', ['enableClientValidation' => false])->hiddenInput()->label(false) ?>
-
-<?php //ActiveForm::end(); ?>

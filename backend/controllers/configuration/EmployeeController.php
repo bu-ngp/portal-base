@@ -10,19 +10,16 @@ namespace backend\controllers\configuration;
 
 
 use common\widgets\Breadcrumbs\Breadcrumbs;
-use domain\forms\base\EmployeeForm;
+use common\widgets\GridView\services\AjaxResponse;
+use console\helpers\RbacHelper;
 use domain\forms\base\EmployeeHistoryForm;
-use domain\models\base\Dolzh;
-use domain\models\base\EmployeeHistory;
-use domain\models\base\search\BuildSearch;
 use domain\models\base\search\EmployeeHistoryBuildSearch;
-use domain\queries\DolzhQuery;
+use domain\services\AjaxFilter;
 use domain\services\base\EmployeeHistoryService;
-use domain\services\base\EmployeeService;
 use domain\services\proxyService;
-use wartron\yii2uuid\helpers\Uuid;
 use Yii;
-use yii\helpers\Url;
+use yii\filters\AccessControl;
+use yii\filters\ContentNegotiator;
 use yii\web\Controller;
 use yii\web\Response;
 
@@ -31,50 +28,62 @@ class EmployeeController extends Controller
     /**
      * @var EmployeeHistoryService
      */
-    private $employeeHistoryService;
+    private $service;
 
-    public function __construct($id, $module, EmployeeHistoryService $employeeHistoryService, $config = [])
+    public function __construct($id, $module, EmployeeHistoryService $service, $config = [])
     {
-        $this->employeeHistoryService = new proxyService($employeeHistoryService);
+        $this->service = new proxyService($service);
         parent::__construct($id, $module, $config = []);
+    }
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['create', 'update', 'delete'],
+                        'roles' => [RbacHelper::USER_EDIT],
+                    ],
+                ],
+            ],
+            [
+                'class' => AjaxFilter::className(),
+                'actions' => ['delete'],
+            ],
+            [
+                'class' => ContentNegotiator::className(),
+                'only' => ['delete'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
+        ];
     }
 
     public function actionCreate()
     {
         $form = new EmployeeHistoryForm();
 
-//        $searchModelBuild = new BuildSearch();
-//        $dataProviderBuild = $searchModelBuild->searchForEmployee(Yii::$app->request->queryParams);
-
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $employeeId = $this->employeeHistoryService->create($form)
+            && $employeeId = $this->service->create($form)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved. Add Builds.'));
             Breadcrumbs::removeLastCrumb();
-
             return $this->redirect(['update', 'id' => $employeeId]);
         }
-//
-//        $form->dolzh_id = Dolzh::find()
-//            ->andWhere(['like', 'dolzh_name', 'сист'])
-//            ->orWhere(['like', 'dolzh_name', 'про'])
-//            ->column();
-
-//        $form->dolzh_id = Dolzh::find()
-//            ->andWhere(['like', 'dolzh_name', 'сист'])
-//            ->one()->dolzh_id;
 
         return $this->render('create', [
             'modelForm' => $form,
-//            'searchModelBuild' => $searchModelBuild,
-//            'dataProviderBuild' => $dataProviderBuild,
         ]);
     }
 
     public function actionUpdate($id)
     {
-        $employee = $this->employeeHistoryService->get($id);
+        $employee = $this->service->get($id);
         $form = new EmployeeHistoryForm($employee);
 
         $searchModelEmployeeHB = new EmployeeHistoryBuildSearch();
@@ -82,10 +91,9 @@ class EmployeeController extends Controller
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $this->employeeHistoryService->update($id, $form)
+            && $this->service->update($employee->primaryKey, $form)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
-
             return $this->redirect(Breadcrumbs::previousUrl());
         }
 
@@ -96,9 +104,14 @@ class EmployeeController extends Controller
         ]);
     }
 
-    public function actionTest()
+    public function actionDelete($id)
     {
-        return $this->render('_test');
-    }
+        try {
+            $this->service->delete($id);
+        } catch (\Exception $e) {
+            return AjaxResponse::init(AjaxResponse::ERROR, $e->getMessage());
+        }
 
+        return AjaxResponse::init(AjaxResponse::SUCCESS);
+    }
 }

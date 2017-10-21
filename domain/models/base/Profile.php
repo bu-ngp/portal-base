@@ -6,7 +6,9 @@ use common\classes\BlameableBehavior;
 use common\classes\validators\SnilsValidator;
 use common\classes\validators\WKDateValidator;
 use common\models\base\Person;
+use common\widgets\GridView\services\GWItemsTrait;
 use domain\forms\base\ProfileForm;
+use domain\rules\base\ProfileRules;
 use domain\services\base\dto\ProfileData;
 use wartron\yii2uuid\behaviors\UUIDBehavior;
 use Yii;
@@ -31,6 +33,8 @@ use yii\db\Expression;
  */
 class Profile extends \yii\db\ActiveRecord
 {
+    use GWItemsTrait;
+
     const MALE = 1;
     const FEMALE = 2;
 
@@ -47,15 +51,9 @@ class Profile extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
-            [['profile_id'], 'required'],
-            [['profile_dr'], WKDateValidator::className()],
-            [['profile_pol'], 'in', 'range' => [Profile::MALE, Profile::FEMALE]],
-            [['profile_inn'], 'match', 'pattern' => '/\d{12}/', 'message' => Yii::t('domain/profile', 'INN required 12 digits')],
-            [['profile_snils'], SnilsValidator::className()],
-            [['profile_address'], 'string', 'max' => 400],
+        return array_merge(ProfileRules::client(), [
             [['profile_inn', 'profile_snils'], 'unique'],
-        ];
+        ]);
     }
 
     /**
@@ -80,14 +78,8 @@ class Profile extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            [
-                'class' => TimestampBehavior::className(),
-                //   'value' => new Expression('NOW()'),
-                'value' => time(),
-            ],
-            [
-                'class' => BlameableBehavior::className(),
-            ],
+            TimestampBehavior::className(),
+            BlameableBehavior::className(),
         ];
     }
 
@@ -115,10 +107,10 @@ class Profile extends \yii\db\ActiveRecord
     public function isNotEmpty()
     {
         return $this->profile_inn
-        || $this->profile_dr
-        || $this->profile_pol
-        || $this->profile_snils
-        || $this->profile_address;
+            || $this->profile_dr
+            || $this->profile_pol
+            || $this->profile_snils
+            || $this->profile_address;
     }
 
     /**

@@ -23,7 +23,7 @@ class AuthAssignmentRepository
     public function find($id)
     {
         if (!$authAssignment = AuthAssignment::findOne($id)) {
-            throw new \DomainException('Model not found.');
+            throw new \RuntimeException('Model not found.');
         }
 
         return $authAssignment;
@@ -34,18 +34,22 @@ class AuthAssignmentRepository
      */
     public function add(AuthAssignment $authAssignment)
     {
-        $userIDStr = Uuid::uuid2str($authAssignment->user_id);
-        
         if (!$authItem = Yii::$app->authManager->getRole($authAssignment->item_name)) {
-            throw new \DomainException("AuthItem {$authAssignment->item_name} not exist.");
+            throw new \DomainException(Yii::t('domain/auth-assignments', "AuthItem {item_name} not exist.", [
+                'item_name' => $authAssignment->item_name,
+            ]));
         }
 
         if (!$userID = Person::findOne($authAssignment->user_id)->primaryKey) {
-            throw new \DomainException("User with ID '$userIDStr' not exist.");
+            throw new \DomainException(Yii::t('domain/auth-assignments', "User with ID '{userUUID}' not exist.", [
+                'userUUID' => Uuid::uuid2str($authAssignment->user_id),
+            ]));
         }
 
         if (!Yii::$app->authManager->assign($authItem, $userID)) {
-            throw new \DomainException("Can't assign User with ID '$userIDStr' to '{$authAssignment->item_name}'");
+            throw new \DomainException(Yii::t('domain/auth-assignments', "Can't assign User with ID '{userUUID}' to '{$authAssignment->item_name}'", [
+                'userUUID' => Uuid::uuid2str($authAssignment->user_id),
+            ]));
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace domain\models\base;
 
 use domain\behaviors\UpperCaseBehavior;
+use domain\forms\base\DolzhForm;
 use domain\rules\base\DolzhRules;
 use domain\behaviors\UUIDBehavior;
 use Yii;
@@ -63,16 +64,16 @@ class Dolzh extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function create($dolzh_name)
+    public static function create(DolzhForm $form)
     {
         return new self([
-            'dolzh_name' => $dolzh_name,
+            'dolzh_name' => $form->dolzh_name,
         ]);
     }
 
-    public function editData($dolzh_name)
+    public function edit(DolzhForm $form)
     {
-        $this->dolzh_name = $dolzh_name;
+        $this->dolzh_name = $form->dolzh_name;
     }
 
     /**

@@ -101,7 +101,6 @@ class Parttime extends \yii\db\ActiveRecord
 
     public function edit(ParttimeForm $form)
     {
-        $this->person_id = Uuid::str2uuid($form->person_id);
         $this->dolzh_id = Uuid::str2uuid($form->dolzh_id);
         $this->podraz_id = Uuid::str2uuid($form->podraz_id);
         $this->parttime_begin = $form->parttime_begin;

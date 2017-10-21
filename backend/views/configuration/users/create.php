@@ -22,25 +22,6 @@ $this->title = Yii::t('common/person', 'Create User');
     <div class="user-form">
         <?php $userForm = ActiveForm::begin(['id' => $modelUserForm->formName()]); ?>
 
-        <?= ''/*Tabs::widget([
-            'items' => [
-                [
-                    'label' => Yii::t('common/employee', 'User'),
-                    'content' => Panel::widget([
-                        'label' => Yii::t('common/employee', 'User'),
-                        'content' => $this->render('_personForm', ['modelUserForm' => $modelUserForm, 'userForm' => $userForm]),
-                    ]),
-                ],
-                [
-                    'label' => Yii::t('common/employee', 'Profile'),
-                    'content' => Panel::widget([
-                        'label' => Yii::t('common/employee', 'Profile'),
-                        'content' => $this->render('_profileForm', ['modelProfileForm' => $modelProfileForm, 'profileForm' => $userForm]),
-                    ]),
-                ],
-            ],
-        ])*/ ?>
-
         <?= Panel::widget([
             'label' => Yii::t('common/employee', 'User'),
             'content' => $this->render('_personForm', ['modelUserForm' => $modelUserForm, 'userForm' => $userForm]),
@@ -55,24 +36,6 @@ $this->title = Yii::t('common/person', 'Create User');
 
         <?= Tabs::widget([
             'items' => [
-               /* [
-                    'label' => Yii::t('common/employee', 'Employees'),
-                    'content' => $this->render('_employeeGrid', [
-                        'searchModel' => $searchModelEmployee,
-                        'dataProvider' => $dataProviderEmployee,
-                        'gridConfig' => [
-                            'crudSettings' => [
-                                'create' => [
-                                    'urlGrid' => 'configuration/employee/create',
-                                    'inputName' => 'UserForm[assignEmployees]',
-                                ],
-                                'delete' => [
-                                    'inputName' => 'UserForm[assignEmployees]',
-                                ],
-                            ],
-                        ],
-                    ]),
-                ],*/
                 [
                     'label' => Yii::t('common/employee', 'Roles'),
                     'content' => $this->render('_roleGrid', [
@@ -95,29 +58,8 @@ $this->title = Yii::t('common/person', 'Create User');
         ]) ?>
 
         <div class="form-group">
-            <?= Html::submitButton(Yii::t('common/podraz', 'Next'), ['class' => 'btn btn-primary', 'form' => $modelUserForm->formName()]) ?>
+            <?= Html::submitButton(Yii::t('common', 'Next'), ['class' => 'btn btn-primary', 'form' => $modelUserForm->formName()]) ?>
         </div>
-
-        <?php
-    /*    $this->registerJs(<<<EOT
-            findErrors = function() {
-                var tabError = $('#{$modelUserForm->formName()}').find('div.has-error').first().parents('div.tab-pane');     
-                
-                if (tabError.length) {
-                    $('a[href="#' + tabError.attr('id') + '"]').click();
-                } 
-            }
-        
-            findErrors();
-            
-            $('button[type="submit"]').on('click', function() {
-                setTimeout(function() {
-                    findErrors();
-                }, 2000);
-            });
-EOT
-        )*/
-        ?>
 
     </div>
 </div>

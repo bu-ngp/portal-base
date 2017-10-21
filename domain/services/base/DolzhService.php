@@ -9,43 +9,43 @@ use domain\services\WKService;
 
 class DolzhService extends WKService
 {
-    private $dolzhRepository;
+    private $dolzhs;
 
     public function __construct(
-        DolzhRepository $dolzhRepository
+        DolzhRepository $dolzhs
     )
     {
-        $this->dolzhRepository = $dolzhRepository;
+        $this->dolzhs = $dolzhs;
     }
 
     public function find($id) {
-        return $this->dolzhRepository->find($id);
+        return $this->dolzhs->find($id);
     }
 
     public function create(DolzhForm $form)
     {
-        $dolzh = Dolzh::create($form->dolzh_name);
+        $dolzh = Dolzh::create($form);
         if (!$this->validateModels($dolzh, $form)) {
             throw new \DomainException();
         }
 
-        $this->dolzhRepository->add($dolzh);
+        $this->dolzhs->add($dolzh);
     }
 
     public function update($id, DolzhForm $form)
     {
-        $dolzh = $this->dolzhRepository->find($id);
-        $dolzh->editData($form->dolzh_name);
+        $dolzh = $this->dolzhs->find($id);
+        $dolzh->edit($form);
         if (!$this->validateModels($dolzh, $form)) {
             throw new \DomainException();
         }
 
-        $this->dolzhRepository->save($dolzh);
+        $this->dolzhs->save($dolzh);
     }
 
     public function delete($id)
     {
-        $dolzh = $this->dolzhRepository->find($id);
-        $this->dolzhRepository->delete($dolzh);
+        $dolzh = $this->dolzhs->find($id);
+        $this->dolzhs->delete($dolzh);
     }
 }

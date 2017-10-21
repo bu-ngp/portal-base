@@ -60,11 +60,9 @@ $this->title = Yii::t('common/person', $modelUserFormUpdate->person_fullname);
                                     return Html::a('<i class="fa fa-2x fa-pencil-square-o"></i>', $customurl, ['title' => Yii::t('wk-widget-gridview', 'Update'), 'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-primary', 'data-pjax' => '0']);
                                 },
                                 'customDelete' => function ($url, $model) {
-                                    $urlArr[] = Url::to([$model['employee_type'] == 1 ? 'configuration/employee/delete' : 'configuration/parttime/delete', 'id' => $model['primary_key']]);
-                                    $urlArr['id'] = $model['primary_key'];
-                                    $urlArr['mainId'] = Yii::$app->request->get('id');
+                                    $urlArr = Url::to([$model['employee_type'] == 1 ? 'configuration/employee/delete' : 'configuration/parttime/delete', 'id' => $model['primary_key']]);
 
-                                    return Html::a('<i class="fa fa-2x fa-trash-o"></i>', Url::to($urlArr), [
+                                    return Html::a('<i class="fa fa-2x fa-trash-o"></i>', $urlArr, [
                                         'title' => Yii::t('wk-widget-gridview', 'Delete'),
                                         'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-danger wk-gridview-crud-delete',
                                         'data-pjax' => '0'

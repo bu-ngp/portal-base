@@ -3,6 +3,7 @@
 namespace domain\models\base;
 
 use domain\behaviors\UpperCaseBehavior;
+use domain\forms\base\PodrazForm;
 use domain\rules\base\PodrazRules;
 use domain\behaviors\UUIDBehavior;
 use Yii;
@@ -63,16 +64,16 @@ class Podraz extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function create($podraz_name)
+    public static function create(PodrazForm $form)
     {
         return new self([
-            'podraz_name' => $podraz_name,
+            'podraz_name' => $form->podraz_name,
         ]);
     }
 
-    public function editData($podraz_name)
+    public function edit(PodrazForm $form)
     {
-        $this->podraz_name = $podraz_name;
+        $this->podraz_name = $form->podraz_name;
     }
 
     /**

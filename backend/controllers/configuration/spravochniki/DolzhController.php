@@ -2,19 +2,18 @@
 
 namespace backend\controllers\configuration\spravochniki;
 
+use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\GridView\services\AjaxResponse;
+use console\helpers\RbacHelper;
 use domain\forms\base\DolzhForm;
-use domain\providers\DolzhProvider;
 use domain\services\AjaxFilter;
 use domain\services\base\DolzhService;
 use domain\services\proxyService;
 use Yii;
-use domain\models\base\Dolzh;
 use domain\models\base\search\DolzhSearch;
 use yii\filters\AccessControl;
 use yii\filters\ContentNegotiator;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 /**
@@ -25,11 +24,11 @@ class DolzhController extends Controller
     /**
      * @var DolzhService
      */
-    private $dolzhService;
+    private $service;
 
-    public function __construct($id, $module, DolzhService $dolzhService, $config = [])
+    public function __construct($id, $module, DolzhService $service, $config = [])
     {
-        $this->dolzhService = new proxyService($dolzhService);
+        $this->service = new proxyService($service);
         parent::__construct($id, $module, $config = []);
     }
 
@@ -39,16 +38,21 @@ class DolzhController extends Controller
     public function behaviors()
     {
         return [
-//            'access' => [
-//                'class' => AccessControl::className(),
-//                'rules' => [
-//                    [
-//                        'actions' => ['index', 'create', 'update', 'delete'],
-//                        'allow' => true,
-//                        'roles' => ['dolzhEdit'],
-//                    ],
-//                ],
-//            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index'],
+                        'roles' => [RbacHelper::AUTHORIZED],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create', 'update', 'delete'],
+                        'roles' => [RbacHelper::DOLZH_EDIT],
+                    ],
+                ],
+            ],
             [
                 'class' => AjaxFilter::className(),
                 'actions' => ['delete'],
@@ -63,15 +67,10 @@ class DolzhController extends Controller
         ];
     }
 
-    /**
-     * Lists all Dolzh models.
-     * @return mixed
-     */
     public function actionIndex()
     {
         $searchModel = new DolzhSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        //$dataProvider = new DolzhProvider();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -79,22 +78,16 @@ class DolzhController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new Dolzh model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
     public function actionCreate()
     {
         $form = new DolzhForm();
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $this->dolzhService->create($form)
+            && $this->service->create($form)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
-
-            return $this->redirect(['index']);
+            return $this->redirect(Breadcrumbs::previousUrl());
         }
 
         return $this->render('create', [
@@ -102,24 +95,17 @@ class DolzhController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing Dolzh model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param resource $id
-     * @return mixed
-     */
     public function actionUpdate($id)
     {
-        $dolzhModel = $this->dolzhService->find($id);
-        $form = new DolzhForm($dolzhModel);
+        $dolzh = $this->service->find($id);
+        $form = new DolzhForm($dolzh);
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $this->dolzhService->update($dolzhModel->primaryKey, $form)
+            && $this->service->update($dolzh->primaryKey, $form)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
-
-            return $this->redirect(['index']);
+            return $this->redirect(Breadcrumbs::previousUrl());
         }
 
         return $this->render('update', [
@@ -127,16 +113,10 @@ class DolzhController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing Dolzh model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param resource $id
-     * @return mixed
-     */
     public function actionDelete($id)
     {
         try {
-            $this->dolzhService->delete($id);
+            $this->service->delete($id);
         } catch (\Exception $e) {
             return AjaxResponse::init(AjaxResponse::ERROR, $e->getMessage());
         }

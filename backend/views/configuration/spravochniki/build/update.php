@@ -15,16 +15,14 @@ $this->title = Yii::t('common/build', 'Update "{modelClass}": ', [
     <h1><?= Html::encode($this->title) ?></h1>
 
     <div class="build-form">
-
         <?php $form = ActiveForm::begin(); ?>
 
-                <?= $form->field($modelForm, 'build_name')->textInput(['wkkeep' => true, 'maxlength' => true]) ?>
+        <?= $form->field($modelForm, 'build_name')->textInput(['wkkeep' => true, 'maxlength' => true]) ?>
 
         <div class="form-group">
             <?= Html::submitButton(Yii::t('common/build', 'Update'), ['class' => 'btn btn-primary']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>
-
     </div>
 </div>

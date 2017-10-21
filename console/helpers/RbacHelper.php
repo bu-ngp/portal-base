@@ -6,12 +6,21 @@
  * Date: 12.05.2017
  * Time: 22:14
  */
+
 namespace console\helpers;
 
 use Yii;
 
 class RbacHelper
 {
+    /**
+     * @var string Разрешение 'Авторизованный пользователь'
+     */
+    const AUTHORIZED = 'authorized';
+    /**
+     * @var string Роль 'Права авторизованного пользователя'
+     */
+    const BASE_AUTHORIZED = 'baseAuthorized';
     /**
      * @var string Разрешение 'Редактирование пользователей'
      */
@@ -44,6 +53,14 @@ class RbacHelper
      * @var string Роль 'Оператор справочника "Должности"'
      */
     const BASE_DOLZH_EDIT = 'baseDolzhEdit';
+    /**
+     * @var string Разрешение 'Редактирование справочника "Здания"'
+     */
+    const BUILD_EDIT = 'buildEdit';
+    /**
+     * @var string Роль 'Оператор справочника "Здания"'
+     */
+    const BASE_BUILD_EDIT = 'baseBuildEdit';
     /**
      * @var string Роль 'Администратор базовой конфигурации'
      */
@@ -88,7 +105,7 @@ class RbacHelper
             $role = Yii::$app->authManager->createRole($name);
             $role->description = $description;
             Yii::$app->authManager->add($role);
-            
+
             /**
              * @var \yii\rbac\Permission $child
              */

@@ -1,6 +1,7 @@
 <?php
 
 use common\widgets\GridView\GridView;
+use console\helpers\RbacHelper;
 use rmrevin\yii\fontawesome\FA;
 use wartron\yii2uuid\helpers\Uuid;
 use yii\db\ActiveQuery;
@@ -28,9 +29,24 @@ $this->params['breadcrumbs'][] = $this->title;
             'dolzh_name',
         ],
         'crudSettings' => [
-            'create' => 'configuration/spravochniki/dolzh/create',
-            'update' => 'configuration/spravochniki/dolzh/update',
-            'delete' => 'configuration/spravochniki/dolzh/delete',
+            'create' => [
+                'url' => 'configuration/spravochniki/dolzh/create',
+                'beforeRender' => function () {
+                    return Yii::$app->user->can(RbacHelper::DOLZH_EDIT);
+                },
+            ],
+            'update' => [
+                'url' => 'configuration/spravochniki/dolzh/update',
+                'beforeRender' => function () {
+                    return Yii::$app->user->can(RbacHelper::DOLZH_EDIT);
+                },
+            ],
+            'delete' => [
+                'url' => 'configuration/spravochniki/dolzh/delete',
+                'beforeRender' => function () {
+                    return Yii::$app->user->can(RbacHelper::DOLZH_EDIT);
+                },
+            ],
         ],
         'panelHeading' => [
             'icon' => FA::icon(FA::_USER),

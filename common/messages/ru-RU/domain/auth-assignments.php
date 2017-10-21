@@ -17,10 +17,5 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Next' => '',
-    'Create' => 'Создать',
-    'Create Podraz' => 'Добавить подразделение',
-    'Podrazs' => 'Подразделения',
-    'Update' => 'Обновить',
-    'Update "{modelClass}": ' => 'Обновить "{modelClass}": ',
+    'AuthItem {item_name} not exist.' => '',
 ];

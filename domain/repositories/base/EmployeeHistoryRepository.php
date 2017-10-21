@@ -7,7 +7,7 @@ use domain\repositories\RepositoryInterface;
 use RuntimeException;
 use Yii;
 
-class EmployeeHistoryRepository implements RepositoryInterface
+class EmployeeHistoryRepository
 {
     /**
      * @param $id
@@ -25,7 +25,7 @@ class EmployeeHistoryRepository implements RepositoryInterface
     /**
      * @param EmployeeHistory $employeeHistory
      */
-    public function add($employeeHistory)
+    public function add(EmployeeHistory $employeeHistory)
     {
         if (!$employeeHistory->getIsNewRecord()) {
             throw new \DomainException(Yii::t('domain/base', 'Adding existing model.'));
@@ -38,7 +38,7 @@ class EmployeeHistoryRepository implements RepositoryInterface
     /**
      * @param EmployeeHistory $employeeHistory
      */
-    public function save($employeeHistory)
+    public function save(EmployeeHistory $employeeHistory)
     {
         if ($employeeHistory->getIsNewRecord()) {
             throw new \DomainException(Yii::t('domain/base', 'Adding existing model.'));
@@ -51,7 +51,7 @@ class EmployeeHistoryRepository implements RepositoryInterface
     /**
      * @param EmployeeHistory $employeeHistory
      */
-    public function delete($employeeHistory)
+    public function delete(EmployeeHistory $employeeHistory)
     {
         if (!$employeeHistory->delete()) {
             throw new \DomainException(Yii::t('domain/base', 'Deleting error.'));
