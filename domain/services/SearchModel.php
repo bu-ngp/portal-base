@@ -15,7 +15,7 @@ use yii\data\Sort;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
-class SearchModel extends Model
+class SearchModels extends Model
 {
     /** Filter Constants */
     const STRICT = 'strict';
