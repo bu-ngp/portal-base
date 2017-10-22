@@ -2,64 +2,32 @@
 
 namespace domain\models\base\search;
 
-use Yii;
-use yii\base\Model;
-use yii\data\ActiveDataProvider;
 use domain\models\base\Podraz;
+use domain\services\SearchModel;
 
-/**
- * PodrazSearch represents the model behind the search form about `domain\models\base\Podraz`.
- */
-class PodrazSearch extends Podraz
+class PodrazSearch extends SearchModel
 {
-    /**
-     * @inheritdoc
-     */
-    public function rules()
+    public static function activeRecord()
+    {
+        return new Podraz;
+    }
+
+    public function attributes()
     {
         return [
-            [['podraz_id', 'podraz_name'], 'safe'],
+            'podraz_name',
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function scenarios()
+    public function defaultSortOrder()
     {
-        // bypass scenarios() implementation in the parent class
-        return Model::scenarios();
+        return ['podraz_name' => SORT_ASC];
     }
 
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
-     */
-    public function search($params)
+    public function filter()
     {
-        $query = Podraz::find();
-
-        // add conditions that should always apply here
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-
-        $this->load($params);
-
-//        if (!$this->validate()) {
-//            // uncomment the following line if you do not want to return any records when validation fails
-//            // $query->where('0=1');
-//            return $dataProvider;
-//        }
-
-        // grid filtering conditions
-        $query->andFilterWhere(['like', 'podraz_id', $this->podraz_id])
-            ->andFilterWhere(['like', 'podraz_name', $this->podraz_name]);
-
-        return $dataProvider;
+        return [
+            ['podraz_name', SearchModel::CONTAIN],
+        ];
     }
 }

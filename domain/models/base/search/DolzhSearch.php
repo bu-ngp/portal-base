@@ -2,64 +2,32 @@
 
 namespace domain\models\base\search;
 
-use Yii;
-use yii\base\Model;
-use yii\data\ActiveDataProvider;
 use domain\models\base\Dolzh;
+use domain\services\SearchModel;
 
-/**
- * DolzhSearch represents the model behind the search form about `domain\models\base\Dolzh`.
- */
-class DolzhSearch extends Dolzh
+class DolzhSearch extends SearchModel
 {
-    /**
-     * @inheritdoc
-     */
-    public function rules()
+    public static function activeRecord()
+    {
+        return new Dolzh;
+    }
+
+    public function attributes()
     {
         return [
-            [['dolzh_id', 'dolzh_name'], 'safe'],
+            'dolzh_name',
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function scenarios()
+    public function defaultSortOrder()
     {
-        // bypass scenarios() implementation in the parent class
-        return Model::scenarios();
+        return ['dolzh_name' => SORT_ASC];
     }
 
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
-     */
-    public function search($params)
+    public function filter()
     {
-        $query = Dolzh::find();
-
-        // add conditions that should always apply here
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-
-        $this->load($params);
-
-//        if (!$this->validate()) {
-//            // uncomment the following line if you do not want to return any records when validation fails
-//            // $query->where('0=1');
-//            return $dataProvider;
-//        }
-
-        // grid filtering conditions
-        $query->andFilterWhere(['like', 'dolzh_id', $this->dolzh_id])
-            ->andFilterWhere(['like', 'dolzh_name', $this->dolzh_name]);
-
-        return $dataProvider;
+        return [
+            ['dolzh_name', SearchModel::CONTAIN],
+        ];
     }
 }

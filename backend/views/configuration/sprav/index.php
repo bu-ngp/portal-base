@@ -9,6 +9,7 @@
 /* @var $this yii\web\View */
 
 use common\widgets\CardList\CardList;
+use console\helpers\RbacHelper;
 
 $this->title = Yii::t('common/config', 'Spravochniki');
 ?>
@@ -22,6 +23,7 @@ $this->title = Yii::t('common/config', 'Spravochniki');
                 ],
                 'title' => Yii::t('common/sprav', 'Dolzh'),
                 'link' => Yii::$app->urlManager->createUrl(['configuration/spravochniki/dolzh']),
+                'roles' => RbacHelper::AUTHORIZED,
             ],
             [
                 'styleClass' => CardList::RED_STYLE,
@@ -30,6 +32,7 @@ $this->title = Yii::t('common/config', 'Spravochniki');
                 ],
                 'title' => Yii::t('common/sprav', 'Podraz'),
                 'link' => Yii::$app->urlManager->createUrl(['configuration/spravochniki/podraz']),
+                'roles' => RbacHelper::AUTHORIZED,
             ],
             [
                 'styleClass' => CardList::GREEN_STYLE,
@@ -38,6 +41,7 @@ $this->title = Yii::t('common/config', 'Spravochniki');
                 ],
                 'title' => Yii::t('common/sprav', 'Build'),
                 'link' => Yii::$app->urlManager->createUrl(['configuration/spravochniki/build']),
+                'roles' => RbacHelper::AUTHORIZED,
             ],
         ],
     ])

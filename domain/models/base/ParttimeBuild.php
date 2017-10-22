@@ -58,7 +58,7 @@ class ParttimeBuild extends \yii\db\ActiveRecord
     {
         return new self([
             'parttime_id' => $form->parttime_id,
-            'build_id' => Uuid::str2uuid($form->build_id),
+            'build_id' => $form->build_id,
             'parttime_build_deactive' => $form->parttime_build_deactive,
         ]);
     }
@@ -66,10 +66,9 @@ class ParttimeBuild extends \yii\db\ActiveRecord
     public function edit(ParttimeBuildForm $form)
     {
         $this->parttime_id = $form->parttime_id;
-        $this->build_id = Uuid::str2uuid($form->build_id);
+        $this->build_id = $form->build_id;
         $this->parttime_build_deactive = $form->parttime_build_deactive;
     }
-
 
     /**
      * @return \yii\db\ActiveQuery

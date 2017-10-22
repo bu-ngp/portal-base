@@ -41,7 +41,6 @@ class EmployeeHistoryBuild extends \yii\db\ActiveRecord
         ]);
     }
 
-
     /**
      * @inheritdoc
      */
@@ -58,15 +57,14 @@ class EmployeeHistoryBuild extends \yii\db\ActiveRecord
     {
         return new self([
             'employee_history_id' => $form->employee_history_id,
-            'build_id' => Uuid::str2uuid($form->build_id),
+            'build_id' => $form->build_id,
             'employee_history_build_deactive' => $form->employee_history_build_deactive,
         ]);
     }
 
     public function edit(EmployeeBuildForm $form)
     {
-        $this->employee_history_id = $form->employee_history_id;
-        $this->build_id = Uuid::str2uuid($form->build_id);
+        $this->build_id = $form->build_id;
         $this->employee_history_build_deactive = $form->employee_history_build_deactive;
     }
 

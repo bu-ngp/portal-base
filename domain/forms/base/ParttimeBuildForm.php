@@ -9,9 +9,7 @@
 namespace domain\forms\base;
 
 
-use domain\models\base\EmployeeHistoryBuild;
 use domain\models\base\ParttimeBuild;
-use domain\rules\base\EmployeeHistoryBuildRules;
 use domain\rules\base\ParttimeBuildRules;
 use Yii;
 use yii\base\Model;
@@ -25,7 +23,9 @@ class ParttimeBuildForm extends Model
     public function __construct(ParttimeBuild $parttimeBuild = null, $config = [])
     {
         if ($parttimeBuild) {
-            $this->load($parttimeBuild->attributes, '');
+            $this->parttime_id = $parttimeBuild->parttime_id;
+            $this->build_id = $parttimeBuild->build_id;
+            $this->parttime_build_deactive = $parttimeBuild->parttime_build_deactive;
         } else {
             $this->parttime_id = Yii::$app->request->get('employee');
         }

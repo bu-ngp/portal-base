@@ -6,6 +6,7 @@ use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\GridView\services\AjaxResponse;
 use console\helpers\RbacHelper;
 use domain\forms\base\DolzhForm;
+use domain\models\base\Dolzh;
 use domain\services\AjaxFilter;
 use domain\services\base\DolzhService;
 use domain\services\proxyService;

@@ -83,6 +83,7 @@ class AllEmployeeSearch extends Model
                         'desc' => ['employee_type' => SORT_DESC],
                     ],
                 ],
+                'defaultOrder' => ['employee_history_begin' => SORT_DESC, 'employee_type' => SORT_ASC]
             ],
             'pagination' => [
                 'pageSize' => 10,
@@ -133,7 +134,7 @@ class AllEmployeeSearch extends Model
                 ) r
             WHERE person_id = UNHEX(:person_id)
 EOT
-        . $this->whereStatement($params);
+            . $this->whereStatement($params);
     }
 
     protected function selectBody()

@@ -9,7 +9,6 @@
 
 namespace domain\services\base;
 
-use common\widgets\NotifyShower\NotifyShower;
 use domain\forms\base\RoleForm;
 use domain\forms\base\RoleUpdateForm;
 use domain\models\base\AuthItem;
@@ -22,23 +21,23 @@ use Yii;
 
 class RoleService extends WKService
 {
-    private $roleRepository;
+    private $roles;
     private $transactionManager;
-    private $authItemChildRepository;
+    private $authItemChilds;
 
     public function __construct(
-        RoleRepository $roleRepository,
-        AuthItemChildRepository $authItemChildRepository,
+        RoleRepository $roles,
+        AuthItemChildRepository $authItemChilds,
         TransactionManager $transactionManager
     )
     {
-        $this->roleRepository = $roleRepository;
-        $this->authItemChildRepository = $authItemChildRepository;
+        $this->roles = $roles;
+        $this->authItemChilds = $authItemChilds;
         $this->transactionManager = $transactionManager;
     }
 
     public function find($id) {
-        return $this->roleRepository->find($id);
+        return $this->roles->find($id);
     }
 
     /**
@@ -60,10 +59,10 @@ class RoleService extends WKService
         $authItemChild = AuthItemChild::create($authItem, $assignedKeys);
 
         return $this->transactionManager->execute(function () use ($authItem, $authItemChild) {
-            $this->roleRepository->add($authItem);
+            $this->roles->add($authItem);
 
             foreach ($authItemChild as $item) {
-                $this->authItemChildRepository->add($item);
+                $this->authItemChilds->add($item);
             }
         });
     }
@@ -77,9 +76,9 @@ class RoleService extends WKService
      */
     public function update($id, RoleUpdateForm $form)
     {
-        $authItem = $this->roleRepository->find($id);
+        $authItem = $this->roles->find($id);
 
-        if ($this->roleRepository->isEmptyChildren($authItem)) {
+        if ($this->roles->isEmptyChildren($authItem)) {
             throw new \DomainException(Yii::t('common/roles', 'Need add roles'));
         }
 
@@ -89,7 +88,7 @@ class RoleService extends WKService
             throw new \DomainException();
         }
 
-        $this->roleRepository->save($authItem);
+        $this->roles->save($authItem);
     }
 
     /**
@@ -100,8 +99,8 @@ class RoleService extends WKService
      */
     public function removeRoleForUpdate($parent, $child)
     {
-        $authItemChildModel = $this->authItemChildRepository->find(['parent' => $parent, 'child' => $child]);
-        $this->authItemChildRepository->delete($authItemChildModel);
+        $authItemChildModel = $this->authItemChilds->find(['parent' => $parent, 'child' => $child]);
+        $this->authItemChilds->delete($authItemChildModel);
     }
 
     /**
@@ -112,11 +111,11 @@ class RoleService extends WKService
      */
     public function removeRole($id)
     {
-        $authItem = $this->roleRepository->findByUser($id);
+        $authItem = $this->roles->findByUser($id);
 
         $this->transactionManager->execute(function () use ($authItem) {
-            $this->authItemChildRepository->removeChildren($authItem);
-            $this->roleRepository->delete($authItem);
+            $this->authItemChilds->removeChildren($authItem);
+            $this->roles->delete($authItem);
         });
     }
 

@@ -8,7 +8,6 @@ use domain\forms\base\EmployeeBuildForm;
 use domain\services\base\EmployeeBuildService;
 use domain\services\proxyService;
 use Yii;
-use yii\helpers\Url;
 use yii\web\Controller;
 
 class EmployeeHistoryBuildController extends Controller
@@ -16,11 +15,11 @@ class EmployeeHistoryBuildController extends Controller
     /**
      * @var EmployeeBuildService
      */
-    private $employeeBuildService;
+    private $service;
 
-    public function __construct($id, $module, EmployeeBuildService $employeeBuildService, $config = [])
+    public function __construct($id, $module, EmployeeBuildService $service, $config = [])
     {
-        $this->employeeBuildService = new proxyService($employeeBuildService);
+        $this->service = new proxyService($service);
         parent::__construct($id, $module, $config = []);
     }
 
@@ -30,10 +29,9 @@ class EmployeeHistoryBuildController extends Controller
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $employeeId = $this->employeeBuildService->create($form)
+            && $this->service->create($form)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
-
             return $this->redirect(Breadcrumbs::previousUrl());
         }
 
@@ -44,17 +42,15 @@ class EmployeeHistoryBuildController extends Controller
 
     public function actionUpdate($id)
     {
-        $employee = $this->employeeBuildService->get($id);
+        $employee = $this->service->get($id);
         $form = new EmployeeBuildForm($employee);
 
-        $a=Yii::$app->request->referrer;
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $this->employeeBuildService->update($id, $form)
+            && $this->service->update($id, $form)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
-
-            return $this->redirect(Url::previous()/* ['configuration/users/index']*/);
+            return $this->redirect(Breadcrumbs::previousUrl());
         }
 
         return $this->render('update', [
@@ -65,7 +61,7 @@ class EmployeeHistoryBuildController extends Controller
     public function actionDelete($id)
     {
         try {
-            $this->employeeBuildService->delete($id);
+            $this->service->delete($id);
         } catch (\Exception $e) {
             return AjaxResponse::init(AjaxResponse::ERROR, $e->getMessage());
         }

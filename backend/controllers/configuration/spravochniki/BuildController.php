@@ -4,6 +4,7 @@ namespace backend\controllers\configuration\spravochniki;
 
 use common\widgets\Breadcrumbs\Breadcrumbs;
 use console\helpers\RbacHelper;
+use domain\models\base\Build;
 use domain\services\proxyService;
 use Yii;
 use domain\models\base\search\BuildSearch;

@@ -7,6 +7,7 @@ use domain\models\base\EmployeeHistory;
 use domain\repositories\RepositoryInterface;
 use RuntimeException;
 use Yii;
+use yii\db\ActiveRecord;
 
 class EmployeeRepository
 {
@@ -25,16 +26,11 @@ class EmployeeRepository
 
     /**
      * @param $personUUID
-     * @return Employee
+     * @return null|ActiveRecord|Employee
      */
     public function findByPerson($personUUID)
     {
-        /** @var Employee $employee */
-        if (!$employee = Employee::find()->andWhere(['person_id' => $personUUID])->one()) {
-            throw new RuntimeException('Model not found.');
-        }
-
-        return $employee;
+        return Employee::find()->andWhere(['person_id' => $personUUID])->one();
     }
 
     public function has($id)

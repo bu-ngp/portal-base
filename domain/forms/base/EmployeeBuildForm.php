@@ -23,7 +23,9 @@ class EmployeeBuildForm extends Model
     public function __construct(EmployeeHistoryBuild $employeeHB = null, $config = [])
     {
         if ($employeeHB) {
-            $this->load($employeeHB->attributes, '');
+            $this->employee_history_id = $employeeHB->employee_history_id;
+            $this->build_id = $employeeHB->build_id;
+            $this->employee_history_build_deactive = $employeeHB->employee_history_build_deactive;
         } else {
             $this->employee_history_id = Yii::$app->request->get('employee');
         }

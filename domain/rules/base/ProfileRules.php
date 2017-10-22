@@ -20,7 +20,6 @@ class ProfileRules
     {
         return
             [
-                [['profile_id'], 'required'],
                 [['profile_dr'], WKDateValidator::className()],
                 [['profile_pol'], 'in', 'range' => [Profile::MALE, Profile::FEMALE]],
                 [['profile_inn'], 'match', 'pattern' => '/\d{12}/', 'message' => Yii::t('domain/profile', 'INN required 12 digits')],

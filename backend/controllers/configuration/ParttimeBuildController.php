@@ -8,7 +8,6 @@ use domain\forms\base\ParttimeBuildForm;
 use domain\services\base\ParttimeBuildService;
 use domain\services\proxyService;
 use Yii;
-use yii\helpers\Url;
 use yii\web\Controller;
 
 class ParttimeBuildController extends Controller
@@ -16,11 +15,11 @@ class ParttimeBuildController extends Controller
     /**
      * @var ParttimeBuildService
      */
-    private $parttimeBuildService;
+    private $service;
 
-    public function __construct($id, $module, ParttimeBuildService $parttimeBuildService, $config = [])
+    public function __construct($id, $module, ParttimeBuildService $service, $config = [])
     {
-        $this->parttimeBuildService = new proxyService($parttimeBuildService);
+        $this->service = new proxyService($service);
         parent::__construct($id, $module, $config = []);
     }
 
@@ -30,10 +29,9 @@ class ParttimeBuildController extends Controller
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $parttimeId = $this->parttimeBuildService->create($form)
+            && $this->service->create($form)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
-
             return $this->redirect(Breadcrumbs::previousUrl());
         }
 
@@ -44,15 +42,14 @@ class ParttimeBuildController extends Controller
 
     public function actionUpdate($id)
     {
-        $parttime = $this->parttimeBuildService->get($id);
+        $parttime = $this->service->get($id);
         $form = new ParttimeBuildForm($parttime);
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $this->parttimeBuildService->update($id, $form)
+            && $this->service->update($id, $form)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
-
             return $this->redirect(Breadcrumbs::previousUrl());
         }
 
@@ -64,7 +61,7 @@ class ParttimeBuildController extends Controller
     public function actionDelete($id)
     {
         try {
-            $this->parttimeBuildService->delete($id);
+            $this->service->delete($id);
         } catch (\Exception $e) {
             return AjaxResponse::init(AjaxResponse::ERROR, $e->getMessage());
         }

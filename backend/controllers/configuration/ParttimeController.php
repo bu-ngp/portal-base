@@ -10,25 +10,57 @@ namespace backend\controllers\configuration;
 
 
 use common\widgets\Breadcrumbs\Breadcrumbs;
+use common\widgets\GridView\services\AjaxResponse;
+use console\helpers\RbacHelper;
 use domain\forms\base\ParttimeForm;
 use domain\models\base\search\ParttimeBuildSearch;
+use domain\services\AjaxFilter;
 use domain\services\base\ParttimeService;
 use domain\services\proxyService;
 use Yii;
-use yii\helpers\Url;
+use yii\filters\AccessControl;
+use yii\filters\ContentNegotiator;
 use yii\web\Controller;
+use yii\web\Response;
 
 class ParttimeController extends Controller
 {
     /**
      * @var ParttimeService
      */
-    private $parttimeService;
+    private $service;
 
-    public function __construct($id, $module, ParttimeService $parttimeService, $config = [])
+    public function __construct($id, $module, ParttimeService $service, $config = [])
     {
-        $this->parttimeService = new proxyService($parttimeService);
+        $this->service = new proxyService($service);
         parent::__construct($id, $module, $config = []);
+    }
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['create', 'update', 'delete'],
+                        'roles' => [RbacHelper::USER_EDIT],
+                    ],
+                ],
+            ],
+            [
+                'class' => AjaxFilter::className(),
+                'actions' => ['delete'],
+            ],
+            [
+                'class' => ContentNegotiator::className(),
+                'only' => ['delete'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
+        ];
     }
 
     public function actionCreate()
@@ -37,11 +69,10 @@ class ParttimeController extends Controller
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $parttimeId = $this->parttimeService->create($form)
+            && $parttimeId = $this->service->create($form)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved. Add Builds.'));
             Breadcrumbs::removeLastCrumb();
-
             return $this->redirect(['update', 'id' => $parttimeId]);
         }
 
@@ -52,7 +83,7 @@ class ParttimeController extends Controller
 
     public function actionUpdate($id)
     {
-        $employee = $this->parttimeService->get($id);
+        $employee = $this->service->get($id);
         $form = new ParttimeForm($employee);
 
         $searchModelParttimeBuild = new ParttimeBuildSearch();
@@ -60,10 +91,9 @@ class ParttimeController extends Controller
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $this->parttimeService->update($id, $form)
+            && $this->service->update($id, $form)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
-
             return $this->redirect(Breadcrumbs::previousUrl());
         }
 
@@ -72,5 +102,16 @@ class ParttimeController extends Controller
             'searchModelParttimeBuild' => $searchModelParttimeBuild,
             'dataProviderParttimeBuild' => $dataProviderParttimeBuild,
         ]);
+    }
+
+    public function actionDelete($id)
+    {
+        try {
+            $this->service->delete($id);
+        } catch (\Exception $e) {
+            return AjaxResponse::init(AjaxResponse::ERROR, $e->getMessage());
+        }
+
+        return AjaxResponse::init(AjaxResponse::SUCCESS);
     }
 }

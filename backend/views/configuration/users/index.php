@@ -8,6 +8,7 @@
 
 use common\models\base\Person;
 use common\widgets\GridView\GridView;
+use console\helpers\RbacHelper;
 use domain\models\base\AuthItem;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
@@ -39,8 +40,8 @@ $this->params['breadcrumbs'][] = $this->title;
         //'customizeDialog' => false,
         //  'minHeight' => 450,
         'columns' => [
+            'person_code',
             'person_fullname',
-
             'employee.dolzh.dolzh_name',
             'employee.podraz.podraz_name',
             [
@@ -55,16 +56,34 @@ $this->params['breadcrumbs'][] = $this->title;
                             }',
                     ],
                 ],
+            ],
+            [
+                'attribute' => 'created_at',
+                'format' => 'datetime',
+            ],
+            [
+                'attribute' => 'updated_at',
+                'format' => 'date',
             ]
         ],
         'crudSettings' => [
-            'create' => 'configuration/users/create',
-            'update' => 'configuration/users/update',
+            'create' => [
+                'url' => 'configuration/users/create',
+                'beforeRender' => function () {
+                    return Yii::$app->user->can(RbacHelper::USER_EDIT);
+                },
+            ],
+            'update' => [
+                'url' => 'configuration/users/update',
+                'beforeRender' => function () {
+                    return Yii::$app->user->can(RbacHelper::USER_EDIT);
+                },
+            ],
             'delete' => [
                 'url' => 'configuration/users/delete',
                 'beforeRender' => function ($model) {
                     /** @var Person $model */
-                    return !($model->person_username === 'admin');
+                    return !($model->person_username === 'admin') && Yii::$app->user->can(RbacHelper::USER_EDIT);
                 },
             ],
         ],

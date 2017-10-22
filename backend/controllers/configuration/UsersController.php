@@ -17,6 +17,7 @@ use domain\forms\base\UserForm;
 use domain\forms\base\UserFormUpdate;
 use domain\models\base\search\AllEmployeeSearch;
 use domain\models\base\search\AuthItemSearch;
+use domain\models\base\search\AuthItemUpdateSearch;
 use domain\models\base\search\UsersSearch;
 use domain\services\AjaxFilter;
 use domain\services\base\PersonService;
@@ -74,8 +75,10 @@ class UsersController extends Controller
 
     public function actionIndex()
     {
-        $searchModel = new UsersSearch();
+        // $searchModel = new UsersSearch();
         // $filterModel = new AuthItemFilter();
+        // $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModel = new UsersSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -91,7 +94,7 @@ class UsersController extends Controller
         $profileForm = new ProfileForm();
 
         $searchModelAuthItem = new AuthItemSearch();
-        $dataProviderAuthItem = $searchModelAuthItem->searchForCreate(Yii::$app->request->queryParams);
+        $dataProviderAuthItem = $searchModelAuthItem->search(Yii::$app->request->queryParams);
 
         if ($userForm->load(Yii::$app->request->post())
             && $profileForm->load(Yii::$app->request->post())
@@ -125,8 +128,8 @@ class UsersController extends Controller
 
         $searchModelEmployee = new AllEmployeeSearch();
         $dataProviderEmployee = $searchModelEmployee->search(Yii::$app->request->queryParams);
-        $searchModelAuthItem = new AuthItemSearch();
-        $dataProviderAuthItem = $searchModelAuthItem->searchForUpdate(Yii::$app->request->queryParams);
+        $searchModelAuthItem = new AuthItemUpdateSearch();
+        $dataProviderAuthItem = $searchModelAuthItem->search(Yii::$app->request->queryParams);
 
         if ($userFormUpdate->load(Yii::$app->request->post())
             && $profileForm->load(Yii::$app->request->post())

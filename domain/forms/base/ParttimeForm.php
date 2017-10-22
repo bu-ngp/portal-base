@@ -12,18 +12,17 @@ class ParttimeForm extends Model
     public $person_id;
     public $dolzh_id;
     public $podraz_id;
-    public $build_id;
     public $parttime_begin;
     public $parttime_end;
-    public $created_at;
-    public $updated_at;
-    public $created_by;
-    public $updated_by;
 
     public function __construct(Parttime $parttime = null, $config = [])
     {
         if ($parttime) {
-            $this->load($parttime->attributes, '');
+            $this->person_id = $parttime->person_id;
+            $this->dolzh_id = $parttime->dolzh_id;
+            $this->podraz_id = $parttime->podraz_id;
+            $this->parttime_begin = $parttime->parttime_begin;
+            $this->parttime_end = $parttime->parttime_end;
         } else {
             $this->person_id = Yii::$app->request->get('person');
             $this->parttime_begin = date('Y-m-d');

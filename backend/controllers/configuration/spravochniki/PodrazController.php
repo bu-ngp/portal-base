@@ -3,6 +3,7 @@
 namespace backend\controllers\configuration\spravochniki;
 
 use console\helpers\RbacHelper;
+use domain\models\base\Podraz;
 use domain\services\proxyService;
 use Yii;
 use domain\models\base\search\PodrazSearch;

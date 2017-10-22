@@ -54,12 +54,6 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         'gridExcludeIdsFunc' => function (ActiveQuery $activeQuery, array $ids) {
             $activeQuery->andWhere(['not in', 'dolzh_id', $ids]);
-//                    ->andWhere(['not exists', (new Query())
-//                        ->select('{{%auth_item_child}}.child')
-//                        ->from('{{%auth_item_child}}')
-//                        ->andWhere(['in', '{{%auth_item_child}}.parent', $ids])
-//                        ->andWhere('{{%auth_item_child}}.child = {{%auth_item}}.name')
-//                    ]);
         }
     ]);
     ?>

@@ -2,15 +2,15 @@
 
 namespace domain\services\base;
 
+use common\widgets\GridView\services\GridViewHelper;
 use domain\forms\base\EmployeeHistoryForm;
 use domain\models\base\Employee;
 use domain\models\base\EmployeeHistory;
-use domain\models\base\EmployeeHistoryBuild;
-use domain\repositories\base\EmployeeHistoryBuildRepository;
 use domain\repositories\base\EmployeeHistoryRepository;
 use domain\repositories\base\EmployeeRepository;
 use domain\services\TransactionManager;
 use domain\services\WKService;
+use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 
 class EmployeeHistoryService extends WKService
@@ -18,19 +18,16 @@ class EmployeeHistoryService extends WKService
     private $transactionManager;
     private $employeeHistories;
     private $employees;
-    private $employeeHistoryBuilds;
 
     public function __construct(
         TransactionManager $transactionManager,
         EmployeeHistoryRepository $employeeHistories,
-        EmployeeRepository $employees,
-        EmployeeHistoryBuildRepository $employeeHistoryBuilds
+        EmployeeRepository $employees
     )
     {
         $this->transactionManager = $transactionManager;
         $this->employeeHistories = $employeeHistories;
         $this->employees = $employees;
-        $this->employeeHistoryBuilds = $employeeHistoryBuilds;
     }
 
     public function get($id)
@@ -41,6 +38,7 @@ class EmployeeHistoryService extends WKService
     public function create(EmployeeHistoryForm $form)
     {
         $this->guardPersonExists($form);
+        $this->filterEmployeeUUIDCreate($form);
         $employeeHistory = EmployeeHistory::create($form);
 
         if (!$this->validateModels($employeeHistory, $form)) {
@@ -65,6 +63,7 @@ class EmployeeHistoryService extends WKService
     public function update($id, EmployeeHistoryForm $form)
     {
         $employee = $this->employeeHistories->find($id);
+        $this->filterEmployeeUUIDUpdate($form);
         $employee->edit($form);
 
         if (!$this->validateModels($employee, $form)) {
@@ -84,6 +83,32 @@ class EmployeeHistoryService extends WKService
     {
         if (!$form->person_id) {
             throw new \DomainException(Yii::t('domain/employee', 'URL parameter "person" is missed.'));
+        }
+    }
+
+    protected function filterEmployeeUUIDCreate(EmployeeHistoryForm $form)
+    {
+        if (GridViewHelper::isBinaryValidString($form->person_id)
+            && GridViewHelper::isBinaryValidString($form->dolzh_id)
+            && GridViewHelper::isBinaryValidString($form->podraz_id)
+        ) {
+            $form->person_id = Uuid::str2uuid($form->person_id);
+            $form->dolzh_id = Uuid::str2uuid($form->dolzh_id);
+            $form->podraz_id = Uuid::str2uuid($form->podraz_id);
+        } else {
+            throw new \RuntimeException(Yii::t('domain/employee', 'Invalid UUID Parameters.'));
+        }
+    }
+
+    protected function filterEmployeeUUIDUpdate(EmployeeHistoryForm $form)
+    {
+        if (GridViewHelper::isBinaryValidString($form->dolzh_id)
+            && GridViewHelper::isBinaryValidString($form->podraz_id)
+        ) {
+            $form->dolzh_id = Uuid::str2uuid($form->dolzh_id);
+            $form->podraz_id = Uuid::str2uuid($form->podraz_id);
+        } else {
+            throw new \RuntimeException(Yii::t('domain/employee', 'Invalid UUID Parameters.'));
         }
     }
 }

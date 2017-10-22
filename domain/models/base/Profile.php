@@ -52,6 +52,7 @@ class Profile extends \yii\db\ActiveRecord
     public function rules()
     {
         return array_merge(ProfileRules::client(), [
+            [['profile_id'], 'required'],
             [['profile_inn', 'profile_snils'], 'unique'],
         ]);
     }

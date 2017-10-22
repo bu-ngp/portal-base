@@ -2,10 +2,7 @@
 
 namespace domain\repositories\base;
 
-use domain\models\base\EmployeeHistory;
 use domain\models\base\Parttime;
-use domain\repositories\RepositoryInterface;
-use RuntimeException;
 use Yii;
 
 class ParttimeRepository

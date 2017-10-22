@@ -3,9 +3,11 @@
 namespace backend\controllers\configuration;
 
 use common\widgets\GridView\services\AjaxResponse;
+use console\helpers\RbacHelper;
 use domain\forms\base\RoleForm;
 use domain\forms\base\RoleUpdateForm;
 use domain\models\base\filter\AuthItemFilter;
+use domain\models\base\search\AuthItemUpdateSearch;
 use domain\services\AjaxFilter;
 use domain\services\base\RoleService;
 use common\reports\RolesReport;
@@ -27,11 +29,11 @@ class RolesController extends Controller
     /**
      * @var RoleService
      */
-    private $roleService;
+    private $service;
 
-    public function __construct($id, $module, RoleService $roleService, $config = [])
+    public function __construct($id, $module, RoleService $service, $config = [])
     {
-        $this->roleService = new proxyService($roleService);
+        $this->service = new proxyService($service);
         parent::__construct($id, $module, $config = []);
     }
 
@@ -45,8 +47,14 @@ class RolesController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'create', 'update', 'index-for-roles', 'index-for-users', 'delete-role', 'delete'],
                         'allow' => true,
+                        'actions' => ['index', 'create', 'update', 'index-for-roles', 'delete-role', 'delete'],
+                        'roles' => [RbacHelper::ROLE_EDIT],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['index-for-users'],
+                        'roles' => [RbacHelper::USER_EDIT],
                     ],
                 ],
             ],
@@ -90,14 +98,13 @@ class RolesController extends Controller
     {
         $form = new RoleForm();
         $searchModel = new AuthItemSearch();
-        $dataProvider = $searchModel->searchForCreate(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $this->roleService->create($form)
+            && $this->service->create($form)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
-
             return $this->redirect(['index']);
         }
 
@@ -116,17 +123,16 @@ class RolesController extends Controller
      */
     public function actionUpdate($id)
     {
-        $roleModel = $this->roleService->find($id);
+        $roleModel = $this->service->find($id);
         $form = new RoleUpdateForm($roleModel);
-        $searchModel = new AuthItemSearch();
-        $dataProvider = $searchModel->searchForUpdate(Yii::$app->request->queryParams);
+        $searchModel = new AuthItemUpdateSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $this->roleService->update($roleModel->primaryKey, $form)
+            && $this->service->update($roleModel->primaryKey, $form)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
-
             return $this->redirect(['index']);
         }
 
@@ -170,7 +176,7 @@ class RolesController extends Controller
     public function actionDeleteRole($mainId, $id)
     {
         try {
-            $this->roleService->removeRoleForUpdate($mainId, $id);
+            $this->service->removeRoleForUpdate($mainId, $id);
         } catch (\Exception $e) {
             return AjaxResponse::init(AjaxResponse::ERROR, $e->getMessage());
         }
@@ -187,7 +193,7 @@ class RolesController extends Controller
     public function actionDelete($id)
     {
         try {
-            $this->roleService->removeRole($id);
+            $this->service->removeRole($id);
         } catch (\Exception $e) {
             return AjaxResponse::init(AjaxResponse::ERROR, $e->getMessage());
         }

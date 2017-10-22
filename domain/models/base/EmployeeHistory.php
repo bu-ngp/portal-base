@@ -47,7 +47,6 @@ class EmployeeHistory extends \yii\db\ActiveRecord
     public function rules()
     {
         return array_merge(EmployeeHistoryRules::client(), [
-            [['person_id'], 'required'],
             [['employee_history_begin'], WKDateValidator::className()],
             [['dolzh_id'], 'exist', 'skipOnError' => true, 'targetClass' => Dolzh::className(), 'targetAttribute' => ['dolzh_id' => 'dolzh_id']],
             [['person_id'], 'exist', 'skipOnError' => true, 'targetClass' => Person::className(), 'targetAttribute' => ['person_id' => 'person_id']],
@@ -78,34 +77,27 @@ class EmployeeHistory extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            [
-                'class' => TimestampBehavior::className(),
-                //'value' => new Expression('NOW()'),
-                'value' => time(),
-            ],
-            [
-                'class' => BlameableBehavior::className(),
-            ],
+            TimestampBehavior::className(),
+            BlameableBehavior::className(),
         ];
     }
 
     public static function create(EmployeeHistoryForm $form)
     {
         return new self([
-            'person_id' => Uuid::str2uuid($form->person_id),
-            'dolzh_id' => Uuid::str2uuid($form->dolzh_id),
-            'podraz_id' => Uuid::str2uuid($form->podraz_id),
+            'person_id' => $form->person_id,
+            'dolzh_id' => $form->dolzh_id,
+            'podraz_id' => $form->podraz_id,
             'employee_history_begin' => $form->employee_history_begin,
         ]);
     }
 
     public function edit(EmployeeHistoryForm $form)
     {
-        $this->dolzh_id = Uuid::str2uuid($form->dolzh_id);
-        $this->podraz_id = Uuid::str2uuid($form->podraz_id);
+        $this->dolzh_id = $form->dolzh_id;
+        $this->podraz_id = $form->podraz_id;
         $this->employee_history_begin = $form->employee_history_begin;
     }
-
 
     /**
      * @return \yii\db\ActiveQuery

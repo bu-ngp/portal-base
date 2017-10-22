@@ -3,7 +3,6 @@
 namespace domain\repositories\base;
 
 use domain\models\base\EmployeeHistoryBuild;
-use RuntimeException;
 use Yii;
 
 class EmployeeHistoryBuildRepository

@@ -91,18 +91,18 @@ class Employee extends \yii\db\ActiveRecord
     public static function create(EmployeeHistoryForm $form)
     {
         return new self([
-            'person_id' => Uuid::str2uuid($form->person_id),
-            'dolzh_id' => Uuid::str2uuid($form->dolzh_id),
-            'podraz_id' => Uuid::str2uuid($form->podraz_id),
+            'person_id' => $form->person_id,
+            'dolzh_id' => $form->dolzh_id,
+            'podraz_id' => $form->podraz_id,
             'employee_begin' => $form->employee_history_begin,
         ]);
     }
 
     public function edit(EmployeeHistoryForm $form)
     {
-        $this->person_id = Uuid::str2uuid($form->person_id);
-        $this->dolzh_id = Uuid::str2uuid($form->dolzh_id);
-        $this->podraz_id = Uuid::str2uuid($form->podraz_id);
+        $this->person_id = $form->person_id;
+        $this->dolzh_id = $form->dolzh_id;
+        $this->podraz_id = $form->podraz_id;
         $this->employee_begin = $form->employee_history_begin;
     }
 

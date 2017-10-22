@@ -47,7 +47,6 @@ class Parttime extends \yii\db\ActiveRecord
     public function rules()
     {
         return array_merge(ParttimeRules::client(), [
-            [['person_id'], 'required'],
             [['dolzh_id'], 'exist', 'skipOnError' => true, 'targetClass' => Dolzh::className(), 'targetAttribute' => ['dolzh_id' => 'dolzh_id']],
             [['person_id'], 'exist', 'skipOnError' => true, 'targetClass' => Person::className(), 'targetAttribute' => ['person_id' => 'person_id']],
             [['podraz_id'], 'exist', 'skipOnError' => true, 'targetClass' => Podraz::className(), 'targetAttribute' => ['podraz_id' => 'podraz_id']],
@@ -77,23 +76,17 @@ class Parttime extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            [
-                'class' => TimestampBehavior::className(),
-                // 'value' => new Expression('NOW()'),
-                'value' => time(),
-            ],
-            [
-                'class' => BlameableBehavior::className(),
-            ],
+            TimestampBehavior::className(),
+            BlameableBehavior::className(),
         ];
     }
 
     public static function create(ParttimeForm $form)
     {
         return new self([
-            'person_id' => Uuid::str2uuid($form->person_id),
-            'dolzh_id' => Uuid::str2uuid($form->dolzh_id),
-            'podraz_id' => Uuid::str2uuid($form->podraz_id),
+            'person_id' => $form->person_id,
+            'dolzh_id' => $form->dolzh_id,
+            'podraz_id' => $form->podraz_id,
             'parttime_begin' => $form->parttime_begin,
             'parttime_end' => $form->parttime_end,
         ]);
@@ -101,8 +94,8 @@ class Parttime extends \yii\db\ActiveRecord
 
     public function edit(ParttimeForm $form)
     {
-        $this->dolzh_id = Uuid::str2uuid($form->dolzh_id);
-        $this->podraz_id = Uuid::str2uuid($form->podraz_id);
+        $this->dolzh_id = $form->dolzh_id;
+        $this->podraz_id = $form->podraz_id;
         $this->parttime_begin = $form->parttime_begin;
         $this->parttime_end = $form->parttime_end;
     }

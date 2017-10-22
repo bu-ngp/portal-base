@@ -3,7 +3,6 @@
 namespace domain\repositories\base;
 
 use domain\models\base\ParttimeBuild;
-use RuntimeException;
 use Yii;
 
 class ParttimeBuildRepository
