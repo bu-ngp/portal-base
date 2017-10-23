@@ -46,6 +46,8 @@ use yii\db\Expression;
 <?php if (count($timestampColumns) === 2): ?>
 use common\classes\BlameableBehavior;
 <?php endif; ?>
+use <?= preg_replace('/models/', 'forms', $generator->ns) ?>\<?= $className ?>Form;
+
 /**
  * This is the model class for table "<?= $generator->generateTableName($tableName) ?>".
  *
@@ -110,33 +112,16 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
             ],
 <?php endif; ?>
 <?php if (count($timestampColumns) === 2): ?>
-            [
-                'class' => TimestampBehavior::className(),
-                'value' => new Expression('NOW()'),
-            ],
+            TimestampBehavior::className(),
 <?php endif; ?>
 <?php if (count($blameableColumns) === 2): ?>
-            [
-                'class' => BlameableBehavior::className(),
-            ],
+            BlameableBehavior::className(),
 <?php endif; ?>
         ];
     }
 <?php endif; ?>
 
-    public static function create(<?php
-        $properties = [];
-
-        foreach ($tableSchema->columns as $column) {
-            if (in_array($column->name, $safeAttributes)) {
-                $properties[]= '$' . $column->name;
-            }
-        }
-
-        if ($properties) {
-            echo implode(', ', $properties);
-        }
-?>)
+    public static function create(<?= $className ?>Form $form)
     {
         return new self([
 <?php
@@ -144,7 +129,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
 
         foreach ($tableSchema->columns as $column) {
             if (in_array($column->name, $safeAttributes)) {
-                $values[] = "            '{$column->name}' => \${$column->name}";
+                $values[] = "            '{$column->name}' => \$form->{$column->name}";
             }
         }
 
@@ -156,26 +141,14 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
         ]);
     }
 
-    public function editData(<?php
-$properties = [];
-
-foreach ($tableSchema->columns as $column) {
-    if (in_array($column->name, $safeAttributes)) {
-        $properties[] = '$' . $column->name;
-    }
-}
-
-if ($properties) {
-    echo implode(', ', $properties);
-}
-?>)
+    public function edit(<?= $className ?>Form $form)
     {
 <?php
 $values = [];
 
 foreach ($tableSchema->columns as $column) {
     if (in_array($column->name, $safeAttributes)) {
-        $values[] = "        \$this->{$column->name} = \${$column->name}";
+        $values[] = "        \$this->{$column->name} = \$form->{$column->name}";
     }
 }
 

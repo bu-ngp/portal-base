@@ -8,6 +8,7 @@ use domain\models\base\Employee;
 use domain\models\base\EmployeeHistory;
 use domain\repositories\base\EmployeeHistoryRepository;
 use domain\repositories\base\EmployeeRepository;
+use domain\repositories\base\PersonRepository;
 use domain\services\TransactionManager;
 use domain\services\WKService;
 use wartron\yii2uuid\helpers\Uuid;
@@ -18,16 +19,19 @@ class EmployeeHistoryService extends WKService
     private $transactionManager;
     private $employeeHistories;
     private $employees;
+    private $persons;
 
     public function __construct(
         TransactionManager $transactionManager,
         EmployeeHistoryRepository $employeeHistories,
-        EmployeeRepository $employees
+        EmployeeRepository $employees,
+        PersonRepository $persons
     )
     {
         $this->transactionManager = $transactionManager;
         $this->employeeHistories = $employeeHistories;
         $this->employees = $employees;
+        $this->persons = $persons;
     }
 
     public function get($id)

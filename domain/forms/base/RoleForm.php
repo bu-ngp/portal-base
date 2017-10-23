@@ -10,7 +10,6 @@ namespace domain\forms\base;
 
 use domain\models\base\AuthItem;
 use domain\rules\base\RoleRules;
-use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
 

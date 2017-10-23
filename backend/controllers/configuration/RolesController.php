@@ -2,6 +2,7 @@
 
 namespace backend\controllers\configuration;
 
+use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\GridView\services\AjaxResponse;
 use console\helpers\RbacHelper;
 use domain\forms\base\RoleForm;
@@ -105,7 +106,7 @@ class RolesController extends Controller
             && $this->service->create($form)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
-            return $this->redirect(['index']);
+            return $this->redirect(Breadcrumbs::previousUrl());
         }
 
         return $this->render('create', [
@@ -123,17 +124,17 @@ class RolesController extends Controller
      */
     public function actionUpdate($id)
     {
-        $roleModel = $this->service->find($id);
-        $form = new RoleUpdateForm($roleModel);
+        $role = $this->service->get($id);
+        $form = new RoleUpdateForm($role);
         $searchModel = new AuthItemUpdateSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $this->service->update($roleModel->primaryKey, $form)
+            && $this->service->update($role->primaryKey, $form)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
-            return $this->redirect(['index']);
+            return $this->redirect(Breadcrumbs::previousUrl());
         }
 
         return $this->render('update', [

@@ -18,8 +18,7 @@ class WKDateValidator extends DateValidator
     public function validateAttribute($model, $attribute)
     {
         $this->filterAttribute($model, $attribute);
-
-        return parent::validateAttribute($model, $attribute);
+        parent::validateAttribute($model, $attribute);
     }
 
     protected function filterAttribute($model, $attribute)

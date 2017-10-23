@@ -23,6 +23,7 @@ use domain\services\AjaxFilter;
 use domain\services\base\PersonService;
 use domain\services\proxyService;
 use Yii;
+use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\ContentNegotiator;
 use yii\web\Controller;

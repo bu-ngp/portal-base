@@ -38,13 +38,6 @@ class UsersSearch extends SearchModel
         ];
     }
 
-    public function customRules()
-    {
-        return [
-            ['person_code', 'integer'],
-        ];
-    }
-
     public function defaultSortOrder()
     {
         return ['person_fullname' => SORT_ASC];

@@ -45,25 +45,31 @@ $this->params['breadcrumbs'][] = $this->title;
             'employee.dolzh.dolzh_name',
             'employee.podraz.podraz_name',
             [
+                'attribute' => 'person_hired',
+                'format' => 'date',
+                'visible' => false,
+            ],
+            [
                 'attribute' => 'person_fired',
-                'format' => 'datetime',
-                'filterWidgetOptions' => [
-                    //    'convertFormat' => true,
-                    'pluginEvents' => [
-                        'apply.daterangepicker' => 'function(event, picker) {
-                              console.debug(picker.startDate.format("YYYY-MM-DD"));
-                              console.debug(event);
-                            }',
-                    ],
-                ],
+                'format' => 'date',
             ],
             [
                 'attribute' => 'created_at',
                 'format' => 'datetime',
+                'visible' => false,
             ],
             [
                 'attribute' => 'updated_at',
-                'format' => 'date',
+                'format' => 'datetime',
+                'visible' => false,
+            ],
+            [
+                'attribute' => 'created_by',
+                'visible' => false,
+            ],
+            [
+                'attribute' => 'updated_by',
+                'visible' => false,
             ]
         ],
         'crudSettings' => [

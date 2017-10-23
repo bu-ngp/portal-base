@@ -36,7 +36,7 @@ class RoleService extends WKService
         $this->transactionManager = $transactionManager;
     }
 
-    public function find($id) {
+    public function get($id) {
         return $this->roles->find($id);
     }
 
@@ -51,7 +51,7 @@ class RoleService extends WKService
     {
         $assignedKeys = $this->guardAssignRoles($form);
 
-        $authItem = AuthItem::create($form->name, $form->description, $form->ldap_group);
+        $authItem = AuthItem::create($form);
         if (!$this->validateModels($authItem, $form)) {
             throw new \DomainException();
         }
@@ -82,7 +82,7 @@ class RoleService extends WKService
             throw new \DomainException(Yii::t('common/roles', 'Need add roles'));
         }
 
-        $authItem->editData($form->description, $form->ldap_group);
+        $authItem->edit($form);
 
         if (!$this->validateModels($authItem, $form)) {
             throw new \DomainException();

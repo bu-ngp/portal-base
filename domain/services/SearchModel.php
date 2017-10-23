@@ -9,11 +9,13 @@
 namespace domain\services;
 
 
+use common\classes\validators\WKDateValidator;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\data\Sort;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\validators\NumberValidator;
 
 class SearchModel extends Model
 {
@@ -175,10 +177,10 @@ class SearchModel extends Model
                 $this->getQuery()->andFilterWhere([$this->digitZnak($this->$attribute), $this->getSQLAttribute($attribute), $this->digitValue($this->$attribute)]);
                 break;
             case SearchModel::DATE:
-                //   $this->getQuery()->andFilterWhere(['BETWEEN', $this->getSQLAttribute($attribute), $this->digitValue($this->$attribute)]);
+                $this->getQuery()->andFilterWhere($this->convertDateValueToCondition($attribute, $this->$attribute));
                 break;
             case SearchModel::DATETIME:
-                //   $this->getQuery()->andFilterWhere(['BETWEEN', $this->getSQLAttribute($attribute), $this->digitValue($this->$attribute)]);
+                $this->getQuery()->andFilterWhere($this->convertDateValueToCondition($attribute, $this->$attribute));
                 break;
             default:
                 throw new \RuntimeException("Invalid ruleFilter '$ruleFilter'");
@@ -241,6 +243,26 @@ class SearchModel extends Model
         }
 
         return $sort;
+    }
+
+    private function convertDateValueToCondition($attribute, $value)
+    {
+        $WKDateValidators = array_filter($this->activeRecord->getActiveValidators($attribute), function ($value) {
+            return $value instanceof WKDateValidator;
+        });
+        $NumberValidators = array_filter($this->activeRecord->getActiveValidators($attribute), function ($value) {
+            return $value instanceof NumberValidator;
+        });
+
+        if ($WKDateValidators) {
+            return (new DateTimeCondition('{{%person}}.'.$attribute, $value, DateTimeCondition::INT))->convert();
+        }
+
+        if ($NumberValidators) {
+            return (new DateTimeCondition('{{%person}}.'.$attribute, $value, DateTimeCondition::DATE))->convert();
+        }
+
+        return [];
     }
 
     public function __get($name)

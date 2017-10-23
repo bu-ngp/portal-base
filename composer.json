@@ -43,7 +43,8 @@
     "wemersonjanuario/wkhtmltopdf-windows": "~0.12",
     "loveorigami/yii2-notification-wrapper": "*",
     "bower-asset/toastr": "^2.1",
-    "knplabs/knp-snappy": "^0.4.3"
+    "knplabs/knp-snappy": "^0.4.3",
+    "la-haute-societe/yii2-save-relations-behavior": "*"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",

@@ -5,6 +5,8 @@ namespace domain\models\base;
 use common\models\base\Person;
 use common\widgets\GridView\services\GWItemsTrait;
 use domain\behaviors\UserRoleBehavior;
+use domain\forms\base\RoleForm;
+use domain\forms\base\RoleUpdateForm;
 use domain\rules\base\RoleRules;
 use Yii;
 use yii\db\ActiveQuery;
@@ -82,22 +84,20 @@ class AuthItem extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function create($name, $description, $ldapGroup)
+    public static function create(RoleForm $form)
     {
-        $authItem = new self([
-            'name' => $name,
-            'description' => $description,
-            'ldap_group' => $ldapGroup,
+        return new self([
+            'name' => $form->name,
+            'description' => $form->description,
+            'ldap_group' => $form->ldap_group,
             'type' => 1,
         ]);
-
-        return $authItem;
     }
 
-    public function editData($description, $ldapGroup)
+    public function edit(RoleUpdateForm $form)
     {
-        $this->description = $description;
-        $this->ldap_group = $ldapGroup;
+        $this->description = $form->description;
+        $this->ldap_group = $form->ldap_group;
     }
 
     /**
