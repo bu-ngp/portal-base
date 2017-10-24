@@ -6,10 +6,9 @@ use common\classes\BlameableBehavior;
 use common\models\base\Person;
 use domain\forms\base\ParttimeForm;
 use domain\rules\base\ParttimeRules;
-use wartron\yii2uuid\helpers\Uuid;
+use domain\validators\ParttimeValidator;
 use Yii;
 use yii\behaviors\TimestampBehavior;
-use yii\db\Expression;
 
 /**
  * This is the model class for table "{{%parttime}}".
@@ -50,6 +49,7 @@ class Parttime extends \yii\db\ActiveRecord
             [['dolzh_id'], 'exist', 'skipOnError' => true, 'targetClass' => Dolzh::className(), 'targetAttribute' => ['dolzh_id' => 'dolzh_id']],
             [['person_id'], 'exist', 'skipOnError' => true, 'targetClass' => Person::className(), 'targetAttribute' => ['person_id' => 'person_id']],
             [['podraz_id'], 'exist', 'skipOnError' => true, 'targetClass' => Podraz::className(), 'targetAttribute' => ['podraz_id' => 'podraz_id']],
+            [['parttime_begin', 'parttime_end'], ParttimeValidator::className()],
         ]);
     }
 

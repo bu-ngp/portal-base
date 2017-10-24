@@ -14,8 +14,10 @@ use domain\forms\base\ProfileForm;
 use domain\forms\base\UserForm;
 use domain\forms\base\UserFormUpdate;
 use domain\models\base\AuthAssignment;
+use domain\models\base\Parttime;
 use domain\models\base\Profile;
 use domain\repositories\base\AuthAssignmentRepository;
+use domain\repositories\base\ParttimeRepository;
 use domain\repositories\base\PersonRepository;
 use domain\repositories\base\ProfileRepository;
 use domain\services\TransactionManager;
@@ -29,18 +31,21 @@ class PersonService extends WKService
     private $persons;
     private $profiles;
     private $authAssignments;
+    private $parttimes;
 
     public function __construct(
         TransactionManager $transactionManager,
         PersonRepository $persons,
         ProfileRepository $profiles,
-        AuthAssignmentRepository $authAssignments
+        AuthAssignmentRepository $authAssignments,
+        ParttimeRepository $parttimes
     )
     {
         $this->transactionManager = $transactionManager;
         $this->persons = $persons;
         $this->profiles = $profiles;
         $this->authAssignments = $authAssignments;
+        $this->parttimes = $parttimes;
     }
 
     public function getUser($id)
@@ -103,8 +108,18 @@ class PersonService extends WKService
             throw new \DomainException();
         }
 
-        $this->transactionManager->execute(function () use ($person, $profile) {
+        $parttimes = [];
+        if ($person->person_fired) {
+            $parttimes = $this->parttimesForClose($person->person_id, $person->person_fired);
+        }
+
+        $this->transactionManager->execute(function () use ($person, $profile, $parttimes) {
             $this->persons->save($person);
+
+            foreach ($parttimes as $parttime) {
+                $this->parttimes->save($parttime);
+            }
+
             if ($profile->isNotEmpty()) {
                 $profile->isNewRecord ? $this->profiles->add($profile) : $this->profiles->save($profile);
             }
@@ -139,5 +154,17 @@ class PersonService extends WKService
         $profileForm->setAttributes(array_map(function ($value) {
             return $value === null || $value === '' ? null : $value;
         }, $profileForm->getAttributes()));
+    }
+
+    private function parttimesForClose($person_id, $date_fire)
+    {
+        /** @var Parttime[] $parttimes */
+        $parttimes = $this->parttimes->getOpenAndMoreParttimes($person_id, $date_fire);
+
+        foreach ($parttimes as $parttime) {
+            $parttime->parttime_end = $date_fire;
+        }
+
+        return $parttimes;
     }
 }

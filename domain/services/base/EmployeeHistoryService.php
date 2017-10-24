@@ -2,12 +2,14 @@
 
 namespace domain\services\base;
 
+use common\models\base\Person;
 use common\widgets\GridView\services\GridViewHelper;
 use domain\forms\base\EmployeeHistoryForm;
 use domain\models\base\Employee;
 use domain\models\base\EmployeeHistory;
 use domain\repositories\base\EmployeeHistoryRepository;
 use domain\repositories\base\EmployeeRepository;
+use domain\repositories\base\ParttimeRepository;
 use domain\repositories\base\PersonRepository;
 use domain\services\TransactionManager;
 use domain\services\WKService;
@@ -20,18 +22,21 @@ class EmployeeHistoryService extends WKService
     private $employeeHistories;
     private $employees;
     private $persons;
+    private $parttimes;
 
     public function __construct(
         TransactionManager $transactionManager,
         EmployeeHistoryRepository $employeeHistories,
         EmployeeRepository $employees,
-        PersonRepository $persons
+        PersonRepository $persons,
+        ParttimeRepository $parttimes
     )
     {
         $this->transactionManager = $transactionManager;
         $this->employeeHistories = $employeeHistories;
         $this->employees = $employees;
         $this->persons = $persons;
+        $this->parttimes = $parttimes;
     }
 
     public function get($id)
@@ -49,6 +54,8 @@ class EmployeeHistoryService extends WKService
             throw new \DomainException();
         }
 
+        $person = $this->changePersonHired($employeeHistory->person_id, $employeeHistory->employee_history_begin);
+
         /** @var Employee $employee */
         if ($employee = $this->employees->findByPerson($employeeHistory->person_id)) {
             $employee->edit($form);
@@ -56,7 +63,11 @@ class EmployeeHistoryService extends WKService
             $employee = Employee::create($form);
         }
 
-        return $this->transactionManager->execute(function () use ($employeeHistory, $employee) {
+        return $this->transactionManager->execute(function () use ($employeeHistory, $employee, $person) {
+            if ($person) {
+                $this->persons->save($person);
+            }
+
             $this->employeeHistories->add($employeeHistory);
             $employee->isNewRecord ? $this->employees->add($employee) : $this->employees->save($employee);
 
@@ -74,13 +85,31 @@ class EmployeeHistoryService extends WKService
             throw new \DomainException();
         }
 
-        $this->employeeHistories->save($employee);
+        $person = $this->changePersonHired($employee->person_id, $employee->employee_history_begin);
+
+        $this->transactionManager->execute(function () use ($employee, $person) {
+            if ($person) {
+                $this->persons->save($person);
+            }
+
+            $this->employeeHistories->save($employee);
+        });
+
     }
 
     public function delete($id)
     {
         $employeeHistory = $this->employeeHistories->find($id);
-        $this->employeeHistories->delete($employeeHistory);
+        $this->guardParttimesExists($employeeHistory);
+        $person = $this->updatePersonForDelete($employeeHistory);
+
+        $this->transactionManager->execute(function () use ($employeeHistory, $person) {
+            if ($person) {
+                $this->persons->save($person);
+            }
+
+            $this->employeeHistories->delete($employeeHistory);
+        });
     }
 
     protected function guardPersonExists(EmployeeHistoryForm $form)
@@ -113,6 +142,44 @@ class EmployeeHistoryService extends WKService
             $form->podraz_id = Uuid::str2uuid($form->podraz_id);
         } else {
             throw new \RuntimeException(Yii::t('domain/employee', 'Invalid UUID Parameters.'));
+        }
+    }
+
+    protected function changePersonHired($person_id, $date)
+    {
+        $person = $this->persons->find($person_id);
+        if (strtotime($date) < strtotime($person->person_hired) || $person->person_hired === null) {
+            $before = $person->getAttributes();
+            $person->person_hired = $date;
+            $after = $person->getAttributes();
+            $diff = array_diff_assoc($after, $before);
+            if (isset($diff['person_hired'])) {
+                return $person;
+            }
+        }
+        return false;
+    }
+
+    protected function updatePersonForDelete(EmployeeHistory $employee)
+    {
+        $person = $this->persons->find($employee->person_id);
+
+        if ($person->person_hired == $employee->employee_history_begin) {
+            $previousEmployee = $this->employeeHistories->previousBy($employee->employee_history_id, $employee->person_id);
+            $person->person_hired = $previousEmployee ? $previousEmployee->employee_history_begin : null;
+        }
+
+        if (!$this->employeeHistories->exists($employee->employee_history_id, $employee->person_id)) {
+            $person->person_fired = null;
+        }
+
+        return $person;
+    }
+
+    private function guardParttimesExists($employeeHistory)
+    {
+        if ($this->parttimes->exists($employeeHistory->person_id)) {
+            throw  new \Exception(Yii::t('domain/employee', 'You need remove Parttimes'));
         }
     }
 }

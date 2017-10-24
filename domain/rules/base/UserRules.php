@@ -25,7 +25,6 @@ class UserRules
                 [['person_fullname', 'person_username', 'person_email'], 'string', 'max' => 255],
                 [['person_fullname'], FIOValidator::className()],
                 [['person_email'], 'email'],
-                [['created_at', 'updated_at'], WKDateValidator::className()]
             ];
     }
 }

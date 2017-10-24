@@ -55,4 +55,23 @@ class ParttimeRepository
             throw new \DomainException(Yii::t('domain/base', 'Deleting error.'));
         }
     }
+
+    public function getOpenAndMoreParttimes($person_id, $date_fire)
+    {
+        return Parttime::find()
+            ->andWhere(['person_id' => $person_id])
+            ->andWhere([
+                'or',
+                ['parttime_end' => null],
+                ['>', 'parttime_end', $date_fire]
+            ])
+            ->all();
+    }
+
+    public function exists($person_id)
+    {
+        return Parttime::find()
+            ->andWhere(['person_id' => $person_id])
+            ->exists();
+    }
 }

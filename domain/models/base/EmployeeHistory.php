@@ -6,10 +6,13 @@ use common\classes\BlameableBehavior;
 use common\classes\validators\WKDateValidator;
 use common\models\base\Person;
 use domain\forms\base\EmployeeHistoryForm;
+use domain\helpers\DateHelper;
 use domain\rules\base\EmployeeHistoryRules;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 use yii\db\Expression;
 
 /**
@@ -97,6 +100,38 @@ class EmployeeHistory extends \yii\db\ActiveRecord
         $this->dolzh_id = $form->dolzh_id;
         $this->podraz_id = $form->podraz_id;
         $this->employee_history_begin = $form->employee_history_begin;
+    }
+
+    public static function activeEmployees($person_id)
+    {
+        return static::find()->andWhere(['person_id' => $person_id])->exists();
+    }
+
+    /**
+     * @param $person_id
+     * @param $date
+     * @return EmployeeHistory|null|ActiveRecord
+     */
+    public static function denyAccessForDateFired($person_id, $date)
+    {
+        return static::find()
+            ->andWhere(['>', 'employee_history_begin', DateHelper::rus2iso($date)])
+            ->andWhere(['person_id' => $person_id])
+            ->orderBy(['employee_history_begin' => SORT_DESC])
+            ->limit(1)
+            ->one();
+    }
+
+    /**
+     * @param $person_id
+     * @return bool
+     */
+    public static function employeeExists($person_id)
+    {
+        return static::find()
+            ->andWhere(['person_id' => $person_id])
+            ->limit(1)
+            ->exists();
     }
 
     /**

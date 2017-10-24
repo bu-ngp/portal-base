@@ -18,29 +18,11 @@ use rmrevin\yii\fontawesome\FA;
         'podraz_name',
         [
             'attribute' => 'employee_history_begin',
-            'format' => 'datetime',
-            'filterWidgetOptions' => [
-                //    'convertFormat' => true,
-                'pluginEvents' => [
-                    'apply.daterangepicker' => 'function(event, picker) {
-                              console.debug(picker.startDate.format("YYYY-MM-DD"));
-                              console.debug(event);
-                            }',
-                ],
-            ],
+            'format' => 'date',
         ],
         [
             'attribute' => 'employee_history_end',
-            'format' => 'datetime',
-            'filterWidgetOptions' => [
-                //    'convertFormat' => true,
-                'pluginEvents' => [
-                    'apply.daterangepicker' => 'function(event, picker) {
-                              console.debug(picker.startDate.format("YYYY-MM-DD"));
-                              console.debug(event);
-                            }',
-                ],
-            ],
+            'format' => 'date',
         ],
         'employee_type',
     ],

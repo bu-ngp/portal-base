@@ -110,11 +110,17 @@ class AllEmployeeSearch extends Model
                     wk1.dolzh_id,
                     wk1.podraz_id,
                     wk1.employee_history_begin,
-                    (
-                        SELECT wk2.employee_history_begin - INTERVAL 1 DAY
-                        FROM wk_employee_history wk2
-                        WHERE wk2.employee_history_begin > wk1.employee_history_begin limit 1
-                        ) AS employee_history_end,
+                    IFNULL((
+                            SELECT wk2.employee_history_begin - INTERVAL 1 DAY
+                            FROM wk_employee_history wk2
+                            WHERE wk2.employee_history_begin > wk1.employee_history_begin 
+                             AND wk2.person_id = UNHEX(:person_id)
+                             LIMIT 1
+                        ), (
+                            SELECT person_fired 
+                            FROM {{%person}} 
+                            WHERE person_id = UNHEX('F33017E2B89511E7A4A5902B3479B004')
+                        )) AS employee_history_end,
                     1 AS employee_type
                 FROM {{%employee_history}} wk1                
             UNION                

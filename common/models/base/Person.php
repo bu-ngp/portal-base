@@ -16,6 +16,7 @@ use domain\models\base\EmployeeHistory;
 use domain\models\base\Parttime;
 use domain\models\base\Profile;
 use domain\rules\base\UserRules;
+use domain\validators\PersonFiredValidator;
 use Exception;
 use domain\behaviors\UUIDBehavior;
 use Yii;
@@ -70,11 +71,12 @@ class Person extends \yii\db\ActiveRecord implements LdapModelInterface
     {
         return ArrayHelper::merge(UserRules::client(), [
             [['person_auth_key', 'person_password_hash'], 'required'],
-            [['person_code'], 'safe'],
+            [['person_code', 'created_at', 'updated_at'], 'integer'],
             [['person_hired', 'person_fired'], WKDateValidator::className()],
             [['person_password_hash'], 'string', 'max' => 255],
             [['person_auth_key'], 'string', 'max' => 32],
             [['person_username'], 'unique'],
+            [['person_fired'], PersonFiredValidator::className()],
         ]);
     }
 
@@ -128,6 +130,7 @@ class Person extends \yii\db\ActiveRecord implements LdapModelInterface
         $this->person_fullname = $userFormUpdate->person_fullname;
         $this->person_username = $userFormUpdate->person_username;
         $this->person_email = $userFormUpdate->person_email;
+        $this->person_fired = $userFormUpdate->person_fired;
     }
 
     /**

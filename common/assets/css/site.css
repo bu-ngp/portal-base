@@ -185,3 +185,15 @@ div.wk-widget-input-prepend-icon > span {
 .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
     border: none;
 }
+
+.help-block {
+    color: #bdbdbd;
+}
+
+.help-block:empty {
+    display: none;
+}
+
+.help-block:before {
+    content: '* ';
+}

@@ -181,6 +181,10 @@ HTML;
 
     protected function setDefaults()
     {
+        if ($this->id === static::$autoIdPrefix . (static::$counter - 1)) {
+            $this->id = $this->filterModel->formName() . 'Grid';
+        }
+
         if ($this->minHeight) {
             $this->containerOptions['style'] = "min-height: {$this->minHeight}px;";
         }

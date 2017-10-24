@@ -6,6 +6,7 @@ use domain\models\base\EmployeeHistory;
 use domain\repositories\RepositoryInterface;
 use RuntimeException;
 use Yii;
+use yii\db\ActiveRecord;
 
 class EmployeeHistoryRepository
 {
@@ -56,5 +57,31 @@ class EmployeeHistoryRepository
         if (!$employeeHistory->delete()) {
             throw new \DomainException(Yii::t('domain/base', 'Deleting error.'));
         }
+    }
+
+    /**
+     * @param $employeeId
+     * @return null|ActiveRecord|EmployeeHistory
+     */
+    public function previousBy($employeeId, $currentPersonId)
+    {
+        return EmployeeHistory::find()
+            ->andWhere(['not in', 'employee_history_id', $employeeId])
+            ->andWhere(['person_id' => $currentPersonId])
+            ->orderBy(['employee_history_begin' => SORT_DESC, 'employee_history_id' => SORT_DESC])
+            ->limit(1)
+            ->one();
+    }
+
+    /**
+     * @param $exceptId
+     * @return bool
+     */
+    public function exists($exceptId, $currentPersonId)
+    {
+        return EmployeeHistory::find()
+            ->andWhere(['not in', 'employee_history_id', $exceptId])
+            ->andWhere(['person_id' => $currentPersonId])
+            ->exists();
     }
 }

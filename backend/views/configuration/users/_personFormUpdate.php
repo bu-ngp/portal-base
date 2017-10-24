@@ -25,3 +25,14 @@ use rmrevin\yii\fontawesome\FA;
         </div>
     </div>
 </div>
+
+<div class="form-group">
+    <div class="row">
+        <div class="col-xs-6">
+            <?= $userForm->field($modelUserFormUpdate, 'person_hired')->datetime(['disabled' => true, 'maxlength' => true, 'wkicon' => FA::_CALENDAR])->hint('Выводится автоматически при добавлении специальности') ?>
+        </div>
+        <div class="col-xs-6">
+            <?= $userForm->field($modelUserFormUpdate, 'person_fired')->datetime(['disabled' => !$modelUserFormUpdate->hasActiveEmployee, 'wkkeep' => true, 'maxlength' => true, 'wkicon' => FA::_CALENDAR])->hint($modelUserFormUpdate->hasActiveEmployee ? '' : 'Доступно в случае имеющихся активных специальностей') ?>
+        </div>
+    </div>
+</div>
