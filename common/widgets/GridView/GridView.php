@@ -11,11 +11,13 @@ use common\widgets\GridView\services\GWExportGridConfiguration;
 use common\widgets\GridView\services\GWFilterDialog;
 use common\widgets\GridView\services\GWFilterDialogConfiguration;
 use common\widgets\GridView\services\GWPrepareColumns;
+use common\widgets\PropellerAssets\ButtonAsset;
 use common\widgets\PropellerAssets\PropellerAsset;
 use Yii;
 use yii\bootstrap\Html;
 use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
+use yii\web\View;
 
 class GridView extends \kartik\grid\GridView
 {
@@ -123,7 +125,9 @@ HTML;
     {
         $this->registerTranslations();
         $this->setDefaults();
-
+        if ($this->customizeDialog) {
+            GWCustomizeDialog::lets($this)->prepareConfig()->makeColumnsContent();
+        }
         parent::init();
     }
 
@@ -132,12 +136,7 @@ HTML;
      */
     public function run()
     {
-        if ($this->customizeDialog) {
-            GWCustomizeDialog::lets($this)->prepareConfig()->makeColumnsContent();
-        }
-
         $filterString = '';
-
         if ($this->filterDialog->isEnable()) {
             $filterString = GWFilterDialog::lets($this)->prepareConfig()->makeFilter();
         }
@@ -160,6 +159,13 @@ HTML;
 
         parent::run();
         $this->registerAssetsByWk();
+    }
+
+    protected function endPjax()
+    {
+        $view = $this->getView();
+        $view->registerJs(file_get_contents(Yii::getAlias('@npm') . '/propellerkit/components/button/js/ripple-effect.js'));
+        parent::endPjax();
     }
 
     protected function initLayout()
@@ -219,6 +225,7 @@ HTML;
                 'buttons' => array_merge($actionButtons->getButtons(), $customActionButtons),
                 'template' => $actionButtons->template() . $customActionButtonsTemplate,
                 'options' => ['wk-widget' => true],
+                'visible' => true,
             ]);
         }
 

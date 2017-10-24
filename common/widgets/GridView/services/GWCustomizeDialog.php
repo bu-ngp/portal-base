@@ -45,12 +45,12 @@ class GWCustomizeDialog
         $hidden = '';
         array_walk($this->gridView->columns, function ($column) use (&$visible, &$hidden) {
             /** @var $column DataColumn */
-            if ($column->visible) {
-                if (empty($column->options['wk-widget'])) {
-                    $visible .= '<a role="option" aria-grabbed="false" draggable="true" class="list-group-item" wk-hash="' . $column->headerOptions['wk-hash'] . '">' . $this->gridView->filterModel->getAttributeLabel($column->attribute) . '</a>';
+            if ($column['visible']) {
+                if (empty($column['options']['wk-widget'])) {
+                    $visible .= '<a role="option" aria-grabbed="false" draggable="true" class="list-group-item" wk-hash="' . $column['headerOptions']['wk-hash'] . '">' . $this->gridView->filterModel->getAttributeLabel($column['attribute']) . '</a>';
                 }
             } else {
-                $hidden .= '<a role="option" aria-grabbed="false" draggable="true" class="list-group-item" wk-hash="' . $column->headerOptions['wk-hash'] . '">' . $this->gridView->filterModel->getAttributeLabel($column->attribute) . '</a>';
+                $hidden .= '<a role="option" aria-grabbed="false" draggable="true" class="list-group-item" wk-hash="' . $column['headerOptions']['wk-hash'] . '">' . $this->gridView->filterModel->getAttributeLabel($column['attribute']) . '</a>';
             }
         });
 
@@ -58,7 +58,7 @@ class GWCustomizeDialog
 
         $this->gridView->columns = array_filter($this->gridView->columns, function ($column) {
             /** @var $column Column */
-            return $column->visible;
+            return $column['visible'];
         });
 
         $this->gridView->panel['before'] .= <<<EOT
@@ -127,7 +127,7 @@ EOT;
 
         array_map(function ($column) use (&$visible, &$process) {
             /** @var $column Column */
-            array_push(isset($column->options['wk-widget']) ? $visible : $process, $column);
+            array_push(isset($column['options']['wk-widget']) ? $visible : $process, $column);
         }, $columns);
 
         if ($_COOKIE[$this->gridView->id]) {
@@ -139,13 +139,13 @@ EOT;
                 foreach ($cookieOptions->visible as $colCookie) {
                     $filterCol = array_filter($process, function ($col) use ($colCookie) {
                         /** @var $col Column */
-                        return $col->headerOptions['wk-hash'] === $colCookie;
+                        return $col['headerOptions']['wk-hash'] === $colCookie;
                     });
 
                     $keyFilterCol = array_keys($filterCol)[0];
 
                     if (!empty($filterCol)) {
-                        $filterCol[$keyFilterCol]->visible = true;
+                        $filterCol[$keyFilterCol]['visible'] = true;
                         $visible[] = $filterCol[$keyFilterCol];
                         unset($process[array_keys($filterCol)[0]]);
                     }
@@ -153,14 +153,14 @@ EOT;
 
                 array_walk($process, function (&$column) {
                     /** @var $column Column */
-                    $column->visible = false;
+                    $column['visible'] = false;
                 });
             }
         }
 
         array_map(function ($column) use (&$visible, &$hidden) {
             /** @var $column Column */
-            array_push($column->visible ? $visible : $hidden, $column);
+            array_push($column['visible'] ? $visible : $hidden, $column);
         }, $process);
 
         return (object)[

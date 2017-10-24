@@ -3,7 +3,6 @@
 namespace domain\models\base\search;
 
 use common\widgets\CardList\CardListHelper;
-use common\widgets\GridView\services\GWItemsTrait;
 use domain\services\SearchModel;
 use yii\data\ActiveDataProvider;
 use domain\models\base\AuthItem;
@@ -11,8 +10,6 @@ use yii\db\ActiveQuery;
 
 class AuthItemSearch extends SearchModel
 {
-    use GWItemsTrait;
-
     public static function activeRecord()
     {
         return new AuthItem;
@@ -47,11 +44,6 @@ class AuthItemSearch extends SearchModel
             [['name', 'description', 'ldap_group'], SearchModel::CONTAIN],
             [['created_at', 'updated_at'], SearchModel::DATETIME],
         ];
-    }
-
-    public static function items()
-    {
-        return static::activeRecord()->items();
     }
 
 //    public function attributes()

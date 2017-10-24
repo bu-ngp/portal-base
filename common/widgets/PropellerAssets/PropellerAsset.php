@@ -24,12 +24,12 @@ class PropellerAsset extends AssetBundlePropeller
                 'common\widgets\PropellerAssets\Select2Asset',
                 'common\widgets\PropellerAssets\TextFieldAsset',
             ],
-            'common\widgets\CardList\CardList' => [
-                'common\widgets\PropellerAssets\ButtonAsset',
-                'common\widgets\PropellerAssets\TextFieldAsset',
-                'common\widgets\PropellerAssets\CardAsset',
-                'common\widgets\PropellerAssets\ShadowAsset',
-            ],
+//            'common\widgets\CardList\CardList' => [
+//                'common\widgets\PropellerAssets\ButtonAsset',
+//                'common\widgets\PropellerAssets\TextFieldAsset',
+//                'common\widgets\PropellerAssets\CardAsset',
+//                'common\widgets\PropellerAssets\ShadowAsset',
+//            ],
             'common\widgets\GridView\GridView' => [
                 'common\widgets\PropellerAssets\ButtonAsset',
                 'common\widgets\PropellerAssets\TextFieldAsset',

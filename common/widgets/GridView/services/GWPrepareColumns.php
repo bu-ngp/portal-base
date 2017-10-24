@@ -43,13 +43,14 @@ class GWPrepareColumns
                     $this->addRequiredProperties($column);
                     $this->addTooltip($column);
                     $this->addValueToSpan($column);
+
                 } else {
                     $this->addDataColumn($column);
                 }
 
                 $this->addFilterDateFormat($column);
-
                 $this->addFilterProperties($column);
+                $this->addVisibleProperties($column);
 
                 $this->columns[] = $column;
             }
@@ -75,6 +76,7 @@ class GWPrepareColumns
                 'class' => '\kartik\grid\SerialColumn',
                 'noWrap' => true,
                 'options' => ['wk-widget' => true],
+                'visible' => true,
             ];
         }
     }
@@ -92,6 +94,7 @@ class GWPrepareColumns
                     'noWrap' => true,
                     'rowSelectedClass' => GridView::TYPE_INFO,
                     'options' => ['wk-widget' => true],
+                    'visible' => true,
                 ];
             }
         }
@@ -193,6 +196,11 @@ class GWPrepareColumns
                 return '<span>' . (isset($value) ? $items[$value] : '') . '</span>';
             };
         }
+    }
+
+    protected function addVisibleProperties(&$column)
+    {
+        $column['visible'] = !isset($column['visible']) || $column['visible'] === true;
     }
 
     protected function addFilterDateFormat(&$column)

@@ -46,6 +46,10 @@ class SearchModel extends Model
 
         $this->dataProvider = new ActiveDataProvider([
             'query' => $this->initQuery(),
+            'pagination' => [
+                'defaultPageSize' => 10,
+                'pageSizeLimit' => [10, 100],
+            ],
         ]);
 
         $this->dataProvider->setSort(new Sort(array_filter([
@@ -133,6 +137,15 @@ class SearchModel extends Model
         }
     }
 
+    public static function itemsValues($attribute)
+    {
+        $activeRecord = static::activeRecord();
+        if (method_exists($activeRecord, 'items')) {
+            $items = call_user_func([$activeRecord, 'items']);
+            return $items[$attribute];
+        }
+    }
+
     /**
      * @return ActiveQuery
      */
@@ -177,34 +190,22 @@ class SearchModel extends Model
                 $this->getQuery()->andFilterWhere([$this->digitZnak($this->$attribute), $this->getSQLAttribute($attribute), $this->digitValue($this->$attribute)]);
                 break;
             case SearchModel::DATE:
-                $this->getQuery()->andFilterWhere($this->convertDateValueToCondition($attribute, $this->$attribute));
+                $this->getQuery()->andFilterWhere($this->convertDateValueToCondition($this->getSQLAttribute($attribute), $this->$attribute));
                 break;
             case SearchModel::DATETIME:
                 $this->getQuery()->andFilterWhere($this->convertDateValueToCondition($attribute, $this->$attribute));
                 break;
             default:
                 throw new \RuntimeException("Invalid ruleFilter '$ruleFilter'");
-            /**
-             * SELECT
-             * employee_begin,
-             * UNIX_TIMESTAMP(employee_begin) AS employee_begin_ut,
-             * created_at,
-             * UNIX_TIMESTAMP('2017-10-22'),
-             * UNIX_TIMESTAMP(DATE_ADD('2017-10-22', INTERVAL 1 DAY)),
-             * FROM_UNIXTIME(created_at)      AS created_at_pretty
-             * FROM wk_employee
-             * WHERE
-             * employee_begin BETWEEN '2017-10-22' AND '2017-10-22'
-             * AND employee_begin = '2017-10-22'
-             * AND created_at >= UNIX_TIMESTAMP('2017-10-22') AND created_at < UNIX_TIMESTAMP(DATE_ADD('2017-10-22', INTERVAL 1 DAY))
-             * AND employee_begin >= '2017-10-22' AND employee_begin < DATE_ADD('2017-10-22', INTERVAL 1 DAY)
-             */
         }
     }
 
     private function getSQLAttribute($attribute)
     {
         preg_match('/((\w+)\.)?(\w+)$/', $attribute, $matches);
+        $table = call_user_func([$this->activeRecord, 'tableName']);
+        $table = is_array($this->query->from) ? array_search($table, $this->query->from) : $table;
+        $matches[1] = empty($matches[1]) ? "$table." : $matches[1];
         return "$matches[1]$matches[3]";
     }
 
@@ -255,11 +256,11 @@ class SearchModel extends Model
         });
 
         if ($WKDateValidators) {
-            return (new DateTimeCondition('{{%person}}.'.$attribute, $value, DateTimeCondition::INT))->convert();
+            return (new DateTimeCondition($this->getSQLAttribute($attribute), $value, DateTimeCondition::INT))->convert();
         }
 
         if ($NumberValidators) {
-            return (new DateTimeCondition('{{%person}}.'.$attribute, $value, DateTimeCondition::DATE))->convert();
+            return (new DateTimeCondition($this->getSQLAttribute($attribute), $value, DateTimeCondition::DATE))->convert();
         }
 
         return [];
