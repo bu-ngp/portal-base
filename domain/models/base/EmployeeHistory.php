@@ -29,10 +29,11 @@ use yii\db\Expression;
  * @property string $created_by
  * @property string $updated_by
  *
- * @property Build $build
  * @property Dolzh $dolzh
  * @property Person $person
  * @property Podraz $podraz
+ * @property EmployeeHistoryBuild[] $employeeHistoryBuilds
+ * @property Build[] $builds
  */
 class EmployeeHistory extends \yii\db\ActiveRecord
 {
@@ -156,5 +157,21 @@ class EmployeeHistory extends \yii\db\ActiveRecord
     public function getPodraz()
     {
         return $this->hasOne(Podraz::className(), ['podraz_id' => 'podraz_id'])->from(['podraz' => Podraz::tableName()]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEmployeeHistoryBuilds()
+    {
+        return $this->hasMany(EmployeeHistoryBuild::className(), ['employee_history_id' => 'employee_history_id'])->from(['employeeHistoryBuilds' => EmployeeHistoryBuild::tableName()]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBuilds()
+    {
+        return $this->hasMany(Build::className(), ['build_id' => 'build_id'])->from(['builds' => EmployeeHistoryBuild::tableName()])->viaTable('{{%employee_history_build}}', ['employee_history_id' => 'employee_history_id']);
     }
 }

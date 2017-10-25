@@ -19,6 +19,7 @@ use domain\rules\base\UserRules;
 use domain\validators\PersonFiredValidator;
 use Exception;
 use domain\behaviors\UUIDBehavior;
+use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -146,7 +147,7 @@ class Person extends \yii\db\ActiveRecord implements LdapModelInterface
      */
     public function getItemNames()
     {
-        return $this->hasMany(AuthItem::className(), ['name' => 'item_name'])->viaTable('{{%auth_assignment}}', ['user_id' => 'person_id']);
+        return $this->hasMany(AuthItem::className(), ['name' => 'item_name'])->from(['itemNames' => AuthItem::tableName()])->viaTable('{{%auth_assignment}}', ['user_id' => 'person_id']);
     }
 
     /**
