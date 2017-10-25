@@ -2,16 +2,14 @@
 
 use common\widgets\ActiveForm\ActiveForm;
 use domain\models\base\Dolzh;
-use common\widgets\Select2\Select2;
 use domain\models\base\Podraz;
 use rmrevin\yii\fontawesome\FA;
 use yii\db\ActiveQuery;
 
 /* @var $this yii\web\View */
 /* @var $modelForm domain\forms\base\ParttimeForm */
+/* @var $form ActiveForm */
 ?>
-
-<?php $form = ActiveForm::begin(['id' => $modelForm->formName()]); ?>
 
 <?= $form->field($modelForm, 'dolzh_id')->select2([
     'activeRecordClass' => Dolzh::className(),
@@ -49,5 +47,3 @@ use yii\db\ActiveQuery;
 <?= $form->field($modelForm, 'parttime_begin')->datetime(['wkkeep' => true, 'wkicon' => FA::_CALENDAR]) ?>
 
 <?= $form->field($modelForm, 'parttime_end')->datetime(['wkkeep' => true, 'wkicon' => FA::_CALENDAR]) ?>
-
-<?php ActiveForm::end(); ?>

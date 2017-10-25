@@ -146,6 +146,16 @@ class SearchModel extends Model
         }
     }
 
+    public function tableName()
+    {
+        return $this->activeRecord->tableName();
+    }
+
+    public function primaryKey()
+    {
+        return $this->activeRecord->primaryKey();
+    }
+
     /**
      * @return ActiveQuery
      */

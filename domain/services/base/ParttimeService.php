@@ -33,6 +33,7 @@ class ParttimeService extends WKService
     public function create(ParttimeForm $form)
     {
         $this->guardPersonExists($form);
+        $this->guardAssignBuilds($form);
         $this->filterEmployeeUUIDCreate($form);
         $parttime = Parttime::create($form);
 
@@ -42,8 +43,6 @@ class ParttimeService extends WKService
 
         $this->transactionManager->execute(function () use ($parttime) {
             $this->parttimes->add($parttime);
-
-            return $parttime->primaryKey;
         });
     }
 
@@ -85,6 +84,10 @@ class ParttimeService extends WKService
         } else {
             throw new \RuntimeException(Yii::t('domain/employee', 'Invalid UUID Parameters.'));
         }
+
+        $form->assignBuilds = array_map(function ($buildId) {
+            return GridViewHelper::isBinaryValidString($buildId) ? Uuid::str2uuid($buildId) : $buildId;
+        }, $form->assignBuilds);
     }
 
     protected function filterEmployeeUUIDUpdate(ParttimeForm $form)
@@ -96,6 +99,13 @@ class ParttimeService extends WKService
             $form->podraz_id = Uuid::str2uuid($form->podraz_id);
         } else {
             throw new \RuntimeException(Yii::t('domain/employee', 'Invalid UUID Parameters.'));
+        }
+    }
+
+    protected function guardAssignBuilds(ParttimeForm $form)
+    {
+        if (!is_string($form->assignBuilds) || ($form->assignBuilds = json_decode($form->assignBuilds)) === null) {
+            throw new \DomainException(Yii::t('common/roles', 'Error when recognizing selected items'));
         }
     }
 }

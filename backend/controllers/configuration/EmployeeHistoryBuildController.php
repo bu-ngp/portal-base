@@ -4,11 +4,16 @@ namespace backend\controllers\configuration;
 
 use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\GridView\services\AjaxResponse;
+use console\helpers\RbacHelper;
 use domain\forms\base\EmployeeBuildForm;
+use domain\services\AjaxFilter;
 use domain\services\base\EmployeeBuildService;
 use domain\services\proxyService;
 use Yii;
+use yii\filters\AccessControl;
+use yii\filters\ContentNegotiator;
 use yii\web\Controller;
+use yii\web\Response;
 
 class EmployeeHistoryBuildController extends Controller
 {
@@ -21,6 +26,33 @@ class EmployeeHistoryBuildController extends Controller
     {
         $this->service = new proxyService($service);
         parent::__construct($id, $module, $config = []);
+    }
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['create', 'update', 'delete'],
+                        'roles' => [RbacHelper::USER_EDIT],
+                    ],
+                ],
+            ],
+            [
+                'class' => AjaxFilter::className(),
+                'actions' => ['delete'],
+            ],
+            [
+                'class' => ContentNegotiator::className(),
+                'only' => ['delete'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
+        ];
     }
 
     public function actionCreate()

@@ -6,6 +6,7 @@ use domain\models\base\EmployeeHistory;
 use domain\rules\base\EmployeeHistoryRules;
 use Yii;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 
 class EmployeeHistoryForm extends Model
 {
@@ -13,6 +14,8 @@ class EmployeeHistoryForm extends Model
     public $dolzh_id;
     public $podraz_id;
     public $employee_history_begin;
+
+    public $assignBuilds;
 
     public function __construct(EmployeeHistory $employee = null, $config = [])
     {
@@ -31,7 +34,9 @@ class EmployeeHistoryForm extends Model
 
     public function rules()
     {
-        return EmployeeHistoryRules::client();
+        return ArrayHelper::merge(EmployeeHistoryRules::client(), [
+            [['assignBuilds'], 'safe'],
+        ]);
     }
 
     public function attributeLabels()

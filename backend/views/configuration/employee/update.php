@@ -3,7 +3,6 @@
 use common\widgets\ActiveForm\ActiveForm;
 use common\widgets\GridView\GridView;
 use common\widgets\Panel\Panel;
-use common\widgets\Tabs\Tabs;
 use rmrevin\yii\fontawesome\FA;
 use yii\bootstrap\Html;
 
@@ -20,10 +19,12 @@ $this->title = \domain\models\base\EmployeeHistory::findOne(Yii::$app->request->
 
     <div class="employee-form">
 
+        <?php $form = ActiveForm::begin(['id' => $modelForm->formName()]); ?>
         <?= Panel::widget([
             'label' => Yii::t('common/employee', 'Employee'),
-            'content' => $this->render('_form', ['modelForm' => $modelForm]),
+            'content' => $this->render('_form', ['modelForm' => $modelForm, 'form' => $form]),
         ]) ?>
+        <?php ActiveForm::end(); ?>
 
         <?= GridView::widget([
             'id' => 'EmployeeHistoryBuildGrid',

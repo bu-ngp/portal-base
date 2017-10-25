@@ -119,7 +119,7 @@ class AllEmployeeSearch extends Model
                         ), (
                             SELECT person_fired 
                             FROM {{%person}} 
-                            WHERE person_id = UNHEX('F33017E2B89511E7A4A5902B3479B004')
+                            WHERE person_id = UNHEX(':person_id')
                         )) AS employee_history_end,
                     1 AS employee_type
                 FROM {{%employee_history}} wk1                

@@ -2,16 +2,14 @@
 
 use common\widgets\ActiveForm\ActiveForm;
 use domain\models\base\Dolzh;
-use common\widgets\Select2\Select2;
 use domain\models\base\Podraz;
 use rmrevin\yii\fontawesome\FA;
 use yii\db\ActiveQuery;
 
 /* @var $this yii\web\View */
-/* @var $modelForm domain\forms\base\EmployeeForm */
+/* @var $form ActiveForm */
+/* @var $modelForm domain\forms\base\EmployeeHistoryForm */
 ?>
-
-<?php $form = ActiveForm::begin(['id' => $modelForm->formName()]); ?>
 
 <?= $form->field($modelForm, 'dolzh_id')->select2([
     'activeRecordClass' => Dolzh::className(),
@@ -49,7 +47,3 @@ use yii\db\ActiveQuery;
 ]); ?>
 
 <?= $form->field($modelForm, 'employee_history_begin')->datetime(['wkkeep' => true, 'wkicon' => FA::_CALENDAR]) ?>
-
-<?= ''//$form->field($modelForm, 'assignBuilds', ['enableClientValidation' => false])->hiddenInput()->label(false) ?>
-
-<?php ActiveForm::end(); ?>

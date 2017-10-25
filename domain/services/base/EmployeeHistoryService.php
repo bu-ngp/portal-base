@@ -47,6 +47,7 @@ class EmployeeHistoryService extends WKService
     public function create(EmployeeHistoryForm $form)
     {
         $this->guardPersonExists($form);
+        $this->guardAssignBuilds($form);
         $this->filterEmployeeUUIDCreate($form);
         $employeeHistory = EmployeeHistory::create($form);
 
@@ -63,15 +64,13 @@ class EmployeeHistoryService extends WKService
             $employee = Employee::create($form);
         }
 
-        return $this->transactionManager->execute(function () use ($employeeHistory, $employee, $person) {
+        $this->transactionManager->execute(function () use ($employeeHistory, $employee, $person) {
             if ($person) {
                 $this->persons->save($person);
             }
 
             $this->employeeHistories->add($employeeHistory);
             $employee->isNewRecord ? $this->employees->add($employee) : $this->employees->save($employee);
-
-            return $employeeHistory->primaryKey;
         });
     }
 
@@ -94,7 +93,6 @@ class EmployeeHistoryService extends WKService
 
             $this->employeeHistories->save($employee);
         });
-
     }
 
     public function delete($id)
@@ -131,6 +129,10 @@ class EmployeeHistoryService extends WKService
         } else {
             throw new \RuntimeException(Yii::t('domain/employee', 'Invalid UUID Parameters.'));
         }
+
+        $form->assignBuilds = array_map(function ($buildId) {
+            return GridViewHelper::isBinaryValidString($buildId) ? Uuid::str2uuid($buildId) : $buildId;
+        }, $form->assignBuilds);
     }
 
     protected function filterEmployeeUUIDUpdate(EmployeeHistoryForm $form)
@@ -176,10 +178,17 @@ class EmployeeHistoryService extends WKService
         return $person;
     }
 
-    private function guardParttimesExists($employeeHistory)
+    protected function guardParttimesExists(EmployeeHistory $employeeHistory)
     {
         if ($this->parttimes->exists($employeeHistory->person_id)) {
             throw  new \Exception(Yii::t('domain/employee', 'You need remove Parttimes'));
+        }
+    }
+
+    protected function guardAssignBuilds(EmployeeHistoryForm $form)
+    {
+        if (!is_string($form->assignBuilds) || ($form->assignBuilds = json_decode($form->assignBuilds)) === null) {
+            throw new \DomainException(Yii::t('common/roles', 'Error when recognizing selected items'));
         }
     }
 }

@@ -8,6 +8,7 @@ use common\models\base\Person;
 use domain\forms\base\EmployeeHistoryForm;
 use domain\helpers\DateHelper;
 use domain\rules\base\EmployeeHistoryRules;
+use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -83,6 +84,17 @@ class EmployeeHistory extends \yii\db\ActiveRecord
         return [
             TimestampBehavior::className(),
             BlameableBehavior::className(),
+            'saveRelations' => [
+                'class'     => SaveRelationsBehavior::className(),
+                'relations' => ['builds'],
+            ],
+        ];
+    }
+
+    public function transactions()
+    {
+        return [
+            self::SCENARIO_DEFAULT => self::OP_ALL,
         ];
     }
 
@@ -93,6 +105,7 @@ class EmployeeHistory extends \yii\db\ActiveRecord
             'dolzh_id' => $form->dolzh_id,
             'podraz_id' => $form->podraz_id,
             'employee_history_begin' => $form->employee_history_begin,
+            'builds' => $form->assignBuilds,
         ]);
     }
 

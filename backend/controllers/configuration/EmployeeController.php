@@ -13,6 +13,7 @@ use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\GridView\services\AjaxResponse;
 use console\helpers\RbacHelper;
 use domain\forms\base\EmployeeHistoryForm;
+use domain\models\base\search\BuildSearch;
 use domain\models\base\search\EmployeeHistoryBuildSearch;
 use domain\services\AjaxFilter;
 use domain\services\base\EmployeeHistoryService;
@@ -67,17 +68,21 @@ class EmployeeController extends Controller
     {
         $form = new EmployeeHistoryForm();
 
+        $searchModelBuild = new BuildSearch();
+        $dataProviderBuild = $searchModelBuild->search(Yii::$app->request->queryParams);
+
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $employeeId = $this->service->create($form)
+            && $this->service->create($form)
         ) {
-            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved. Add Builds.'));
-            Breadcrumbs::removeLastCrumb();
-            return $this->redirect(['update', 'id' => $employeeId]);
+            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
+            return $this->redirect(Breadcrumbs::previousUrl());
         }
 
         return $this->render('create', [
             'modelForm' => $form,
+            'searchModelBuild' => $searchModelBuild,
+            'dataProviderBuild' => $dataProviderBuild,
         ]);
     }
 

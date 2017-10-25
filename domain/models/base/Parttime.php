@@ -7,6 +7,7 @@ use common\models\base\Person;
 use domain\forms\base\ParttimeForm;
 use domain\rules\base\ParttimeRules;
 use domain\validators\ParttimeValidator;
+use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -25,10 +26,11 @@ use yii\behaviors\TimestampBehavior;
  * @property string $created_by
  * @property string $updated_by
  *
- * @property Build $build
  * @property Dolzh $dolzh
  * @property Person $person
  * @property Podraz $podraz
+ * @property ParttimeBuild[] $parttimeBuilds
+ * @property Build[] $builds
  */
 class Parttime extends \yii\db\ActiveRecord
 {
@@ -78,6 +80,17 @@ class Parttime extends \yii\db\ActiveRecord
         return [
             TimestampBehavior::className(),
             BlameableBehavior::className(),
+            'saveRelations' => [
+                'class'     => SaveRelationsBehavior::className(),
+                'relations' => ['builds'],
+            ],
+        ];
+    }
+
+    public function transactions()
+    {
+        return [
+            self::SCENARIO_DEFAULT => self::OP_ALL,
         ];
     }
 
@@ -89,6 +102,7 @@ class Parttime extends \yii\db\ActiveRecord
             'podraz_id' => $form->podraz_id,
             'parttime_begin' => $form->parttime_begin,
             'parttime_end' => $form->parttime_end,
+            'builds' => $form->assignBuilds,
         ]);
     }
 
@@ -122,5 +136,21 @@ class Parttime extends \yii\db\ActiveRecord
     public function getPodraz()
     {
         return $this->hasOne(Podraz::className(), ['podraz_id' => 'podraz_id'])->from(['podraz' => Podraz::tableName()]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getParttimeBuilds()
+    {
+        return $this->hasMany(ParttimeBuild::className(), ['parttime_id' => 'parttime_id'])->from(['parttimeBuilds' => ParttimeBuild::tableName()]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBuilds()
+    {
+        return $this->hasMany(Build::className(), ['build_id' => 'build_id'])->from(['builds' => Podraz::tableName()])->viaTable('{{%parttime_build}}', ['parttime_id' => 'parttime_id']);
     }
 }

@@ -6,6 +6,7 @@ use domain\models\base\Parttime;
 use domain\rules\base\ParttimeRules;
 use Yii;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 
 class ParttimeForm extends Model
 {
@@ -14,6 +15,8 @@ class ParttimeForm extends Model
     public $podraz_id;
     public $parttime_begin;
     public $parttime_end;
+
+    public $assignBuilds;
 
     public function __construct(Parttime $parttime = null, $config = [])
     {
@@ -33,7 +36,9 @@ class ParttimeForm extends Model
 
     public function rules()
     {
-        return ParttimeRules::client();
+        return ArrayHelper::merge(ParttimeRules::client(), [
+            [['assignBuilds'], 'safe'],
+        ]);
     }
 
     public function attributeLabels()

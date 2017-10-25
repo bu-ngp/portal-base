@@ -19,11 +19,12 @@ $this->title = \domain\models\base\Parttime::findOne(Yii::$app->request->get('id
     <h1><?= Html::encode($this->title) ?></h1>
 
     <div class="parttime-form">
-
+        <?php $form = ActiveForm::begin(['id' => $modelForm->formName()]); ?>
         <?= Panel::widget([
             'label' => Yii::t('common/employee', 'Parttime'),
-            'content' => $this->render('_form', ['modelForm' => $modelForm]),
+            'content' => $this->render('_form', ['modelForm' => $modelForm, 'form' => $form]),
         ]) ?>
+        <?php ActiveForm::end(); ?>
 
         <?= GridView::widget([
             'id' => 'ParttimeBuildGrid',
@@ -45,8 +46,7 @@ $this->title = \domain\models\base\Parttime::findOne(Yii::$app->request->get('id
                 'icon' => FA::icon(FA::_LIST_ALT),
                 'title' => Yii::t('domain\parttime_build', 'Builds'),
             ],
-        ]);
-        ?>
+        ]) ?>
 
         <div class="form-group">
             <?= Html::submitButton(Yii::t('common', 'Update'), ['class' => 'btn btn-primary', 'form' => $modelForm->formName()]) ?>
