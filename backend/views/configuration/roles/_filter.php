@@ -13,7 +13,7 @@ use common\widgets\Tabs\Tabs;
 <?= Tabs::widget([
     'items' => [
         [
-            'label' => Yii::t('domain/authitem', 'Main'),
+            'label' => Yii::t('common/roles', 'Main'),
             'content' => Panel::widget([
                     'label' => 'Системные',
                     'content' => $form->field($filterModel, 'authitem_system_roles_mark')->checkbox(),

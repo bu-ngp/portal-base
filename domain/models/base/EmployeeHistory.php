@@ -72,10 +72,10 @@ class EmployeeHistory extends \yii\db\ActiveRecord
             'podraz_id' => Yii::t('domain/employee', 'Podraz ID'),
             'build_id' => Yii::t('domain/employee', 'Build ID'),
             'employee_history_begin' => Yii::t('domain/employee', 'Employee History Begin'),
-            'created_at' => Yii::t('domain/employee', 'Created At'),
-            'updated_at' => Yii::t('domain/employee', 'Updated At'),
-            'created_by' => Yii::t('domain/employee', 'Created By'),
-            'updated_by' => Yii::t('domain/employee', 'Updated By'),
+            'created_at' => Yii::t('domain/base', 'Created At'),
+            'updated_at' => Yii::t('domain/base', 'Updated At'),
+            'created_by' => Yii::t('domain/base', 'Created By'),
+            'updated_by' => Yii::t('domain/base', 'Updated By'),
         ];
     }
 

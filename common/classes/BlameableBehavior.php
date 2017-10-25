@@ -55,7 +55,7 @@ class BlameableBehavior extends AttributeBehavior
 
             if ($user) {
                 if ($user->isGuest) {
-                    return Yii::t('classes/behaviours', 'guest');
+                    return Yii::t('classes/behaviors', 'guest');
                 }
 
                 return ($user->identity->isLocal() ? 'local/' : 'ldap/') . $user->identity->person_username;

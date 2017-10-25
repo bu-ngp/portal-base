@@ -30,7 +30,7 @@ $this->title = Yii::t('common/config-ldap', 'Update Ldap Settings');
         <?= $form->field($modelForm, 'config_ldap_active')->toggleSwitch(['wkkeep' => true])/*->checkbox(['wkkeep' => true])*/ ?>
 
         <div class="form-group">
-            <?= Html::submitButton(Yii::t('common/authitem', 'Update'), ['class' => 'btn btn-primary']) ?>
+            <?= Html::submitButton(Yii::t('common', 'Update'), ['class' => 'btn btn-primary']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>

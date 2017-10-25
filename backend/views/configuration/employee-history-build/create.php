@@ -10,7 +10,7 @@ use yii\bootstrap\Html;
 /* @var $this yii\web\View */
 /* @var $modelForm domain\forms\base\EmployeeBuildForm */
 
-$this->title = Yii::t('common/person', 'Add Build');
+$this->title = Yii::t('common/employee', 'Add Build');
 ?>
 <div class="employee-history-build-create">
 

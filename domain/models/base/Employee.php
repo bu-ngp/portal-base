@@ -67,10 +67,10 @@ class Employee extends \yii\db\ActiveRecord
             'dolzh_id' => Yii::t('domain/employee', 'Dolzh ID'),
             'podraz_id' => Yii::t('domain/employee', 'Podraz ID'),
             'employee_begin' => Yii::t('domain/employee', 'Employee Begin'),
-            'created_at' => Yii::t('domain/employee', 'Created At'),
-            'updated_at' => Yii::t('domain/employee', 'Updated At'),
-            'created_by' => Yii::t('domain/employee', 'Created By'),
-            'updated_by' => Yii::t('domain/employee', 'Updated By'),
+            'created_at' => Yii::t('domain/base', 'Created At'),
+            'updated_at' => Yii::t('domain/base', 'Updated At'),
+            'created_by' => Yii::t('domain/base', 'Created By'),
+            'updated_by' => Yii::t('domain/base', 'Updated By'),
         ];
     }
 

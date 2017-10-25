@@ -17,7 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Build' => 'Здания',
-    'Dolzh' => 'Должности',
-    'Podraz' => 'Подразделения',
+    'Create' => 'Создать',
+    'Delete' => 'Удалить',
+    'Next' => 'Далее',
+    'Record is saved.' => 'Запись сохранена',
+    'Update' => 'Обновить',
 ];

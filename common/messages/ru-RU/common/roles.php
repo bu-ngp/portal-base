@@ -17,9 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Error when recognizing selected items' => '',
-    'Delete error' => '@@Ошибка удаления@@',
-    'Deleted 0 records' => '@@Удалено 0 записей@@',
+    'Create Auth Item' => 'Добавить роль',
+    'Main' => 'Основные',
     'Need add roles' => 'Необходимо добавить роли',
     'Roles' => 'Роли',
 ];

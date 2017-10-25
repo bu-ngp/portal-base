@@ -95,7 +95,7 @@ class RoleRepository
         }
 
         if (!Yii::$app->authManager->remove($role)) {
-            throw new \DomainException(Yii::t('domain/base', 'Deleting error. Remove Role Fail.'));
+            throw new \DomainException(Yii::t('domain/authitem', 'Deleting error. Remove Role Fail.'));
         };
     }
 

@@ -63,16 +63,16 @@ class Profile extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'profile_id' => Yii::t('domain/employee', 'Profile ID'),
-            'profile_inn' => Yii::t('domain/employee', 'Profile Inn'),
-            'profile_dr' => Yii::t('domain/employee', 'Profile Dr'),
-            'profile_pol' => Yii::t('domain/employee', 'Profile Pol'),
-            'profile_snils' => Yii::t('domain/employee', 'Profile Snils'),
-            'profile_address' => Yii::t('domain/employee', 'Profile Address'),
-            'created_at' => Yii::t('domain/employee', 'Created At'),
-            'updated_at' => Yii::t('domain/employee', 'Updated At'),
-            'created_by' => Yii::t('domain/employee', 'Created By'),
-            'updated_by' => Yii::t('domain/employee', 'Updated By'),
+            'profile_id' => Yii::t('domain/profile', 'Profile ID'),
+            'profile_inn' => Yii::t('domain/profile', 'Profile Inn'),
+            'profile_dr' => Yii::t('domain/profile', 'Profile Dr'),
+            'profile_pol' => Yii::t('domain/profile', 'Profile Pol'),
+            'profile_snils' => Yii::t('domain/profile', 'Profile Snils'),
+            'profile_address' => Yii::t('domain/profile', 'Profile Address'),
+            'created_at' => Yii::t('domain/base', 'Created At'),
+            'updated_at' => Yii::t('domain/base', 'Updated At'),
+            'created_by' => Yii::t('domain/base', 'Created By'),
+            'updated_by' => Yii::t('domain/base', 'Updated By'),
         ];
     }
 

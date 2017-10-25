@@ -17,7 +17,6 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Description' => '@@Название@@',
     'Create' => 'Создать',
     'Create Auth Item' => 'Добавить роль',
     'Update' => 'Обновить',

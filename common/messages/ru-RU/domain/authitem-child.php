@@ -17,7 +17,11 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Podraz' => 'Подразделение',
-    'Create Podraz' => 'Добавить подразделение',
-    'Podrazs' => 'Подразделения',
+    'Child' => '',
+    'Deleting error. Child is missed.' => '',
+    'Deleting error. Parent is missed.' => '',
+    'Deleting error. Remove Child Fail.' => '',
+    'Deleting error. Remove Children Fail.' => '',
+    'Deleting error. Role \'{role}\' not exists' => '',
+    'Parent' => '',
 ];

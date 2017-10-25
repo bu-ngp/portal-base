@@ -72,8 +72,8 @@ class AuthItem extends \yii\db\ActiveRecord
             'ldap_group' => Yii::t('domain/authitem', 'Ldap Group'),
             'rule_name' => Yii::t('domain/authitem', 'Rule Name'),
             'data' => Yii::t('domain/authitem', 'Data'),
-            'created_at' => Yii::t('domain/authitem', 'Created At'),
-            'updated_at' => Yii::t('domain/authitem', 'Updated At'),
+            'created_at' => Yii::t('domain/base', 'Created At'),
+            'updated_at' => Yii::t('domain/base', 'Updated At'),
         ];
     }
 

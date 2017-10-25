@@ -17,22 +17,16 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Child' => '',
-    'Created At' => '',
     'Data' => '',
-    'Item Name' => '',
-    'Ldap Group' => '',
-    'Parent' => '',
+    'Ldap Group' => 'Имя группы LDAP',
     'Rule Name' => '',
-    'Updated At' => '',
-    'User ID' => '',
     'Additional' => 'Дополнительные',
     'Description' => 'Наименование',
-    'Main' => 'Основные',
     'Name' => 'Идентификатор',
     'Role Name' => 'Имя роли',
     'System Roles Only' => 'Только системные роли',
     'Type' => 'Тип',
     'Users Roles Only' => 'Только пользовательские роли',
     'View' => 'Вид',
+    'Deleting error. Remove Role Fail.' => 'Ошибка удаления. Неудачная попытка удаления роли.',
 ];

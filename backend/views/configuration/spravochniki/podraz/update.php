@@ -6,9 +6,7 @@ use common\widgets\ActiveForm\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $modelForm domain\forms\base\PodrazForm */
 
-$this->title = Yii::t('common/podraz', 'Update "{modelClass}": ', [
-    'modelClass' => $modelForm->podraz_name,
-]);
+$this->title = $modelForm->podraz_name;
 ?>
 <div class="podraz-update">
 
@@ -21,7 +19,7 @@ $this->title = Yii::t('common/podraz', 'Update "{modelClass}": ', [
                 <?= $form->field($modelForm, 'podraz_name')->textInput(['wkkeep' => true, 'maxlength' => true]) ?>
 
         <div class="form-group">
-            <?= Html::submitButton(Yii::t('common/podraz', 'Update'), ['class' => 'btn btn-primary']) ?>
+            <?= Html::submitButton(Yii::t('common', 'Update'), ['class' => 'btn btn-primary']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>

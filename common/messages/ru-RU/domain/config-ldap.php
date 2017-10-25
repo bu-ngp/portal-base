@@ -17,5 +17,10 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Parttime' => '',
+    'Config Ldap Active' => 'Активировать авторизацию по LDAP',
+    'Config Ldap Admin Login' => 'Логин администратора контроллера домена',
+    'Config Ldap Admin Password' => 'Пароль администратора контроллера домена',
+    'Config Ldap Host' => 'Имя хоста/IP адрес контроллера домена',
+    'Config Ldap ID' => 'ИД',
+    'Config Ldap Port' => 'Порт подключения к контроллеру домена',
 ];

@@ -17,15 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Config Ldap Active' => 'Активировать LDAP авторизацию',
-    'Config Ldap Admin Login' => 'Логин администратора домена',
-    'Config Ldap Admin Password' => 'Пароль администратора домена',
-    'Config Ldap Host' => 'IP адрес/Имя хоста доменного контроллера',
-    'Config Ldap ID' => '',
-    'Config Ldap Port' => 'Порт подключения к LDAP',
+    'Ldap config not correct' => 'Некорректные настройки LDAP',
     'LDAP can\'t connect' => 'Не удалось подключиться к контроллеру домена',
     'LDAP settings' => 'Настройки LDAP',
-    'Ldap config not correct' => '',
     'Update Ldap Settings' => 'Настройки LDAP',
     'Users of system' => 'Пользователи системы',
 ];

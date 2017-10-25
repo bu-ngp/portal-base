@@ -60,15 +60,15 @@ class AuthItemChildRepository
     public function delete(AuthItemChild $authItemChild)
     {
         if (!$parent = Yii::$app->authManager->getRole($authItemChild->parent)) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Deleting error. Parent is missed.'));
+            throw new \RuntimeException(Yii::t('domain/authitem-child', 'Deleting error. Parent is missed.'));
         }
 
         if (!$child = Yii::$app->authManager->getRole($authItemChild->child)) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Deleting error. Child is missed.'));
+            throw new \RuntimeException(Yii::t('domain/authitem-child', 'Deleting error. Child is missed.'));
         }
 
         if (!Yii::$app->authManager->removeChild($parent, $child)) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Deleting error. Remove Child Fail.'));
+            throw new \RuntimeException(Yii::t('domain/authitem-child', 'Deleting error. Remove Child Fail.'));
         };
     }
 
@@ -78,11 +78,11 @@ class AuthItemChildRepository
     public function removeChildren(AuthItem $authItem)
     {
         if (!$role = Yii::$app->authManager->getRole($authItem->name)) {
-            throw new \RuntimeException(Yii::t('domain/base', "Deleting error. Role '{role}' not exists", ['role' => $authItem->name]));
+            throw new \RuntimeException(Yii::t('domain/authitem-child', "Deleting error. Role '{role}' not exists", ['role' => $authItem->name]));
         }
 
         if (Yii::$app->authManager->getChildren($role->name) && !Yii::$app->authManager->removeChildren($role)) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Deleting error. Remove Children Fail.'));
+            throw new \RuntimeException(Yii::t('domain/authitem-child', 'Deleting error. Remove Children Fail.'));
         }
     }
 }

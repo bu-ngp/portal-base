@@ -44,8 +44,8 @@ class AuthItemChild extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'parent' => Yii::t('domain/authitem', 'Parent'),
-            'child' => Yii::t('domain/authitem', 'Child'),
+            'parent' => Yii::t('domain/authitem-child', 'Parent'),
+            'child' => Yii::t('domain/authitem-child', 'Child'),
         ];
     }
 

@@ -12,7 +12,7 @@ use yii\bootstrap\Html;
 /* @var $searchModelBuild domain\models\base\search\BuildSearch */
 /* @var $dataProviderBuild yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('common/person', 'Create Employee');
+$this->title = Yii::t('common/employee', 'Create Employee');
 ?>
 <div class="user-create">
 
@@ -45,7 +45,7 @@ $this->title = Yii::t('common/person', 'Create Employee');
             ],
             'panelHeading' => [
                 'icon' => FA::icon(FA::_LIST_ALT),
-                'title' => Yii::t('domain\employee_history_build', 'Builds'),
+                'title' => Yii::t('common/employee', 'Builds'),
             ],
         ]) ?>
 

@@ -17,15 +17,12 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Adding existing model.' => '',
-    'Deleting error.' => '',
-    'Deleting error. Child is missed.' => '',
-    'Deleting error. Parent is missed.' => '',
-    'Deleting error. Remove Child Fail.' => '',
-    'Deleting error. Remove Children Fail.' => '',
-    'Deleting error. Remove Role Fail.' => '',
-    'Deleting error. Role \'{role}\' not exists' => '',
-    'unsupported' => '',
-    'Incorrect username or password.' => '@@@@',
+    'Adding existing model.' => 'Попытка добавления существующей модели',
+    'Created At' => 'Время создания записи',
+    'Created By' => 'Автор создавший запись',
+    'Deleting error.' => 'Ошибка удаления.',
+    'Updated At' => 'Время обновления записи',
+    'Updated By' => 'Автор обновивший запись',
+    'unsupported' => 'Не поддерживается',
     'Saving error.' => 'Ошибка сохранения.',
 ];

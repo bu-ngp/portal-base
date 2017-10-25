@@ -60,7 +60,7 @@ class ParttimeBuildService extends WKService
     protected function guardEmployeeExists(ParttimeBuildForm $form)
     {
         if (!$form->parttime_id) {
-            throw new \DomainException(Yii::t('domain/employee', 'URL parameter "employee" is missed.'));
+            throw new \DomainException(Yii::t('domain/parttime-build', 'URL parameter "employee" is missed.'));
         }
     }
 
@@ -69,7 +69,7 @@ class ParttimeBuildService extends WKService
         if (GridViewHelper::isBinaryValidString($form->build_id)) {
             $form->build_id = Uuid::str2uuid($form->build_id);
         } else {
-            throw new \RuntimeException(Yii::t('domain/employee', 'Invalid UUID Parameters.'));
+            throw new \RuntimeException(Yii::t('domain/parttime-build', 'Invalid UUID Parameters.'));
         }
     }
 }

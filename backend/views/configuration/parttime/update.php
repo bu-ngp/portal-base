@@ -44,7 +44,7 @@ $this->title = \domain\models\base\Parttime::findOne(Yii::$app->request->get('id
             ],
             'panelHeading' => [
                 'icon' => FA::icon(FA::_LIST_ALT),
-                'title' => Yii::t('domain\parttime_build', 'Builds'),
+                'title' => Yii::t('common/employee', 'Builds'),
             ],
         ]) ?>
 

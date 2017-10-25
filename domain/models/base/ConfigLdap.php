@@ -40,12 +40,12 @@ class ConfigLdap extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'config_ldap_id' => Yii::t('common/config-ldap', 'Config Ldap ID'),
-            'config_ldap_host' => Yii::t('common/config-ldap', 'Config Ldap Host'),
-            'config_ldap_port' => Yii::t('common/config-ldap', 'Config Ldap Port'),
-            'config_ldap_active' => Yii::t('common/config-ldap', 'Config Ldap Active'),
-            'config_ldap_admin_login' => Yii::t('common/config-ldap', 'Config Ldap Admin Login'),
-            'config_ldap_admin_password' => Yii::t('common/config-ldap', 'Config Ldap Admin Password'),
+            'config_ldap_id' => Yii::t('domain/config-ldap', 'Config Ldap ID'),
+            'config_ldap_host' => Yii::t('domain/config-ldap', 'Config Ldap Host'),
+            'config_ldap_port' => Yii::t('domain/config-ldap', 'Config Ldap Port'),
+            'config_ldap_active' => Yii::t('domain/config-ldap', 'Config Ldap Active'),
+            'config_ldap_admin_login' => Yii::t('domain/config-ldap', 'Config Ldap Admin Login'),
+            'config_ldap_admin_password' => Yii::t('domain/config-ldap', 'Config Ldap Admin Password'),
         ];
     }
 

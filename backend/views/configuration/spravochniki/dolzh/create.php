@@ -19,7 +19,7 @@ $this->title = Yii::t('common/dolzh', 'Create Dolzh');
         <?= $form->field($modelForm, 'dolzh_name')->textInput(['maxlength' => true, 'wkkeep' => true]) ?>
 
         <div class="form-group">
-            <?= Html::submitButton(Yii::t('common/dolzh', 'Create'), ['class' => 'btn btn-success']) ?>
+            <?= Html::submitButton(Yii::t('common', 'Create'), ['class' => 'btn btn-success']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>

@@ -17,7 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Podraz' => 'Подразделение',
-    'Create Podraz' => 'Добавить подразделение',
-    'Podrazs' => 'Подразделения',
+    'Build ID' => '',
+    'Parttime Build Deactive' => 'Дата с которой здание неактивно',
+    'Parttime ID' => '',
+    'Pb' => '',
 ];

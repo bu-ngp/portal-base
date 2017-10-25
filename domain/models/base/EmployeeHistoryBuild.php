@@ -47,9 +47,9 @@ class EmployeeHistoryBuild extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'employee_history_id' => Yii::t('domain\employee_history_build', 'Employee History ID'),
-            'build_id' => Yii::t('domain\employee_history_build', 'Build ID'),
-            'employee_history_build_deactive' => Yii::t('domain\employee_history_build', 'Employee History Build Deactive'),
+            'employee_history_id' => Yii::t('domain/employee-history-build', 'Employee History ID'),
+            'build_id' => Yii::t('domain/employee-history-build', 'Build ID'),
+            'employee_history_build_deactive' => Yii::t('domain/employee-history-build', 'Employee History Build Deactive'),
         ];
     }
 

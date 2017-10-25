@@ -11,6 +11,7 @@ namespace domain\models\base\search;
 
 use common\classes\validators\WKDateValidator;
 use common\widgets\GridView\services\GWItemsTrait;
+use domain\services\DateTimeCondition;
 use Yii;
 use yii\base\Model;
 use yii\data\SqlDataProvider;
@@ -181,7 +182,13 @@ EOT;
             return " and $ltrimKey = " . $key;
         }, array_keys($filterColumns));
 
-        return implode($resultLike) . implode($resultStrict);
+        $filterColumns = $this->columnDate($params);
+        $resultDate = array_map(function ($key, $value) {
+            $ltrimKey = ltrim($key, ':');
+            return " and " . (new DateTimeCondition($ltrimKey, $value, DateTimeCondition::DATE))->convertAsSql();
+        }, array_keys($filterColumns), $filterColumns);
+
+        return implode($resultLike) . implode($resultStrict) . implode($resultDate);
     }
 
     protected function columnsLike($params)
@@ -189,8 +196,6 @@ EOT;
         return array_filter([
             ':dolzh_name' => $params[$this->formName()]['dolzh_name'] ? '%' . $params[$this->formName()]['dolzh_name'] . '%' : '',
             ':podraz_name' => $params[$this->formName()]['podraz_name'] ? '%' . $params[$this->formName()]['podraz_name'] . '%' : '',
-//            ':employee_history_begin' => $params['employee_history_begin'],
-//            ':employee_history_end' => $params['employee_history_end'],
         ], function ($value) {
             return !empty($value);
         });
@@ -200,6 +205,16 @@ EOT;
     {
         return array_filter([
             ':employee_type' => $params[$this->formName()]['employee_type'],
+        ], function ($value) {
+            return !empty($value);
+        });
+    }
+
+    protected function columnDate($params)
+    {
+        return array_filter([
+            ':employee_history_begin' => $params[$this->formName()]['employee_history_begin'],
+            ':employee_history_end' => $params[$this->formName()]['employee_history_end'],
         ], function ($value) {
             return !empty($value);
         });

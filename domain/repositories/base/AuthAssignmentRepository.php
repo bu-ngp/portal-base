@@ -35,19 +35,19 @@ class AuthAssignmentRepository
     public function add(AuthAssignment $authAssignment)
     {
         if (!$authItem = Yii::$app->authManager->getRole($authAssignment->item_name)) {
-            throw new \DomainException(Yii::t('domain/auth-assignments', "AuthItem {item_name} not exist.", [
+            throw new \DomainException(Yii::t('domain/auth-assignment', "AuthItem {item_name} not exist.", [
                 'item_name' => $authAssignment->item_name,
             ]));
         }
 
         if (!$userID = Person::findOne($authAssignment->user_id)->primaryKey) {
-            throw new \DomainException(Yii::t('domain/auth-assignments', "User with ID '{userUUID}' not exist.", [
+            throw new \DomainException(Yii::t('domain/auth-assignment', "User with ID '{userUUID}' not exist.", [
                 'userUUID' => Uuid::uuid2str($authAssignment->user_id),
             ]));
         }
 
         if (!Yii::$app->authManager->assign($authItem, $userID)) {
-            throw new \DomainException(Yii::t('domain/auth-assignments', "Can't assign User with ID '{userUUID}' to '{$authAssignment->item_name}'", [
+            throw new \DomainException(Yii::t('domain/auth-assignment', "Can't assign User with ID '{userUUID}' to '{$authAssignment->item_name}'", [
                 'userUUID' => Uuid::uuid2str($authAssignment->user_id),
             ]));
         }

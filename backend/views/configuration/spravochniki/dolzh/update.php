@@ -6,9 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $modelForm domain\forms\base\DolzhForm */
 
-$this->title = Yii::t('common/dolzh', 'Update "{modelClass}": ', [
-    'modelClass' => $modelForm->dolzh_name,
-]);
+$this->title = $modelForm->dolzh_name;
 ?>
 <div class="dolzh-update">
 
@@ -21,7 +19,7 @@ $this->title = Yii::t('common/dolzh', 'Update "{modelClass}": ', [
         <?= $form->field($modelForm, 'dolzh_name')->textInput(['maxlength' => true, 'wkkeep' => true]) ?>
 
         <div class="form-group">
-            <?= Html::submitButton(Yii::t('common/dolzh', 'Update'), ['class' => 'btn btn-primary']) ?>
+            <?= Html::submitButton(Yii::t('common', 'Update'), ['class' => 'btn btn-primary']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>

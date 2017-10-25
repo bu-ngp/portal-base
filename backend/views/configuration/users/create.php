@@ -23,12 +23,12 @@ $this->title = Yii::t('common/person', 'Create User');
         <?php $userForm = ActiveForm::begin(['id' => $modelUserForm->formName()]); ?>
 
         <?= Panel::widget([
-            'label' => Yii::t('common/employee', 'User'),
+            'label' => Yii::t('common/person', 'User'),
             'content' => $this->render('_personForm', ['modelUserForm' => $modelUserForm, 'userForm' => $userForm]),
         ]) ?>
 
         <?= Panel::widget([
-            'label' => Yii::t('common/employee', 'Profile'),
+            'label' => Yii::t('common/person', 'Profile'),
             'content' => $this->render('_profileForm', ['modelProfileForm' => $modelProfileForm, 'profileForm' => $userForm]),
         ]) ?>
 
@@ -37,7 +37,7 @@ $this->title = Yii::t('common/person', 'Create User');
         <?= Tabs::widget([
             'items' => [
                 [
-                    'label' => Yii::t('common/employee', 'Roles'),
+                    'label' => Yii::t('common/person', 'Roles'),
                     'content' => $this->render('_roleGrid', [
                         'searchModel' => $searchModelAuthItem,
                         'dataProvider' => $dataProviderAuthItem,

@@ -45,8 +45,8 @@ class Podraz extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'podraz_id' => Yii::t('domain/employee', 'Podraz ID'),
-            'podraz_name' => Yii::t('domain/employee', 'Podraz Name'),
+            'podraz_id' => Yii::t('domain/podraz', 'Podraz ID'),
+            'podraz_name' => Yii::t('domain/podraz', 'Podraz Name'),
         ];
     }
 

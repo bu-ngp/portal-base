@@ -17,9 +17,13 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Builds' => '',
-    'Parttime' => '',
-    'Create' => '@@Создать@@',
+    'Add Build' => 'Добавить здание',
+    'Add main speciality' => 'Добавить основную специальность',
+    'Add parttime' => 'Добавить совмещение',
+    'Builds' => 'Здания',
+    'Create Employee' => 'Добавить специальность',
+    'Create Parttime' => 'Добавить совместительство',
+    'Parttime' => 'Совместительство',
     'Employee' => 'Специальность',
     'Employees' => 'Специальности',
     'Profile' => 'Профиль',

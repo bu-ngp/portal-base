@@ -45,8 +45,8 @@ class Dolzh extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'dolzh_id' => Yii::t('domain/employee', 'Dolzh ID'),
-            'dolzh_name' => Yii::t('domain/employee', 'Dolzh Name'),
+            'dolzh_id' => Yii::t('domain/dolzh', 'Dolzh ID'),
+            'dolzh_name' => Yii::t('domain/dolzh', 'Dolzh Name'),
         ];
     }
 

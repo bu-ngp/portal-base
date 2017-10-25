@@ -11,9 +11,7 @@ use common\widgets\ActiveForm\ActiveForm;
 /* @var $searchModel domain\models\base\search\AuthItemSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('common/authitem', 'Update "{modelClass}": ', [
-        'modelClass' => $modelForm->description,
-    ]);
+$this->title = $modelForm->description;
 ?>
 <div class="auth-item-update">
 
@@ -65,7 +63,7 @@ $this->title = Yii::t('common/authitem', 'Update "{modelClass}": ', [
         ]) ?>
 
         <div class="form-group">
-            <?= Html::submitButton(Yii::t('common/authitem', 'Update'), ['class' => 'btn btn-primary', 'form' => $modelForm->formName()]) ?>
+            <?= Html::submitButton(Yii::t('common', 'Update'), ['class' => 'btn btn-primary', 'form' => $modelForm->formName()]) ?>
         </div>
 
     </div>

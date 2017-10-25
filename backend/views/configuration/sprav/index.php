@@ -21,7 +21,7 @@ $this->title = Yii::t('common/config', 'Spravochniki');
                 'preview' => [
                     'FAIcon' => 'list-alt',
                 ],
-                'title' => Yii::t('common/sprav', 'Dolzh'),
+                'title' => Yii::t('common/dolzh', 'Dolzh'),
                 'link' => Yii::$app->urlManager->createUrl(['configuration/spravochniki/dolzh']),
                 'roles' => RbacHelper::AUTHORIZED,
             ],
@@ -30,7 +30,7 @@ $this->title = Yii::t('common/config', 'Spravochniki');
                 'preview' => [
                     'FAIcon' => 'list-alt',
                 ],
-                'title' => Yii::t('common/sprav', 'Podraz'),
+                'title' => Yii::t('common/podraz', 'Podraz'),
                 'link' => Yii::$app->urlManager->createUrl(['configuration/spravochniki/podraz']),
                 'roles' => RbacHelper::AUTHORIZED,
             ],
@@ -39,7 +39,7 @@ $this->title = Yii::t('common/config', 'Spravochniki');
                 'preview' => [
                     'FAIcon' => 'list-alt',
                 ],
-                'title' => Yii::t('common/sprav', 'Build'),
+                'title' => Yii::t('common/build', 'Build'),
                 'link' => Yii::$app->urlManager->createUrl(['configuration/spravochniki/build']),
                 'roles' => RbacHelper::AUTHORIZED,
             ],

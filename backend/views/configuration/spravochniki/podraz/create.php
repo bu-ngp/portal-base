@@ -19,7 +19,7 @@ $this->title = Yii::t('common/podraz', 'Create Podraz');
         <?= $form->field($modelForm, 'podraz_name')->textInput(['wkkeep' => true, 'maxlength' => true]) ?>
 
         <div class="form-group">
-            <?= Html::submitButton(Yii::t('common/podraz', 'Create'), ['class' => 'btn btn-success']) ?>
+            <?= Html::submitButton(Yii::t('common', 'Create'), ['class' => 'btn btn-success']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>

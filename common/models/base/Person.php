@@ -87,19 +87,19 @@ class Person extends \yii\db\ActiveRecord implements LdapModelInterface
     public function attributeLabels()
     {
         return [
-            'person_id' => Yii::t('common/person', 'Person ID'),
-            'person_code' => Yii::t('common/person', 'Person Code'),
-            'person_fullname' => Yii::t('common/person', 'Person Fullname'),
-            'person_username' => Yii::t('common/person', 'Person Username'),
-            'person_auth_key' => Yii::t('common/person', 'Person Auth Key'),
-            'person_password_hash' => Yii::t('common/person', 'Person Password Hash'),
-            'person_email' => Yii::t('common/person', 'Person Email'),
-            'person_hired' => Yii::t('common/person', 'Person Hired'),
-            'person_fired' => Yii::t('common/person', 'Person Fired'),
-            'created_at' => Yii::t('common/person', 'Created At'),
-            'updated_at' => Yii::t('common/person', 'Updated At'),
-            'created_by' => Yii::t('domain/employee', 'Created By'),
-            'updated_by' => Yii::t('domain/employee', 'Updated By'),
+            'person_id' => Yii::t('domain/person', 'Person ID'),
+            'person_code' => Yii::t('domain/person', 'Person Code'),
+            'person_fullname' => Yii::t('domain/person', 'Person Fullname'),
+            'person_username' => Yii::t('domain/person', 'Person Username'),
+            'person_auth_key' => Yii::t('domain/person', 'Person Auth Key'),
+            'person_password_hash' => Yii::t('domain/person', 'Person Password Hash'),
+            'person_email' => Yii::t('domain/person', 'Person Email'),
+            'person_hired' => Yii::t('domain/person', 'Person Hired'),
+            'person_fired' => Yii::t('domain/person', 'Person Fired'),
+            'created_at' => Yii::t('domain/base', 'Created At'),
+            'updated_at' => Yii::t('domain/base', 'Updated At'),
+            'created_by' => Yii::t('domain/base', 'Created By'),
+            'updated_by' => Yii::t('domain/base', 'Updated By'),
         ];
     }
 

@@ -12,7 +12,7 @@ use yii\bootstrap\Html;
 /* @var $searchModelBuild domain\models\base\search\BuildSearch */
 /* @var $dataProviderBuild yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('common/person', 'Create Parttime');
+$this->title = Yii::t('common/employee', 'Create Parttime');
 ?>
 <div class="parttime-create">
 
@@ -22,7 +22,7 @@ $this->title = Yii::t('common/person', 'Create Parttime');
 
         <?php $form = ActiveForm::begin(['id' => $modelForm->formName()]); ?>
         <?= Panel::widget([
-            'label' => Yii::t('common/parttime', 'Parttime'),
+            'label' => Yii::t('common/employee', 'Parttime'),
             'content' => $this->render('_form', ['modelForm' => $modelForm, 'form' => $form]),
         ]) ?>
         <?= $form->field($modelForm, 'assignBuilds', ['enableClientValidation' => false])->hiddenInput()->label(false) ?>
@@ -46,7 +46,7 @@ $this->title = Yii::t('common/person', 'Create Parttime');
             ],
             'panelHeading' => [
                 'icon' => FA::icon(FA::_LIST_ALT),
-                'title' => Yii::t('domain\employee_history_build', 'Builds'),
+                'title' => Yii::t('common/employee', 'Builds'),
             ],
         ]) ?>
 

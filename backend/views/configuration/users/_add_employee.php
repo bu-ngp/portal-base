@@ -6,7 +6,7 @@
     </button>
     <ul role="menu" class="dropdown-menu">
         <li role="presentation">
-            <?= Html::a(Yii::t('domain/person', 'Add main speciality'), ['configuration/employee/create', 'person' => Yii::$app->request->get('id')], [
+            <?= Html::a(Yii::t('common/employee', 'Add main speciality'), ['configuration/employee/create', 'person' => Yii::$app->request->get('id')], [
                 'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-default',
                 'data-pjax' => '0',
                 'tabindex' => '-1',
@@ -14,7 +14,7 @@
             ]) ?>
         </li>
         <li role="presentation">
-            <?= Html::a(Yii::t('domain/person', 'Add parttime'), ['configuration/parttime/create', 'person' => Yii::$app->request->get('id')], [
+            <?= Html::a(Yii::t('common/employee', 'Add parttime'), ['configuration/parttime/create', 'person' => Yii::$app->request->get('id')], [
                 'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-default',
                 'data-pjax' => '0',
                 'tabindex' => '-1',

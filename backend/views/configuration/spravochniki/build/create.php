@@ -18,7 +18,7 @@ $this->title = Yii::t('common/build', 'Create Build');
         <?= $form->field($modelForm, 'build_name')->textInput(['wkkeep' => true, 'maxlength' => true]) ?>
 
         <div class="form-group">
-            <?= Html::submitButton(Yii::t('common/build', 'Create'), ['class' => 'btn btn-success']) ?>
+            <?= Html::submitButton(Yii::t('common', 'Create'), ['class' => 'btn btn-success']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>

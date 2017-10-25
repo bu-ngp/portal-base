@@ -45,8 +45,8 @@ class Build extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'build_id' => Yii::t('domain/employee', 'Build ID'),
-            'build_name' => Yii::t('domain/employee', 'Build Name'),
+            'build_id' => Yii::t('domain/build', 'Build ID'),
+            'build_name' => Yii::t('domain/build', 'Build Name'),
         ];
     }
 

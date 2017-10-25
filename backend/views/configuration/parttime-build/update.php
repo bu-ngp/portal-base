@@ -11,7 +11,7 @@ use yii\bootstrap\Html;
 /* @var $this yii\web\View */
 /* @var $modelForm domain\forms\base\ParttimeBuildForm */
 
-$this->title = Yii::t('common/person', Build::findOne($modelForm->build_id)->build_name);
+$this->title = Build::findOne($modelForm->build_id)->build_name;
 ?>
 <div class="parttime-build-update">
 

@@ -17,9 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Create' => 'Создать',
+    'Dolzh' => 'Должность',
     'Create Dolzh' => 'Добавить должность',
     'Dolzhs' => 'Должности',
-    'Update' => 'Обновить',
-    'Update "{modelClass}": ' => 'Обновить "{modelClass}": ',
 ];

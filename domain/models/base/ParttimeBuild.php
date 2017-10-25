@@ -46,10 +46,10 @@ class ParttimeBuild extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'pb' => Yii::t('domain\parttime_build', 'Pb'),
-            'parttime_id' => Yii::t('domain\parttime_build', 'Parttime ID'),
-            'build_id' => Yii::t('domain\parttime_build', 'Build ID'),
-            'parttime_build_deactive' => Yii::t('domain\parttime_build', 'Parttime Build Deactive'),
+            'pb' => Yii::t('domain/parttime-build', 'Pb'),
+            'parttime_id' => Yii::t('domain/parttime-build', 'Parttime ID'),
+            'build_id' => Yii::t('domain/parttime-build', 'Build ID'),
+            'parttime_build_deactive' => Yii::t('domain/parttime-build', 'Parttime Build Deactive'),
         ];
     }
 

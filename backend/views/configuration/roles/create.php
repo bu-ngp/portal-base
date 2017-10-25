@@ -8,7 +8,7 @@ use common\widgets\ActiveForm\ActiveForm;
 /* @var $searchModel domain\models\base\search\AuthItemSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('common/authitem', 'Create Auth Item');
+$this->title = Yii::t('common/roles', 'Create Auth Item');
 ?>
 <div class="auth-item-create">
 
@@ -44,7 +44,7 @@ $this->title = Yii::t('common/authitem', 'Create Auth Item');
         ]) ?>
 
         <div class="form-group">
-            <?= Html::submitButton(Yii::t('common/authitem', 'Create'), ['class' => 'btn btn-success', 'form' => $modelForm->formName()]) ?>
+            <?= Html::submitButton(Yii::t('common', 'Create'), ['class' => 'btn btn-success', 'form' => $modelForm->formName()]) ?>
         </div>
 
     </div>

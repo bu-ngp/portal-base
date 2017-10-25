@@ -122,7 +122,7 @@ class RoleService extends WKService
     private function guardAssignRoles($form)
     {
         if (!is_string($form->assignRoles) || ($assignedKeys = json_decode($form->assignRoles)) === null) {
-            throw new \DomainException(Yii::t('common/roles', 'Error when recognizing selected items'));
+            throw new \DomainException(Yii::t('domain/base', 'Error when recognizing selected items'));
         }
 
         if (!$assignedKeys) {

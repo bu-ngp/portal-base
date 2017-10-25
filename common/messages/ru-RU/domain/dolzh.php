@@ -17,5 +17,6 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'AuthItem {item_name} not exist.' => '',
+    'Dolzh ID' => 'ИД Должности',
+    'Dolzh Name' => 'Наименование',
 ];

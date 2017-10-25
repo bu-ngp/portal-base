@@ -17,7 +17,6 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Podraz' => 'Подразделение',
-    'Create Podraz' => 'Добавить подразделение',
-    'Podrazs' => 'Подразделения',
+    'Item Name' => '',
+    'User ID' => '',
 ];

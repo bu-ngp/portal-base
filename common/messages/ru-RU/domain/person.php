@@ -17,8 +17,16 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Error when recognizing selected items' => '',
-    'Person is saved. Add speciality.' => '',
+    'Person Auth Key' => '',
+    'Person Code' => 'Код',
+    'Person Email' => 'Электронная почта',
+    'Person Fired' => 'Дата увольнения',
+    'Person Fullname' => 'Фамилия Имя Отчество',
+    'Person Hired' => 'Дата приема на работу',
+    'Person ID' => 'ИД Пользователя',
+    'Person Password Hash' => '',
+    'Person Username' => 'Логин',
+    'Person is saved. Add speciality.' => 'Пользователь сохранен. Добавьте специальность.',
     'Password very short. Need minimum 6 characters.' => 'Пароль должен содержать не менее 6 символов.',
     'Person Password' => 'Пароль',
     'Person Password Repeat' => 'Повторите ввод пароля',

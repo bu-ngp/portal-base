@@ -46,9 +46,9 @@ class AuthAssignment extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'user_id' => Yii::t('domain/authitem', 'User ID'),
-            'item_name' => Yii::t('domain/authitem', 'Item Name'),
-            'created_at' => Yii::t('domain/authitem', 'Created At'),
+            'user_id' => Yii::t('domain/auth-assignment', 'User ID'),
+            'item_name' => Yii::t('domain/auth-assignment', 'Item Name'),
+            'created_at' => Yii::t('domain/base', 'Created At'),
         ];
     }
 

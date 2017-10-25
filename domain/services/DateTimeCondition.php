@@ -60,7 +60,7 @@ class DateTimeCondition
                     case DateTimeCondition::DATE:
                         return [
                             'and',
-                            ['>=', $this->attribute, $this->dateBegin . $this->timeBegin],
+                            ['>=', $this->attribute, DateHelper::rus2iso($this->dateBegin . $this->timeBegin)],
                             ['<', $this->attribute, new Expression("DATE_ADD(:date, INTERVAL 1 DAY)", [':date' => DateHelper::rus2iso($this->date . $this->time)])]
                         ];
                         break;
@@ -86,6 +86,35 @@ class DateTimeCondition
         }
 
         return [];
+    }
+
+    public function convertAsSql()
+    {
+        if (isset($this->value) && $this->value !== '') {
+            if ($this->range) {
+                switch ($this->type) {
+                    case DateTimeCondition::INT:
+                        return "{$this->attribute} >= UNIX_TIMESTAMP('" . DateHelper::rus2iso($this->dateBegin . $this->timeBegin) . ")" .
+                            " AND {$this->attribute} < UNIX_TIMESTAMP(DATE_ADD('" . DateHelper::rus2iso($this->date . $this->time) . "', INTERVAL 1 DAY))";
+                        break;
+                    case DateTimeCondition::DATE:
+                        return "{$this->attribute} >= '" . DateHelper::rus2iso($this->dateBegin . $this->timeBegin) . "'" .
+                            " AND {$this->attribute} < DATE_ADD('" . DateHelper::rus2iso($this->date . $this->time) . "', INTERVAL 1 DAY)";
+                        break;
+                }
+            } else {
+                switch ($this->type) {
+                    case DateTimeCondition::INT:
+                        return "{$this->attribute} {$this->znak} UNIX_TIMESTAMP('" . DateHelper::rus2iso($this->date . $this->time) . "')";
+                        break;
+                    case DateTimeCondition::DATE:
+                        return "{$this->attribute} {$this->znak} '" . DateHelper::rus2iso($this->date . $this->time) . "'";
+                        break;
+                }
+            }
+        }
+
+        return '';
     }
 
 }

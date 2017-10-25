@@ -11,7 +11,7 @@ use yii\bootstrap\Html;
 /* @var $this yii\web\View */
 /* @var $modelForm domain\forms\base\EmployeeBuildForm */
 
-$this->title = Yii::t('common/person', Build::findOne($modelForm->build_id)->build_name);
+$this->title = Build::findOne($modelForm->build_id)->build_name;
 ?>
 <div class="employee-history-build-update">
 
