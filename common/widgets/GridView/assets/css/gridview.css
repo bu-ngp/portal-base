@@ -223,3 +223,27 @@ div.wk-filterDialog-content {
 .wk-grid-action-buttons a i {
     line-height: 30px !important;
 }
+
+.wk-custom-buttons > .dropup, .wk-custom-buttons > .dropdown {
+    top: 40px;
+}
+
+.wk-custom-buttons a, .wk-addition-grid-toolbar a {
+    width: 100%;
+}
+
+.wk-custom-buttons li, .wk-addition-grid-toolbar li {
+    width: 100%;
+    float: left;
+}
+
+.wk-custom-buttons button[data-toggle="dropdown"] > i {
+    font-size: 20px;
+    padding-left: 3px;
+    margin-top: -5px;
+    color: #676767;
+}
+
+.wk-addition-grid-toolbar .pmd-dropdown-menu-container {
+    top: 35px;
+}

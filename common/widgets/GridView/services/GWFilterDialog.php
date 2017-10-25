@@ -76,6 +76,8 @@ class GWFilterDialog
         $button = Html::a(Yii::t('wk-widget-gridview', 'Filter'), '#',
             [
                 'class' => 'btn btn-xs pmd-btn-flat pmd-ripple-effect btn-primary wk-btn-filterDialog',
+                'tabindex' => '-1',
+                'role' => 'menuitem',
             ]);
 
         $this->gridView->customButtons[] = $button;

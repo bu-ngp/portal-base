@@ -104,6 +104,8 @@ EOT;
         $button = Html::a(Yii::t('wk-widget-gridview', 'Customize'), '#',
             [
                 'class' => 'btn btn-xs pmd-btn-flat pmd-ripple-effect btn-default wk-btn-customizeDialog',
+                'data-pjax' => '0',
+                'tabindex' => '-1',
             ]);
 
         $this->gridView->customButtons[] = $button;

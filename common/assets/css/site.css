@@ -197,3 +197,7 @@ div.wk-widget-input-prepend-icon > span {
 .help-block:before {
     content: '* ';
 }
+
+.dropdown-menu > li > a {
+    text-align: left;
+}

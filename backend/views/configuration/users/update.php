@@ -70,8 +70,7 @@ $this->title = Yii::t('common/person', $modelUserFormUpdate->person_fullname);
                                 }
                             ],
                             'toolbar' => [
-                                'content' => \yii\helpers\Html::a('Добавить основную специальность', ['configuration/employee/create', 'person' => Yii::$app->request->get('id')], ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-success', 'data-pjax' => '0']) .
-                                    \yii\helpers\Html::a('Добавить совмещение', ['configuration/parttime/create', 'person' => Yii::$app->request->get('id')], ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-success', 'data-pjax' => '0'])
+                                'content' => $this->render('_add_employee'),
                             ],
                         ],
                     ]),

@@ -123,17 +123,6 @@
 
                 $dialog.find('.wk-filterDialog-content').html($pjax.find('.wk-filter-dialog-content').html());
                 $pjax.find('.wk-filter-dialog-content').html('');
-
-                $dialog.find(".pmd-textfield-focused").remove();
-                $dialog.find(".pmd-textfield .form-control").after('<span class="pmd-textfield-focused"></span>');
-
-                $dialog.find('.pmd-textfield input.form-control').each(function () {
-                    if ($(this).val() !== "") {
-                        $(this).closest('.pmd-textfield').addClass("pmd-textfield-floating-label-completed");
-                    }
-                });
-
-                $dialog.find('.pmd-checkbox input').after('<span class="pmd-checkbox-label">&nbsp;</span>');
             }
         });
 

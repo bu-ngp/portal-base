@@ -97,6 +97,8 @@ class GWExportGrid
                     'wk-export' => $format,
                     'wk-loading' => true,
                     'data-pjax' => '0',
+                    'tabindex' => '-1',
+                    'role' => 'menuitem',
                 ]);
 
             $this->gridView->customButtons[] = $button;

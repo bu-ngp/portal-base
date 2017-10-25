@@ -77,11 +77,11 @@ HTML;
                     {crudToolbar}
                 </div>
             </div>
-            <div class="btn-toolbar pull-left kv-grid-toolbar" role="toolbar">
+            <div class="btn-toolbar pull-left kv-grid-toolbar wk-addition-grid-toolbar" role="toolbar">
                 {toolbar}
             </div>
             <div class="btn-toolbar pull-right kv-grid-toolbar" role="toolbar">
-                <div class="btn-group wk-custom-buttons">
+                <div class="wk-custom-buttons">
                     {customButtons}
                 </div>
             </div>
@@ -165,6 +165,12 @@ HTML;
     {
         $view = $this->getView();
         $view->registerJs(file_get_contents(Yii::getAlias('@npm') . '/propellerkit/components/button/js/ripple-effect.js'));
+        $view->registerJs(strtr(file_get_contents(Yii::getAlias('@common') . '/widgets/PropellerAssets/assets/js/dropdown.js'), ['wkGridView' => $this->id]));
+        if ($this->filterDialog->isEnable()) {
+            $view->registerJs(file_get_contents(Yii::getAlias('@npm') . '/propellerkit/components/textfield/js/textfield.js'));
+            $view->registerJs(file_get_contents(Yii::getAlias('@npm') . '/propellerkit/components/checkbox/js/checkbox.js'));
+        }
+
         parent::endPjax();
     }
 
@@ -351,19 +357,19 @@ EOT;
             $buttons = '';
             array_map(function ($liContent) use (&$buttons) {
                 if ($liContent === '{divider}') {
-                    $buttons .= '<li role="separator" class="divider"></li>';
+                    $buttons .= '<li role="presentation" class="divider"></li>';
                 } else {
-                    $buttons .= "<li>$liContent</li>";
+                    $buttons .= "<li role=\"presentation\">$liContent</li>";
                 }
             }, $this->customButtons);
 
             $this->panelBeforeTemplate = strtr($this->panelBeforeTemplate, ['{customButtons}' => <<<EOT
-                <div class="btn-group wk-widget-grid-custom-button">
-                    <button type="button" class="btn pmd-btn-flat pmd-ripple-effect btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-option-vertical"></i></button>
-                    <ul class="dropdown-menu dropdown-menu-right">
-                        $buttons
+                <span class="dropdown pmd-dropdown">
+                    <button class="btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-primary" type="button" data-toggle="dropdown" aria-expanded="true"><i class="glyphicon glyphicon-option-vertical"></i></button>
+                    <ul role="menu" class="dropdown-menu dropdown-menu-right">
+                         $buttons
                     </ul>
-                </div>
+                </span>
 EOT
             ]);
         }
