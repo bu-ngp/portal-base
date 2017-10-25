@@ -97,6 +97,15 @@ HTML;
         {footer}
         <div class="clearfix"></div>
 HTML;
+    public $panelHeadingTemplate = <<< HTML
+    <div class="pull-right">
+        {summary}
+    </div>
+    <h3 class="panel-title">
+        {heading}
+    </h3>
+    <div class="clearfix"></div>
+HTML;
     public $customButtons = [];
     public $customActionButtons = [];
     public $gridExcludeIdsFunc;
@@ -159,6 +168,41 @@ HTML;
 
         parent::run();
         $this->registerAssetsByWk();
+    }
+
+    // переопределен изза глюка с руссификацией kartik GridView
+    public function renderSummary()
+    {
+        $count = $this->dataProvider->getCount();
+        if ($count <= 0) {
+            return '';
+        }
+        $summaryOptions = $this->summaryOptions;
+        $tag = ArrayHelper::remove($summaryOptions, 'tag', 'div');
+        if (($pagination = $this->dataProvider->getPagination()) !== false) {
+            $totalCount = $this->dataProvider->getTotalCount();
+            $begin = $pagination->getPage() * $pagination->pageSize + 1;
+            $end = $begin + $count - 1;
+            if ($begin > $end) {
+                $begin = $end;
+            }
+            $page = $pagination->getPage() + 1;
+            $pageCount = $pagination->pageCount;
+            if (($summaryContent = $this->summary) === null) {
+                return Html::tag($tag, Yii::t('yii', 'Showing <b>{begin, number}-{end, number}</b> of <b>{totalCount, number}</b> {totalCount, plural, one{item} other{items}}.', [
+                    'begin' => $begin,
+                    'end' => $end,
+                    'count' => $count,
+                    'totalCount' => $totalCount,
+                    'page' => $page,
+                    'pageCount' => $pageCount,
+                    'item' => $this->itemLabelSingle,
+                    'items' => $this->itemLabelPlural,
+                ]), $summaryOptions);
+            }
+        }
+
+        return parent::renderSummary();
     }
 
     protected function endPjax()
