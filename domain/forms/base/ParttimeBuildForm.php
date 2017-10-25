@@ -37,4 +37,9 @@ class ParttimeBuildForm extends Model
     {
         return ParttimeBuildRules::client();
     }
+
+    public function attributeLabels()
+    {
+        return (new ParttimeBuild())->attributeLabels();
+    }
 }

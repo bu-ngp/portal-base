@@ -18,15 +18,19 @@
  */
 return [
     'Build ID' => '',
-    'Dolzh ID' => 'Должность',
+    'Dolzh Name' => 'Должность',
+    'Employee End' => 'Дата окончания',
     'Employee History ID' => '',
     'Employee ID' => '',
     'Invalid UUID Parameters.' => '',
     'Person ID' => '',
-    'Podraz ID' => 'Подразделение',
+    'Podraz Name' => 'Подразделение',
+    'Type' => 'Тип',
     'URL parameter "employee" is missed.' => '',
     'URL parameter "person" is missed.' => '',
-    'You need remove Parttimes' => 'Вам необходимо убрать совмещения',
+    'Dolzh ID' => 'Должность',
     'Employee Begin' => 'Дата начала',
     'Employee History Begin' => 'Дата начала',
+    'Podraz ID' => 'Подразделение',
+    'You need remove Parttimes' => 'Вам необходимо убрать совмещения',
 ];

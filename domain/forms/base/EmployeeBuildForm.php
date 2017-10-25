@@ -37,4 +37,9 @@ class EmployeeBuildForm extends Model
     {
         return EmployeeHistoryBuildRules::client();
     }
+
+    public function attributeLabels()
+    {
+        return (new EmployeeHistoryBuild())->attributeLabels();
+    }
 }

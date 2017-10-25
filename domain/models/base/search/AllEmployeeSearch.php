@@ -47,6 +47,17 @@ class AllEmployeeSearch extends Model
         ];
     }
 
+    public function attributeLabels()
+    {
+        return [
+            'dolzh_name' => Yii::t('domain/employee','Dolzh Name'),
+            'podraz_name' => Yii::t('domain/employee','Podraz Name'),
+            'employee_type' => Yii::t('domain/employee','Type'),
+            'employee_history_begin' => Yii::t('domain/employee','Employee Begin'),
+            'employee_history_end' => Yii::t('domain/employee','Employee End'),
+        ];
+    }
+
     public function search($params)
     {
         $count = Yii::$app->db->createCommand($this->sqlCount($params), array_merge([

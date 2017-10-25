@@ -17,7 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Build ID' => '',
+    'Build ID' => 'Здание',
     'Employee History Build Deactive' => 'Дата с которой здание неактивно',
     'Employee History ID' => '',
 ];
