@@ -18,7 +18,9 @@
  */
 return [
     'Build ID' => '',
-    'Parttime Build Deactive' => 'Дата с которой здание неактивно',
+    'Invalid UUID Parameters.' => '',
     'Parttime ID' => '',
     'Pb' => '',
+    'URL parameter "employee" is missed.' => '',
+    'Parttime Build Deactive' => 'Дата с которой здание неактивно',
 ];

@@ -19,7 +19,7 @@ use yii\helpers\Html;
 /* @var $filterModel domain\models\base\filter\UsersFilter */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('common/users', 'Users');
+$this->title = Yii::t('common/person', 'Users');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="users-index">
@@ -94,7 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
         'panelHeading' => ['icon' => FA::icon(FA::_USER),
-            'title' => Yii::t('common/users', 'Users'),
+            'title' => Yii::t('common/person', 'Users'),
         ],
     ]);
     ?>

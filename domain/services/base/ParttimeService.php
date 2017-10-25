@@ -105,7 +105,7 @@ class ParttimeService extends WKService
     protected function guardAssignBuilds(ParttimeForm $form)
     {
         if (!is_string($form->assignBuilds) || ($form->assignBuilds = json_decode($form->assignBuilds)) === null) {
-            throw new \DomainException(Yii::t('common/roles', 'Error when recognizing selected items'));
+            throw new \DomainException(Yii::t('domain/base', 'Error when recognizing selected items'));
         }
     }
 }

@@ -17,12 +17,12 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Profile' => 'Профиль',
-    'Roles' => 'Роли',
-    'User' => 'Пользователь',
+    'Users' => 'Пользователи системы',
     'Create User' => 'Добавить пользователя',
     'Person Password' => 'Пароль',
     'Person Username' => 'Логин',
+    'Profile' => 'Профиль',
     'Remember Me' => 'Запомнить',
-    'Users' => 'Пользователи системы',
+    'Roles' => 'Роли',
+    'User' => 'Пользователь',
 ];
