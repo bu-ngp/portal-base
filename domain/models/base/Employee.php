@@ -3,14 +3,9 @@
 namespace domain\models\base;
 
 use common\classes\BlameableBehavior;
-use common\models\base\Person;
-use common\widgets\GridView\services\GridViewHelper;
-use domain\forms\base\EmployeeForm;
 use domain\forms\base\EmployeeHistoryForm;
-use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\behaviors\TimestampBehavior;
-use yii\db\Expression;
 
 /**
  * This is the model class for table "{{%employee}}".

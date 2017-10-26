@@ -9,7 +9,7 @@
 namespace common\classes;
 
 
-use common\models\base\Person;
+use domain\models\base\Person;
 use domain\models\base\ConfigLdap;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;

@@ -1,6 +1,6 @@
 <?php
 
-use common\models\base\Person;
+use domain\models\base\Person;
 use console\helpers\RbacHelper;
 use domain\models\base\AuthItem;
 use yii\db\Migration;

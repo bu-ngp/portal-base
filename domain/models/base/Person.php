@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models\base;
+namespace domain\models\base;
 
 use common\classes\BlameableBehavior;
 use common\classes\Ldap;
@@ -8,18 +8,10 @@ use common\classes\LdapModelInterface;
 use common\classes\validators\WKDateValidator;
 use domain\forms\base\UserForm;
 use domain\forms\base\UserFormUpdate;
-use domain\models\base\AuthAssignment;
-use domain\models\base\AuthItem;
-use domain\models\base\ConfigLdap;
-use domain\models\base\Employee;
-use domain\models\base\EmployeeHistory;
-use domain\models\base\Parttime;
-use domain\models\base\Profile;
 use domain\rules\base\UserRules;
 use domain\validators\PersonFiredValidator;
 use Exception;
 use domain\behaviors\UUIDBehavior;
-use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;

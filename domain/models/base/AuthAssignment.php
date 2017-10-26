@@ -2,7 +2,6 @@
 
 namespace domain\models\base;
 
-use common\models\base\Person;
 use Yii;
 
 /**

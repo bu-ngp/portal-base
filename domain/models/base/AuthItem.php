@@ -2,7 +2,6 @@
 
 namespace domain\models\base;
 
-use common\models\base\Person;
 use common\widgets\GridView\services\GWItemsTrait;
 use domain\behaviors\UserRoleBehavior;
 use domain\forms\base\RoleForm;

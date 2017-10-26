@@ -1,7 +1,7 @@
 <?php
 namespace common\models;
 
-use common\models\base\Person;
+use domain\models\base\Person;
 use Yii;
 use yii\base\Model;
 

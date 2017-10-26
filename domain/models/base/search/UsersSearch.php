@@ -10,7 +10,7 @@ namespace domain\models\base\search;
 
 use domain\services\SearchModel;
 use yii\data\ActiveDataProvider;
-use common\models\base\Person;
+use domain\models\base\Person;
 use yii\db\ActiveQuery;
 
 class UsersSearch extends SearchModel

@@ -9,7 +9,7 @@
 
 namespace domain\services\base;
 
-use common\models\base\Person;
+use domain\models\base\Person;
 use domain\forms\base\ProfileForm;
 use domain\forms\base\UserForm;
 use domain\forms\base\UserFormUpdate;

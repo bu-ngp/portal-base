@@ -10,7 +10,7 @@ namespace domain\forms\base;
 
 
 use common\classes\validators\WKDateValidator;
-use common\models\base\Person;
+use domain\models\base\Person;
 use domain\models\base\EmployeeHistory;
 use domain\rules\base\UserRules;
 use yii\base\Model;

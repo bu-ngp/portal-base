@@ -2,7 +2,6 @@
 
 namespace domain\services\base;
 
-use common\models\base\Person;
 use common\widgets\GridView\services\GridViewHelper;
 use domain\forms\base\EmployeeHistoryForm;
 use domain\models\base\Employee;

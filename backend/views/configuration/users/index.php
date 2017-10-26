@@ -6,7 +6,7 @@
  * Time: 20:56
  */
 
-use common\models\base\Person;
+use domain\models\base\Person;
 use common\widgets\GridView\GridView;
 use console\helpers\RbacHelper;
 use domain\models\base\AuthItem;

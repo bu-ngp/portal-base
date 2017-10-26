@@ -4,17 +4,13 @@ namespace domain\models\base;
 
 use common\classes\BlameableBehavior;
 use common\classes\validators\WKDateValidator;
-use common\models\base\Person;
 use domain\forms\base\EmployeeHistoryForm;
 use domain\helpers\DateHelper;
 use domain\rules\base\EmployeeHistoryRules;
 use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
-use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use yii\db\Expression;
 
 /**
  * This is the model class for table "{{%employee_history}}".

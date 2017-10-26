@@ -8,7 +8,7 @@
 
 namespace domain\forms\base;
 
-use common\models\base\Person;
+use domain\models\base\Person;
 use domain\models\base\Profile;
 use domain\rules\base\UserRules;
 use Yii;

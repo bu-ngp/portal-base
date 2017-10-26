@@ -8,7 +8,7 @@
 
 namespace domain\repositories\base;
 
-use common\models\base\Person;
+use domain\models\base\Person;
 use Yii;
 
 class PersonRepository

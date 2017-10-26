@@ -3,7 +3,6 @@
 namespace domain\models\base;
 
 use common\classes\BlameableBehavior;
-use common\models\base\Person;
 use domain\forms\base\ParttimeForm;
 use domain\rules\base\ParttimeRules;
 use domain\validators\ParttimeValidator;

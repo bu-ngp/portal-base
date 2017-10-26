@@ -266,7 +266,7 @@ _Дополнения_:
 
  _Исправления_:
 
-  - Изменен класс `identityClass` компонента `user` на `common\models\base\Person`
+  - Изменен класс `identityClass` компонента `user` на `domain\models\base\Person`
 
 ## 0.2.3 - (2017-06-05)
 

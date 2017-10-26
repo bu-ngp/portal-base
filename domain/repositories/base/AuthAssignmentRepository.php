@@ -9,7 +9,7 @@
 namespace domain\repositories\base;
 
 
-use common\models\base\Person;
+use domain\models\base\Person;
 use domain\models\base\AuthAssignment;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;

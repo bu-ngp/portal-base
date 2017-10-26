@@ -9,7 +9,7 @@
 namespace domain\validators;
 
 
-use common\models\base\Person;
+use domain\models\base\Person;
 use yii\validators\Validator;
 
 class ParttimeValidator extends Validator

@@ -3,17 +3,11 @@
 namespace domain\models\base;
 
 use common\classes\BlameableBehavior;
-use common\classes\validators\SnilsValidator;
-use common\classes\validators\WKDateValidator;
-use common\models\base\Person;
 use common\widgets\GridView\services\GWItemsTrait;
 use domain\forms\base\ProfileForm;
 use domain\rules\base\ProfileRules;
-use domain\services\base\dto\ProfileData;
-use wartron\yii2uuid\behaviors\UUIDBehavior;
 use Yii;
 use yii\behaviors\TimestampBehavior;
-use yii\db\Expression;
 
 /**
  * This is the model class for table "{{%profile}}".
