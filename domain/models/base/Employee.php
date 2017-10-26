@@ -72,14 +72,8 @@ class Employee extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            [
-                'class' => TimestampBehavior::className(),
-                //  'value' => new Expression('NOW()'),
-                'value' => time(),
-            ],
-            [
-                'class' => BlameableBehavior::className(),
-            ],
+            TimestampBehavior::className(),
+            BlameableBehavior::className(),
         ];
     }
 

@@ -86,6 +86,12 @@ $this->title = Yii::t('common/person', $modelUserFormUpdate->person_fullname);
                                 'delete' => 'configuration/roles/delete',
                             ],
                         ],
+                        'gridInject' => [
+                            'mainField' => 'user_id',
+                            'mainIdParameterName' => 'id',
+                            'foreignField' => 'auth_item',
+                            'modelClassName' => 'domain\models\base\AuthAssignment',
+                        ],
                     ]),
                 ],
             ],
