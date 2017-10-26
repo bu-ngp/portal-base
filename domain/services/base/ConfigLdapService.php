@@ -9,7 +9,7 @@
 
 namespace domain\services\base;
 
-use common\classes\Ldap;
+use domain\auth\Ldap;
 use domain\forms\base\ConfigLdapUpdateForm;
 use domain\repositories\base\ConfigLdapRepository;
 use Yii;

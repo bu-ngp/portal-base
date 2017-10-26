@@ -6,7 +6,7 @@
  * Time: 8:53
  */
 
-namespace common\classes;
+namespace domain\auth;
 
 
 use domain\models\base\Person;

@@ -3,7 +3,7 @@
 namespace domain\models\base;
 
 use domain\behaviors\BlameableBehavior;
-use common\classes\Ldap;
+use domain\auth\Ldap;
 use common\classes\LdapModelInterface;
 use domain\validators\WKDateValidator;
 use domain\forms\base\UserForm;
