@@ -64,7 +64,7 @@ class PersonService extends WKService
     {
         $this->guardPasswordLength($userForm);
         $assignedKeysUser = $this->guardAssignRoles($userForm);
-        $person = Person::create($userForm);
+        $person = \domain\models\base\Person::create($userForm);
         $personValidate = $this->validateModels($person, $userForm);
 
         $this->filterEmptyValues($profileForm);

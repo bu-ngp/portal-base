@@ -65,7 +65,7 @@ class LoginForm extends Model
     }
 
     /**
-     * @return null|Person
+     * @return null|\domain\models\base\Person
      */
     protected function getUser()
     {
