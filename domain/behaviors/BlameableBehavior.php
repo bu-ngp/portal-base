@@ -1,6 +1,6 @@
 <?php
 
-namespace common\classes;
+namespace domain\behaviors;
 
 use Yii;
 use yii\behaviors\AttributeBehavior;

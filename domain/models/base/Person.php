@@ -2,7 +2,7 @@
 
 namespace domain\models\base;
 
-use common\classes\BlameableBehavior;
+use domain\behaviors\BlameableBehavior;
 use common\classes\Ldap;
 use common\classes\LdapModelInterface;
 use domain\validators\WKDateValidator;

@@ -2,7 +2,7 @@
 
 namespace domain\models\base;
 
-use common\classes\BlameableBehavior;
+use domain\behaviors\BlameableBehavior;
 use common\widgets\GridView\services\GWItemsTrait;
 use domain\forms\base\ProfileForm;
 use domain\rules\base\ProfileRules;

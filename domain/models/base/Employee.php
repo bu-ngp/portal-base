@@ -2,7 +2,7 @@
 
 namespace domain\models\base;
 
-use common\classes\BlameableBehavior;
+use domain\behaviors\BlameableBehavior;
 use domain\forms\base\EmployeeHistoryForm;
 use Yii;
 use yii\behaviors\TimestampBehavior;

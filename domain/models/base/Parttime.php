@@ -2,7 +2,7 @@
 
 namespace domain\models\base;
 
-use common\classes\BlameableBehavior;
+use domain\behaviors\BlameableBehavior;
 use domain\forms\base\ParttimeForm;
 use domain\rules\base\ParttimeRules;
 use domain\validators\ParttimeValidator;
