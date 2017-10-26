@@ -6,10 +6,9 @@
  * Time: 13:39
  */
 
-namespace common\classes\validators;
+namespace domain\validators;
 
 
-use Yii;
 use yii\validators\Validator;
 
 class SnilsValidator extends Validator

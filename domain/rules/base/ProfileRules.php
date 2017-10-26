@@ -9,7 +9,7 @@
 namespace domain\rules\base;
 
 
-use common\classes\validators\SnilsValidator;
+use domain\validators\SnilsValidator;
 use common\classes\validators\WKDateValidator;
 use domain\models\base\Profile;
 use Yii;
