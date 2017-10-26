@@ -5,7 +5,7 @@ namespace domain\models\base;
 use common\classes\BlameableBehavior;
 use common\classes\Ldap;
 use common\classes\LdapModelInterface;
-use common\classes\validators\WKDateValidator;
+use domain\validators\WKDateValidator;
 use domain\forms\base\UserForm;
 use domain\forms\base\UserFormUpdate;
 use domain\rules\base\UserRules;

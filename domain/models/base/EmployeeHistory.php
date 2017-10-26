@@ -3,7 +3,7 @@
 namespace domain\models\base;
 
 use common\classes\BlameableBehavior;
-use common\classes\validators\WKDateValidator;
+use domain\validators\WKDateValidator;
 use domain\forms\base\EmployeeHistoryForm;
 use domain\helpers\DateHelper;
 use domain\rules\base\EmployeeHistoryRules;

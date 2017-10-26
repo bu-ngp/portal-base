@@ -6,7 +6,7 @@
  * Time: 13:22
  */
 
-namespace common\classes\validators;
+namespace domain\validators;
 
 
 use yii\validators\DateValidator;

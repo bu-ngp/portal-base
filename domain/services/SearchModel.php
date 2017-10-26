@@ -9,7 +9,7 @@
 namespace domain\services;
 
 
-use common\classes\validators\WKDateValidator;
+use domain\validators\WKDateValidator;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\data\Sort;

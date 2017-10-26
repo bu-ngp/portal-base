@@ -9,7 +9,7 @@
 namespace domain\rules\base;
 
 
-use common\classes\validators\WKDateValidator;
+use domain\validators\WKDateValidator;
 
 class ParttimeRules
 {

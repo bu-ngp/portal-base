@@ -9,7 +9,7 @@
 namespace domain\models\base\search;
 
 
-use common\classes\validators\WKDateValidator;
+use domain\validators\WKDateValidator;
 use common\widgets\GridView\services\GWItemsTrait;
 use domain\services\DateTimeCondition;
 use Yii;

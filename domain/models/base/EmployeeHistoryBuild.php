@@ -2,13 +2,9 @@
 
 namespace domain\models\base;
 
-use common\classes\validators\WKDateValidator;
 use domain\forms\base\EmployeeBuildForm;
 use domain\rules\base\EmployeeHistoryBuildRules;
-use domain\rules\base\EmployeeHistoryRules;
-use wartron\yii2uuid\helpers\Uuid;
 use Yii;
-use wartron\yii2uuid\behaviors\UUIDBehavior;
 
 /**
  * This is the model class for table "{{%employee_history_build}}".
