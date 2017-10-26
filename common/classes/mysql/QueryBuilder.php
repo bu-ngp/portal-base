@@ -8,6 +8,8 @@
 
 namespace common\classes\mysql;
 
+use console\classes\mysql\Schema;
+
 class QueryBuilder extends \yii\db\mysql\QueryBuilder
 {
     public function __construct($connection, $config = [])

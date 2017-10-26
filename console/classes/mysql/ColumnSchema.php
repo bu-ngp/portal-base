@@ -9,8 +9,6 @@
 namespace console\classes\mysql;
 
 
-use common\classes\mysql\Schema;
-
 class ColumnSchema extends \yii\db\ColumnSchema
 {
     protected function typecast($value)

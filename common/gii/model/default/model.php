@@ -2,7 +2,7 @@
 /**
  * This is the template for generating the model class of a specified table.
  */
-use common\classes\mysql\Schema;
+use console\classes\mysql\Schema;
 
 /* @var $this yii\web\View */
 /* @var $generator yii\gii\generators\model\Generator */

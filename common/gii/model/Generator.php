@@ -7,7 +7,7 @@
 
 namespace common\gii\model;
 
-use common\classes\mysql\Schema;
+use console\classes\mysql\Schema;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;

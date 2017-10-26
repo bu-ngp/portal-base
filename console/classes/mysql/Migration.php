@@ -9,8 +9,6 @@
 namespace console\classes\mysql;
 
 
-use common\classes\mysql\Schema;
-
 class Migration extends \yii\db\Migration
 {
     public function blob()
