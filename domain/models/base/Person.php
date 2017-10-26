@@ -45,7 +45,7 @@ use yii\web\IdentityInterface;
 class Person extends \yii\db\ActiveRecord implements LdapModelInterface
 {
     /**
-     * @var array Группы LDAP доменного пользователя, проверяются в common\classes\WKUser
+     * @var array Группы LDAP доменного пользователя, проверяются в domain\auth\WKUser
      */
     private $person_ldap_groups = [];
 

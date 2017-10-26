@@ -6,10 +6,9 @@
  * Time: 15:10
  */
 
-namespace common\classes;
+namespace domain\auth;
 
 
-use domain\auth\LdapModelInterface;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\base\InvalidValueException;

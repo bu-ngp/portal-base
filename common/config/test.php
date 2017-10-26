@@ -88,7 +88,7 @@ return [
             'enableCsrfValidation' => false,
         ],
         'user' => [
-            'class' => 'common\classes\WKUser',
+            'class' => 'domain\auth\WKUser',
             'identityClass' => 'domain\models\base\Person',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-wk-portal', 'httpOnly' => true],
