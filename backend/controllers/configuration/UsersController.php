@@ -21,9 +21,8 @@ use domain\models\base\search\AuthItemUpdateSearch;
 use domain\models\base\search\UsersSearch;
 use domain\services\AjaxFilter;
 use domain\services\base\PersonService;
-use domain\services\proxyService;
+use domain\services\ProxyService;
 use Yii;
-use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\ContentNegotiator;
 use yii\web\Controller;
@@ -38,7 +37,7 @@ class UsersController extends Controller
 
     public function __construct($id, $module, PersonService $service, $config = [])
     {
-        $this->service = new proxyService($service);
+        $this->service = new ProxyService($service);
         parent::__construct($id, $module, $config = []);
     }
 

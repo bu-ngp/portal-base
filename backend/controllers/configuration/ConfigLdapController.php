@@ -13,7 +13,7 @@ use common\widgets\Breadcrumbs\Breadcrumbs;
 use console\helpers\RbacHelper;
 use domain\forms\base\ConfigLdapUpdateForm;
 use domain\services\base\ConfigLdapService;
-use domain\services\proxyService;
+use domain\services\ProxyService;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -46,7 +46,7 @@ class ConfigLdapController extends Controller
 
     public function __construct($id, $module, ConfigLdapService $service, $config = [])
     {
-        $this->service = new proxyService($service);
+        $this->service = new ProxyService($service);
         parent::__construct($id, $module, $config = []);
     }
 

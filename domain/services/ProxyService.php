@@ -10,7 +10,7 @@ namespace domain\services;
 
 use Yii;
 
-class proxyService
+class ProxyService
 {
     private $serviceClass;
     private $storeErrors = [];

@@ -3,8 +3,7 @@
 namespace backend\controllers\configuration\spravochniki;
 
 use console\helpers\RbacHelper;
-use domain\models\base\Podraz;
-use domain\services\proxyService;
+use domain\services\ProxyService;
 use Yii;
 use domain\models\base\search\PodrazSearch;
 use yii\web\Controller;
@@ -28,7 +27,7 @@ class PodrazController extends Controller
 
     public function __construct($id, $module, PodrazService $service, $config = [])
     {
-        $this->service = new proxyService($service);
+        $this->service = new ProxyService($service);
         parent::__construct($id, $module, $config = []);
     }
 

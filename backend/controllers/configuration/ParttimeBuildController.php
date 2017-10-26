@@ -6,7 +6,7 @@ use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\GridView\services\AjaxResponse;
 use domain\forms\base\ParttimeBuildForm;
 use domain\services\base\ParttimeBuildService;
-use domain\services\proxyService;
+use domain\services\ProxyService;
 use Yii;
 use yii\web\Controller;
 
@@ -19,7 +19,7 @@ class ParttimeBuildController extends Controller
 
     public function __construct($id, $module, ParttimeBuildService $service, $config = [])
     {
-        $this->service = new proxyService($service);
+        $this->service = new ProxyService($service);
         parent::__construct($id, $module, $config = []);
     }
 

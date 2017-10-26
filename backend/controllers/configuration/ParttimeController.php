@@ -17,7 +17,7 @@ use domain\models\base\search\BuildSearch;
 use domain\models\base\search\ParttimeBuildSearch;
 use domain\services\AjaxFilter;
 use domain\services\base\ParttimeService;
-use domain\services\proxyService;
+use domain\services\ProxyService;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\ContentNegotiator;
@@ -33,7 +33,7 @@ class ParttimeController extends Controller
 
     public function __construct($id, $module, ParttimeService $service, $config = [])
     {
-        $this->service = new proxyService($service);
+        $this->service = new ProxyService($service);
         parent::__construct($id, $module, $config = []);
     }
 

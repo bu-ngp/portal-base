@@ -17,7 +17,7 @@ use domain\models\base\search\BuildSearch;
 use domain\models\base\search\EmployeeHistoryBuildSearch;
 use domain\services\AjaxFilter;
 use domain\services\base\EmployeeHistoryService;
-use domain\services\proxyService;
+use domain\services\ProxyService;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\ContentNegotiator;
@@ -33,7 +33,7 @@ class EmployeeController extends Controller
 
     public function __construct($id, $module, EmployeeHistoryService $service, $config = [])
     {
-        $this->service = new proxyService($service);
+        $this->service = new ProxyService($service);
         parent::__construct($id, $module, $config = []);
     }
 

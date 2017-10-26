@@ -4,8 +4,7 @@ namespace backend\controllers\configuration\spravochniki;
 
 use common\widgets\Breadcrumbs\Breadcrumbs;
 use console\helpers\RbacHelper;
-use domain\models\base\Build;
-use domain\services\proxyService;
+use domain\services\ProxyService;
 use Yii;
 use domain\models\base\search\BuildSearch;
 use yii\web\Controller;
@@ -29,7 +28,7 @@ class BuildController extends Controller
 
     public function __construct($id, $module, BuildService $service, $config = [])
     {
-        $this->service = new proxyService($service);
+        $this->service = new ProxyService($service);
         parent::__construct($id, $module, $config = []);
     }
 

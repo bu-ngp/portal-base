@@ -4,21 +4,13 @@ namespace frontend\controllers;
 use common\widgets\CardList\CardListHelper;
 use domain\models\base\search\AuthItemSearch;
 use domain\services\base\PersonService;
-use domain\services\proxyService;
-use Faker\Factory;
-use ReflectionClass;
-use rmrevin\yii\fontawesome\FA;
+use domain\services\ProxyService;
 use Yii;
 use yii\base\InvalidParamException;
-use yii\bootstrap\Html;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use frontend\models\PasswordResetRequestForm;
-use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
-use frontend\models\ContactForm;
 use yii\web\Response;
 
 /**
@@ -33,7 +25,7 @@ class SiteController extends Controller
 
     public function __construct($id, $module, PersonService $personService, $config = [])
     {
-        $this->personService = new proxyService($personService);
+        $this->personService = new ProxyService($personService);
         parent::__construct($id, $module, $config = []);
     }
 

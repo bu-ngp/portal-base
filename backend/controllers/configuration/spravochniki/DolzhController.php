@@ -6,10 +6,9 @@ use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\GridView\services\AjaxResponse;
 use console\helpers\RbacHelper;
 use domain\forms\base\DolzhForm;
-use domain\models\base\Dolzh;
 use domain\services\AjaxFilter;
 use domain\services\base\DolzhService;
-use domain\services\proxyService;
+use domain\services\ProxyService;
 use Yii;
 use domain\models\base\search\DolzhSearch;
 use yii\filters\AccessControl;
@@ -29,7 +28,7 @@ class DolzhController extends Controller
 
     public function __construct($id, $module, DolzhService $service, $config = [])
     {
-        $this->service = new proxyService($service);
+        $this->service = new ProxyService($service);
         parent::__construct($id, $module, $config = []);
     }
 

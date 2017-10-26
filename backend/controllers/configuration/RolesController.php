@@ -12,7 +12,7 @@ use domain\models\base\search\AuthItemUpdateSearch;
 use domain\services\AjaxFilter;
 use domain\services\base\RoleService;
 use common\reports\RolesReport;
-use domain\services\proxyService;
+use domain\services\ProxyService;
 use Yii;
 use domain\models\base\AuthItem;
 use domain\models\base\search\AuthItemSearch;
@@ -34,7 +34,7 @@ class RolesController extends Controller
 
     public function __construct($id, $module, RoleService $service, $config = [])
     {
-        $this->service = new proxyService($service);
+        $this->service = new ProxyService($service);
         parent::__construct($id, $module, $config = []);
     }
 
