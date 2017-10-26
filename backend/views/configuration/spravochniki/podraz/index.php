@@ -47,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
         'panelHeading' => [
-            'icon' => FA::icon(FA::_BARS),
+            'icon' => FA::icon(FA::_WINDOW_RESTORE),
             'title' => Yii::t('common/podraz', 'Podrazs'),
         ],
         'gridExcludeIdsFunc' => function (ActiveQuery $activeQuery, array $ids) {

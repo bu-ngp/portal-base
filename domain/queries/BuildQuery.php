@@ -11,19 +11,19 @@ namespace domain\queries;
 
 use yii\db\ActiveQuery;
 
-class DolzhQuery
+class BuildQuery
 {
     public static function select()
     {
         return function (ActiveQuery $query) {
-            return $query->select(['dolzh_id', 'dolzh_name']);
+            return $query->select(['build_id', 'build_name']);
         };
     }
 
     public static function search()
     {
         return function (ActiveQuery $query, $searchString) {
-            $query->andWhere(['like', 'dolzh_name', $searchString]);
+            $query->andWhere(['like', 'build_name', $searchString]);
         };
     }
 }

@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
         'panelHeading' => [
-            'icon' => FA::icon(FA::_USER),
+            'icon' => FA::icon(FA::_USER_CIRCLE_O),
             'title' => Yii::t('common/dolzh', 'Dolzhs'),
         ],
         'gridExcludeIdsFunc' => function (ActiveQuery $activeQuery, array $ids) {

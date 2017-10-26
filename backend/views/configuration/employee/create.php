@@ -44,7 +44,7 @@ $this->title = Yii::t('common/employee', 'Create Employee');
                 ],
             ],
             'panelHeading' => [
-                'icon' => FA::icon(FA::_LIST_ALT),
+                'icon' => FA::icon(FA::_HOME),
                 'title' => Yii::t('common/employee', 'Builds'),
             ],
         ]) ?>

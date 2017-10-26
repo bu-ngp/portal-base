@@ -16,7 +16,7 @@ use rmrevin\yii\fontawesome\FA;
         'description'
     ],
     'panelHeading' => array(
-        'icon' => FA::icon(FA::_LIST_ALT),
+        'icon' => FA::icon(FA::_UNLOCK_ALT),
         'title' => Yii::t('common/employee', 'Roles'),
     ),
 ], $gridConfig)) ?>

@@ -17,7 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Build ID' => '',
+    'Build ID' => 'Здание',
     'Invalid UUID Parameters.' => '',
     'Parttime ID' => '',
     'Pb' => '',

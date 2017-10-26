@@ -2,11 +2,8 @@
 
 use common\widgets\ActiveForm\ActiveForm;
 use domain\models\base\Build;
-use domain\models\base\Dolzh;
-use common\widgets\Select2\Select2;
-use domain\models\base\Podraz;
+use domain\queries\BuildQuery;
 use rmrevin\yii\fontawesome\FA;
-use yii\db\ActiveQuery;
 
 /* @var $this yii\web\View */
 /* @var $modelForm domain\forms\base\EmployeeBuildForm */
@@ -16,22 +13,15 @@ use yii\db\ActiveQuery;
 
 <?= $form->field($modelForm, 'build_id')->select2([
     'activeRecordClass' => Build::className(),
-    // 'queryCallback' => \domain\queries\DolzhQuery::getCallbackAllDolzhs(),
-    'queryCallback' => function (ActiveQuery $query) {
-        $query->select(['build_id', 'build_name']);
-    },
+    'queryCallback' => BuildQuery::select(),
     'ajaxConfig' => [
-        'searchAjaxCallback' => function (ActiveQuery $query, $searchString) {
-            $query->andWhere(['like', 'build_name', $searchString]);
-        },
-        //'onlyAjax' => true,
+        'searchAjaxCallback' => BuildQuery::search(),
     ],
     'wkkeep' => true,
-    'wkicon' => FA::_ADDRESS_BOOK,
-    'multiple' => false,
+    'wkicon' => FA::_HOME,
     'selectionGridUrl' => ['configuration/spravochniki/build/index'],
 ]); ?>
 
-<?= $form->field($modelForm, 'employee_history_build_deactive')->datetime(['wkkeep' => true, 'wkicon' => FA::_CALENDAR]) ?>
+<?= $form->field($modelForm, 'employee_history_build_deactive')->datetime(['wkkeep' => true, 'wkicon' => FA::_CALENDAR_TIMES_O]) ?>
 
 <?php ActiveForm::end(); ?>

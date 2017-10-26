@@ -43,7 +43,7 @@ $this->title = \domain\models\base\EmployeeHistory::findOne(Yii::$app->request->
                 'delete' => 'configuration/employee-history-build/delete',
             ],
             'panelHeading' => [
-                'icon' => FA::icon(FA::_LIST_ALT),
+                'icon' => FA::icon(FA::_HOME),
                 'title' => Yii::t('common/employee', 'Builds'),
             ],
         ]);

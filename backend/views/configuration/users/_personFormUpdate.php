@@ -38,10 +38,10 @@ if (!$modelUserFormUpdate->hasActiveEmployee) {
 <div class="form-group">
     <div class="row">
         <div class="col-xs-6">
-            <?= $userForm->field($modelUserFormUpdate, 'person_hired')->datetime(['disabled' => true, 'maxlength' => true, 'wkicon' => FA::_CALENDAR])->hint('Выводится автоматически при добавлении специальности') ?>
+            <?= $userForm->field($modelUserFormUpdate, 'person_hired')->datetime(['disabled' => true, 'maxlength' => true, 'wkicon' => FA::_CALENDAR_PLUS_O])->hint('Выводится автоматически при добавлении специальности') ?>
         </div>
         <div class="col-xs-6">
-            <?= $userForm->field($modelUserFormUpdate, 'person_fired')->datetime(['disabled' => !$modelUserFormUpdate->hasActiveEmployee, 'wkkeep' => true, 'maxlength' => true, 'wkicon' => FA::_CALENDAR])->hint($hint) ?>
+            <?= $userForm->field($modelUserFormUpdate, 'person_fired')->datetime(['disabled' => !$modelUserFormUpdate->hasActiveEmployee, 'wkkeep' => true, 'maxlength' => true, 'wkicon' => FA::_CALENDAR_TIMES_O])->hint($hint) ?>
         </div>
     </div>
 </div>
