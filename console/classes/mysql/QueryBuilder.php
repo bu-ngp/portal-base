@@ -6,9 +6,8 @@
  * Time: 15:18
  */
 
-namespace common\classes\mysql;
+namespace console\classes\mysql;
 
-use console\classes\mysql\Schema;
 
 class QueryBuilder extends \yii\db\mysql\QueryBuilder
 {

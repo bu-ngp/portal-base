@@ -8,7 +8,6 @@
 
 namespace console\classes\mysql;
 
-use common\classes\mysql\QueryBuilder;
 
 class Schema extends \yii\db\mysql\Schema
 {
