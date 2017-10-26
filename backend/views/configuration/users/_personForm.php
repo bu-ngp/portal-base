@@ -1,11 +1,14 @@
 <?php
 
+use common\assets\UserAsset;
 use common\widgets\ActiveForm\ActiveForm;
 use rmrevin\yii\fontawesome\FA;
 
 /* @var $this yii\web\View */
 /* @var $modelUserForm domain\forms\base\UserForm */
 /* @var $userForm ActiveForm */
+
+UserAsset::register($this);
 ?>
 
 <div class="form-group">

@@ -1,5 +1,6 @@
 <?php
 
+use common\assets\UserAsset;
 use common\widgets\ActiveForm\ActiveForm;
 use rmrevin\yii\fontawesome\FA;
 
@@ -15,6 +16,7 @@ if (!$modelUserFormUpdate->hasActiveEmployee) {
     $hint = '';
 }
 
+UserAsset::register($this);
 ?>
 <div class="form-group">
     <div class="row">
