@@ -1,5 +1,5 @@
 <?php
-namespace common\models;
+namespace domain\forms\base;
 
 use domain\models\base\Person;
 use Yii;
