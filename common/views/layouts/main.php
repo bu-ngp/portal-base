@@ -5,7 +5,6 @@
 
 use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\PropellerAssets\PropellerAsset;
-use common\widgets\ReportLoader\assets\ReportLoaderAsset;
 use common\widgets\ReportLoader\ReportLoader;
 use lo\modules\noty\Wrapper;
 use yii\helpers\Html;
@@ -45,7 +44,7 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
             ],
         ]);
         $menuItems = [
-            ['label' => 'Главная', 'url' => Yii::$app->urlManagerFrontend->createUrl(['/']), 'linkOptions' => ['class' => 'pmd-ripple-effect']],
+            ['label' => 'Главная', 'url' => Yii::$app->urlManager->createUrl(['/']), 'linkOptions' => ['class' => 'pmd-ripple-effect']],
             [
                 'label' => 'Система',
                 'url' => '#',
@@ -77,7 +76,7 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
             $menuItems[] = ['label' => 'Войти', 'url' => Yii::$app->urlManagerAdmin->createUrl('login'), 'linkOptions' => ['class' => 'pmd-ripple-effect']];
         } else {
             $menuItems[] = '<li>'
-                . Html::beginForm(Yii::$app->urlManagerFrontend->createUrl(['/site/logout']), 'post')
+                . Html::beginForm(Yii::$app->urlManagerAdmin->createUrl(['site/logout']), 'post')
                 . Html::submitButton(
                     'Выйти (' . Yii::$app->user->identity->person_fullname . ')',
                     ['class' => 'btn btn-link pmd-ripple-effect logout']
@@ -93,9 +92,7 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
         ?>
 
         <div class="wrap">
-            <?= Breadcrumbs::widget(/*['defaultShow' => false]*/)  /*Breadcrumbs::widget([
-                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-            ])*/ ?>
+            <?= Breadcrumbs::widget() ?>
             <?= $content ?>
         </div>
     </div>
@@ -107,7 +104,7 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>
 </footer>
-<?= ReportLoader::widget(['id' => 'wk-Report-Loader']); ?>
+<?= ReportLoader::widget(['id' => 'wk-Report-Loader']) ?>
 <?= Wrapper::widget([
     'layerClass' => 'lo\modules\noty\layers\Toastr',
 ]) ?>

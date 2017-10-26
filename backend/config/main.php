@@ -28,9 +28,6 @@ return [
         'urlManager' => function () {
             return Yii::$app->get('urlManagerAdmin');
         },
-        'urlManagerFrontend' => [
-            'baseUrl' => '../',
-        ],
     ],
     'params' => $params,
 ];

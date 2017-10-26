@@ -71,13 +71,6 @@ return [
                 'login' => 'site/login',
             ],
         ],
-        'urlManagerFrontend' => [
-            'class' => 'yii\web\urlManager',
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-            ],
-        ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
         ],

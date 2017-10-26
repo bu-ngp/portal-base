@@ -12,9 +12,11 @@ return [
     'controllerNamespace' => 'frontend\controllers',
     //'layoutPath' => '@app/views/layouts',
     'components' => [
-        'urlManager' => function() {
-            return Yii::$app->get('urlManagerFrontend');
-        },
+        'urlManager' => [
+            'class' => 'yii\web\urlManager',
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+        ],
         'urlManagerAdmin' => [
             'baseUrl' => 'manager',
         ],
