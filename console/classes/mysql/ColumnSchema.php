@@ -6,8 +6,10 @@
  * Time: 10:54
  */
 
-namespace common\classes\mysql;
+namespace console\classes\mysql;
 
+
+use common\classes\mysql\Schema;
 
 class ColumnSchema extends \yii\db\ColumnSchema
 {
