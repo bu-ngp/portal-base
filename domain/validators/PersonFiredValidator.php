@@ -10,6 +10,7 @@ namespace domain\validators;
 
 
 use domain\models\base\EmployeeHistory;
+use domain\models\base\Parttime;
 use yii\validators\Validator;
 
 class PersonFiredValidator extends Validator
@@ -22,6 +23,10 @@ class PersonFiredValidator extends Validator
 
         if ($employee = EmployeeHistory::denyAccessForDateFired($model->person_id, $model->$attribute)) {
             $model->addError($attribute, "\"{$model->getAttributeLabel($attribute)}\" меньше даты специальности '{$employee->dolzh->dolzh_name}' от " . \Yii::$app->formatter->asDate($employee->employee_history_begin));
+        }
+
+        if ($parttime = Parttime::denyAccessForDateFired($model->person_id, $model->$attribute)) {
+            $model->addError($attribute, "\"{$model->getAttributeLabel($attribute)}\" меньше даты совмещения '{$employee->dolzh->dolzh_name}' от " . \Yii::$app->formatter->asDate($parttime->parttime_begin));
         }
     }
 }

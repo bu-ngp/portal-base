@@ -131,7 +131,7 @@ class AllEmployeeSearch extends Model
                         ), (
                             SELECT person_fired 
                             FROM {{%person}} 
-                            WHERE person_id = UNHEX(':person_id')
+                            WHERE person_id = UNHEX(:person_id)
                         )) AS employee_history_end,
                     1 AS employee_type
                 FROM {{%employee_history}} wk1                

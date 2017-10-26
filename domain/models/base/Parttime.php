@@ -4,6 +4,7 @@ namespace domain\models\base;
 
 use domain\behaviors\BlameableBehavior;
 use domain\forms\base\ParttimeForm;
+use domain\helpers\DateHelper;
 use domain\rules\base\ParttimeRules;
 use domain\validators\ParttimeValidator;
 use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
@@ -80,7 +81,7 @@ class Parttime extends \yii\db\ActiveRecord
             TimestampBehavior::className(),
             BlameableBehavior::className(),
             'saveRelations' => [
-                'class'     => SaveRelationsBehavior::className(),
+                'class' => SaveRelationsBehavior::className(),
                 'relations' => ['builds'],
             ],
         ];
@@ -111,6 +112,16 @@ class Parttime extends \yii\db\ActiveRecord
         $this->podraz_id = $form->podraz_id;
         $this->parttime_begin = $form->parttime_begin;
         $this->parttime_end = $form->parttime_end;
+    }
+
+    public static function denyAccessForDateFired($person_id, $date)
+    {
+        return static::find()
+            ->andWhere(['>', 'parttime_begin', DateHelper::rus2iso($date)])
+            ->andWhere(['person_id' => $person_id])
+            ->orderBy(['parttime_begin' => SORT_DESC])
+            ->limit(1)
+            ->one();
     }
 
     /**

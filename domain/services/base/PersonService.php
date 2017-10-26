@@ -140,7 +140,7 @@ class PersonService extends Service
         }
     }
 
-    private function guardAssignRoles($form)
+    protected function guardAssignRoles($form)
     {
         if (!is_string($form->assignRoles) || ($assignedKeys = json_decode($form->assignRoles)) === null) {
             throw new \DomainException(Yii::t('domain/base', 'Error when recognizing selected items'));
@@ -149,14 +149,14 @@ class PersonService extends Service
         return $assignedKeys;
     }
 
-    private function filterEmptyValues(ProfileForm $profileForm)
+    protected function filterEmptyValues(ProfileForm $profileForm)
     {
         $profileForm->setAttributes(array_map(function ($value) {
             return $value === null || $value === '' ? null : $value;
         }, $profileForm->getAttributes()));
     }
 
-    private function parttimesForClose($person_id, $date_fire)
+    protected function parttimesForClose($person_id, $date_fire)
     {
         /** @var Parttime[] $parttimes */
         $parttimes = $this->parttimes->getOpenAndMoreParttimes($person_id, $date_fire);

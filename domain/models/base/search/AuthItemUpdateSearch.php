@@ -9,6 +9,7 @@ use yii\data\ActiveDataProvider;
 use domain\models\base\AuthItem;
 use yii\db\ActiveQuery;
 use yii\db\Expression;
+use yii\rbac\Item;
 
 class AuthItemUpdateSearch extends SearchModel
 {
@@ -46,7 +47,7 @@ class AuthItemUpdateSearch extends SearchModel
         if (GridViewHelper::isBinaryValidString($params['id'])) {
             $query->andWhere(['authAssignments.user_id' => new Expression("UNHEX('{$params['id']}')")]);
         }
-        $query->andWhere(['type' => 1]);
+        $query->andWhere(['type' => Item::TYPE_ROLE]);
     }
 
     public function filter()

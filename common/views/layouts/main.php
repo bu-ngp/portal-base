@@ -59,7 +59,7 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
                         'label' => 'Затребованные отчеты',
                         'url' => '#',
                         'linkOptions' => [
-                            'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-default wk-widget-reports-loader',
+                            'class' => 'btn btn-sm pmd-btn-flat pmd-ripple-effect btn-default wk-widget-reports-loader',
                             'data-target' => '#wk-Report-Loader',
                             'data-toggle' => 'modal',
                         ],
@@ -67,7 +67,7 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
                     [
                         'label' => 'Обновления',
                         'url' => '#',
-                        'linkOptions' => ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-default pmd-ripple-effect'],
+                        'linkOptions' => ['class' => 'btn btn-sm pmd-btn-flat pmd-ripple-effect btn-default pmd-ripple-effect'],
                     ],
                 ],
             ],

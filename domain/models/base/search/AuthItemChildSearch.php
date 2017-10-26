@@ -2,7 +2,6 @@
 
 namespace domain\models\base\search;
 
-use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use domain\models\base\AuthItemChild;

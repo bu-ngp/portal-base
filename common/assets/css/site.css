@@ -186,15 +186,15 @@ div.wk-widget-input-prepend-icon > span {
     border: none;
 }
 
-.help-block {
+[class="help-block"] {
     color: #bdbdbd;
 }
 
-.help-block:empty {
+[class="help-block"]:empty {
     display: none;
 }
 
-.help-block:before {
+[class="help-block"]:before {
     content: '* ';
 }
 
