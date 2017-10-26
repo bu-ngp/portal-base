@@ -9,6 +9,7 @@
 namespace common\classes;
 
 
+use domain\auth\LdapModelInterface;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\base\InvalidValueException;

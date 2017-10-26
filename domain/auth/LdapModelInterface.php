@@ -6,7 +6,7 @@
  * Time: 11:07
  */
 
-namespace common\classes;
+namespace domain\auth;
 
 use yii\web\IdentityInterface;
 
