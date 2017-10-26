@@ -6,6 +6,15 @@ use rmrevin\yii\fontawesome\FA;
 /* @var $this yii\web\View */
 /* @var $modelUserFormUpdate domain\forms\base\UserFormUpdate */
 /* @var $userForm ActiveForm */
+
+if (!$modelUserFormUpdate->hasActiveEmployee) {
+    $hint = 'Доступно в случае имеющихся активных специальностей';
+} elseif (!$modelUserFormUpdate->person_fired) {
+    $hint = 'В случае заполнения даты увольнения, все специальности и совмещения закроются датой увольнения';
+} else {
+    $hint = '';
+}
+
 ?>
 <div class="form-group">
     <div class="row">
@@ -32,7 +41,7 @@ use rmrevin\yii\fontawesome\FA;
             <?= $userForm->field($modelUserFormUpdate, 'person_hired')->datetime(['disabled' => true, 'maxlength' => true, 'wkicon' => FA::_CALENDAR])->hint('Выводится автоматически при добавлении специальности') ?>
         </div>
         <div class="col-xs-6">
-            <?= $userForm->field($modelUserFormUpdate, 'person_fired')->datetime(['disabled' => !$modelUserFormUpdate->hasActiveEmployee, 'wkkeep' => true, 'maxlength' => true, 'wkicon' => FA::_CALENDAR])->hint($modelUserFormUpdate->hasActiveEmployee ? '' : 'Доступно в случае имеющихся активных специальностей') ?>
+            <?= $userForm->field($modelUserFormUpdate, 'person_fired')->datetime(['disabled' => !$modelUserFormUpdate->hasActiveEmployee, 'wkkeep' => true, 'maxlength' => true, 'wkicon' => FA::_CALENDAR])->hint($hint) ?>
         </div>
     </div>
 </div>
