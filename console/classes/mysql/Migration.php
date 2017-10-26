@@ -6,8 +6,10 @@
  * Time: 21:33
  */
 
-namespace common\classes\mysql;
+namespace console\classes\mysql;
 
+
+use common\classes\mysql\Schema;
 
 class Migration extends \yii\db\Migration
 {

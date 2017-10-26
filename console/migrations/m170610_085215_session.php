@@ -1,7 +1,7 @@
 <?php
 
 
-use common\classes\mysql\Migration;
+use console\classes\mysql\Migration;
 
 class m170610_085215_session extends Migration
 {

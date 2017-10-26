@@ -2,7 +2,7 @@
 
 use wartron\yii2uuid\helpers\Uuid;
 use yii\base\InvalidConfigException;
-use common\classes\mysql\Migration;
+use console\classes\mysql\Migration;
 use yii\rbac\DbManager;
 
 class m130524_201442_init extends Migration

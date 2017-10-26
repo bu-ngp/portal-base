@@ -1,6 +1,6 @@
 <?php
 
-use common\classes\mysql\Migration;
+use console\classes\mysql\Migration;
 
 class m170913_050424_configLdap extends Migration
 {
