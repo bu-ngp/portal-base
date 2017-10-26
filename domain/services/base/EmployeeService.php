@@ -8,10 +8,10 @@ use domain\models\base\Employee;
 use domain\models\base\EmployeeHistory;
 use domain\repositories\base\EmployeeHistoryRepository;
 use domain\repositories\base\EmployeeRepository;
-use domain\services\WKService;
+use domain\services\Service;
 use Yii;
 
-class EmployeeService extends WKService
+class EmployeeService extends Service
 {
     private $employeeRepository;
 

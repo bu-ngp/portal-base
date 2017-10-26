@@ -16,10 +16,10 @@ use domain\models\base\AuthItemChild;
 use domain\repositories\base\AuthItemChildRepository;
 use domain\repositories\base\RoleRepository;
 use domain\services\TransactionManager;
-use domain\services\WKService;
+use domain\services\Service;
 use Yii;
 
-class RoleService extends WKService
+class RoleService extends Service
 {
     private $roles;
     private $transactionManager;

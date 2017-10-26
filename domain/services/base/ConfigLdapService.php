@@ -12,9 +12,10 @@ namespace domain\services\base;
 use domain\auth\Ldap;
 use domain\forms\base\ConfigLdapUpdateForm;
 use domain\repositories\base\ConfigLdapRepository;
+use domain\services\Service;
 use Yii;
 
-class ConfigLdapService
+class ConfigLdapService extends Service
 {
     private $configLdapRepository;
 

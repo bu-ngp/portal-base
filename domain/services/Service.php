@@ -11,7 +11,7 @@ namespace domain\services;
 use yii\base\Model;
 use yii\db\ActiveRecord;
 
-abstract class WKService
+abstract class Service
 {
     /**
      * @param ActiveRecord|array $models

@@ -5,9 +5,9 @@ namespace domain\services\base;
 use domain\forms\base\PodrazForm;
 use domain\models\base\Podraz;
 use domain\repositories\base\PodrazRepository;
-use domain\services\WKService;
+use domain\services\Service;
 
-class PodrazService extends WKService
+class PodrazService extends Service
 {
     private $podrazs;
 

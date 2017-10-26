@@ -11,11 +11,11 @@ use domain\repositories\base\EmployeeRepository;
 use domain\repositories\base\ParttimeRepository;
 use domain\repositories\base\PersonRepository;
 use domain\services\TransactionManager;
-use domain\services\WKService;
+use domain\services\Service;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 
-class EmployeeHistoryService extends WKService
+class EmployeeHistoryService extends Service
 {
     private $transactionManager;
     private $employeeHistories;

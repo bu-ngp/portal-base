@@ -21,11 +21,11 @@ use domain\repositories\base\ParttimeRepository;
 use domain\repositories\base\PersonRepository;
 use domain\repositories\base\ProfileRepository;
 use domain\services\TransactionManager;
-use domain\services\WKService;
+use domain\services\Service;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 
-class PersonService extends WKService
+class PersonService extends Service
 {
     private $transactionManager;
     private $persons;

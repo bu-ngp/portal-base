@@ -7,11 +7,11 @@ use domain\forms\base\ParttimeForm;
 use domain\models\base\Parttime;
 use domain\repositories\base\ParttimeRepository;
 use domain\services\TransactionManager;
-use domain\services\WKService;
+use domain\services\Service;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 
-class ParttimeService extends WKService
+class ParttimeService extends Service
 {
     private $transactionManager;
     private $parttimes;

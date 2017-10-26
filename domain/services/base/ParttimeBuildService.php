@@ -6,11 +6,11 @@ use common\widgets\GridView\services\GridViewHelper;
 use domain\forms\base\ParttimeBuildForm;
 use domain\models\base\ParttimeBuild;
 use domain\repositories\base\ParttimeBuildRepository;
-use domain\services\WKService;
+use domain\services\Service;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 
-class ParttimeBuildService extends WKService
+class ParttimeBuildService extends Service
 {
     private $parttimeBuilds;
 

@@ -5,9 +5,9 @@ namespace domain\services\base;
 use domain\forms\base\BuildForm;
 use domain\models\base\Build;
 use domain\repositories\base\BuildRepository;
-use domain\services\WKService;
+use domain\services\Service;
 
-class BuildService extends WKService
+class BuildService extends Service
 {
     private $builds;
 

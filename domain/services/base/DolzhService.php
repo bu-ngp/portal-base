@@ -5,9 +5,9 @@ namespace domain\services\base;
 use domain\forms\base\DolzhForm;
 use domain\models\base\Dolzh;
 use domain\repositories\base\DolzhRepository;
-use domain\services\WKService;
+use domain\services\Service;
 
-class DolzhService extends WKService
+class DolzhService extends Service
 {
     private $dolzhs;
 

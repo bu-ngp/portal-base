@@ -4,9 +4,9 @@ namespace domain\services\base;
 
 use domain\models\base\Profile;
 use domain\repositories\base\ProfileRepository;
-use domain\services\WKService;
+use domain\services\Service;
 
-class ProfileService extends WKService
+class ProfileService extends Service
 {
     private $profileRepository;
 

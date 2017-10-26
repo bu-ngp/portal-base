@@ -6,11 +6,11 @@ use common\widgets\GridView\services\GridViewHelper;
 use domain\forms\base\EmployeeBuildForm;
 use domain\models\base\EmployeeHistoryBuild;
 use domain\repositories\base\EmployeeHistoryBuildRepository;
-use domain\services\WKService;
+use domain\services\Service;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 
-class EmployeeBuildService extends WKService
+class EmployeeBuildService extends Service
 {
     private $employeeHistoryBuilds;
 
