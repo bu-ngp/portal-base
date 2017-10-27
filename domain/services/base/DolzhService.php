@@ -3,9 +3,11 @@
 namespace domain\services\base;
 
 use domain\forms\base\DolzhForm;
+use domain\helpers\BinaryHelper;
 use domain\models\base\Dolzh;
 use domain\repositories\base\DolzhRepository;
 use domain\services\Service;
+use wartron\yii2uuid\helpers\Uuid;
 
 class DolzhService extends Service
 {
@@ -19,7 +21,8 @@ class DolzhService extends Service
     }
 
     public function find($id) {
-        return $this->dolzhs->find($id);
+        $uuid = BinaryHelper::isBinaryValidString($id) ? Uuid::str2uuid($id) : $id;
+        return $this->dolzhs->find($uuid);
     }
 
     public function create(DolzhForm $form)

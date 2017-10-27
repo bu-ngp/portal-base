@@ -3,9 +3,11 @@
 namespace domain\services\base;
 
 use domain\forms\base\BuildForm;
+use domain\helpers\BinaryHelper;
 use domain\models\base\Build;
 use domain\repositories\base\BuildRepository;
 use domain\services\Service;
+use wartron\yii2uuid\helpers\Uuid;
 
 class BuildService extends Service
 {
@@ -20,7 +22,8 @@ class BuildService extends Service
 
     public function find($id)
     {
-        return $this->builds->find($id);
+        $uuid = BinaryHelper::isBinaryValidString($id) ? Uuid::str2uuid($id) : $id;
+        return $this->builds->find($uuid);
     }
 
     public function create(BuildForm $form)
@@ -35,6 +38,7 @@ class BuildService extends Service
 
     public function update($id, BuildForm $form)
     {
+
         $build = $this->builds->find($id);
         $build->edit($form);
         if (!$this->validateModels($build, $form)) {

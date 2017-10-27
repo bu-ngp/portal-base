@@ -3,9 +3,11 @@
 namespace domain\services\base;
 
 use domain\forms\base\PodrazForm;
+use domain\helpers\BinaryHelper;
 use domain\models\base\Podraz;
 use domain\repositories\base\PodrazRepository;
 use domain\services\Service;
+use wartron\yii2uuid\helpers\Uuid;
 
 class PodrazService extends Service
 {
@@ -20,7 +22,8 @@ class PodrazService extends Service
 
     public function find($id)
     {
-        return $this->podrazs->find($id);
+        $uuid = BinaryHelper::isBinaryValidString($id) ? Uuid::str2uuid($id) : $id;
+        return $this->podrazs->find($uuid);
     }
 
     public function create(PodrazForm $form)
