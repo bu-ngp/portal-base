@@ -10,6 +10,7 @@ namespace common\widgets\GridView\services;
 
 
 use common\widgets\GridView\GridView;
+use domain\helpers\GridViewHelper;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\bootstrap\Html;

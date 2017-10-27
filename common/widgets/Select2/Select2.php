@@ -9,7 +9,7 @@
 namespace common\widgets\Select2;
 
 
-use common\widgets\GridView\services\GridViewHelper;
+use domain\helpers\GridViewHelper;
 use common\widgets\PropellerAssets\PropellerAsset;
 use common\widgets\PropellerAssets\Select2Asset AS PropellerSelect2Asset;
 use common\widgets\Select2\assets\Select2Asset;

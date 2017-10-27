@@ -6,7 +6,7 @@
  * Time: 13:41
  */
 
-namespace common\widgets\GridView\services;
+namespace domain\helpers;
 
 
 class GridViewHelper

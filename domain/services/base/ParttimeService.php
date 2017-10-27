@@ -2,7 +2,7 @@
 
 namespace domain\services\base;
 
-use common\widgets\GridView\services\GridViewHelper;
+use domain\helpers\GridViewHelper;
 use domain\forms\base\ParttimeForm;
 use domain\models\base\Parttime;
 use domain\repositories\base\ParttimeRepository;

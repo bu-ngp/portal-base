@@ -9,7 +9,7 @@
 
 namespace domain\services\base;
 
-use common\widgets\GridView\services\GridViewHelper;
+use domain\helpers\GridViewHelper;
 use domain\models\base\Person;
 use domain\forms\base\ProfileForm;
 use domain\forms\base\UserForm;

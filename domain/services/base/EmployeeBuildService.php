@@ -2,7 +2,7 @@
 
 namespace domain\services\base;
 
-use common\widgets\GridView\services\GridViewHelper;
+use domain\helpers\GridViewHelper;
 use domain\forms\base\EmployeeBuildForm;
 use domain\models\base\EmployeeHistoryBuild;
 use domain\repositories\base\EmployeeHistoryBuildRepository;

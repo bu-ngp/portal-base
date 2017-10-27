@@ -2,7 +2,7 @@
 
 namespace domain\models\base\search;
 
-use common\widgets\GridView\services\GridViewHelper;
+use domain\helpers\GridViewHelper;
 use common\widgets\GridView\services\GWItemsTrait;
 use domain\services\SearchModel;
 use yii\data\ActiveDataProvider;
