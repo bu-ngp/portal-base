@@ -10,7 +10,6 @@ namespace domain\repositories\base;
 
 use domain\models\base\AuthItem;
 use domain\models\base\AuthItemChild;
-use domain\repositories\RepositoryInterface;
 use RuntimeException;
 use Yii;
 

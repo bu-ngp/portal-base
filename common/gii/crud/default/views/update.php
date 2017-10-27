@@ -43,7 +43,7 @@ $this->title = Yii::t('<?= $generator->messageCategory ?>', 'Update "{modelClass
             }
         } ?>
         <div class="form-group">
-            <?= "<?= " ?>Html::submitButton(<?= $generator->generateString('Update') ?>, ['class' => 'btn btn-primary']) ?>
+            <?= "<?= " ?>Html::submitButton(Yii::t('common', 'Update'), ['class' => 'btn btn-primary']) ?>
         </div>
 
         <?= "<?php " ?>ActiveForm::end(); ?>

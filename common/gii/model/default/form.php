@@ -43,15 +43,16 @@ class <?= $generator->modelClass ?>Form extends Model
     public function __construct(<?= $generator->modelClass ?> $<?= lcfirst($generator->modelClass) ?> = null, $config = [])
     {
         if ($<?= lcfirst($generator->modelClass) ?>) {
-            $this->load($<?= lcfirst($generator->modelClass) ?>->attributes, '');
+<?php
+               foreach ($tableSchema->columns as $column) {
+                   if (in_array($column->name, $safeAttributes)) {
+                       echo "           \$this->{$column->name} = \$".lcfirst($generator->modelClass)."->{$column->name};\n";
+                   }
+               }
+?>
         }
 
         parent::__construct($config);
-    }
-
-    public function rules()
-    {
-        return (new <?= $generator->modelClass ?>())->rules();
     }
 
     public function attributeLabels()

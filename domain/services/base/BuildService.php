@@ -38,7 +38,6 @@ class BuildService extends Service
 
     public function update($id, BuildForm $form)
     {
-
         $build = $this->builds->find($id);
         $build->edit($form);
         if (!$this->validateModels($build, $form)) {

@@ -39,7 +39,7 @@ $this->title = <?= $generator->generateString('Create ' . Inflector::camel2words
             }
         } ?>
         <div class="form-group">
-            <?= "<?= " ?>Html::submitButton(<?= $generator->generateString('Create') ?>, ['class' => 'btn btn-success']) ?>
+            <?= "<?= " ?>Html::submitButton(Yii::t('common', 'Create'), ['class' => 'btn btn-success']) ?>
         </div>
 
         <?= "<?php " ?>ActiveForm::end(); ?>

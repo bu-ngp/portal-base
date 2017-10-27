@@ -3,7 +3,6 @@
 namespace domain\repositories\base;
 
 use domain\models\base\EmployeeHistory;
-use domain\repositories\RepositoryInterface;
 use RuntimeException;
 use Yii;
 use yii\db\ActiveRecord;

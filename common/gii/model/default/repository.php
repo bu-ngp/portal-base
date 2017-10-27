@@ -19,11 +19,10 @@ namespace <?= $ns ?>;
 
 use <?= $generator->ns ?>\<?= $generator->modelClass ?>;
 use domain\exceptions\ServiceErrorsException;
-use domain\repositories\RepositoryInterface;
 use RuntimeException;
 use Yii;
 
-class <?= $generator->modelClass ?>Repository implements RepositoryInterface
+class <?= $generator->modelClass ?>Repository
 {
     /**
      * @param $id
@@ -44,10 +43,10 @@ class <?= $generator->modelClass ?>Repository implements RepositoryInterface
     public function add($<?= lcfirst($generator->modelClass) ?>)
     {
         if (!$<?= lcfirst($generator->modelClass) ?>->getIsNewRecord()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Adding existing model.'));
+            throw new \DomainException(Yii::t('domain/base', 'Adding existing model.'));
         }
         if (!$<?= lcfirst($generator->modelClass) ?>->insert(false)) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Saving error.'));
         }
     }
 
@@ -57,10 +56,10 @@ class <?= $generator->modelClass ?>Repository implements RepositoryInterface
     public function save($<?= lcfirst($generator->modelClass) ?>)
     {
         if ($<?= lcfirst($generator->modelClass) ?>->getIsNewRecord()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Adding existing model.'));
+            throw new \DomainException(Yii::t('domain/base', 'Adding existing model.'));
         }
         if ($<?= lcfirst($generator->modelClass) ?>->update(false) === false) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Saving error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Saving error.'));
         }
     }
 
@@ -70,7 +69,7 @@ class <?= $generator->modelClass ?>Repository implements RepositoryInterface
     public function delete($<?= lcfirst($generator->modelClass) ?>)
     {
         if (!$<?= lcfirst($generator->modelClass) ?>->delete()) {
-            throw new \RuntimeException(Yii::t('domain/base', 'Deleting error.'));
+            throw new \DomainException(Yii::t('domain/base', 'Deleting error.'));
         }
     }
 }

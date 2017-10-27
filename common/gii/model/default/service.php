@@ -1,6 +1,9 @@
 <?php
 
 /* @var $this yii\web\View */
+
+use yii\helpers\Inflector;
+
 /* @var $generator yii\gii\generators\model\Generator */
 /* @var $tableName string full table name */
 /* @var $className string class name */
@@ -12,6 +15,7 @@
 
 $ns = preg_replace('/(.*?\\\\)(\w+)(\\\\.*)/', '$1services$3', $generator->ns);
 $nsRepositories = preg_replace('/(.*?\\\\)(\w+)(\\\\.*)/', '$1repositories$3', $generator->ns);
+$nsForms = preg_replace('/(.*?\\\\)(\w+)(\\\\.*)/', '$1forms$3', $generator->ns);
 
 $safeAttributes = array_filter(array_keys($tableSchema->columns), function($value) use ($tableSchema) {
     return !$tableSchema->columns[$value]->isPrimaryKey;
@@ -29,6 +33,8 @@ if ($attributes) {
     $attributesString = implode(", ", $attributes);
 }
 
+$pluralizeRepo = Inflector::pluralize($generator->modelClass);
+
 echo "<?php\n";
 ?>
 
@@ -36,42 +42,51 @@ namespace <?= $ns ?>;
 
 use <?= $generator->ns ?>\<?= $generator->modelClass ?>;
 use <?= $nsRepositories ?>\<?= $generator->modelClass ?>Repository;
-use domain\services\BaseService;
+use domain\services\Service;
+use <?= $nsForms ?>\<?= $generator->modelClass ?>Form;
 
-class <?= $generator->modelClass ?>Service extends BaseService
+class <?= $generator->modelClass ?>Service extends Service
 {
-    private $<?= lcfirst($generator->modelClass) ?>Repository;
+    private $<?= lcfirst($pluralizeRepo) ?>;
 
     public function __construct(
-        <?= $generator->modelClass ?>Repository $<?= lcfirst($generator->modelClass) ?>Repository
+        <?= $generator->modelClass ?>Repository $<?= lcfirst($pluralizeRepo) . "\n" ?>
     )
     {
-        $this-><?= lcfirst($generator->modelClass) ?>Repository = $<?= lcfirst($generator->modelClass) ?>Repository;
+        $this-><?= lcfirst($pluralizeRepo) ?> = $<?= lcfirst($generator->modelClass) ?>;
 
         parent::__construct();
     }
 
-    public function create(<?= $attributesString ?>)
+    public function find($id)
     {
-        $<?= lcfirst($generator->modelClass) ?> = <?= $generator->modelClass ?>::create(<?= $attributesString ?>);
-        $this-><?= lcfirst($generator->modelClass) ?>Repository->add($<?= lcfirst($generator->modelClass) ?>);
-
-        return true;
+        return $this-><?= lcfirst($pluralizeRepo) ?>->find($id);
     }
 
-    public function update($id, <?= $attributesString ?>)
+    public function create(<?= $generator->modelClass ?>Form $form)
     {
-        $<?= lcfirst($generator->modelClass) ?> = $this-><?= lcfirst($generator->modelClass) ?>Repository->find($id);
+        $<?= lcfirst($generator->modelClass) ?> = <?= $generator->modelClass ?>::create($form);
+        if (!$this->validateModels($<?= lcfirst($generator->modelClass) ?>, $form)) {
+            throw new \DomainException();
+        }
 
-        $<?= lcfirst($generator->modelClass) ?>->editData(<?= $attributesString ?>);
-        $this-><?= lcfirst($generator->modelClass) ?>Repository->save($<?= lcfirst($generator->modelClass) ?>);
+        $this-><?= lcfirst($pluralizeRepo) ?>->add($<?= lcfirst($generator->modelClass) ?>);
+    }
 
-        return true;
+    public function update($id, <?= $generator->modelClass ?>Form $form)
+    {
+        $<?= lcfirst($generator->modelClass) ?> = $this-><?= lcfirst($pluralizeRepo) ?>->find($id);
+        $<?= lcfirst($generator->modelClass) ?>->edit($form);
+        if (!$this->validateModels($<?= lcfirst($generator->modelClass) ?>, $form)) {
+            throw new \DomainException();
+        }
+
+        $this-><?= lcfirst($pluralizeRepo) ?>->save($<?= lcfirst($generator->modelClass) ?>);
     }
 
     public function delete($id)
     {
-        $<?= lcfirst($generator->modelClass) ?> = $this-><?= lcfirst($generator->modelClass) ?>Repository->find($id);
-        $this-><?= lcfirst($generator->modelClass) ?>Repository->delete($<?= lcfirst($generator->modelClass) ?>);
+        $<?= lcfirst($generator->modelClass) ?> = $this-><?= lcfirst($pluralizeRepo) ?>->find($id);
+        $this-><?= lcfirst($pluralizeRepo) ?>->delete($<?= lcfirst($generator->modelClass) ?>);
     }
 }

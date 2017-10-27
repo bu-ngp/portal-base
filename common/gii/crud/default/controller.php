@@ -55,6 +55,7 @@ use domain\services\proxyService;
 use yii\filters\ContentNegotiator;
 use yii\filters\AccessControl;
 use yii\web\Response;
+use common\widgets\Breadcrumbs\Breadcrumbs;
 
 /**
  * <?= $controllerClass ?> implements the CRUD actions for <?= $modelClass ?> model.
@@ -62,13 +63,13 @@ use yii\web\Response;
 class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) . "\n" ?>
 {
     /**
-    * @var <?= $service ?> $<?= lcfirst($service) ?>
+    * @var $service $<?= lcfirst($service) ?>
     */
-    private $<?= lcfirst($service) ?>;
+    private $service;
 
-    public function __construct($id, $module, <?= $service ?> $<?= lcfirst($service) ?>, $config = [])
+    public function __construct($id, $module, <?= $service ?> $service, $config = [])
     {
-        $this-><?= lcfirst($service) ?> = new proxyService($<?= lcfirst($service) ?>);
+        $this->service = new proxyService($service);
         parent::__construct($id, $module, $config = []);
     }
 
@@ -92,10 +93,6 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         ];
     }
 
-    /**
-     * Lists all <?= $modelClass ?> models.
-     * @return mixed
-     */
     public function actionIndex()
     {
 <?php if (!empty($generator->searchModelClass)): ?>
@@ -117,30 +114,16 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 <?php endif; ?>
     }
 
-    /**
-     * Creates a new <?= $modelClass ?> model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
     public function actionCreate()
     {
         $form = new <?= $form ?>();
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
-            && $this-><?= lcfirst($service) ?>->create(<?php
-        $properties = [];
-
-        foreach ($generator->getColumnNames() as $attribute) {
-            if (in_array($attribute, $safeAttributes)) {
-                $properties[] = '$form->' . $attribute;
-            }
-        }
-
-        echo implode(",\n", $properties)
-?>)
+            && $this->service->create($form)
         ) {
-            return $this->redirect(['index']);
+            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
+            return $this->redirect(Breadcrumbs::previousUrl());
         }
 
         return $this->render('create', [
@@ -148,31 +131,17 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         ]);
     }
 
-    /**
-     * Updates an existing <?= $modelClass ?> model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
-     * @return mixed
-     */
     public function actionUpdate(<?= $actionParams ?>)
     {
-        $<?= $findModel ?> = $this->findModel(<?= $actionParams ?>);
-        $form = new <?= $form ?>($<?= $findModel ?>);
+        $<?= lcfirst($modelClass) ?> = $this->service->find(<?= $actionParams ?>);
+        $form = new <?= $modelClass ?>Form($<?= lcfirst($modelClass) ?>);
 
-        if ($form->load(Yii::$app->request->post()) && $form->validate()
-            && $this-><?= lcfirst($service) ?>->update($<?= $findModel ?>->primaryKey, <?php
-$properties = [];
-
-foreach ($generator->getColumnNames() as $attribute) {
-    if (in_array($attribute, $safeAttributes)) {
-        $properties[] = '$form->' . $attribute;
-    }
-}
-
-echo implode(",\n", $properties)
-?>)
+        if ($form->load(Yii::$app->request->post())
+            && $form->validate()
+            && $this->service->update($<?= lcfirst($modelClass) ?>->primaryKey, $form)
         ) {
-            return $this->redirect(['index']);
+            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
+            return $this->redirect(Breadcrumbs::previousUrl());
         }
 
         return $this->render('update', [
@@ -180,47 +149,14 @@ echo implode(",\n", $properties)
         ]);
     }
 
-    /**
-     * Deletes an existing <?= $modelClass ?> model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
-     * @return mixed
-     */
     public function actionDelete(<?= $actionParams ?>)
     {
         try {
-            $this-><?= lcfirst($service) ?>->delete(<?= $actionParams ?>);
+            $this->service->delete(<?= $actionParams ?>);
         } catch (\Exception $e) {
             return AjaxResponse::init(AjaxResponse::ERROR, $e->getMessage());
         }
 
         return AjaxResponse::init(AjaxResponse::SUCCESS);
-    }
-
-    /**
-     * Finds the <?= $modelClass ?> model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
-     * @return <?=                   $modelClass ?> the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel(<?= $actionParams ?>)
-    {
-<?php
-if (count($pks) === 1) {
-    $condition = '$id';
-} else {
-    $condition = [];
-    foreach ($pks as $pk) {
-        $condition[] = "'$pk' => \$$pk";
-    }
-    $condition = '[' . implode(', ', $condition) . ']';
-}
-?>
-        if (($model = <?= $modelClass ?>::findOne(<?= $condition ?>)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
     }
 }

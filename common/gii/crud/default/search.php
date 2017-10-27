@@ -18,70 +18,52 @@ $rules = $generator->generateSearchRules();
 $labels = $generator->generateSearchLabels();
 $searchAttributes = $generator->getSearchAttributes();
 $searchConditions = $generator->generateSearchConditions();
+/** @var \yii\db\ActiveRecord $modelAR */
+$modelAR = new $generator->modelClass;
 
 echo "<?php\n";
 ?>
 
 namespace <?= StringHelper::dirname(ltrim($generator->searchModelClass, '\\')) ?>;
 
-use Yii;
-use yii\base\Model;
-use yii\data\ActiveDataProvider;
 use <?= ltrim($generator->modelClass, '\\') . (isset($modelAlias) ? " as $modelAlias" : "") ?>;
+use domain\services\SearchModel;
 
-/**
- * <?= $searchModelClass ?> represents the model behind the search form about `<?= $generator->modelClass ?>`.
- */
-class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $modelClass ?>
-
+class <?= $searchModelClass ?> extends SearchModel
 {
-    /**
-     * @inheritdoc
-     */
-    public function rules()
+    public static function activeRecord()
+    {
+        return new <?= $modelClass ?>;
+    }
+
+    public function attributes()
     {
         return [
-            <?= implode(",\n            ", $rules) ?>,
+<?php
+        foreach ($searchAttributes as $attribute) {
+            if ($modelAR->isAttributeSafe($attribute)) {
+                echo "            '$attribute',\n";
+            }
+        }
+?>
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function scenarios()
-    {
-        // bypass scenarios() implementation in the parent class
-        return Model::scenarios();
+<?php
+foreach ($attributes = $modelAR->safeAttributes() as $attribute) {
+    if (!in_array($attribute, array_keys($modelAR->getPrimaryKey(true)))  ) {
+        echo "    public function defaultSortOrder()\n";
+        echo "    {\n";
+        echo "        return ['$attribute' => SORT_ASC];\n";
+        echo "    }\n\n";
+        break;
     }
-
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
-     */
-    public function search($params)
+}
+?>
+    public function filter()
     {
-        $query = <?= isset($modelAlias) ? $modelAlias : $modelClass ?>::find();
+        return [
 
-        // add conditions that should always apply here
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-
-        $this->load($params);
-
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
-
-        // grid filtering conditions
-        <?= implode("\n        ", $searchConditions) ?>
-
-        return $dataProvider;
+        ];
     }
 }
