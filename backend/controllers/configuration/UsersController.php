@@ -103,7 +103,6 @@ class UsersController extends Controller
         ) {
             Yii::$app->session->setFlash('success', Yii::t('domain/person', 'Person is saved. Add speciality.'));
             Breadcrumbs::removeLastCrumb();
-
             return $this->redirect(['update', 'id' => $newPersonId]);
         }
 
@@ -131,13 +130,14 @@ class UsersController extends Controller
         $searchModelAuthItem = new AuthItemUpdateSearch();
         $dataProviderAuthItem = $searchModelAuthItem->search(Yii::$app->request->queryParams);
 
+        $gridInjectCallBack = $this->service->gridInjectCallBack();
+
         if ($userFormUpdate->load(Yii::$app->request->post())
             && $profileForm->load(Yii::$app->request->post())
             && $userFormUpdate->validate() & $profileForm->validate()
             && $this->service->update($user->primaryKey, $userFormUpdate, $profileForm)
         ) {
             Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
-
             return $this->redirect(Breadcrumbs::previousUrl());
         }
 
@@ -148,6 +148,7 @@ class UsersController extends Controller
             'dataProviderEmployee' => $dataProviderEmployee,
             'searchModelAuthItem' => $searchModelAuthItem,
             'dataProviderAuthItem' => $dataProviderAuthItem,
+            'gridInjectCallBack' => $gridInjectCallBack,
         ]);
     }
 

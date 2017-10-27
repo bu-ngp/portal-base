@@ -15,6 +15,7 @@ use yii\helpers\Url;
 /* @var $searchModelAuthItem domain\models\base\search\AuthItemSearch */
 /* @var $dataProviderEmployee yii\data\ActiveDataProvider */
 /* @var $dataProviderAuthItem yii\data\ActiveDataProvider */
+/* @var $gridInjectCallBack Closure */
 
 $this->title = Yii::t('common/person', $modelUserFormUpdate->person_fullname);
 ?>
@@ -85,13 +86,15 @@ $this->title = Yii::t('common/person', $modelUserFormUpdate->person_fullname);
                                 'create' => 'configuration/roles/index-for-users',
                                 'delete' => 'configuration/roles/delete',
                             ],
+                            'gridInject' => [
+                                'mainField' => 'user_id',
+                                'mainIdParameterName' => 'id',
+                                'foreignField' => 'item_name',
+                                'modelClassName' => 'domain\models\base\AuthAssignment',
+                                'saveFunc' => $gridInjectCallBack,
+                            ],
                         ],
-                        'gridInject' => [
-                            'mainField' => 'user_id',
-                            'mainIdParameterName' => 'id',
-                            'foreignField' => 'auth_item',
-                            'modelClassName' => 'domain\models\base\AuthAssignment',
-                        ],
+
                     ]),
                 ],
             ],

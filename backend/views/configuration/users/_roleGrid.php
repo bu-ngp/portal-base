@@ -9,7 +9,7 @@ use rmrevin\yii\fontawesome\FA;
 ?>
 
 <?= GridView::widget(array_replace([
-    'id' => 'RolesUserGridGrid',
+    'id' => 'RolesUserGrid',
     'dataProvider' => $dataProvider,
     'filterModel' => $searchModel,
     'columns' => [

@@ -9,6 +9,7 @@
 
 namespace domain\services\base;
 
+use common\widgets\GridView\services\GridViewHelper;
 use domain\models\base\Person;
 use domain\forms\base\ProfileForm;
 use domain\forms\base\UserForm;
@@ -138,6 +139,23 @@ class PersonService extends Service
         if (mb_strlen($userForm->person_password, 'UTF-8') < 6) {
             throw new \DomainException(Yii::t('domain/person', 'Password very short. Need minimum 6 characters.'));
         }
+    }
+
+    public function gridInjectCallBack()
+    {
+        return function (\yii\db\ActiveRecord $model, $mainId, $mainField, $foreignField, $foreignId) {
+            $auth = Yii::$app->authManager;
+            $role = $auth->getRole($foreignId);
+            $userUUID = GridViewHelper::isBinaryValidString($mainId) ? Uuid::str2uuid($mainId) : false;
+
+            if (!$role) {
+                throw new \DomainException(Yii::t('domain/base', "Role '{role}' not found", ['role' => $foreignId]));
+            }
+
+            if (!($userUUID && $auth->assign($role, $userUUID))) {
+                throw new \DomainException(Yii::t('domain/base', 'Saving error.'));
+            }
+        };
     }
 
     protected function guardAssignRoles($form)

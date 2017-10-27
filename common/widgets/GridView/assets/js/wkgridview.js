@@ -141,7 +141,7 @@
         var xhr = opts.xhr;
         var lastCrumb = $(".wkbc-breadcrumb").length === 1 ? $(".wkbc-breadcrumb").wkbreadcrumbs('getLast') : {};
 
-        if ("wk-id" in lastCrumb) {
+        if ("wk-id" in lastCrumb && lastCrumb["wk-id"].gridID === opts.gridID) {
             delete(lastCrumb["wk-id"]);
             xhr.setRequestHeader("WK-GRID-OPER", "save");
             $(".wkbc-breadcrumb").wkbreadcrumbs('setLast', lastCrumb);
@@ -212,7 +212,8 @@
             }
 
             gridSaveModelMarker({
-                xhr: xhr
+                xhr: xhr,
+                gridID: $grid.attr("id")
             });
 
             gridExcludedFromBreadcrumb({
