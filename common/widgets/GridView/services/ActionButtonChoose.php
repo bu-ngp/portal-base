@@ -9,7 +9,7 @@
 namespace common\widgets\GridView\services;
 
 use common\widgets\GridView\GridView;
-use domain\helpers\GridViewHelper;
+use domain\helpers\BinaryHelper;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\bootstrap\Html;
@@ -40,7 +40,7 @@ class ActionButtonChoose
             && (property_exists($_selected, 'exclude') || property_exists($_selected, 'reject'))
         ) {
             $this->actionButtons['choose'] = function ($url, $model) use ($_selected) {
-                $selected = GridViewHelper::isBinary($model->primaryKey) ? Uuid::uuid2str($model->primaryKey) : $model->primaryKey;
+                $selected = BinaryHelper::isBinary($model->primaryKey) ? Uuid::uuid2str($model->primaryKey) : $model->primaryKey;
                 $url = $_selected->url . (preg_match('/\?/', $_selected->url) ? '&' : '?') . 'grid=' . urlencode($_selected->gridID) . '&selected=' . urlencode($selected);
 
                 return Html::a('<i class="fa fa-2x fa-check-square-o"></i>', $url, ['title' => Yii::t('wk-widget-gridview', 'Choose'), 'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-success', 'data-pjax' => '0']);
@@ -51,12 +51,12 @@ class ActionButtonChoose
             if (property_exists($_selected, 'exclude')) {
                 $_selected->exclude = is_array($_selected->exclude) ? $_selected->exclude : [$_selected->exclude];
                 $_selected->exclude = array_map(function ($id) {
-                    return GridViewHelper::isBinaryValidString($id) ? Uuid::str2uuid($id) : $id;
+                    return BinaryHelper::isBinaryValidString($id) ? Uuid::str2uuid($id) : $id;
                 }, $_selected->exclude);
 
                 $func($this->grid->dataProvider->query, $_selected->exclude, GridView::ADD);
             } else {
-                $_selected->reject = GridViewHelper::isBinaryValidString($_selected->reject) ? Uuid::str2uuid($_selected->reject) : $_selected->reject;
+                $_selected->reject = BinaryHelper::isBinaryValidString($_selected->reject) ? Uuid::str2uuid($_selected->reject) : $_selected->reject;
                 $func($this->grid->dataProvider->query, [$_selected->reject], GridView::EDIT);
             }
         }

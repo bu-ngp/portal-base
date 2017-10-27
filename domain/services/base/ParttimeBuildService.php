@@ -2,7 +2,7 @@
 
 namespace domain\services\base;
 
-use domain\helpers\GridViewHelper;
+use domain\helpers\BinaryHelper;
 use domain\forms\base\ParttimeBuildForm;
 use domain\models\base\ParttimeBuild;
 use domain\repositories\base\ParttimeBuildRepository;
@@ -66,7 +66,7 @@ class ParttimeBuildService extends Service
 
     protected function filterEmployeeUUID(ParttimeBuildForm $form)
     {
-        if (GridViewHelper::isBinaryValidString($form->build_id)) {
+        if (BinaryHelper::isBinaryValidString($form->build_id)) {
             $form->build_id = Uuid::str2uuid($form->build_id);
         } else {
             throw new \RuntimeException(Yii::t('domain/parttime-build', 'Invalid UUID Parameters.'));

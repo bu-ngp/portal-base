@@ -9,7 +9,7 @@
 
 namespace domain\services\base;
 
-use domain\helpers\GridViewHelper;
+use domain\helpers\BinaryHelper;
 use domain\models\base\Person;
 use domain\forms\base\ProfileForm;
 use domain\forms\base\UserForm;
@@ -146,7 +146,7 @@ class PersonService extends Service
         return function (\yii\db\ActiveRecord $model, $mainId, $mainField, $foreignField, $foreignId) {
             $auth = Yii::$app->authManager;
             $role = $auth->getRole($foreignId);
-            $userUUID = GridViewHelper::isBinaryValidString($mainId) ? Uuid::str2uuid($mainId) : false;
+            $userUUID = BinaryHelper::isBinaryValidString($mainId) ? Uuid::str2uuid($mainId) : false;
 
             if (!$role) {
                 throw new \DomainException(Yii::t('domain/base', "Role '{role}' not found", ['role' => $foreignId]));

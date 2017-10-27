@@ -2,7 +2,7 @@
 
 namespace domain\services\base;
 
-use domain\helpers\GridViewHelper;
+use domain\helpers\BinaryHelper;
 use domain\forms\base\EmployeeHistoryForm;
 use domain\models\base\Employee;
 use domain\models\base\EmployeeHistory;
@@ -118,9 +118,9 @@ class EmployeeHistoryService extends Service
 
     protected function filterEmployeeUUIDCreate(EmployeeHistoryForm $form)
     {
-        if (GridViewHelper::isBinaryValidString($form->person_id)
-            && GridViewHelper::isBinaryValidString($form->dolzh_id)
-            && GridViewHelper::isBinaryValidString($form->podraz_id)
+        if (BinaryHelper::isBinaryValidString($form->person_id)
+            && BinaryHelper::isBinaryValidString($form->dolzh_id)
+            && BinaryHelper::isBinaryValidString($form->podraz_id)
         ) {
             $form->person_id = Uuid::str2uuid($form->person_id);
             $form->dolzh_id = Uuid::str2uuid($form->dolzh_id);
@@ -130,14 +130,14 @@ class EmployeeHistoryService extends Service
         }
 
         $form->assignBuilds = array_map(function ($buildId) {
-            return GridViewHelper::isBinaryValidString($buildId) ? Uuid::str2uuid($buildId) : $buildId;
+            return BinaryHelper::isBinaryValidString($buildId) ? Uuid::str2uuid($buildId) : $buildId;
         }, $form->assignBuilds);
     }
 
     protected function filterEmployeeUUIDUpdate(EmployeeHistoryForm $form)
     {
-        if (GridViewHelper::isBinaryValidString($form->dolzh_id)
-            && GridViewHelper::isBinaryValidString($form->podraz_id)
+        if (BinaryHelper::isBinaryValidString($form->dolzh_id)
+            && BinaryHelper::isBinaryValidString($form->podraz_id)
         ) {
             $form->dolzh_id = Uuid::str2uuid($form->dolzh_id);
             $form->podraz_id = Uuid::str2uuid($form->podraz_id);

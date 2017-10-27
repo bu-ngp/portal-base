@@ -9,23 +9,16 @@
 namespace common\widgets\Select2;
 
 
-use domain\helpers\GridViewHelper;
+use domain\helpers\BinaryHelper;
 use common\widgets\PropellerAssets\PropellerAsset;
-use common\widgets\PropellerAssets\Select2Asset AS PropellerSelect2Asset;
 use common\widgets\Select2\assets\Select2Asset;
-use common\widgets\PropellerAssets\TextFieldAsset;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
-use yii\bootstrap\Html;
-use yii\bootstrap\InputWidget;
-use yii\bootstrap\Widget;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\JsExpression;
-use yii\web\Response;
-use yii\web\View;
 
 class Select2 extends \kartik\select2\Select2
 {
@@ -265,12 +258,12 @@ class Select2 extends \kartik\select2\Select2
 
     protected function filterBinaryToString($value)
     {
-        return GridViewHelper::isBinary($value) ? Uuid::uuid2str($value) : $value;
+        return BinaryHelper::isBinary($value) ? Uuid::uuid2str($value) : $value;
     }
 
     protected function filterStringToBinary($value)
     {
-        return GridViewHelper::isBinaryValidString($value) ? Uuid::str2uuid($value) : $value;
+        return BinaryHelper::isBinaryValidString($value) ? Uuid::str2uuid($value) : $value;
     }
 
     protected function initAjaxMultiple(ActiveQuery $dataQuery)

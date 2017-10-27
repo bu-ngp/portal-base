@@ -10,7 +10,7 @@ namespace common\widgets\GridView\services;
 
 
 use common\widgets\GridView\GridView;
-use domain\helpers\GridViewHelper;
+use domain\helpers\BinaryHelper;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\bootstrap\Html;
@@ -102,7 +102,7 @@ class ActionButtonCreate
                 if ($_choose = json_decode(Yii::$app->request->headers['wk-choose'])) {
                     if (is_array($_choose)) {
                         $_choose = array_map(function ($value) {
-                            return is_string($value) && GridViewHelper::isBinaryValidString($value) ? Uuid::str2uuid($value) : $value;
+                            return is_string($value) && BinaryHelper::isBinaryValidString($value) ? Uuid::str2uuid($value) : $value;
                         }, $_choose);
 
                         $condition = ['in', $this->grid->filterModel->tableName() . '.' . $this->grid->filterModel->primaryKey()[0], $_choose];

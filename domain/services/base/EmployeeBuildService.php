@@ -2,7 +2,7 @@
 
 namespace domain\services\base;
 
-use domain\helpers\GridViewHelper;
+use domain\helpers\BinaryHelper;
 use domain\forms\base\EmployeeBuildForm;
 use domain\models\base\EmployeeHistoryBuild;
 use domain\repositories\base\EmployeeHistoryBuildRepository;
@@ -67,7 +67,7 @@ class EmployeeBuildService extends Service
 
     protected function filterEmployeeUUID(EmployeeBuildForm $form)
     {
-        if (GridViewHelper::isBinaryValidString($form->build_id)) {
+        if (BinaryHelper::isBinaryValidString($form->build_id)) {
             $form->build_id = Uuid::str2uuid($form->build_id);
         } else {
             throw new \RuntimeException(Yii::t('domain/employee', 'Invalid UUID Parameters.'));

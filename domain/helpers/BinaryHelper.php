@@ -9,7 +9,7 @@
 namespace domain\helpers;
 
 
-class GridViewHelper
+class BinaryHelper
 {
     public static function isBinary($value)
     {

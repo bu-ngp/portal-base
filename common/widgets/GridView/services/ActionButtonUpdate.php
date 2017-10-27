@@ -9,7 +9,7 @@
 namespace common\widgets\GridView\services;
 
 use common\widgets\GridView\GridView;
-use domain\helpers\GridViewHelper;
+use domain\helpers\BinaryHelper;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\bootstrap\Html;
@@ -48,7 +48,7 @@ class ActionButtonUpdate
         $this->actionButtons['update'] = function ($url, $model) use ($crudProp) {
             $crudUrl = is_string($crudProp) ? $crudProp : $crudProp['url'];
 
-            $customurl = Url::to([$crudUrl, 'id' => GridViewHelper::isBinary($model->primaryKey) ? Uuid::uuid2str($model->primaryKey) : $model->primaryKey]);
+            $customurl = Url::to([$crudUrl, 'id' => BinaryHelper::isBinary($model->primaryKey) ? Uuid::uuid2str($model->primaryKey) : $model->primaryKey]);
             return $this->beforeRender($model) ? Html::a('<i class="fa fa-2x fa-pencil-square-o"></i>', $customurl, ['title' => Yii::t('wk-widget-gridview', 'Update'), 'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-primary', 'data-pjax' => '0']) : '';
         };
 

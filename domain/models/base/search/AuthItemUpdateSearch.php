@@ -2,7 +2,7 @@
 
 namespace domain\models\base\search;
 
-use domain\helpers\GridViewHelper;
+use domain\helpers\BinaryHelper;
 use common\widgets\GridView\services\GWItemsTrait;
 use domain\services\SearchModel;
 use yii\data\ActiveDataProvider;
@@ -44,7 +44,7 @@ class AuthItemUpdateSearch extends SearchModel
 
     public function afterLoad(ActiveQuery $query, ActiveDataProvider $dataProvider, $params)
     {
-        if (GridViewHelper::isBinaryValidString($params['id'])) {
+        if (BinaryHelper::isBinaryValidString($params['id'])) {
             $query->andWhere(['authAssignments.user_id' => new Expression("UNHEX('{$params['id']}')")]);
         }
         $query->andWhere(['type' => Item::TYPE_ROLE]);
