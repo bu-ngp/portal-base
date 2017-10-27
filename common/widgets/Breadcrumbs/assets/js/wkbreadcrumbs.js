@@ -10,7 +10,8 @@
     };
 
     var defaults = {
-        homeCrumbMessage: 'Home'
+        homeCrumbMessage: 'Home',
+        CurrentPageMessage: 'Current Page'
     };
 
     var getFromSessionStorage = function ($widget, params) {
@@ -81,6 +82,11 @@
         var items = '';
         $.each($widget.data('wkbreadcrumbs').crumbs, function (index) {
             if (this.visible) {
+                console.debug(this)
+                if (!"title" in this || typeof this.title == 'undefined') {
+                    this.title = $widget.data('wkbreadcrumbs').settings.CurrentPageMessage;
+                }
+
                 var item = index === $widget.data('wkbreadcrumbs').crumbs.length - 1 ? '<li class="active">' + this.title + '</li>' : '<li><a href="' + this.url + '">' + this.title + '</a></li>';
 
                 items = items + item;

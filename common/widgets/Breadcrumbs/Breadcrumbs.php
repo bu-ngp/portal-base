@@ -60,6 +60,7 @@ class Breadcrumbs extends Widget
 
         $options = [
             'homeCrumbMessage' => Yii::t('wk-widget-breadcrumbs', 'Home'),
+            'CurrentPageMessage' => Yii::t('wk-widget-breadcrumbs', 'Current Page'),
         ];
 
         $options = json_encode(array_filter($options), JSON_UNESCAPED_UNICODE);

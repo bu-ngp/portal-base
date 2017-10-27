@@ -117,7 +117,7 @@ class RolesController extends Controller
     }
 
     /**
-     * Updates an existing AuthItem model.
+     * UpdatesController an existing AuthItem model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
