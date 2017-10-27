@@ -164,7 +164,7 @@ class RolesController extends Controller
     {
         $searchModel = new AuthItemSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $gridExcludeIdsFunc = AuthItem::funcExcludeForRoles();
+        $gridExcludeIdsFunc = AuthItem::funcExcludeForUsers();
 
         return $this->render('index_for_users', [
             'searchModel' => $searchModel,

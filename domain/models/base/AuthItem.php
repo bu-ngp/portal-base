@@ -11,6 +11,7 @@ use Yii;
 use yii\db\ActiveQuery;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use yii\rbac\Item;
 
 /**
  * This is the model class for table "{{%auth_item}}".
@@ -89,7 +90,7 @@ class AuthItem extends \yii\db\ActiveRecord
             'name' => $form->name,
             'description' => $form->description,
             'ldap_group' => $form->ldap_group,
-            'type' => 1,
+            'type' => Item::TYPE_ROLE,
         ]);
     }
 
@@ -161,12 +162,26 @@ class AuthItem extends \yii\db\ActiveRecord
         };
     }
 
+    public static function funcExcludeForUsers()
+    {
+        return function (ActiveQuery $activeQuery, array $ids) {
+            $activeQuery
+                ->andWhere(['not in', 'name', $ids])
+                ->andWhere(['not exists', (new Query())
+                    ->select('{{%auth_assignment}}.item_name')
+                    ->from('{{%auth_assignment}}')
+                    ->andWhere(['in', '{{%auth_assignment}}.user_id', $ids])
+                    ->andWhere('{{%auth_assignment}}.item_name = {{%auth_item}}.name')
+                ]);
+        };
+    }
+
     public static function items()
     {
         return [
             'type' => [
-                1 => 'Роль',
-                2 => 'Разрешение',
+                Item::TYPE_ROLE => 'Роль',
+                Item::TYPE_PERMISSION => 'Разрешение',
             ],
         ];
     }
