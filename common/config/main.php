@@ -6,12 +6,13 @@ return [
     'sourceLanguage' => 'en-US',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
     ],
     'bootstrap' => [
         'assetsAutoCompress',
         'log',
         'domain\bootstrap\BaseDomainBootstrap',
+        'common\bootstrap\Documenter',
     ],
     'components' => [
         'assetManager' => [
@@ -129,6 +130,9 @@ return [
         'report-loader' => [
             'class' => '\common\widgets\ReportLoader\Module',
 
+        ],
+        'markdown' => [
+            'class' => 'kartik\markdown\Module',
         ],
     ],
 ];

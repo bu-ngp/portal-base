@@ -15,10 +15,13 @@ return [
         'fixture' => [
             'class' => 'yii\console\controllers\FixtureController',
             'namespace' => 'common\fixtures',
-          ],
+        ],
         'migrate' => [
             'class' => 'yii\console\controllers\MigrateController',
             'interactive' => false,
+            'migrationPath' => [
+                '@console/migrations',
+            ],
         ],
         'wkloader' => [
             'class' => 'common\widgets\ReportLoader\controllers\WkloaderController',

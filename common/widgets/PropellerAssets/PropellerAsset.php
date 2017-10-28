@@ -42,6 +42,10 @@ class PropellerAsset extends AssetBundlePropeller
                 'common\widgets\PropellerAssets\ButtonAsset',
                 'common\widgets\PropellerAssets\ModalAsset',
             ],
+            'common\widgets\Documenter\Documenter' => [
+                'common\widgets\PropellerAssets\CardAsset',
+                'common\widgets\PropellerAssets\TabAsset',
+            ],
             'yii\bootstrap\NavBar' => [
                 'common\widgets\PropellerAssets\NavBarAsset',
             ],

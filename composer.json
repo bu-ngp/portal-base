@@ -44,7 +44,8 @@
     "loveorigami/yii2-notification-wrapper": "*",
     "bower-asset/toastr": "^2.1",
     "knplabs/knp-snappy": "^0.4.3",
-    "la-haute-societe/yii2-save-relations-behavior": "*"
+    "la-haute-societe/yii2-save-relations-behavior": "*",
+    "kartik-v/yii2-markdown": "dev-master"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",

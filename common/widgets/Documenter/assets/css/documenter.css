@@ -1,0 +1,19 @@
+.wkdoc-pills {
+    margin-top: 50px;
+    padding-right: 0;
+}
+
+.wkdoc-tabs {
+    padding-left: 0;
+}
+
+.wkdoc-content {
+    border-top: 1px solid #d1d1d1;
+    margin-top: 5px !important;
+}
+
+.pmd-tabs-scroll-left, .pmd-tabs-scroll-right {
+    color: #000 !important;
+    opacity: 0.54;
+    background-color: white !important;
+}

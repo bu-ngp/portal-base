@@ -12,7 +12,5 @@ $this->title = Yii::t('common/updates','Updates');
 ?>
 
 <div class="updates-index">
-    <?= Documenter::widget([
-
-    ]) ?>
+    <?= Documenter::widget() ?>
 </div>

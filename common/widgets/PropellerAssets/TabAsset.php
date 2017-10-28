@@ -15,13 +15,14 @@ class TabAsset extends AssetBundle
 {
     public function init()
     {
-        $this->sourcePath = '@npm/propellerkit';
+        $this->sourcePath = '@npm';
         $this->css = [
-            'components/tab/css/tab.css',
+            'material-design-icons/iconfont/material-icons.css',
+            'propellerkit/components/tab/css/tab.css',
         ];
 
         $this->js = [
-            'components/tab/js/tab-scrollable.js',
+            'propellerkit/components/tab/js/tab-scrollable.js',
         ];
 
         $this->depends = [
