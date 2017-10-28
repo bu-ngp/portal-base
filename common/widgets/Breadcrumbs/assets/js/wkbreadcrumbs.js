@@ -82,7 +82,6 @@
         var items = '';
         $.each($widget.data('wkbreadcrumbs').crumbs, function (index) {
             if (this.visible) {
-                console.debug(this)
                 if (!"title" in this || typeof this.title == 'undefined') {
                     this.title = $widget.data('wkbreadcrumbs').settings.CurrentPageMessage;
                 }
