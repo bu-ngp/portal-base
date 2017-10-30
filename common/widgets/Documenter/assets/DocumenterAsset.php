@@ -21,7 +21,7 @@ class DocumenterAsset extends \yii\web\AssetBundle
         ];
 
         $this->js = [
-
+            'js/documenter.js',
         ];
 
         $this->depends = [

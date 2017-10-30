@@ -13,6 +13,7 @@ use common\widgets\Documenter\assets\DocumenterAsset;
 use common\widgets\Documenter\services\DocumenterContainer;
 use common\widgets\Documenter\services\DocumenterViewer;
 use common\widgets\PropellerAssets\PropellerAsset;
+use kartik\markdown\Markdown;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Widget;
@@ -47,12 +48,34 @@ class Documenter extends Widget
             }, FileHelper::findFiles($dirPath));
         }
 
+        if (Yii::$app->request->isAjax
+            && ($tab = Yii::$app->request->get('t', false))
+            && ($pill = Yii::$app->request->get('p', false))
+        ) {
+            Yii::$app->response->clearOutputBuffers();
+
+            /** @var DocumenterViewer[] $viewers */
+            foreach ($documents as $directory => $viewers) {
+                foreach ($viewers as $key => $document) {
+                    $tabHash = 't_' . hash('crc32', $document->getTabName());
+                    $pillHash = 'p_' . hash('crc32', $document->getPillName());
+
+                    if ($tab === $tabHash && $pill === $pillHash) {
+                        $contentConverted = Markdown::convert($document->getContent());
+                        exit("$contentConverted");
+                    }
+                }
+            }
+
+            exit();
+        }
+
         $documenterContainer = new DocumenterContainer($documents);
 
         echo Html::tag('div', $this->render('_container', [
             'pillLinks' => $documenterContainer->getPillsContent(),
-            'tabs' => $documenterContainer->getTabsContent(),
-            'tabContent' => $documenterContainer->getCurrentDocument(),
+            'tabs' => $documenterContainer->getTabsLinks(),
+            'tabContent' => $documenterContainer->getTabsContent(),
         ]), ['id' => $this->id]);
 
         $this->registerAssets();
@@ -62,10 +85,7 @@ class Documenter extends Widget
     {
         $view = $this->getView();
         DocumenterAsset::register($view);
+        $view->registerJs("$('.pmd-tabs').pmdTab();");
         PropellerAsset::setWidget(self::className());
-        $view->registerJs(<<<EOT
-            $('.pmd-tabs').pmdTab();
-EOT
-        );
     }
 }

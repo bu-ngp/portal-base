@@ -42,15 +42,23 @@ class DocumenterViewer
 
     public function getPillName()
     {
-        if (preg_match('/^\d+$/', $this->_id)) {
-            return date('d.m.Y', filemtime($this->_filePath));
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $this->_id)) {
+            return date('d.m.Y', strtotime($this->_id));
         }
 
         return $this->_id;
     }
 
+    public function getOrigPillName() {
+        return $this->_id;
+    }
+
     public function isAllowed()
     {
+        if (count($this->_permissions) === 0) {
+            return true;
+        }
+
         foreach ($this->_permissions as $permission) {
             return Yii::$app->user->can($permission);
         }
@@ -63,7 +71,8 @@ class DocumenterViewer
         return $this->_order ?: false;
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         return file_get_contents($this->_filePath);
     }
 }

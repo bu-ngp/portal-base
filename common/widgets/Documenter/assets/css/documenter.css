@@ -13,7 +13,30 @@
 }
 
 .pmd-tabs-scroll-left, .pmd-tabs-scroll-right {
-    color: #000 !important;
-    opacity: 0.54;
-    background-color: white !important;
+    height: 48px;
+}
+
+.wkdoc-tabs-inside {
+    min-height: 700px;
+}
+
+.wkdoc-loading {
+    opacity: 0.8;
+    background: #ffffff url("../svg/loading.svg") center center no-repeat;
+    background-size: 150px;
+    width: calc(100% - 15px);
+    height: calc(100% - 85px);
+    position: absolute;
+    top: 55px;
+    left: 0;
+    transition: opacity 0.5s;
+    display: none;
+}
+
+.wkdoc-pill-hide {
+    display: none;
+}
+
+.wkdoc-pill-show {
+    display: block;
 }

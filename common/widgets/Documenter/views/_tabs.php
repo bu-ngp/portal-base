@@ -3,8 +3,8 @@
 /* @var $tabs string */
 /* @var $tabContent string */
 ?>
-<div class="pmd-card pmd-z-depth">
-    <div class="pmd-tabs pmd-tabs-scroll">
+<div class="pmd-card pmd-z-depth wkdoc-tabs-inside">
+    <div class="pmd-tabs pmd-tabs-scroll pmd-tabs-bg">
         <div class="pmd-tabs-scroll-left"><i class="material-icons pmd-sm">chevron_left</i></div>
         <div class="pmd-tabs-scroll-container">
             <div class="pmd-tab-active-bar"></div>
@@ -16,7 +16,8 @@
     </div>
     <div class="pmd-card-body wkdoc-content">
         <div class="tab-content">
-            <?= $tabContent ?>
+            <?= $tabContent  ?>
+            <div class="wkdoc-loading"></div>
         </div>
     </div>
 </div>

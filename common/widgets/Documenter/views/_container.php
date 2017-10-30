@@ -1,14 +1,12 @@
 <?php
 
-use yii\widgets\Pjax;
-
 /* @var $this yii\web\View */
 /* @var $pillLinks string */
 /* @var $tabs string */
 /* @var $tabContent string */
+/* @var $jsContent string */
 ?>
 <div class="row wkdoc-container">
-    <?php Pjax::begin(); ?>
     <div class="col-md-2 wkdoc-pills">
         <?= $this->render('_pills', [
             'pillLinks' => $pillLinks,
@@ -20,5 +18,4 @@ use yii\widgets\Pjax;
             'tabContent' => $tabContent,
         ]) ?>
     </div>
-    <?php Pjax::end(); ?>
 </div>
