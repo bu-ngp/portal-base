@@ -28,15 +28,15 @@ $this->title = 'My Yii Application';
                 'link' => Yii::$app->urlManager->createUrl(['configuration/config']),
                 'roles' => [RbacHelper::ROLE_EDIT, RbacHelper::USER_EDIT],
             ],
-            [
-                'styleClass' => CardList::YELLOW_STYLE,
-                'preview' => [
-                    'FAIcon' => 'list-alt',
-                ],
-                'title' => Yii::t('common/config', 'Tiles on main page'),
-                'description' => 'Добавление/Редактирование/Удаление плиток',
-                'link' => Yii::$app->urlManager->createUrl(['configuration/tiles']),
-            ],
+//            [
+//                'styleClass' => CardList::YELLOW_STYLE,
+//                'preview' => [
+//                    'FAIcon' => 'list-alt',
+//                ],
+//                'title' => Yii::t('common/config', 'Tiles on main page'),
+//                'description' => 'Добавление/Редактирование/Удаление плиток',
+//                'link' => Yii::$app->urlManager->createUrl(['configuration/tiles']),
+//            ],
             [
                 'styleClass' => CardList::GREEN_STYLE,
                 'preview' => [

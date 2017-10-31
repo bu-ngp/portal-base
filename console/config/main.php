@@ -21,6 +21,8 @@ return [
             'interactive' => false,
             'migrationPath' => [
                 '@console/migrations',
+                '@common/widgets/CardList/migrations',
+                '@frontend/migrations',
             ],
         ],
         'wkloader' => [
