@@ -17,11 +17,12 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Error when recognizing selected items' => 'Ошибка при распознавании выбранных элементов',
+    'Role \'{role}\' not found' => '',
     'Adding existing model.' => 'Попытка добавления существующей модели',
     'Created At' => 'Время создания записи',
     'Created By' => 'Автор создавший запись',
     'Deleting error.' => 'Ошибка удаления.',
+    'Error when recognizing selected items' => 'Ошибка при распознавании выбранных элементов',
     'Saving error.' => 'Ошибка сохранения.',
     'Updated At' => 'Время обновления записи',
     'Updated By' => 'Автор обновивший запись',

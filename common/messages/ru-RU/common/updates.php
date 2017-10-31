@@ -17,9 +17,5 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Create User' => 'Добавить пользователя',
-    'Profile' => 'Профиль',
-    'Roles' => 'Роли',
-    'User' => 'Пользователь',
-    'Users' => 'Пользователи системы',
+    'Updates' => 'Обновления',
 ];
