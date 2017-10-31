@@ -43,8 +43,7 @@ class DocumenterContainer
         }, $this->_tabsNames));
 
         $this->_pillsContent = implode('', array_map(function ($tabs) {
-            ksort($tabs['pills']);
-            return implode('', array_reverse($tabs['pills']));
+            return implode('', $tabs['pills']);
         }, $this->_tabsNames));
     }
 
@@ -72,6 +71,8 @@ class DocumenterContainer
     {
         /** @var DocumenterViewer[][] $viewers */
         foreach ($this->_documents as $directory => $viewers) {
+            $this->sortViewers($viewers);
+
             foreach ($viewers as $key => $document) {
                 $tabHash = 't_' . hash('crc32', $document->getTabName());
                 $pillHash = 'p_' . hash('crc32', $document->getPillName());
@@ -91,7 +92,8 @@ class DocumenterContainer
                             'tabLink' => "<li role=\"presentation\"$active><a class=\"wkdoc-tab-link\" href=\"#$tabHash\" role=\"tab\" data-toggle=\"tab\">{$document->getTabName()}</a></li>"
                         ];
 
-                        $contentConverted = Markdown::convert($document->getContent());
+                        $content = strtr($document->getContent(), ['{absoluteWebRoot}' => Url::base(true)]);
+                        $contentConverted = Markdown::convert($content);
                         $this->_tabsNames[$document->getTabName()]['tabContent'] = "<div role=\"tabpanel\" class=\"tab-pane fade in$activeTabContent\" id=\"$tabHash\">$contentConverted</div>";
                     }
 
@@ -99,5 +101,23 @@ class DocumenterContainer
                 }
             }
         }
+    }
+
+    /**
+     * @param DocumenterViewer[] $viewers
+     */
+    protected function sortViewers(array &$viewers)
+    {
+        usort($viewers, function (DocumenterViewer $a, DocumenterViewer $b) {
+            if ($a->getTabName() === $b->getTabName() && $a->getOrigPillName() === $b->getOrigPillName()) {
+                return 0;
+            }
+
+            if ($a->getTabName() === $b->getTabName()) {
+                return $a->getOrigPillName() > $b->getOrigPillName() ? -1 : 1;
+            }
+
+            return ($a->getTabName() > $b->getTabName() && $a->getOrigPillName() > $b->getOrigPillName()) ? -1 : 1;
+        });
     }
 }

@@ -4,15 +4,11 @@
 /* @var $tabContent string */
 ?>
 <div class="pmd-card pmd-z-depth wkdoc-tabs-inside">
-    <div class="pmd-tabs pmd-tabs-scroll pmd-tabs-bg">
-        <div class="pmd-tabs-scroll-left"><i class="material-icons pmd-sm">chevron_left</i></div>
-        <div class="pmd-tabs-scroll-container">
+    <div class="pmd-tabs">
             <div class="pmd-tab-active-bar"></div>
             <ul class="nav nav-tabs" role="tablist">
                 <?= $tabs ?>
             </ul>
-        </div>
-        <div class="pmd-tabs-scroll-right"><i class="material-icons pmd-sm">chevron_right</i></div>
     </div>
     <div class="pmd-card-body wkdoc-content">
         <div class="tab-content">

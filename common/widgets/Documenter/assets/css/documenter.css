@@ -8,8 +8,12 @@
 }
 
 .wkdoc-content {
-    border-top: 1px solid #d1d1d1;
-    margin-top: 5px !important;
+    /*border-top: 1px solid #d1d1d1;*/
+    /*margin-top: 5px !important;*/
+}
+
+.wkdoc-tabs-inside > .pmd-tabs {
+    border-bottom: 1px solid #d1d1d1;
 }
 
 .pmd-tabs-scroll-left, .pmd-tabs-scroll-right {
@@ -25,9 +29,9 @@
     background: #ffffff url("../svg/loading.svg") center center no-repeat;
     background-size: 150px;
     width: calc(100% - 15px);
-    height: calc(100% - 85px);
+    height: calc(100% - 95px);
     position: absolute;
-    top: 55px;
+    top: 65px;
     left: 0;
     transition: opacity 0.5s;
     display: none;

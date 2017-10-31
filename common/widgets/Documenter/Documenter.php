@@ -19,6 +19,7 @@ use yii\base\InvalidConfigException;
 use yii\base\Widget;
 use yii\bootstrap\Html;
 use yii\helpers\FileHelper;
+use yii\helpers\Url;
 
 class Documenter extends Widget
 {
@@ -61,7 +62,8 @@ class Documenter extends Widget
                     $pillHash = 'p_' . hash('crc32', $document->getPillName());
 
                     if ($tab === $tabHash && $pill === $pillHash) {
-                        $contentConverted = Markdown::convert($document->getContent());
+                        $content = strtr($document->getContent(), ['{absoluteWebRoot}' => Url::base(true)]);
+                        $contentConverted = Markdown::convert($content);
                         exit("$contentConverted");
                     }
                 }
