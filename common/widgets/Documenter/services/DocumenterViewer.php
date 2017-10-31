@@ -8,9 +8,9 @@
 
 namespace common\widgets\Documenter\services;
 
-
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\helpers\Url;
 
 class DocumenterViewer
 {
@@ -19,6 +19,8 @@ class DocumenterViewer
     private $_id;
     private $_permissions;
     private $_order;
+    private $_tabHash;
+    private $_pillHash;
 
     public function __construct($path, $filePath)
     {
@@ -33,6 +35,8 @@ class DocumenterViewer
         $this->_id = $matches[6];
         $this->_permissions = empty($matches[5]) ? [] : explode('|', $matches[5]);
         $this->_order = $matches[2];
+        $this->_tabHash = 't_' . hash('crc32', $this->getTabName());
+        $this->_pillHash = 'p_' . hash('crc32', $this->getPillName());
     }
 
     public function getTabName()
@@ -74,6 +78,16 @@ class DocumenterViewer
 
     public function getContent()
     {
-        return file_get_contents($this->_filePath);
+        return strtr(file_get_contents($this->_filePath), ['{absoluteWebRoot}' => Url::base(true)]);
+    }
+
+    public function getTabHash()
+    {
+        return $this->_tabHash;
+    }
+
+    public function getPillHash()
+    {
+        return $this->_pillHash;
     }
 }

@@ -3,10 +3,8 @@ $(document).ready(function () {
 
     $('.wkdoc-tab-link').click(function () {
         var tabClass = $(this).attr("href").substr(1);
-        $(".pmd-card-list a").removeClass("wkdoc-pill-show");
-        $(".pmd-card-list a").addClass("wkdoc-pill-hide");
-        $('a[hash-tab="' + tabClass + '"]').removeClass("wkdoc-pill-hide");
-        $('a[hash-tab="' + tabClass + '"]').addClass("wkdoc-pill-show");
+        $(".pmd-card-list a").removeClass("wkdoc-pill-show").addClass("wkdoc-pill-hide");
+        $('a[hash-tab="' + tabClass + '"]').removeClass("wkdoc-pill-hide").addClass("wkdoc-pill-show");
         if ($(".pmd-card-list a.active:visible").length === 0) {
             $(".pmd-card-list a:visible").first().addClass("active");
         }
@@ -14,18 +12,16 @@ $(document).ready(function () {
 
     $(".wkdoc-pill-link").click(function (e) {
         var $that = $(this);
+        var hash = $(this).attr("hash-tab");
         $.ajax({
             url: $(this).attr("href"),
             beforeSend: function () {
-                var hash = $(".wkdoc-pill-link").attr("hash-tab");
-                $(".wkdoc-loading").show();
                 $('.pmd-card-list a[hash-tab="' + hash + '"]').removeClass("active");
                 $that.addClass("active");
+                $(".wkdoc-loading").show();
             },
             success: function (response) {
-                var hash = $(".wkdoc-pill-link").attr("hash-tab");
                 $("#" + hash).html(response);
-
                 $(".wkdoc-loading").hide();
             }
         });

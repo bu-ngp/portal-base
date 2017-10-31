@@ -1,10 +1,8 @@
 <?php
-
 /* @var $this yii\web\View */
 /* @var $pillLinks string */
 /* @var $tabs string */
 /* @var $tabContent string */
-/* @var $jsContent string */
 ?>
 <div class="row wkdoc-container">
     <div class="col-md-2 wkdoc-pills">

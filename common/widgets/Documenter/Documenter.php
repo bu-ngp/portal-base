@@ -19,7 +19,6 @@ use yii\base\InvalidConfigException;
 use yii\base\Widget;
 use yii\bootstrap\Html;
 use yii\helpers\FileHelper;
-use yii\helpers\Url;
 
 class Documenter extends Widget
 {
@@ -46,50 +45,11 @@ class Documenter extends Widget
 
     public function run()
     {
-        $documents = [];
-        foreach ($this->directories as $directory) {
-            if (!is_dir($dirPath = Yii::getAlias($directory))) {
-                throw new InvalidConfigException(Yii::t('wkdocumenter', 'Directory "{dirPath}" not exists', ['dirPath' => $dirPath]));
-            }
-            $preg = preg_quote($dirPath, '/');
-
-            $documents[$directory] = array_map(function ($filePath) use ($preg) {
-                $path = preg_replace("/$preg/", '', $filePath);
-
-                return new DocumenterViewer($path, $filePath);
-            }, FileHelper::findFiles($dirPath));
-        }
-
-        if (Yii::$app->request->isAjax
-            && ($tab = Yii::$app->request->get('t', false))
-            && ($pill = Yii::$app->request->get('p', false))
-        ) {
-            Yii::$app->response->clearOutputBuffers();
-
-            /** @var DocumenterViewer[] $viewers */
-            foreach ($documents as $directory => $viewers) {
-                foreach ($viewers as $key => $document) {
-                    $tabHash = 't_' . hash('crc32', $document->getTabName());
-                    $pillHash = 'p_' . hash('crc32', $document->getPillName());
-
-                    if ($tab === $tabHash && $pill === $pillHash) {
-                        $content = strtr($document->getContent(), ['{absoluteWebRoot}' => Url::base(true)]);
-                        $contentConverted = Markdown::convert($content);
-                        exit("$contentConverted");
-                    }
-                }
-            }
-
-            exit();
-        }
-
+        $documents = $this->getDocumenterViewers();
+        $this->returnContentIfAjax($documents);
         $documenterContainer = new DocumenterContainer($documents);
 
-        if ($documenterContainer->allowedTabsCount() === 0) {
-            echo Html::tag('div', Yii::t('wkdocumenter', 'Documents is missed'), [
-                'class' => 'wkdoc-missed',
-                'style' => 'min-height:700px;line-height:700px;text-align:center;font-size:80px;font-weight:bold;color:#ccdfe8;',
-            ]);
+        if ($this->returnContentIfEmpty($documenterContainer)) {
             return;
         }
 
@@ -106,7 +66,63 @@ class Documenter extends Widget
     {
         $view = $this->getView();
         DocumenterAsset::register($view);
-        $view->registerJs("$('.pmd-tabs').pmdTab();");
         PropellerAsset::setWidget(self::className());
+        $view->registerJs("$('.wkdoc-tabs-inside>.pmd-tabs').pmdTab();");
+    }
+
+    /**
+     * @param DocumenterViewer[] $documents
+     */
+    protected function returnContentIfAjax(array $documents)
+    {
+        if (Yii::$app->request->isAjax
+            && ($tab = Yii::$app->request->get('t', false))
+            && ($pill = Yii::$app->request->get('p', false))
+        ) {
+            Yii::$app->response->clearOutputBuffers();
+
+            /** @var DocumenterViewer[] $viewers */
+            foreach ($documents as $directory => $viewers) {
+                foreach ($viewers as $key => $document) {
+                    if ($tab === $document->getTabHash() && $pill === $document->getPillHash()) {
+                        exit(Markdown::convert($document->getContent()));
+                    }
+                }
+            }
+
+            exit();
+        }
+    }
+
+    protected function getDocumenterViewers()
+    {
+        $documents = [];
+        foreach ($this->directories as $directory) {
+            if (!is_dir($dirPath = Yii::getAlias($directory))) {
+                throw new InvalidConfigException(Yii::t('wkdocumenter', 'Directory "{dirPath}" not exists', ['dirPath' => $dirPath]));
+            }
+            $preg = preg_quote($dirPath, '/');
+
+            $documents[$directory] = array_map(function ($filePath) use ($preg) {
+                $path = preg_replace("/$preg/", '', $filePath);
+
+                return new DocumenterViewer($path, $filePath);
+            }, FileHelper::findFiles($dirPath));
+        }
+
+        return $documents;
+    }
+
+    protected function returnContentIfEmpty(DocumenterContainer $documenterContainer)
+    {
+        if ($documenterContainer->allowedTabsCount() === 0) {
+            echo Html::tag('div', Yii::t('wkdocumenter', 'Documents is missed'), [
+                'class' => 'wkdoc-missed',
+                'style' => 'min-height:700px;line-height:700px;text-align:center;font-size:80px;font-weight:bold;color:#ccdfe8;',
+            ]);
+            return true;
+        }
+
+        return false;
     }
 }

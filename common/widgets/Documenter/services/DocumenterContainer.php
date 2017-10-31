@@ -8,12 +8,8 @@
 
 namespace common\widgets\Documenter\services;
 
-
 use kartik\markdown\Markdown;
-use Yii;
 use yii\helpers\Url;
-use yii\web\Response;
-use yii\web\View;
 
 class DocumenterContainer
 {
@@ -22,31 +18,32 @@ class DocumenterContainer
     private $_tabsLinks = '';
     private $_tabsContent = '';
     private $_pillsContent = '';
-    private $_currentDocumentContent = '';
 
     private $_tabsNames = [];
 
     private $_allowedTabsCount = 0;
 
+    public $tabLinkTemplate = '<li role="presentation"{tabActive}><a class="wkdoc-tab-link" href="#{tabId}" role="tab" data-toggle="tab">{tabName}</a></li>';
+    public $tabContentTemplate = '<div role="tabpanel" class="tab-pane fade in{tabActive}" id="{tabId}">{tabContent}</div>';
+    public $pillContentTemplate = '<a hash-tab="{tabHash}" class="list-group-item wkdoc-pill-link{pillActive}" href="{pillUrl}">{pillName}</a>';
+
     /**
-     * @param DocumenterViewer[][] $documents
+     * @param DocumenterViewer[] $documents
      */
     public function __construct(array $documents)
     {
         $this->_documents = $documents;
         $this->initTabs();
 
-        $this->_tabsLinks = implode('', array_map(function ($tabs) {
-            return $tabs['tabLink'];
-        }, $this->_tabsNames));
-
-        $this->_tabsContent = implode('', array_map(function ($tabs) {
-            return $tabs['tabContent'];
-        }, $this->_tabsNames));
-
-        $this->_pillsContent = implode('', array_map(function ($tabs) {
-            return implode('', $tabs['pills']);
-        }, $this->_tabsNames));
+        $content = [];
+        array_walk($this->_tabsNames, function ($tabs) use (&$content) {
+            $content['tabLink'] .= $tabs['tabLink'];
+            $content['tabContent'] .= $tabs['tabContent'];
+            $content['pills'] .= implode('', $tabs['pills']);
+        });
+        $this->_tabsLinks = $content['tabLink'];
+        $this->_tabsContent = $content['tabContent'];
+        $this->_pillsContent = $content['pills'];
     }
 
     public function getPillsContent()
@@ -64,11 +61,6 @@ class DocumenterContainer
         return $this->_tabsContent;
     }
 
-    public function getCurrentDocumentContent()
-    {
-        return $this->_currentDocumentContent;
-    }
-
     public function allowedTabsCount()
     {
         return $this->_allowedTabsCount;
@@ -76,19 +68,23 @@ class DocumenterContainer
 
     protected function initTabs()
     {
-        /** @var DocumenterViewer[][] $viewers */
+        /** @var DocumenterViewer[] $viewers */
         foreach ($this->_documents as $directory => $viewers) {
             $this->sortViewers($viewers);
 
             foreach ($viewers as $key => $document) {
-                $tabHash = 't_' . hash('crc32', $document->getTabName());
-                $pillHash = 'p_' . hash('crc32', $document->getPillName());
-
                 if ($document->isAllowed()) {
+                    $pillShow = '';
+                    $active = '';
+                    $activeTabContent = '';
+
+                    $tabHash = $document->getTabHash();
+                    $pillHash = $document->getPillHash();
+
                     if (!isset($this->_tabsNames[$document->getTabName()])) {
-                        $active = '';
                         $pillShow = ' wkdoc-pill-hide';
-                        $activeTabContent = '';
+                        $this->_allowedTabsCount++;
+
                         if ($key === 0) {
                             $active = ' class="active" ';
                             $pillShow = ' wkdoc-pill-show';
@@ -96,16 +92,26 @@ class DocumenterContainer
                         }
 
                         $this->_tabsNames[$document->getTabName()] = [
-                            'tabLink' => "<li role=\"presentation\"$active><a class=\"wkdoc-tab-link\" href=\"#$tabHash\" role=\"tab\" data-toggle=\"tab\">{$document->getTabName()}</a></li>"
+                            'tabLink' => strtr($this->tabLinkTemplate, [
+                                '{tabActive}' => $active,
+                                '{tabId}' => $tabHash,
+                                '{tabName}' => $document->getTabName(),
+                            ]),
                         ];
 
-                        $content = strtr($document->getContent(), ['{absoluteWebRoot}' => Url::base(true)]);
-                        $contentConverted = Markdown::convert($content);
-                        $this->_tabsNames[$document->getTabName()]['tabContent'] = "<div role=\"tabpanel\" class=\"tab-pane fade in$activeTabContent\" id=\"$tabHash\">$contentConverted</div>";
-                        $this->_allowedTabsCount++;
+                        $this->_tabsNames[$document->getTabName()]['tabContent'] = strtr($this->tabContentTemplate, [
+                            '{tabActive}' => $activeTabContent,
+                            '{tabId}' => $tabHash,
+                            '{tabContent}' => Markdown::convert($document->getContent()),
+                        ]);
                     }
 
-                    $this->_tabsNames[$document->getTabName()]['pills'][$document->getOrigPillName()] = "<a hash-tab=\"$tabHash\" class=\"list-group-item wkdoc-pill-link$pillShow\" href=\"" . Url::current(['t' => $tabHash, 'p' => $pillHash]) . "\">{$document->getPillName()}</a>";
+                    $this->_tabsNames[$document->getTabName()]['pills'][$document->getOrigPillName()] = strtr($this->pillContentTemplate, [
+                        '{tabHash}' => $tabHash,
+                        '{pillActive}' => $pillShow,
+                        '{pillUrl}' => Url::current(['t' => $tabHash, 'p' => $pillHash]),
+                        '{pillName}' => $document->getPillName(),
+                    ]);
                 }
             }
         }
