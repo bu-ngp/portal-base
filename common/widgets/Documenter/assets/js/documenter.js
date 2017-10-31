@@ -11,20 +11,22 @@ $(document).ready(function () {
     });
 
     $(".wkdoc-pill-link").click(function (e) {
-        var $that = $(this);
-        var hash = $(this).attr("hash-tab");
-        $.ajax({
-            url: $(this).attr("href"),
-            beforeSend: function () {
-                $('.pmd-card-list a[hash-tab="' + hash + '"]').removeClass("active");
-                $that.addClass("active");
-                $(".wkdoc-loading").show();
-            },
-            success: function (response) {
-                $("#" + hash).html(response);
-                $(".wkdoc-loading").hide();
-            }
-        });
+        if (!$(this).hasClass(("active"))) {
+            var $that = $(this);
+            var hash = $(this).attr("hash-tab");
+            $.ajax({
+                url: $(this).attr("href"),
+                beforeSend: function () {
+                    $('.pmd-card-list a[hash-tab="' + hash + '"]').removeClass("active");
+                    $that.addClass("active");
+                    $(".wkdoc-loading").show();
+                },
+                success: function (response) {
+                    $("#" + hash).html(response);
+                    $(".wkdoc-loading").hide();
+                }
+            });
+        }
 
         e.preventDefault();
     });
