@@ -178,8 +178,8 @@ div.wk-widget-input-prepend-icon > span {
     min-width: 50px;
 }
 
-.nav.nav-tabs {
-    margin-bottom: 10px;
+.pmd-tabs+.pmd-card-body {
+    margin-top: 10px;
 }
 
 .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
