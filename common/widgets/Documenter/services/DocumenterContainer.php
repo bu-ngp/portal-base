@@ -26,6 +26,8 @@ class DocumenterContainer
 
     private $_tabsNames = [];
 
+    private $_allowedTabsCount = 0;
+
     /**
      * @param DocumenterViewer[][] $documents
      */
@@ -67,6 +69,11 @@ class DocumenterContainer
         return $this->_currentDocumentContent;
     }
 
+    public function allowedTabsCount()
+    {
+        return $this->_allowedTabsCount;
+    }
+
     protected function initTabs()
     {
         /** @var DocumenterViewer[][] $viewers */
@@ -95,6 +102,7 @@ class DocumenterContainer
                         $content = strtr($document->getContent(), ['{absoluteWebRoot}' => Url::base(true)]);
                         $contentConverted = Markdown::convert($content);
                         $this->_tabsNames[$document->getTabName()]['tabContent'] = "<div role=\"tabpanel\" class=\"tab-pane fade in$activeTabContent\" id=\"$tabHash\">$contentConverted</div>";
+                        $this->_allowedTabsCount++;
                     }
 
                     $this->_tabsNames[$document->getTabName()]['pills'][$document->getOrigPillName()] = "<a hash-tab=\"$tabHash\" class=\"list-group-item wkdoc-pill-link$pillShow\" href=\"" . Url::current(['t' => $tabHash, 'p' => $pillHash]) . "\">{$document->getPillName()}</a>";

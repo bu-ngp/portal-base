@@ -7,11 +7,6 @@
     padding-left: 0;
 }
 
-.wkdoc-content {
-    /*border-top: 1px solid #d1d1d1;*/
-    /*margin-top: 5px !important;*/
-}
-
 .wkdoc-tabs-inside > .pmd-tabs {
     border-bottom: 1px solid #d1d1d1;
 }

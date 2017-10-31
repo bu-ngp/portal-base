@@ -74,6 +74,14 @@ class Documenter extends Widget
 
         $documenterContainer = new DocumenterContainer($documents);
 
+        if ($documenterContainer->allowedTabsCount() === 0) {
+            echo Html::tag('div', Yii::t('wkdocumenter', 'Documents is missed'), [
+                'class' => 'wkdoc-missed',
+                'style' => 'min-height:700px;line-height:700px;text-align:center;font-size:80px;font-weight:bold;color:#ccdfe8;',
+            ]);
+            return;
+        }
+
         echo Html::tag('div', $this->render('_container', [
             'pillLinks' => $documenterContainer->getPillsContent(),
             'tabs' => $documenterContainer->getTabsLinks(),
