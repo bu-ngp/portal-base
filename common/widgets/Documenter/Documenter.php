@@ -30,7 +30,18 @@ class Documenter extends Widget
         if (!is_array($this->directories) || empty($this->directories)) {
             throw new InvalidConfigException(Yii::t('wkdocumenter', 'Property Directories required and must be Array of strings of paths'));
         }
+        $this->registerTranslations();
         parent::init();
+    }
+
+    public function registerTranslations()
+    {
+        $i18n = Yii::$app->i18n;
+        $i18n->translations['wkdocumenter'] = [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'sourceLanguage' => 'en-US',
+            'basePath' => __DIR__ . '/messages',
+        ];
     }
 
     public function run()
