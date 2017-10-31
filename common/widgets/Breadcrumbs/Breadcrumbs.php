@@ -20,6 +20,7 @@ class Breadcrumbs extends Widget
     public static $show;
     public $defaultShow = true;
     public static $cookieId = 'wk_breadcrumb';
+    public static $root = false;
 
     public function init()
     {
@@ -37,6 +38,7 @@ class Breadcrumbs extends Widget
             'current-crumb-id' => $this->getCurrentCrumbId(),
             'current-crumb-title' => $this->getView()->title,
             'remove-last-crumb' => $this->getRemoveLastCrumb() ? '1' : '0',
+            'root' => self::$root ? '1' : '0',
             'cookie-id' => self::$cookieId,
             'class' => 'wkbc-breadcrumb',
         ]);
@@ -100,5 +102,9 @@ class Breadcrumbs extends Widget
         } else {
             return Url::previous();
         }
+    }
+
+    public static function root() {
+        self::$root = true;
     }
 }

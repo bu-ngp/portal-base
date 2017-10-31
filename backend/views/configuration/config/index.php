@@ -2,9 +2,11 @@
 
 /* @var $this yii\web\View */
 
+use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\CardList\CardList;
 use console\helpers\RbacHelper;
 
+Breadcrumbs::root();
 $this->title = Yii::t('common/config', 'Portal configuration');
 ?>
 <div class="site-index">

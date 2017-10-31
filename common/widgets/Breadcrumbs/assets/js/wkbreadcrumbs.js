@@ -15,6 +15,13 @@
     };
 
     var getFromSessionStorage = function ($widget, params) {
+        if ($widget.attr('root') === '1') {
+            if (typeof params.fail == "function") {
+                params.fail();
+            }
+            return;
+        }
+
         var id = $widget.data('wkbreadcrumbs').id;
         var bcJson = sessionStorage.getItem(id);
 
@@ -33,6 +40,13 @@
     };
 
     var getFromLocalStorage = function ($widget, params) {
+        if ($widget.attr('root') === '1') {
+            if (typeof params.fail == "function") {
+                params.fail();
+            }
+            return;
+        }
+
         var id = $widget.data('wkbreadcrumbs').id;
         var bcJson = localStorage.getItem(id);
         if (bcJson) {

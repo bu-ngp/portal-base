@@ -6,8 +6,10 @@
  * Time: 13:10
  */
 
+use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\Documenter\Documenter;
 
+Breadcrumbs::root();
 $this->title = Yii::t('common/updates','Updates');
 ?>
 
