@@ -1,5 +1,6 @@
 <?php
 
+use frontend\helpers\RbacHelper;
 use yii\db\Migration;
 
 class m171031_113027_cardlist_data extends Migration
@@ -13,13 +14,15 @@ class m171031_113027_cardlist_data extends Migration
             'cardlist_style',
             'cardlist_link',
             'cardlist_icon',
+            'cardlist_roles',
         ], [[
             'wkportal-backend|site/index',
             'Плитки на главной странице',
             'Добавление/Редактирование/Удаление плиток',
             'wk-yellow-style',
-            '[configuration/tiles]',
+            'FrontendUrlManager[tiles/index]',
             'list-alt',
+            RbacHelper::TILES_EDIT,
         ]]);
     }
 

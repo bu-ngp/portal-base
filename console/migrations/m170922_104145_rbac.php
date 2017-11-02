@@ -2,6 +2,7 @@
 
 use domain\models\base\Person;
 use console\helpers\RbacHelper;
+use console\helpers\RbacMethodsHelper;
 use domain\models\base\AuthItem;
 use yii\db\Migration;
 
@@ -9,25 +10,25 @@ class m170922_104145_rbac extends Migration
 {
     public function safeUp()
     {
-        $authorized = RbacHelper::createRole(RbacHelper::BASE_AUTHORIZED, 'Авторизованный пользователь',
-            RbacHelper::createPermission(RbacHelper::AUTHORIZED, 'Права авторизованного пользователя'));
+        $authorized = RbacMethodsHelper::createRole(RbacHelper::BASE_AUTHORIZED, 'Авторизованный пользователь',
+            RbacMethodsHelper::createPermission(RbacHelper::AUTHORIZED, 'Права авторизованного пользователя'));
 
-        $userOperator = RbacHelper::createRole(RbacHelper::USER_OPERATOR, 'Оператор менеджера пользователей',
-            RbacHelper::createPermission(RbacHelper::USER_EDIT, 'Редактирование пользователей'));
+        $userOperator = RbacMethodsHelper::createRole(RbacHelper::USER_OPERATOR, 'Оператор менеджера пользователей',
+            RbacMethodsHelper::createPermission(RbacHelper::USER_EDIT, 'Редактирование пользователей'));
 
-        $roleOperator = RbacHelper::createRole(RbacHelper::ROLE_OPERATOR, 'Оператор менеджера ролей',
-            RbacHelper::createPermission(RbacHelper::ROLE_EDIT, 'Редактирование ролей пользователя'));
+        $roleOperator = RbacMethodsHelper::createRole(RbacHelper::ROLE_OPERATOR, 'Оператор менеджера ролей',
+            RbacMethodsHelper::createPermission(RbacHelper::ROLE_EDIT, 'Редактирование ролей пользователя'));
 
-        $basePodrazEdit = RbacHelper::createRole(RbacHelper::BASE_PODRAZ_EDIT, 'Оператор справочника "Подразделения"',
-            RbacHelper::createPermission(RbacHelper::PODRAZ_EDIT, 'Редактирование справочника "Подразделения"'));
+        $basePodrazEdit = RbacMethodsHelper::createRole(RbacHelper::BASE_PODRAZ_EDIT, 'Оператор справочника "Подразделения"',
+            RbacMethodsHelper::createPermission(RbacHelper::PODRAZ_EDIT, 'Редактирование справочника "Подразделения"'));
 
-        $baseDolzhEdit = RbacHelper::createRole(RbacHelper::BASE_DOLZH_EDIT, 'Оператор справочника "Должности"',
-            RbacHelper::createPermission(RbacHelper::DOLZH_EDIT, 'Редактирование справочника "Должности"'));
+        $baseDolzhEdit = RbacMethodsHelper::createRole(RbacHelper::BASE_DOLZH_EDIT, 'Оператор справочника "Должности"',
+            RbacMethodsHelper::createPermission(RbacHelper::DOLZH_EDIT, 'Редактирование справочника "Должности"'));
 
-        $baseBuildEdit = RbacHelper::createRole(RbacHelper::BASE_BUILD_EDIT, 'Оператор справочника "Здания"',
-            RbacHelper::createPermission(RbacHelper::BUILD_EDIT, 'Редактирование справочника "Здания"'));
+        $baseBuildEdit = RbacMethodsHelper::createRole(RbacHelper::BASE_BUILD_EDIT, 'Оператор справочника "Здания"',
+            RbacMethodsHelper::createPermission(RbacHelper::BUILD_EDIT, 'Редактирование справочника "Здания"'));
 
-        $baseAdministrator = RbacHelper::createRole(RbacHelper::BASE_ADMINISTRATOR, 'Администратор базовой конфигурации',
+        $baseAdministrator = RbacMethodsHelper::createRole(RbacHelper::BASE_ADMINISTRATOR, 'Администратор базовой конфигурации',
             [
                 $authorized,
                 $userOperator,
@@ -37,7 +38,7 @@ class m170922_104145_rbac extends Migration
                 $baseBuildEdit,
             ]);
 
-        $administrator = RbacHelper::createRole(RbacHelper::ADMINISTRATOR, 'Администратор системы', $baseAdministrator);
+        $administrator = RbacMethodsHelper::createRole(RbacHelper::ADMINISTRATOR, 'Администратор системы', $baseAdministrator);
 
         $person = Person::find()->where(['person_username' => 'admin'])->one();
 

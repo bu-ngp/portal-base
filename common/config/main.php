@@ -116,9 +116,9 @@ return [
         'noty' => [
             'class' => 'lo\modules\noty\Module',
         ],
-        /*  'wkcardlist' => [
-              'class' => '\common\widgets\CardList\Module'
-          ]*/
+        'cardlist' => [
+            'class' => '\common\widgets\CardList\Module',
+        ],
         'gridview' => [
             'class' => '\kartik\grid\Module'
             // enter optional module parameters below - only if you need to

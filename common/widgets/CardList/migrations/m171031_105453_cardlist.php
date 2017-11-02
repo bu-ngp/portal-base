@@ -14,6 +14,7 @@ class m171031_105453_cardlist extends Migration
             'cardlist_style' => $this->string(),
             'cardlist_link' => $this->string()->notNull(),
             'cardlist_icon' => $this->string(),
+            'cardlist_roles' => $this->string(),
         ]);
     }
 

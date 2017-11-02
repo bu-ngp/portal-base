@@ -11,12 +11,14 @@ namespace common\widgets\CardList;
 
 class Module extends \yii\base\Module
 {
+    public $cardlistTable = '{{%cardlist}}';
+
     /**
      * @inheritdoc
      */
     public function init()
     {
-        $this->id = 'wkcardlist';
+        $this->id = 'cardlist';
         parent::init();
 
     }

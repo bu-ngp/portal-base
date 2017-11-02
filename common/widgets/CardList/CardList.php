@@ -16,6 +16,7 @@ use Yii;
 use yii\bootstrap\Html;
 use yii\bootstrap\Widget;
 use yii\db\ActiveRecord;
+use yii\web\UrlManager;
 
 class CardList extends Widget
 {
@@ -64,6 +65,7 @@ class CardList extends Widget
         $this->registerAssets();
         echo $this->initLayout();
         $view = $this->getView();
+        $this->getItemsFromDB();
         $this->filterByRoles();
 
         $options = [
@@ -130,4 +132,71 @@ class CardList extends Widget
         });
     }
 
+    protected function getItemsFromDB()
+    {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('cardlist');
+
+        if ($module) {
+            $table = $module->cardlistTable;
+            if (Yii::$app->db->schema->getTableSchema($table)) {
+                $tiles = Yii::$app->db->createCommand('SELECT * FROM ' . $table)->queryAll();
+
+                /**
+                 * $tile
+                 *      cardlist_id
+                 *      cardlist_page
+                 *      cardlist_title
+                 *      cardlist_description
+                 *      cardlist_style
+                 *      cardlist_link
+                 *      cardlist_icon
+                 *      cardlist_roles
+                 */
+                foreach ($tiles as $tile) {
+                    if ($this->allowTileForPage($tile)) {
+                        $this->items[] = [
+                            'styleClass' => $tile['cardlist_style'],
+                            'preview' => [
+                                'FAIcon' => $tile['cardlist_icon'],
+                            ],
+                            'title' => $tile['cardlist_title'],
+                            'description' => $tile['cardlist_description'],
+                            'link' => $this->getLinkFromDBField($tile),
+                            'roles' => $this->getRolesFromDBField($tile),
+                        ];
+                    }
+                }
+            }
+        }
+    }
+
+    protected function allowTileForPage(array $tile)
+    {
+        $value = explode('|', $tile['cardlist_page']);
+        if ($value[0] === Yii::$app->id && $value[1] === Yii::$app->controller->id . '/' . Yii::$app->controller->action->id) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function getLinkFromDBField(array $tile)
+    {
+        preg_match('/(\w+)?\[([\w\/]+)\]/', $tile['cardlist_link'], $matches);
+
+        $urlManagerName = $matches[1] ?: 'UrlManager';
+        /** @var UrlManager $urlManager */
+        $urlManager = Yii::$app->get($urlManagerName);
+        if ($matches[2]) {
+            return $urlManager->createAbsoluteUrl([$matches[2]]);
+        }
+
+        return '#';
+    }
+
+    protected function getRolesFromDBField(array $tile)
+    {
+        return $tile['cardlist_roles'] ? explode('|', $tile['cardlist_roles']) : [];
+    }
 }
