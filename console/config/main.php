@@ -22,7 +22,7 @@ return [
             'migrationPath' => [
                 '@console/migrations',
                 '@common/widgets/CardList/migrations',
-                '@frontend/migrations',
+                '@ngp/migrations',
             ],
         ],
         'wkloader' => [
