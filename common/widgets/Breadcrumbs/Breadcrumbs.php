@@ -21,10 +21,11 @@ class Breadcrumbs extends Widget
     public $defaultShow = true;
     public static $cookieId = 'wk_breadcrumb';
     public static $root = false;
+    public $id;
 
     public function init()
     {
-        $this->id = 'wkbc_' . Yii::$app->id;
+        $this->id = $this->id ?: 'wkbc_' . Yii::$app->id;
         $this->registerTranslations();
         static::$show = static::$show !== null ? static::$show : $this->defaultShow;
         parent::init();
@@ -104,7 +105,8 @@ class Breadcrumbs extends Widget
         }
     }
 
-    public static function root() {
+    public static function root()
+    {
         self::$root = true;
     }
 }

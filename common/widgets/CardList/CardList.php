@@ -183,9 +183,9 @@ class CardList extends Widget
 
     protected function getLinkFromDBField(array $tile)
     {
-        preg_match('/(\w+)?\[([\w\/]+)\]/', $tile['cardlist_link'], $matches);
+        preg_match('/(\w+)?\[([\w\/-]+)\]/', $tile['cardlist_link'], $matches);
 
-        $urlManagerName = $matches[1] ?: 'UrlManager';
+        $urlManagerName = $matches[1] ?: 'urlManager';
         /** @var UrlManager $urlManager */
         $urlManager = Yii::$app->get($urlManagerName);
         if ($matches[2]) {

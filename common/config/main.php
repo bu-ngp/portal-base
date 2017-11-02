@@ -13,6 +13,7 @@ return [
         'log',
         'domain\bootstrap\BaseDomainBootstrap',
         'common\bootstrap\Documenter',
+        'common\bootstrap\Breadcrumbs',
     ],
     'components' => [
         'assetManager' => [

@@ -1,6 +1,7 @@
 <?php
 
 use ngp\helpers\RbacHelper;
+use console\helpers\RbacHelper as BaseRbacHelper;
 use yii\db\Migration;
 
 class m171031_113027_cardlist_data extends Migration
@@ -34,11 +35,23 @@ class m171031_113027_cardlist_data extends Migration
                 'list-alt',
                 RbacHelper::OFOMS_VIEW,
             ],
+            [
+                'wkportal-backend|configuration/config/index',
+                'Настройки портала ОФОМС',
+                '',
+                'wk-blue-style',
+                'FrontendUrlManager[ofoms-config/index]',
+                'list-alt',
+                BaseRbacHelper::ADMINISTRATOR,
+            ],
         ]);
     }
 
     public function safeDown()
     {
-        $this->delete('{{%cardlist}}', ['cardlist_page' => 'wkportal-backend|site/index']);
+        $this->delete('{{%cardlist}}', ['in', 'cardlist_page', [
+            'wkportal-backend|site/index',
+            'wkportal-backend|config/index',
+        ]]);
     }
 }
