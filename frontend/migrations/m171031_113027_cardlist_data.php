@@ -28,7 +28,7 @@ class m171031_113027_cardlist_data extends Migration
             [
                 'wkportal-backend|site/index',
                 'Портал ОФОМС',
-                '',
+                'Проверка полисов на портале ОФОМС. Прикрепление пациентов к врачам ЛПУ',
                 'wk-blue-style',
                 'FrontendUrlManager[ofoms/index]',
                 'list-alt',
