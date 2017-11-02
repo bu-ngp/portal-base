@@ -1,4 +1,5 @@
 <?php
+
 use console\helpers\RbacMethodsHelper;
 use frontend\helpers\RbacHelper;
 use console\helpers\RbacHelper as BaseRbacHelper;
@@ -11,21 +12,26 @@ class m171102_042755_rbac extends Migration
         RbacMethodsHelper::createRole(RbacHelper::TILES_OPERATOR, 'Оператор плиток на главной странице',
             RbacMethodsHelper::createPermission(RbacHelper::TILES_EDIT, 'Редактирование плиток на главной странице'));
 
-        RbacMethodsHelper::assignRole(BaseRbacHelper::ADMINISTRATOR, [RbacHelper::TILES_OPERATOR]);
+        RbacMethodsHelper::createRole(RbacHelper::NGP_OFOMS_VIEW, 'Проверка полисов на портале ОФОМС',
+            RbacMethodsHelper::createPermission(RbacHelper::OFOMS_VIEW, 'Разрешение проверки полисов на портале ОФОМС'));
+
+        RbacMethodsHelper::createRole(RbacHelper::NGP_OFOMS_PRIK, 'Прикрепление пациентов к врачам ЛПУ на портале ОФОМС',
+            RbacMethodsHelper::createPermission(RbacHelper::OFOMS_PRIK, 'Разрешение прикрепления пациентов к врачам ЛПУ на портале ОФОМС'));
+
+        RbacMethodsHelper::createRole(RbacHelper::NGP_OFOMS_PRIK_LIST, 'Пакетное прикрепление списком пациентов к врачам ЛПУ на портале ОФОМС',
+            RbacMethodsHelper::createPermission(RbacHelper::OFOMS_PRIK_LIST, 'Разрешение прикрепления списком пациентов к врачам ЛПУ на портале ОФОМС'));
+
+        RbacMethodsHelper::assignRole(BaseRbacHelper::ADMINISTRATOR, [
+            RbacHelper::TILES_OPERATOR,
+            RbacHelper::NGP_OFOMS_VIEW,
+            RbacHelper::NGP_OFOMS_PRIK,
+            RbacHelper::NGP_OFOMS_PRIK_LIST,
+        ]);
     }
 
     public function safeDown()
     {
         $auth = Yii::$app->authManager;
-        $parent = $auth->getRole(BaseRbacHelper::ADMINISTRATOR);
-        $child = $auth->getRole(RbacHelper::TILES_OPERATOR);
-        $auth->removeChild($parent, $child);
-
-        $parent = $auth->getRole(RbacHelper::TILES_OPERATOR);
-        $child = $auth->getRole(RbacHelper::TILES_EDIT);
-        $auth->removeChild($parent, $child);
-
-        $auth->remove($auth->getRole(RbacHelper::TILES_OPERATOR));
-        $auth->remove($auth->getRole(RbacHelper::TILES_EDIT));
+        $auth->removeAll();
     }
 }

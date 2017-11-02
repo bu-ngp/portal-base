@@ -15,15 +15,26 @@ class m171031_113027_cardlist_data extends Migration
             'cardlist_link',
             'cardlist_icon',
             'cardlist_roles',
-        ], [[
-            'wkportal-backend|site/index',
-            'Плитки на главной странице',
-            'Добавление/Редактирование/Удаление плиток',
-            'wk-yellow-style',
-            'FrontendUrlManager[tiles/index]',
-            'list-alt',
-            RbacHelper::TILES_EDIT,
-        ]]);
+        ], [
+            [
+                'wkportal-backend|site/index',
+                'Плитки на главной странице',
+                'Добавление/Редактирование/Удаление плиток',
+                'wk-yellow-style',
+                'FrontendUrlManager[tiles/index]',
+                'list-alt',
+                RbacHelper::TILES_EDIT,
+            ],
+            [
+                'wkportal-backend|site/index',
+                'Портал ОФОМС',
+                '',
+                'wk-blue-style',
+                'FrontendUrlManager[ofoms/index]',
+                'list-alt',
+                RbacHelper::OFOMS_VIEW,
+            ]
+        ]);
     }
 
     public function safeDown()
