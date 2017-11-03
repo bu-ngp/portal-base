@@ -11,6 +11,7 @@ namespace common\widgets\GridView\services;
 
 use common\widgets\GridView\GridView;
 use Yii;
+use yii\base\Model;
 use yii\bootstrap\Html;
 use yii\grid\Column;
 use yii\grid\DataColumn;
@@ -44,13 +45,21 @@ class GWCustomizeDialog
         $visible = '';
         $hidden = '';
         array_walk($this->gridView->columns, function ($column) use (&$visible, &$hidden) {
+            $attributeLabel = $column['attribute'];
+
+            if ($this->gridView->filterModel instanceof Model) {
+                $attributeLabel = $this->gridView->filterModel->getAttributeLabel($column['attribute']);
+            } elseif (isset($this->gridView->dataProvider->query)) {
+                $attributeLabel = $this->gridView->dataProvider->query->getAttributeLabel($column['attribute']);
+            }
+
             /** @var $column DataColumn */
             if ($column['visible']) {
                 if (empty($column['options']['wk-widget'])) {
-                    $visible .= '<a role="option" aria-grabbed="false" draggable="true" class="list-group-item" wk-hash="' . $column['headerOptions']['wk-hash'] . '">' . $this->gridView->filterModel->getAttributeLabel($column['attribute']) . '</a>';
+                    $visible .= '<a role="option" aria-grabbed="false" draggable="true" class="list-group-item" wk-hash="' . $column['headerOptions']['wk-hash'] . '">' . $attributeLabel . '</a>';
                 }
             } else {
-                $hidden .= '<a role="option" aria-grabbed="false" draggable="true" class="list-group-item" wk-hash="' . $column['headerOptions']['wk-hash'] . '">' . $this->gridView->filterModel->getAttributeLabel($column['attribute']) . '</a>';
+                $hidden .= '<a role="option" aria-grabbed="false" draggable="true" class="list-group-item" wk-hash="' . $column['headerOptions']['wk-hash'] . '">' . $attributeLabel . '</a>';
             }
         });
 

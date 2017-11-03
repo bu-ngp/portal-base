@@ -14,6 +14,7 @@ use common\widgets\GridView\services\GWPrepareColumns;
 use common\widgets\PropellerAssets\ButtonAsset;
 use common\widgets\PropellerAssets\PropellerAsset;
 use Yii;
+use yii\base\Model;
 use yii\bootstrap\Html;
 use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
@@ -232,7 +233,7 @@ HTML;
     protected function setDefaults()
     {
         if ($this->id === static::$autoIdPrefix . (static::$counter - 1)) {
-            $this->id = $this->filterModel->formName() . 'Grid';
+            $this->id = ($this->filterModel instanceof Model ? $this->filterModel->formName() : $this->id) . 'Grid';
         }
 
         if ($this->minHeight) {
