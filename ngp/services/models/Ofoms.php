@@ -1,5 +1,7 @@
 <?php
 
+namespace ngp\services\models;
+
 use common\widgets\GridView\services\GWItemsTrait;
 use yii\base\Model;
 
@@ -15,6 +17,12 @@ class Ofoms extends Model
 
     const MALE = 1;
     const FEMALE = 2;
+
+    const OPDOC_POLIS_OLD = 1;
+    const OPDOC_VREM_SVID = 2;
+    const OPDOC_POLIS_ENP = 3;
+    const OPDOC_NON_POLIS = 4;
+    const OPDOC_NON_VREM_SVID = 5;
 
     /** @var string(14) Код врача из регионального регистра врачей */
     public $att_doct_amb;
@@ -59,13 +67,47 @@ class Ofoms extends Model
     /** @var string(254) Территория страхования */
     public $ter_st;
 
-    public function items()
+    public function attributeLabels()
+    {
+        return [
+            'att_doct_amb' => 'Код врача из регионального регистра врачей',
+            'att_lpu_amb' => 'Код МО из регионального регистра МО',
+            'dt_att_amb' => 'Дата прикрепления в амбулатории',
+            'att_lpu_stm' => 'Код МО из регионального регистра МО',
+            'dt_att_stm' => 'Дата прикрепления в стоматологии',
+            'fam' => 'Фамилия',
+            'im' => 'Имя',
+            'ot' => 'Отчество',
+            'dr' => 'Дата рождения',
+            'w' => 'Пол',
+            'enp' => 'Единый номер полиса (ЕНП)',
+            'opdoc' => 'Код вида полиса',
+            'polis' => 'Наименование вида полиса',
+            'spol' => 'Серия бланка полиса',
+            'npol' => 'Номер бланка полиса',
+            'dbeg' => 'Дата выдачи полиса',
+            'dend' => 'Дата прекращения страхования в субъекте',
+            'q' => 'Код СМО',
+            'q_name' => 'Наименование СМО',
+            'rstop' => 'Причина прекращения страхования',
+            'ter_st' => 'Территория страхования',
+        ];
+    }
+
+    public static function items()
     {
         return [
             'w' => [
                 self::MALE => 'Мужской',
                 self::FEMALE => 'Женский',
-            ]
+            ],
+            'opdoc' => [
+                self::OPDOC_POLIS_OLD => 'Полис ОМС старого образца',
+                self::OPDOC_VREM_SVID => 'Временное свидетельство, подтверждающее оформление полиса обязательного медицинского страхования',
+                self::OPDOC_POLIS_ENP => 'Полис ОМС единого образца',
+                self::OPDOC_NON_POLIS => 'Состояние на учёте без полиса ОМС',
+                self::OPDOC_NON_VREM_SVID => 'Состояние на учёте без временного свидетельства при приёме заявления в иную организацию',
+            ],
         ];
     }
 

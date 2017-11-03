@@ -9,6 +9,8 @@
 namespace ngp\controllers;
 
 use ngp\helpers\RbacHelper;
+use ngp\services\models\search\OfomsSearch;
+use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 
@@ -35,6 +37,12 @@ class OfomsController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        $searchModel = new OfomsSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 }

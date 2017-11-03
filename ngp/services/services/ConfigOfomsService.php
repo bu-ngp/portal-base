@@ -1,8 +1,8 @@
 <?php
 
-namespace ngp\services\models;
+namespace ngp\services\services;
 
-use ngp\repositories\models\ConfigOfomsRepository;
+use ngp\services\repositories\ConfigOfomsRepository;
 use domain\services\Service;
 use ngp\services\forms\ConfigOfomsUpdateForm;
 

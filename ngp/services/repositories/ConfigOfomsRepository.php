@@ -1,6 +1,6 @@
 <?php
 
-namespace ngp\repositories\models;
+namespace ngp\services\repositories;
 
 use ngp\services\models\ConfigOfoms;
 use RuntimeException;
