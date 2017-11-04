@@ -13,7 +13,7 @@ class ColumnSchema extends \yii\db\ColumnSchema
 {
     protected function typecast($value)
     {
-        if ($value === '' && $this->type === Schema::TYPE_BLOB) { // иначе пустая строка переводится в null
+        if ($value === '' && in_array($this->type,[Schema::TYPE_BLOB, Schema::TYPE_BASE_BINARY])) { // иначе пустая строка переводится в null
             return $value;
         }
 

@@ -25,7 +25,7 @@ class m130524_201442_init extends Migration
         $authManager = $this->getAuthManager();
 
         $this->createTable('{{%profile}}', [
-            'profile_id' => $this->binary(16)->notNull(),
+            'profile_id' => $this->baseBinary()->notNull(),
             'profile_inn' => $this->char(12)->unique(),
             'profile_dr' => $this->date(),
             'profile_pol' => $this->boolean(),
@@ -40,7 +40,7 @@ class m130524_201442_init extends Migration
         $this->addPrimaryKey('profile_id', '{{%profile}}', 'profile_id');
 
         $this->createTable('{{%person}}', [
-            'person_id' => $this->binary(16)->notNull(),
+            'person_id' => $this->baseBinary()->notNull(),
             'person_fullname' => $this->string()->notNull(),
             'person_username' => $this->string()->notNull()->unique(),
             'person_auth_key' => $this->char(32)->notNull(),
@@ -93,7 +93,7 @@ class m130524_201442_init extends Migration
         $this->addForeignKey('child', $authManager->itemChildTable, 'child', $authManager->itemTable, 'name', 'CASCADE', 'CASCADE');
 
         $this->createTable($authManager->assignmentTable, [
-            'user_id' => $this->binary(16)->notNull(),
+            'user_id' => $this->baseBinary()->notNull(),
             'item_name' => $this->string(64)->notNull(),
             'created_at' => $this->integer()->notNull(),
         ]);

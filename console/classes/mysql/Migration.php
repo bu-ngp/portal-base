@@ -16,6 +16,10 @@ class Migration extends \yii\db\Migration
         return $this->getDb()->getSchema()->createColumnSchemaBuilder(Schema::TYPE_BLOB);
     }
 
+    public function baseBinary() {
+        return $this->getDb()->getSchema()->createColumnSchemaBuilder(Schema::TYPE_BASE_BINARY);
+    }
+
     public function createOnlyAutoIncrement($field, $table, $after = '')
     {
         $after = $after ? "AFTER `$after`" : '';

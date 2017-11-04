@@ -12,12 +12,13 @@ namespace console\classes\mysql;
 class Schema extends \yii\db\mysql\Schema
 {
     const TYPE_BLOB = 'blob';
+    const TYPE_BASE_BINARY = 'basebinary';
 
     public $columnSchemaClass = 'console\classes\mysql\ColumnSchema';
 
     public function __construct($config = [])
     {
-        $this->typeMap['binary'] = self::TYPE_BINARY;
+        $this->typeMap['basebinary'] = self::TYPE_BASE_BINARY;
         $this->typeMap['blob'] = self::TYPE_BLOB;
 
         parent::__construct($config);

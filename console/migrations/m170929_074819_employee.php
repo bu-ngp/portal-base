@@ -1,11 +1,12 @@
 <?php
+use console\classes\mysql\Migration;
 
-class m170929_074819_employee extends yii\db\Migration
+class m170929_074819_employee extends Migration
 {
     public function safeUp()
     {
         $this->createTable('{{%dolzh}}', [
-            'dolzh_id' => $this->binary(16)->notNull(),
+            'dolzh_id' => $this->baseBinary()->notNull(),
             'dolzh_name' => $this->string()->notNull()->unique(),
         ]);
 
@@ -14,7 +15,7 @@ class m170929_074819_employee extends yii\db\Migration
         /*==============================*/
 
         $this->createTable('{{%podraz}}', [
-            'podraz_id' => $this->binary(16)->notNull(),
+            'podraz_id' => $this->baseBinary()->notNull(),
             'podraz_name' => $this->string()->notNull()->unique(),
         ]);
 
@@ -23,7 +24,7 @@ class m170929_074819_employee extends yii\db\Migration
         /*==============================*/
 
         $this->createTable('{{%build}}', [
-            'build_id' => $this->binary(16)->notNull(),
+            'build_id' => $this->baseBinary()->notNull(),
             'build_name' => $this->string()->notNull()->unique(),
         ]);
 
@@ -33,9 +34,9 @@ class m170929_074819_employee extends yii\db\Migration
 
         $this->createTable('{{%employee}}', [
             'employee_id' => $this->primaryKey(),
-            'person_id' => $this->binary(16)->notNull()->unique(),
-            'dolzh_id' => $this->binary(16)->notNull(),
-            'podraz_id' => $this->binary(16)->notNull(),
+            'person_id' => $this->baseBinary()->notNull()->unique(),
+            'dolzh_id' => $this->baseBinary()->notNull(),
+            'podraz_id' => $this->baseBinary()->notNull(),
             'employee_begin' => $this->date()->notNull(),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
@@ -51,9 +52,9 @@ class m170929_074819_employee extends yii\db\Migration
 
         $this->createTable('{{%employee_history}}', [
             'employee_history_id' => $this->primaryKey(),
-            'person_id' => $this->binary(16)->notNull(),
-            'dolzh_id' => $this->binary(16)->notNull(),
-            'podraz_id' => $this->binary(16)->notNull(),
+            'person_id' => $this->baseBinary()->notNull(),
+            'dolzh_id' => $this->baseBinary()->notNull(),
+            'podraz_id' => $this->baseBinary()->notNull(),
             'employee_history_begin' => $this->date()->notNull()->unique(),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
@@ -72,7 +73,7 @@ class m170929_074819_employee extends yii\db\Migration
         $this->createTable('{{%employee_history_build}}', [
             'ehb_id' => $this->primaryKey(),
             'employee_history_id' => $this->integer()->notNull(),
-            'build_id' => $this->binary(16)->notNull(),
+            'build_id' => $this->baseBinary()->notNull(),
             'employee_history_build_deactive' => $this->date(),
         ]);
 
@@ -85,9 +86,9 @@ class m170929_074819_employee extends yii\db\Migration
 
         $this->createTable('{{%parttime}}', [
             'parttime_id' => $this->primaryKey(),
-            'person_id' => $this->binary(16)->notNull(),
-            'dolzh_id' => $this->binary(16)->notNull(),
-            'podraz_id' => $this->binary(16)->notNull(),
+            'person_id' => $this->baseBinary()->notNull(),
+            'dolzh_id' => $this->baseBinary()->notNull(),
+            'podraz_id' => $this->baseBinary()->notNull(),
             'parttime_begin' => $this->date()->notNull(),
             'parttime_end' => $this->date(),
             'created_at' => $this->integer()->notNull(),
@@ -107,7 +108,7 @@ class m170929_074819_employee extends yii\db\Migration
         $this->createTable('{{%parttime_build}}', [
             'pb' => $this->primaryKey(),
             'parttime_id' => $this->integer()->notNull(),
-            'build_id' => $this->binary(16)->notNull(),
+            'build_id' => $this->baseBinary()->notNull(),
             'parttime_build_deactive' => $this->date(),
         ]);
 
