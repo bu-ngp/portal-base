@@ -11,6 +11,7 @@ return [
     'bootstrap' => [
         'assetsAutoCompress',
         'log',
+        'queue',
         'domain\bootstrap\BaseDomainBootstrap',
         'common\bootstrap\Documenter',
         'common\bootstrap\Breadcrumbs',
@@ -112,6 +113,10 @@ return [
             'datetimeFormat' => 'dd.MM.yyyy HH:mm:ss',
             'nullDisplay' => '',
         ],
+        'queue' => [
+            'class' => \yii\queue\db\Queue::className(),
+            'mutex' => \yii\mutex\MysqlMutex::className(),
+        ],
     ],
     'modules' => [
         'noty' => [
@@ -134,6 +139,9 @@ return [
         ],
         'markdown' => [
             'class' => 'kartik\markdown\Module',
+        ],
+        'doh' => [
+            'class' => 'doh\Module',
         ],
     ],
 ];

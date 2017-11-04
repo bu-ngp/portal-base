@@ -64,6 +64,11 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
                         ],
                     ],
                     [
+                        'label' => 'Обработчики',
+                        'url' => Yii::$app->urlManagerAdmin->createUrl(['doh']),
+                        'linkOptions' => ['class' => 'btn btn-sm pmd-btn-flat pmd-ripple-effect btn-default pmd-ripple-effect'],
+                    ],
+                    [
                         'label' => 'Обновления',
                         'url' => Yii::$app->urlManagerAdmin->createUrl(['updates']),
                         'linkOptions' => ['class' => 'btn btn-sm pmd-btn-flat pmd-ripple-effect btn-default pmd-ripple-effect'],

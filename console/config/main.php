@@ -22,7 +22,10 @@ return [
             'migrationPath' => [
                 '@console/migrations',
                 '@common/widgets/CardList/migrations',
-                '@ngp/migrations',
+                '@backend/modules/doh/migrations',
+            ],
+            'migrationNamespaces' => [
+                'yii\queue\db\migrations',
             ],
         ],
         'wkloader' => [
