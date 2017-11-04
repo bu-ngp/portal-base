@@ -22,7 +22,7 @@ return [
     'File Type' => 'Тип файла',
     'Handler At' => 'Дата добавления',
     'Handler Description' => 'Описание',
-    'Handler Done Time' => 'Дата выполнения',
+    'Handler Done Time' => 'Время выполнения',
     'Handler Files' => 'Файлы',
     'Handler Files ID' => 'Файлы',
     'Handler ID' => 'ИД',

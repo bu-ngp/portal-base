@@ -19,6 +19,7 @@ class DefaultController extends Controller
 {
     public function actionIndex()
     {
+        Yii::$app->formatter->sizeFormatBase = 1000;
         $searchModel = new HandlerSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 

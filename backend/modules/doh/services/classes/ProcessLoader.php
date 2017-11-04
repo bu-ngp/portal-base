@@ -90,7 +90,7 @@ abstract class ProcessLoader extends BaseObject implements Job
             $this->_handler->handler_status = Handler::FINISHED;
             $this->_handler->handler_percent = 100;
             $this->_handler->handler_done_time = microtime(true) - $this->_handler->handler_at;
-            $this->_handler->handler_used_memory = Yii::$app->formatter->asShortSize(memory_get_usage(true));
+            $this->_handler->handler_used_memory = memory_get_usage(true);
             $this->_handler->save(false);
         }
     }
