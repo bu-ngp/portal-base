@@ -26,10 +26,11 @@ class Handler extends \yii\db\ActiveRecord
 {
     use GWItemsTrait;
 
-    const DURING = 1;
-    const FINISHED = 2;
-    const CANCELED = 3;
-    const ERROR = 4;
+    const QUEUE = 1;
+    const DURING = 2;
+    const FINISHED = 3;
+    const CANCELED = 4;
+    const ERROR = 5;
 
     /**
      * @inheritdoc
@@ -85,11 +86,12 @@ class Handler extends \yii\db\ActiveRecord
     {
         return [
             'handler_status' => [
+                self::QUEUE => 'В очереди',
                 self::DURING => 'В процессе',
                 self::FINISHED => 'Закончен',
                 self::CANCELED => 'Отменен',
                 self::ERROR => 'Ошибка',
-            ]
+            ],
         ];
     }
 }

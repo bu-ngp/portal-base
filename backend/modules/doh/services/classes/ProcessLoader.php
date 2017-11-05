@@ -20,32 +20,35 @@ use yii\web\User;
 
 abstract class ProcessLoader extends BaseObject implements Job
 {
-    const CONSOLE = 'CONSOLE';
+    //  const CONSOLE = 'CONSOLE';
 
     public $description = 'Process Loader';
+    public $handler_id;
 
+    /** @var  Handler */
     private $_handler;
 
     abstract public function body();
 
     public function __construct($config = [])
     {
-        $this->_handler = new Handler([
-            'identifier' => $this->getIdentifier(),
-            'handler_name' => static::className(),
-            'handler_description' => $this->description,
-            'handler_at' => time(),
-            'handler_percent' => 0,
-            'handler_status' => Handler::DURING,
-        ]);
-
-        $this->_handler->save(false);
+//        $this->_handler = new Handler([
+//            'identifier' => $this->getIdentifier(),
+//            'handler_name' => static::className(),
+//            'handler_description' => $this->description,
+//            'handler_at' => time(),
+//            'handler_percent' => 0,
+//            'handler_status' => Handler::DURING,
+//        ]);
+//
+//        $this->_handler->save(false);
 
         parent::__construct($config);
     }
 
     public function execute($queue)
     {
+        $this->_handler = Handler::findOne($this->handler_id);
         $this->begin();
         try {
             $this->body();
@@ -81,7 +84,8 @@ abstract class ProcessLoader extends BaseObject implements Job
 
     protected function begin()
     {
-
+        $this->_handler->handler_status = Handler::DURING;
+        $this->_handler->save(false);
     }
 
     protected function end()
@@ -104,30 +108,8 @@ abstract class ProcessLoader extends BaseObject implements Job
     {
         $this->_handler->handler_status = Handler::ERROR;
         $this->_handler->handler_short_report = $message;
-        $this->_handler->save();
+        $this->_handler->handler_done_time = microtime(true) - $this->_handler->handler_at;
+        $this->_handler->handler_used_memory = memory_get_usage(true);
+        $this->_handler->save(false);
     }
-
-    protected function getIdentifier()
-    {
-        if (Yii::$app->controller instanceof Controller) {
-            return self::CONSOLE;
-        }
-
-        /** @var User $user */
-        if ($user = Yii::$app->get('user')) {
-            /** @var Session $session */
-            if ($user->isGuest) {
-                if ($session = Yii::$app->get('session')) {
-                    return $session->getId();
-                }
-
-                throw new \Exception('Need user and session components');
-            }
-
-            return BinaryHelper::isBinary($user->getId()) ? Uuid::uuid2str($user->getId()) : $user->getId();
-        }
-
-        throw new \Exception('Need user and session components');
-    }
-
 }

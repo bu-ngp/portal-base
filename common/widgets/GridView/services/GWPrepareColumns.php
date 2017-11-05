@@ -189,11 +189,12 @@ class GWPrepareColumns
         $model = $this->gridView->filterModel;
         if (method_exists($model, 'itemsValues') && $items = $model::itemsValues($column['attribute'])) {
             $column['filter'] = $items;
+            $column['format'] = 'raw';
             $column['value'] = function ($model, $key, $index, $column) use ($items) {
                 /** @var $model ActiveRecord */
                 $value = $model[$column->attribute];
 
-                return '<span>' . (isset($value) ? $items[$value] : '') . '</span>';
+                return '<span key="' . $value . '">' . (isset($value) ? Html::encode($items[$value]) : '') . '</span>';
             };
         }
     }

@@ -48,10 +48,14 @@ class ListenController extends Controller
         }
 
         if ($keys) {
-            $handlers = Handler::find()->select(['handler_id', new Expression('round(handler_percent / 100, 2) as handler_percent')])->andWhere(['handler_id' => $keys])->asArray()->all();
+            $handlers = Handler::find()
+                ->select(['handler_id', new Expression('round(handler_percent / 100, 2) as handler_percent'), 'handler_status'])
+                ->andWhere(['handler_id' => $keys])
+                ->asArray()
+                ->all();
 
             return $handlers ? array_map(function ($handler) {
-                return [$handler['handler_id'], $handler['handler_percent']];
+                return [$handler['handler_id'], $handler['handler_percent'], $handler['handler_status']];
             }, $handlers) : [];
         }
 

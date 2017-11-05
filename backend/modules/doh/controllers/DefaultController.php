@@ -12,6 +12,7 @@ namespace doh\controllers;
 use doh\services\classes\DoH;
 use doh\services\models\search\handlerSearch;
 use doh\services\TestPL;
+use doh\services\TestPLError;
 use Yii;
 use yii\web\Controller;
 
@@ -32,6 +33,14 @@ class DefaultController extends Controller
     public function actionTest()
     {
         $doh = new DoH(new TestPL);
+        $doh->execute();
+        $this->redirect('doh');
+    }
+
+
+    public function actionTestError()
+    {
+        $doh = new DoH(new TestPLError);
         $doh->execute();
         $this->redirect('doh');
     }

@@ -2,9 +2,11 @@
 
 use doh\assets\DoHAsset;
 use doh\assets\ProgressbarAsset;
+use doh\services\models\Handler;
 use yii\helpers\Html;
 use rmrevin\yii\fontawesome\FA;
 use common\widgets\GridView\GridView;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel doh\services\models\search\HandlerSearch */
@@ -75,11 +77,25 @@ $this->params['breadcrumbs'][] = $this->title;
                     'visible' => false,
                 ],
             ],
+            'customActionButtons' => [
+                'cancel' => function ($url, $model) {
+                    if (in_array($model->handler_status, [Handler::QUEUE, Handler::DURING])) {
+                        return Html::a('<i class="fa fa-2x fa-close"></i>', Yii::$app->get('urlManagerAdmin')->createUrl(['doh/cancel', 'id' => $model->handler_id]), [
+                            'title' => Yii::t('doh', 'Cancel'),
+                            'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-danger wk-doh-cancel',
+                            'data-pjax' => '0'
+                        ]);
+                    }
+
+                    return '';
+                }
+            ],
             'panelHeading' => [
                 'icon' => FA::icon(FA::_LIST_ALT),
                 'title' => Yii::t('doh', 'Handlers'),
             ],
-            'leftBottomToolbar' => \yii\bootstrap\Html::button('test', ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary', 'id' => 'test1']),
+            'leftBottomToolbar' => \yii\bootstrap\Html::button('test', ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary', 'id' => 'test1'])
+                . \yii\bootstrap\Html::button('test error', ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger', 'id' => 'test_error']),
         ]) ?>
 
     </div>

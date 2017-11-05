@@ -1,32 +1,41 @@
+const HANDLER_QUEUE = 1,
+    HANDLER_DURING = 2,
+    HANDLER_FINISHED = 3,
+    HANDLER_CANCELED = 4,
+    HANDLER_ERROR = 5;
+
+var progressBarOpts = {
+    strokeWidth: 4,
+    easing: 'easeInOut',
+    duration: 1400,
+    color: '#FFEA82',
+    trailColor: '#eee',
+    trailWidth: 4,
+    svgStyle: {width: '100%', height: '100%'},
+    text: {
+        style: {
+            // Text color.
+            // Default: same as stroke color (options.color)
+            color: '#999',
+            position: 'relative',
+            left: '40%',
+            padding: 0,
+            margin: 0,
+            transform: null
+        },
+        autoStyleContainer: false
+    },
+    from: {color: '#FFEA82'},
+    to: {color: '#ED6A5A'},
+    step: function (state, bar) {
+        bar.setText(Math.round(bar.value() * 100) + ' %');
+    }
+};
+
+var bars_cache = {};
+
 $(document).ready(function () {
-
-    setTimeout(function listenDoH() {
-
-        var keys = [];
-        $(".wk-progress").each(function () {
-            if ($(this).attr('percent') < 1) {
-                keys.push($(this).attr('key'));
-            }
-        });
-
-        $.ajax({
-            url: "doh/listen",
-            data: {keys: JSON.stringify(keys)},
-            success: function (response) {
-                console.log(response);
-
-                $.each(response, function() {
-                    console.debug( $('.wk-progress[key="' + this[0] + '"]'))
-
-console.debug($('.wk-progress[key="' + this[0] + '"]').line())
-
-                });
-
-                setTimeout(listenDoH, 5000);
-            }
-        });
-
-    }, 3000);
+    setTimeout(listenDoH(), 3000);
 
     $(document).on('click', '#test1', function () {
         $.ajax({
@@ -34,41 +43,111 @@ console.debug($('.wk-progress[key="' + this[0] + '"]').line())
         });
     });
 
+    $(document).on('click', '#test_error', function () {
+        $.ajax({
+            url: "doh/default/test-error"
+        });
+    });
+
     $("#handlerSearchGrid-pjax").on('pjax:success', function () {
+        $(this)[0].busy = false;
         initProgressBars();
+    });
+
+    $("#handlerSearchGrid-pjax").on('pjax:beforeSend', function () {
+        $(this)[0].busy = true;
+    });
+
+    $("#handlerSearchGrid-pjax").on('click', '.wk-doh-cancel', function (e) {
+        var $button = $(this);
+        e.preventDefault();
+
+        wkwidget.confirm({
+            message: 'Вы уверены, что хотите отменить задание?',
+            yes: function () {
+                $.ajax({
+                    url: $button.attr("href"),
+                    success: function (response) {
+                        $("#handlerSearchGrid").yiiGridView('applyFilter');
+                    }
+                });
+            }
+        });
     });
 });
 
 var initProgressBars = function () {
+    bars_cache = {};
     $('.wk-progress').each(function () {
-        var bar = new ProgressBar.Line('div.wk-progress[key="' + $(this).attr('key') + '"]', {
-            strokeWidth: 4,
-            easing: 'easeInOut',
-            duration: 1400,
-            color: '#FFEA82',
-            trailColor: '#eee',
-            trailWidth: 4,
-            svgStyle: {width: '100%', height: '100%'},
-            text: {
-                style: {
-                    // Text color.
-                    // Default: same as stroke color (options.color)
-                    color: '#999',
-                    position: 'relative',
-                    left: '40%',
-                    padding: 0,
-                    margin: 0,
-                    transform: null
-                },
-                autoStyleContainer: false
-            },
-            from: {color: '#FFEA82'},
-            to: {color: '#ED6A5A'},
-            step: function (state, bar) {
-                bar.setText(Math.round(bar.value() * 100) + ' %');
-            }
-        });
-console.debug("bar", bar);
-        bar.set($(this).attr('percent'));
+        var id = $(this).attr('key');
+        var barSelector = 'div.wk-progress[key="' + id + '"]';
+        var percent = $(this).attr('percent');
+
+        bars_cache[id] = new ProgressBar.Line(barSelector, progressBarOpts);
+        bars_cache[id].set(percent);
     });
 };
+
+var listenDoH = function () {
+    var keys = [];
+    var dataColSeq = $('a[data-sort="handler_status"]').closest("th").attr('data-col-seq');
+
+    $("#handlerSearchGrid tbody > tr[data-key]").each(function () {
+        var id = $(this).find('.wk-progress').attr('key');
+        var percent = $(this).find('.wk-progress').attr('percent');
+        var status = $(this).find('td[data-col-seq="' + dataColSeq + '"] > span').attr('key');
+        if (percent < 1 && [HANDLER_QUEUE, HANDLER_DURING].indexOf(parseInt(status)) >= 0) {
+            keys.push(id);
+        }
+    });
+
+    if (keys.length > 0) {
+        $.ajax({
+            url: "doh/listen",
+            data: {keys: JSON.stringify(keys)},
+            success: function (response) {
+                var dataColSeq = $('a[data-sort="handler_status"]').closest("th").attr('data-col-seq');
+
+                $.each(response, function () {
+                    var id = this[0];
+                    var percent = this[1];
+                    var status = this[2];
+                    var barSelector = 'div.wk-progress[key="' + id + '"]';
+                    var barPercent = $(barSelector).attr('percent');
+                    var barStatus = $('tr[data-key="' + id + '"] > td[data-col-seq="' + dataColSeq + '"] > span').attr('key');
+
+                    if (parseFloat(barPercent) !== parseFloat(percent) || (parseInt(status) === HANDLER_ERROR && parseInt(status) !== parseInt(barStatus))) {
+                        $(barSelector).attr('percent', percent);
+                        bars_cache[id].animate(percent, {}, afterAnimateBar(percent, status));
+                    }
+                });
+
+                setTimeout(listenDoH, 5000);
+            }
+        });
+    } else {
+        setTimeout(listenDoH, 5000);
+    }
+};
+
+var afterAnimateBar = function (percent, status) {
+    if (parseFloat(percent) === 1 || parseInt(status) === HANDLER_ERROR) {
+        reloadGrid();
+    }
+};
+
+var reloadGrid = function () {
+    console.debug("reloadGrid");
+    var busy = false;
+    if ($("#handlerSearchGrid-pjax")[0].busy) {
+        busy = $(this)[0].busy;
+    }
+
+    if (!busy) {
+        $("#handlerSearchGrid").yiiGridView("applyFilter");
+    } else {
+        setTimeout(function () {
+            reloadGrid();
+        }, 300);
+    }
+}
