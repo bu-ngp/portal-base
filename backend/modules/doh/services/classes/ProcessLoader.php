@@ -32,27 +32,24 @@ abstract class ProcessLoader extends BaseObject implements Job
 
     public function __construct($config = [])
     {
-//        $this->_handler = new Handler([
-//            'identifier' => $this->getIdentifier(),
-//            'handler_name' => static::className(),
-//            'handler_description' => $this->description,
-//            'handler_at' => time(),
-//            'handler_percent' => 0,
-//            'handler_status' => Handler::DURING,
-//        ]);
-//
-//        $this->_handler->save(false);
-
         parent::__construct($config);
     }
 
     public function execute($queue)
     {
         $this->_handler = Handler::findOne($this->handler_id);
+        if ($this->_handler->handler_status !== Handler::QUEUE) {
+            return;
+        }
         $this->begin();
         try {
             $this->body();
         } catch (\Exception $e) {
+            if ($e instanceof CancelException) {
+                $this->cancel();
+                return;
+            }
+
             $this->error($e->getMessage());
             return;
         }
@@ -70,22 +67,17 @@ abstract class ProcessLoader extends BaseObject implements Job
             }
 
             $this->_handler->save(false);
-        }
-    }
-
-    public static function cancel($handler_id)
-    {
-        $handler = Handler::findOne($handler_id);
-        if ($handler && $handler->handler_status === Handler::DURING) {
-            $handler->handler_status = Handler::CANCELED;
-            $handler->save(false);
+        } elseif ($this->isCanceled()) {
+            throw new CancelException;
         }
     }
 
     protected function begin()
     {
-        $this->_handler->handler_status = Handler::DURING;
-        $this->_handler->save(false);
+        if ($this->_handler->handler_status === Handler::QUEUE) {
+            $this->_handler->handler_status = Handler::DURING;
+            $this->_handler->save(false);
+        }
     }
 
     protected function end()
@@ -101,7 +93,19 @@ abstract class ProcessLoader extends BaseObject implements Job
 
     protected function isActive()
     {
-        return $this->_handler->handler_status === Handler::DURING;
+        return Handler::findOne($this->_handler->primaryKey)->handler_status === Handler::DURING;
+    }
+
+    protected function isCanceled()
+    {
+        return Handler::findOne($this->_handler->primaryKey)->handler_status === Handler::CANCELED;
+    }
+
+    protected function cancel()
+    {
+        $this->_handler->handler_done_time = microtime(true) - $this->_handler->handler_at;
+        $this->_handler->handler_used_memory = memory_get_usage(true);
+        $this->_handler->save(false);
     }
 
     protected function error($message)

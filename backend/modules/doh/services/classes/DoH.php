@@ -47,7 +47,6 @@ class DoH
 
     public function execute()
     {
-
         Yii::$app->queue->push($this->_loader);
     }
 
@@ -72,5 +71,16 @@ class DoH
         }
 
         throw new \Exception('Need user and session components');
+    }
+
+    public static function cancel($handler_id)
+    {
+        $handler = Handler::findOne($handler_id);
+        if ($handler && $handler->handler_status === Handler::DURING) {
+            $handler->handler_status = Handler::CANCELED;
+            return $handler->save(false);
+        }
+
+        return false;
     }
 }

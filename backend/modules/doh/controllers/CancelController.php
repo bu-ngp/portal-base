@@ -9,6 +9,7 @@
 namespace doh\controllers;
 
 
+use doh\services\classes\DoH;
 use yii\filters\AjaxFilter;
 use yii\filters\ContentNegotiator;
 use yii\web\Controller;
@@ -38,7 +39,9 @@ class CancelController extends Controller
 
     public function actionIndex($id)
     {
-
-        return [];
+        if (DoH::cancel($id)) {
+            return (object)['status' => 'success'];
+        }
+        return (object)['status' => 'error'];
     }
 }
