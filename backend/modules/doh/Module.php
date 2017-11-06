@@ -9,9 +9,21 @@
 namespace doh;
 
 use Yii;
+use yii\base\BootstrapInterface;
+use yii\web\Application;
 
-class Module extends \yii\base\Module
+class Module extends \yii\base\Module implements BootstrapInterface
 {
+    public function bootstrap($app)
+    {
+        if ($app instanceof Application) {
+            $app->getUrlManager()->addRules([
+                ['class' => 'yii\web\UrlRule', 'pattern' => $this->id . '/listen', 'route' => $this->id . '/default/listen'],
+                ['class' => 'yii\web\UrlRule', 'pattern' => $this->id . '/cancel', 'route' => $this->id . '/default/cancel'],
+            ], false);
+        }
+    }
+
     public function init()
     {
         parent::init();

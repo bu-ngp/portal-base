@@ -15,6 +15,7 @@ return [
         'domain\bootstrap\BaseDomainBootstrap',
         'common\bootstrap\Documenter',
         'common\bootstrap\Breadcrumbs',
+        'doh',
     ],
     'components' => [
         'assetManager' => [
@@ -72,6 +73,7 @@ return [
             'showScriptName' => false,
             'rules' => [
                 'login' => 'site/login',
+               // 'doh/listen' => 'doh/default/listen',
             ],
         ],
         'authManager' => [
