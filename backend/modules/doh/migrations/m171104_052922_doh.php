@@ -9,10 +9,9 @@ class m171104_052922_doh extends Migration
 {
     public function up()
     {
-        $this->createTable('{{%handler_files}}', [
-            'handler_files_id' => $this->primaryKey(),
-            'handler_id' => $this->integer()->notNull(),
-            'file_type' => $this->boolean()->notNull(),
+        $this->createTable('{{%doh_files}}', [
+            'doh_files_id' => $this->primaryKey(),
+            'file_type' => $this->string()->notNull(),
             'file_path' => $this->string(400)->notNull(),
             'file_description' => $this->string(400)->notNull(),
         ]);
@@ -31,12 +30,20 @@ class m171104_052922_doh extends Migration
             'handler_files' => $this->integer()->unsigned(),
         ]);
 
-        $this->addForeignKey('handler_files', '{{%handler_files}}', 'handler_id', '{{%handler}}', 'handler_id', 'CASCADE', 'CASCADE');
+        $this->createTable('{{%handler_files}}', [
+            'doh_files_id' => $this->integer()->notNull(),
+            'handler_id' => $this->integer()->notNull(),
+        ]);
+
+        $this->addForeignKey('handler_files_handler', '{{%handler_files}}', 'handler_id', '{{%handler}}', 'handler_id', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('handler_files_doh_files', '{{%handler_files}}', 'doh_files_id', '{{%doh_files}}', 'doh_files_id', 'CASCADE', 'CASCADE');
+        $this->createIndex('idx_handler_files', '{{%handler_files}}', ['doh_files_id', 'handler_id'], true);
     }
 
     public function down()
     {
-        $this->dropTable('{{%handler}}');
         $this->dropTable('{{%handler_files}}');
+        $this->dropTable('{{%handler}}');
+        $this->dropTable('{{%doh_files}}');
     }
 }

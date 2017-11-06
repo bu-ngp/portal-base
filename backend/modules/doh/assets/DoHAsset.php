@@ -19,6 +19,10 @@ class DoHAsset extends AssetBundle
     {
         $this->sourcePath = __DIR__;
 
+        $this->css = [
+            'css/doh.css',
+        ];
+
         $this->js = [
             'js/doh.js',
         ];

@@ -46,7 +46,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     'filter' => false,
                 ],
                 [
-                    'attribute' => 'handler_files',
+                    'attribute' => 'dohFilesList',
+                    'label' => Yii::t('doh', 'Handler Files'),
+                    'format' => 'raw',
                     'filter' => false,
                 ],
                 [
@@ -88,14 +90,29 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
 
                     return '';
-                }
+                },
+                'delete' => function ($url, $model) {
+                    if (!in_array($model->handler_status, [Handler::QUEUE, Handler::DURING])) {
+                        return Html::a('<i class="fa fa-2x fa-trash"></i>', Yii::$app->get('urlManagerAdmin')->createUrl(['doh/delete', 'id' => $model->handler_id]), [
+                            'title' => Yii::t('doh', 'Delete'),
+                            'class' => 'btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-danger wk-doh-delete',
+                            'data-pjax' => '0'
+                        ]);
+                    }
+
+                    return '';
+                },
+            ],
+            'toolbar' => [
+                \yii\bootstrap\Html::a(Yii::t('doh', 'Clear handlers'), Yii::$app->get('urlManagerAdmin')->createUrl(['doh/clear']), ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger wk-doh-clear', 'data-pjax' => '0'])
             ],
             'panelHeading' => [
                 'icon' => FA::icon(FA::_LIST_ALT),
                 'title' => Yii::t('doh', 'Handlers'),
             ],
             'leftBottomToolbar' => \yii\bootstrap\Html::button('test', ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary', 'id' => 'test1'])
-                . \yii\bootstrap\Html::button('test error', ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger', 'id' => 'test_error']),
+                . \yii\bootstrap\Html::button('test error', ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger', 'id' => 'test_error'])
+                . \yii\bootstrap\Html::button('test with files', ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-info', 'id' => 'test_with_files'])
         ]) ?>
 
     </div>

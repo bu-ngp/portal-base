@@ -49,6 +49,12 @@ $(document).ready(function () {
         });
     });
 
+    $(document).on('click', '#test_with_files', function () {
+        $.ajax({
+            url: "doh/default/test-with-files"
+        });
+    });
+
     $("#handlerSearchGrid-pjax").on('pjax:success', function () {
         $(this)[0].busy = false;
         initProgressBars();
@@ -64,6 +70,40 @@ $(document).ready(function () {
 
         wkwidget.confirm({
             message: 'Вы уверены, что хотите отменить задание?',
+            yes: function () {
+                $.ajax({
+                    url: $button.attr("href"),
+                    success: function (response) {
+                        $("#handlerSearchGrid").yiiGridView('applyFilter');
+                    }
+                });
+            }
+        });
+    });
+
+    $("#handlerSearchGrid-pjax").on('click', '.wk-doh-delete', function (e) {
+        var $button = $(this);
+        e.preventDefault();
+
+        wkwidget.confirm({
+            message: 'Вы уверены, что хотите удалить задание?',
+            yes: function () {
+                $.ajax({
+                    url: $button.attr("href"),
+                    success: function (response) {
+                        $("#handlerSearchGrid").yiiGridView('applyFilter');
+                    }
+                });
+            }
+        });
+    });
+
+    $("#handlerSearchGrid-pjax").on('click', '.wk-doh-clear', function (e) {
+        var $button = $(this);
+        e.preventDefault();
+
+        wkwidget.confirm({
+            message: 'Вы уверены, что хотите очистить все задания?',
             yes: function () {
                 $.ajax({
                     url: $button.attr("href"),

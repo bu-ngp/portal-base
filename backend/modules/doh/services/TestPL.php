@@ -21,5 +21,7 @@ class TestPL extends ProcessLoader
             $this->addPercentComplete(10);
             sleep(2);
         }
+
+        $this->addShortReport('Report Success Finished');
     }
 }

@@ -42,13 +42,6 @@ class handlerSearch extends SearchModel
         return ['handler_at' => SORT_DESC];
     }
 
-    public function beforeLoad(ActiveQuery $query, ActiveDataProvider $dataProvider, $params)
-    {
-        $query->joinWith([
-            'handlerFiles',
-        ]);
-    }
-
     public function filter()
     {
         return [

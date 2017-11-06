@@ -3,6 +3,7 @@
 namespace doh\services\models;
 
 use common\widgets\GridView\services\GWItemsTrait;
+use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
 use Yii;
 
 /**
@@ -21,6 +22,7 @@ use Yii;
  * @property string $handler_files
  *
  * @property HandlerFiles[] $handlerFiles
+ * @property DohFiles[] $dohFiles
  */
 class Handler extends \yii\db\ActiveRecord
 {
@@ -71,6 +73,24 @@ class Handler extends \yii\db\ActiveRecord
             'handler_used_memory' => Yii::t('doh', 'Handler Used Memory'),
             'handler_short_report' => Yii::t('doh', 'Handler Short Report'),
             'handler_files' => Yii::t('doh', 'Handler Files'),
+            'dohFilesList' => Yii::t('doh', 'Handler Files'),
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            'saveRelations' => [
+                'class' => SaveRelationsBehavior::className(),
+                'relations' => ['dohFiles'],
+            ],
+        ];
+    }
+
+    public function transactions()
+    {
+        return [
+            self::SCENARIO_DEFAULT => self::OP_ALL,
         ];
     }
 
@@ -80,6 +100,21 @@ class Handler extends \yii\db\ActiveRecord
     public function getHandlerFiles()
     {
         return $this->hasMany(HandlerFiles::className(), ['handler_id' => 'handler_id'])->from(['handlerFiles' => HandlerFiles::tableName()]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDohFiles()
+    {
+        return $this->hasMany(DohFiles::className(), ['doh_files_id' => 'doh_files_id'])->from(['dohFiles' => DohFiles::tableName()])->viaTable('{{%handler_files}}', ['handler_id' => 'handler_id']);
+    }
+
+    public function getDohFilesList()
+    {
+        return $this->dohFiles ? '<ul>' . implode("", array_map(function ($dohFiles) {
+                return '<li><i class="fa fa-file-text"></i><a data-pjax="0" href="' . Yii::$app->get('urlManagerAdmin')->createUrl(['doh/download', 'id' => $dohFiles->primaryKey]) . '">&nbsp' . $dohFiles->file_description . '</a></li>';
+            }, $this->dohFiles)) . '</ul>' : '';
     }
 
     public static function items()

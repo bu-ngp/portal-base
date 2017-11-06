@@ -83,4 +83,25 @@ class DoH
 
         return false;
     }
+
+    public static function delete($handler_id)
+    {
+        $handler = Handler::findOne($handler_id);
+        if ($handler && !in_array($handler->handler_status, [Handler::QUEUE, Handler::DURING])) {
+            /** TODO Delete Files */
+            return $handler->delete();
+        }
+
+        return false;
+    }
+
+    public static function clear()
+    {
+        /** TODO Delete Files */
+        Handler::deleteAll(['not',
+            ['handler_status' => [Handler::QUEUE, Handler::DURING]]
+        ]);
+
+        return true;
+    }
 }

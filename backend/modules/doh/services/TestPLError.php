@@ -13,7 +13,7 @@ use doh\services\classes\ProcessLoader;
 
 class TestPLError extends ProcessLoader
 {
-    public $description = 'Тестовый процесс';
+    public $description = 'Тестовый процесс с ошибкой';
 
     public function body()
     {

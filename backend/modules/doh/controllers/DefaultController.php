@@ -10,10 +10,12 @@ namespace doh\controllers;
 
 
 use doh\services\classes\DoH;
+use doh\services\models\DohFiles;
 use doh\services\models\Handler;
 use doh\services\models\search\handlerSearch;
 use doh\services\TestPL;
 use doh\services\TestPLError;
+use doh\services\TestWithFiles;
 use Yii;
 use yii\db\Expression;
 use yii\filters\AjaxFilter;
@@ -31,11 +33,11 @@ class DefaultController extends Controller
         return [
             [
                 'class' => AjaxFilter::className(),
-                'only' => ['listen', 'cancel'],
+                'only' => ['listen', 'cancel', 'delete', 'clear'],
             ],
             [
                 'class' => ContentNegotiator::className(),
-                'only' => ['listen', 'cancel'],
+                'only' => ['listen', 'cancel', 'delete', 'clear'],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                 ],
@@ -86,6 +88,30 @@ class DefaultController extends Controller
         return (object)['status' => 'error'];
     }
 
+    public function actionDownload($id)
+    {
+        $dohFiles = DohFiles::findOne($id);
+        if ($dohFiles) {
+            return Yii::$app->response->sendFile($dohFiles->file_path, $dohFiles->file_description);
+        }
+    }
+
+    public function actionClear()
+    {
+        if (DoH::clear()) {
+            return (object)['status' => 'success'];
+        }
+        return (object)['status' => 'error'];
+    }
+
+    public function actionDelete($id)
+    {
+        if (DoH::delete($id)) {
+            return (object)['status' => 'success'];
+        }
+        return (object)['status' => 'error'];
+    }
+
     public function actionTest()
     {
         $doh = new DoH(new TestPL);
@@ -93,10 +119,16 @@ class DefaultController extends Controller
         $this->redirect('doh');
     }
 
-
     public function actionTestError()
     {
         $doh = new DoH(new TestPLError);
+        $doh->execute();
+        $this->redirect('doh');
+    }
+
+    public function actionTestWithFiles()
+    {
+        $doh = new DoH(new TestWithFiles);
         $doh->execute();
         $this->redirect('doh');
     }

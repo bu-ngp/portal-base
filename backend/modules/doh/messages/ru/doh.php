@@ -17,6 +17,11 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Cancel' => 'Отмена',
+    'Clear handlers' => 'Очистить все задания',
+    'Delete' => 'Удалить',
+    'Doh Files ID' => 'Файлы',
+    'Handlers' => 'Задания',
     'File Description' => 'Название файла',
     'File Path' => 'Путь к файлу',
     'File Type' => 'Тип файла',
@@ -24,7 +29,6 @@ return [
     'Handler Description' => 'Описание',
     'Handler Done Time' => 'Время выполнения',
     'Handler Files' => 'Файлы',
-    'Handler Files ID' => 'Файлы',
     'Handler ID' => 'ИД',
     'Handler Name' => 'Наименование',
     'Handler Percent' => 'Процент выполнения',

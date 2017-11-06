@@ -9,6 +9,7 @@
 namespace doh\services\classes;
 
 use doh\services\models\Handler;
+use doh\services\models\HandlerFiles;
 use domain\helpers\BinaryHelper;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
@@ -20,7 +21,13 @@ use yii\web\User;
 
 abstract class ProcessLoader extends BaseObject implements Job
 {
-    //  const CONSOLE = 'CONSOLE';
+    const FILE_PDF = 'pdf';
+    const FILE_EXCEL = 'excel';
+    const FILE_DOC = 'word';
+    const FILE_CSV = 'csv';
+    const FILE_TXT = 'txt';
+    const FILE_XML = 'xml';
+    const FILE_UNKNOWN = 'unknown';
 
     public $description = 'Process Loader';
     public $handler_id;
@@ -72,6 +79,39 @@ abstract class ProcessLoader extends BaseObject implements Job
         }
     }
 
+    public function addShortReport($reportString)
+    {
+        if ($this->isActive()) {
+            $this->_handler->handler_short_report = $reportString;
+            if (!$this->_handler->save()) {
+                $this->_handler->handler_short_report = print_r($this->_handler->getErrors(), true);
+                $this->_handler->save(false);
+            };
+        }
+    }
+
+    public function addFile($path, $description = '', $type = '')
+    {
+        if (file_exists($path)) {
+            $this->_handler->dohFiles = array_merge(HandlerFiles::findAll(['handler_id' =>  $this->_handler->primaryKey]),[
+                [
+                    'file_type' => $this->getFileType($path, $type),
+                    'file_path' => $path,
+                    'file_description' => $this->getFileDescription($path, $description),
+                ]
+            ]);
+
+            if (!$this->_handler->save()) {
+                file_put_contents('test.txt', print_r($this->_handler->getErrors(), true));
+                $this->_handler->handler_short_report = "File '$path': " . print_r($this->_handler->getErrors(), true);
+                $this->_handler->save(false);
+            }
+        } else {
+            $this->_handler->handler_short_report = "File '$path' not exist";
+            $this->_handler->save(false);
+        }
+    }
+
     protected function begin()
     {
         if ($this->_handler->handler_status === Handler::QUEUE) {
@@ -115,5 +155,56 @@ abstract class ProcessLoader extends BaseObject implements Job
         $this->_handler->handler_done_time = microtime(true) - $this->_handler->handler_at;
         $this->_handler->handler_used_memory = memory_get_usage(true);
         $this->_handler->save(false);
+    }
+
+    protected function getFileDescription($path, $description)
+    {
+        if (is_string($description) && !empty($description)) {
+            return $description;
+        }
+
+        if (preg_match('/[\\\\\/]?((?:.(?![\\\\/]))+$)/', $path, $matches)) {
+            return $matches[1] ?: 'file';
+        }
+
+        return 'file';
+    }
+
+    protected function getFileType($path, $type)
+    {
+        if (in_array($type, [self::FILE_PDF, self::FILE_EXCEL, self::FILE_DOC, self::FILE_CSV, self::FILE_TXT])) {
+            return $type;
+        }
+
+        if (preg_match('/\.?((?:.(?!\.))+$)/', $path, $matches)) {
+            $extension = $matches[1];
+
+            switch ($extension) {
+                case 'pdf':
+                    return self::FILE_PDF;
+                    break;
+                case 'xls':
+                case 'xlsx':
+                    return self::FILE_EXCEL;
+                    break;
+                case 'doc':
+                case 'docx':
+                    return self::FILE_DOC;
+                    break;
+                case 'csv':
+                    return self::FILE_CSV;
+                    break;
+                case 'txt':
+                    return self::FILE_TXT;
+                    break;
+                case 'xml':
+                    return self::FILE_XML;
+                    break;
+                default:
+                    return self::FILE_UNKNOWN;
+            }
+        }
+
+        return self::FILE_UNKNOWN;
     }
 }
