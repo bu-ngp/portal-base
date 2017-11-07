@@ -8,6 +8,7 @@
 
 namespace doh\services\classes;
 
+use doh\services\models\DohFiles;
 use doh\services\models\Handler;
 use doh\services\models\HandlerFiles;
 use domain\helpers\BinaryHelper;
@@ -21,14 +22,6 @@ use yii\web\User;
 
 abstract class ProcessLoader extends BaseObject implements Job
 {
-    const FILE_PDF = 'pdf';
-    const FILE_EXCEL = 'excel';
-    const FILE_DOC = 'word';
-    const FILE_CSV = 'csv';
-    const FILE_TXT = 'txt';
-    const FILE_XML = 'xml';
-    const FILE_UNKNOWN = 'unknown';
-
     public $description = 'Process Loader';
     public $handler_id;
 
@@ -93,7 +86,7 @@ abstract class ProcessLoader extends BaseObject implements Job
     public function addFile($path, $description = '', $type = '')
     {
         if (file_exists($path)) {
-            $this->_handler->dohFiles = array_merge(HandlerFiles::findAll(['handler_id' =>  $this->_handler->primaryKey]),[
+            $this->_handler->dohFiles = array_merge(HandlerFiles::findAll(['handler_id' => $this->_handler->primaryKey]), [
                 [
                     'file_type' => $this->getFileType($path, $type),
                     'file_path' => $path,
@@ -172,7 +165,7 @@ abstract class ProcessLoader extends BaseObject implements Job
 
     protected function getFileType($path, $type)
     {
-        if (in_array($type, [self::FILE_PDF, self::FILE_EXCEL, self::FILE_DOC, self::FILE_CSV, self::FILE_TXT])) {
+        if (in_array($type, [DohFiles::FILE_PDF, DohFiles::FILE_EXCEL, DohFiles::FILE_DOC, DohFiles::FILE_CSV, DohFiles::FILE_TXT])) {
             return $type;
         }
 
@@ -181,30 +174,33 @@ abstract class ProcessLoader extends BaseObject implements Job
 
             switch ($extension) {
                 case 'pdf':
-                    return self::FILE_PDF;
+                    return DohFiles::FILE_PDF;
                     break;
                 case 'xls':
                 case 'xlsx':
-                    return self::FILE_EXCEL;
+                    return DohFiles::FILE_EXCEL;
                     break;
                 case 'doc':
                 case 'docx':
-                    return self::FILE_DOC;
+                    return DohFiles::FILE_DOC;
                     break;
                 case 'csv':
-                    return self::FILE_CSV;
+                    return DohFiles::FILE_CSV;
                     break;
                 case 'txt':
-                    return self::FILE_TXT;
+                    return DohFiles::FILE_TXT;
+                    break;
+                case 'zip':
+                    return DohFiles::FILE_ZIP;
                     break;
                 case 'xml':
-                    return self::FILE_XML;
+                    return DohFiles::FILE_XML;
                     break;
                 default:
-                    return self::FILE_UNKNOWN;
+                    return DohFiles::FILE_UNKNOWN;
             }
         }
 
-        return self::FILE_UNKNOWN;
+        return DohFiles::FILE_UNKNOWN;
     }
 }

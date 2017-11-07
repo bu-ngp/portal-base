@@ -113,7 +113,7 @@ class Handler extends \yii\db\ActiveRecord
     public function getDohFilesList()
     {
         return $this->dohFiles ? '<ul>' . implode("", array_map(function ($dohFiles) {
-                return '<li><i class="fa fa-file-text"></i><a data-pjax="0" href="' . Yii::$app->get('urlManagerAdmin')->createUrl(['doh/download', 'id' => $dohFiles->primaryKey]) . '">&nbsp' . $dohFiles->file_description . '</a></li>';
+                return '<li><i class="fa fa-' . DohFiles::faFileType($dohFiles->file_type) . '"></i><a data-pjax="0" href="' . Yii::$app->get('urlManagerAdmin')->createUrl(['doh/download', 'id' => $dohFiles->primaryKey]) . '">&nbsp' . $dohFiles->file_description . '</a></li>';
             }, $this->dohFiles)) . '</ul>' : '';
     }
 

@@ -50,6 +50,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     'label' => Yii::t('doh', 'Handler Files'),
                     'format' => 'raw',
                     'filter' => false,
+                    'contentOptions' => [
+                        'class' => 'wk-doh-files',
+                    ],
                 ],
                 [
                     'attribute' => 'handler_done_time',

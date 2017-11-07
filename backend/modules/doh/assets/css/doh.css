@@ -1,0 +1,36 @@
+.wk-doh-files > ul {
+    list-style-type: none;
+    padding-left: 10px;
+}
+
+.wk-doh-files i.fa-file-text-o {
+    color: #777777;
+}
+
+.wk-doh-files i.fa-file-pdf-o {
+    color: #e85656;
+}
+
+.wk-doh-files i.fa-file-excel-o {
+    color: #63ab63;
+}
+
+.wk-doh-files i.fa-file-word-o {
+    color: #6378ab;
+}
+
+.wk-doh-files i.fa-file-zip-o {
+    color: #ab9563;
+}
+
+.wk-doh-files i.fa-file-o {
+    color: #777777;
+}
+
+.wk-doh-files i.fa-file-code-o {
+    color: #63ab63;
+}
+
+.wk-doh-files i.fa-table {
+    color: #63ab63;
+}

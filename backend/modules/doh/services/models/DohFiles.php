@@ -2,6 +2,7 @@
 
 namespace doh\services\models;
 
+use rmrevin\yii\fontawesome\FA;
 use Yii;
 
 /**
@@ -17,6 +18,15 @@ use Yii;
  */
 class DohFiles extends \yii\db\ActiveRecord
 {
+    const FILE_PDF = 'pdf';
+    const FILE_EXCEL = 'excel';
+    const FILE_DOC = 'word';
+    const FILE_CSV = 'csv';
+    const FILE_TXT = 'txt';
+    const FILE_XML = 'xml';
+    const FILE_ZIP = 'zip';
+    const FILE_UNKNOWN = 'unknown';
+
     /**
      * @inheritdoc
      */
@@ -64,5 +74,33 @@ class DohFiles extends \yii\db\ActiveRecord
     public function getHandlers()
     {
         return $this->hasMany(Handler::className(), ['handler_id' => 'handler_id'])->from(['handlers' => Handler::tableName()])->viaTable('{{%handler_files}}', ['doh_files_id' => 'doh_files_id']);
+    }
+
+    public static function faFileType($file_type) {
+        switch ($file_type) {
+            case DohFiles::FILE_PDF:
+                return FA::_FILE_PDF_O;
+                break;
+            case DohFiles::FILE_EXCEL:
+                return FA::_FILE_EXCEL_O;
+                break;
+            case DohFiles::FILE_DOC:
+                return FA::_FILE_WORD_O;
+                break;
+            case DohFiles::FILE_CSV:
+                return FA::_TABLE;
+                break;
+            case DohFiles::FILE_TXT:
+                return FA::_FILE_TEXT_O;
+                break;
+            case DohFiles::FILE_XML:
+                return FA::_FILE_CODE_O;
+                break;
+            case DohFiles::FILE_ZIP:
+                return FA::_FILE_ZIP_O;
+                break;
+            default:
+                return FA::_FILE;
+        }
     }
 }
