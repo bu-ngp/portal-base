@@ -46,7 +46,8 @@ class handlerSearch extends SearchModel
     {
         return [
             ['handler_status', SearchModel::STRICT],
-            [['handler_at'], SearchModel::DATETIME],
+            ['handler_at', SearchModel::DATETIME],
+            ['handler_description', SearchModel::CONTAIN],
         ];
     }
 }

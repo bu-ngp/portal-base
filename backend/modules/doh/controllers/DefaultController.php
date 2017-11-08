@@ -50,6 +50,7 @@ class DefaultController extends Controller
         Yii::$app->formatter->sizeFormatBase = 1000;
         $searchModel = new HandlerSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->sort->attributes = ['handler_at' => ['desc' => ['handler_at' => SORT_DESC], 'asc' => ['handler_at' => SORT_DESC]]];
 
         return $this->render('index', [
             'searchModel' => $searchModel,

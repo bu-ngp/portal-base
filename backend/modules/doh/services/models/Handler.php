@@ -117,6 +117,29 @@ class Handler extends \yii\db\ActiveRecord
             }, $this->dohFiles)) . '</ul>' : '';
     }
 
+    public function labelStatus($handler_status)
+    {
+        switch ($handler_status) {
+            case self::QUEUE:
+                return 'info';
+                break;
+            case self::DURING:
+                return 'primary';
+                break;
+            case self::FINISHED:
+                return 'success';
+                break;
+            case self::CANCELED:
+                return 'warning';
+                break;
+            case self::ERROR:
+                return 'danger';
+                break;
+            default:
+                return 'default';
+        }
+    }
+
     public static function items()
     {
         return [

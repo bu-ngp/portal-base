@@ -130,7 +130,7 @@ var initProgressBars = function () {
 
 var listenDoH = function () {
     var keys = [];
-    var dataColSeq = $('a[data-sort="handler_status"]').closest("th").attr('data-col-seq');
+    var dataColSeq = $('th[attribute="handler_status"]').attr('data-col-seq');
 
     $("#handlerSearchGrid tbody > tr[data-key]").each(function () {
         var id = $(this).find('.wk-progress').attr('key');
@@ -146,7 +146,7 @@ var listenDoH = function () {
             url: "doh/listen",
             data: {keys: JSON.stringify(keys)},
             success: function (response) {
-                var dataColSeq = $('a[data-sort="handler_status"]').closest("th").attr('data-col-seq');
+                var dataColSeq = $('th[attribute="handler_status"]').attr('data-col-seq');
 
                 $.each(response, function () {
                     var id = this[0];
@@ -156,7 +156,9 @@ var listenDoH = function () {
                     var barPercent = $(barSelector).attr('percent');
                     var barStatus = $('tr[data-key="' + id + '"] > td[data-col-seq="' + dataColSeq + '"] > span').attr('key');
 
-                    if (parseFloat(barPercent) !== parseFloat(percent) || (parseInt(status) === HANDLER_ERROR && parseInt(status) !== parseInt(barStatus))) {
+                    if (parseInt(status) !== parseInt(barStatus)) {
+                        reloadGrid();
+                    } else if (parseFloat(barPercent) !== parseFloat(percent) || (parseInt(status) === HANDLER_ERROR && parseInt(status) !== parseInt(barStatus))) {
                         $(barSelector).attr('percent', percent);
                         bars_cache[id].animate(percent, {}, afterAnimateBar(percent, status));
                     }
@@ -177,7 +179,6 @@ var afterAnimateBar = function (percent, status) {
 };
 
 var reloadGrid = function () {
-    console.debug("reloadGrid");
     var busy = false;
     if ($("#handlerSearchGrid-pjax")[0].busy) {
         busy = $(this)[0].busy;

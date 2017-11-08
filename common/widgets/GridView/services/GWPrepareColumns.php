@@ -42,14 +42,15 @@ class GWPrepareColumns
                 if (is_array($column)) {
                     $this->addRequiredProperties($column);
                     $this->addTooltip($column);
+                    $this->addFilterProperties($column);
                     $this->addValueToSpan($column);
 
                 } else {
+                    $this->addFilterProperties($column);
                     $this->addDataColumn($column);
                 }
 
                 $this->addFilterDateFormat($column);
-                $this->addFilterProperties($column);
                 $this->addVisibleProperties($column);
 
                 $this->columns[] = $column;
@@ -58,7 +59,7 @@ class GWPrepareColumns
             foreach ($this->columns as $key => $column) {
                 $this->columns[$key]['headerOptions'] = array_replace_recursive([
                     'wk-hash' => hash('crc32', $column['attribute'] . $key),
-                ], isset($this->columns[$key]['headerOptions']) ?: []);
+                ], isset($this->columns[$key]['headerOptions']) ? $this->columns[$key]['headerOptions'] : []);
             }
 
             $this->gridView->columns = $this->columns;
@@ -185,17 +186,25 @@ class GWPrepareColumns
 
     protected function addFilterProperties(&$column)
     {
-        /** @var ActiveRecord $model */
-        $model = $this->gridView->filterModel;
-        if (method_exists($model, 'itemsValues') && $items = $model::itemsValues($column['attribute'])) {
-            $column['filter'] = $items;
-            $column['format'] = 'raw';
-            $column['value'] = function ($model, $key, $index, $column) use ($items) {
-                /** @var $model ActiveRecord */
-                $value = $model[$column->attribute];
+        if (isset($column['class']) && $column['class'] === '\kartik\grid\DataColumn') {
+            /** @var ActiveRecord $model */
+            $model = $this->gridView->filterModel;
+            $attribute = isset($column['attribute']) ? $column['attribute'] : $column;
 
-                return '<span key="' . $value . '">' . (isset($value) ? Html::encode($items[$value]) : '') . '</span>';
-            };
+            if (
+                (isset($column['value']) && !is_callable($column['value']) || !isset($column['value']))
+                && method_exists($model, 'itemsValues')
+                && ($items = $model::itemsValues($attribute))
+            ) {
+                $column['filter'] = $items;
+                $column['format'] = 'raw';
+                $column['value'] = function ($model, $key, $index, $column) use ($items) {
+                    /** @var $model ActiveRecord */
+                    $value = $model[$column->attribute];
+
+                    return '<span key="' . $value . '">' . (isset($value) ? Html::encode($items[$value]) : '') . '</span>';
+                };
+            }
         }
     }
 
@@ -214,5 +223,17 @@ class GWPrepareColumns
 //            $column['filterType'] = GridView::FILTER_DATE_RANGE;
 //            $column['filterWidgetOptions']['pluginOptions']['locale']['format'] = 'DD.MM.YYYY';
 //         }
+    }
+
+    protected function getValueCallable($value, $encode = false)
+    {
+        if (is_callable($value)) {
+            return function ($model, $key, $index, $column) use ($value, $encode) {
+                $return = $value($model, $key, $index, $column);
+                return '<span>' . ($encode ? Html::encode($return) : $return) . '</span>';
+            };
+        }
+
+        return $value;
     }
 }

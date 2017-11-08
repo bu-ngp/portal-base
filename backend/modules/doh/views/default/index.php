@@ -14,6 +14,8 @@ use yii\helpers\Url;
 
 $this->title = Yii::t('doh', 'Handlers');
 $this->params['breadcrumbs'][] = $this->title;
+
+$handler_statuses = Handler::itemsValues('handler_status');
 ?>
     <div class="handler-index">
 
@@ -29,10 +31,19 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 ],
                 [
-                    'attribute' => 'handler_description',
-                    'filter' => false,
+                    'attribute' => 'handler_status',
+                    'filter' => $handler_statuses,
+                    'format' => 'raw',
+                    'headerOptions' => [
+                        'attribute' => 'handler_status',
+                    ],
+                    'value' => function ($model, $key, $index, $column) use ($handler_statuses) {
+                        /** @var Handler $model */
+                        $value = $model[$column->attribute];
+                        return '<span key="' . $value . '" class="label label-' . $model->labelStatus($value) . '">' . (isset($value) ? Html::encode($handler_statuses[$value]) : '') . '</span>';
+                    },
                 ],
-                'handler_status',
+                'handler_description',
                 [
                     'attribute' => 'handler_percent',
                     'filter' => false,
