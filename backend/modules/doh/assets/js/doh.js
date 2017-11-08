@@ -74,7 +74,11 @@ $(document).ready(function () {
                 $.ajax({
                     url: $button.attr("href"),
                     success: function (response) {
-                        $("#handlerSearchGrid").yiiGridView('applyFilter');
+                        if (response.result === 'success') {
+                            $("#handlerSearchGrid").yiiGridView('applyFilter');
+                        } else if (response.result === 'error') {
+                            $("#handlerSearchGrid-pjax").find('.wk-grid-errors').html("<div>" + response.message + "</div>");
+                        }
                     }
                 });
             }
@@ -91,7 +95,11 @@ $(document).ready(function () {
                 $.ajax({
                     url: $button.attr("href"),
                     success: function (response) {
-                        $("#handlerSearchGrid").yiiGridView('applyFilter');
+                        if (response.result === 'success') {
+                            $("#handlerSearchGrid").yiiGridView('applyFilter');
+                        } else if (response.result === 'error') {
+                            $("#handlerSearchGrid-pjax").find('.wk-grid-errors').html("<div>" + response.message + "</div>");
+                        }
                     }
                 });
             }

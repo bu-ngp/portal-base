@@ -9,15 +9,15 @@
 namespace doh\controllers;
 
 
+use console\helpers\RbacHelper;
 use doh\services\classes\DoH;
 use doh\services\models\DohFiles;
-use doh\services\models\Handler;
 use doh\services\models\search\handlerSearch;
 use doh\services\TestPL;
 use doh\services\TestPLError;
 use doh\services\TestWithFiles;
 use Yii;
-use yii\db\Expression;
+use yii\filters\AccessControl;
 use yii\filters\AjaxFilter;
 use yii\filters\ContentNegotiator;
 use yii\web\Controller;
@@ -31,6 +31,24 @@ class DefaultController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['test', 'test-error', 'test-with-files'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'listen', 'cancel', 'download'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['delete', 'clear'],
+                        'roles' => [RbacHelper::ADMINISTRATOR],
+                    ],
+                ],
+            ],
             [
                 'class' => AjaxFilter::className(),
                 'only' => ['listen', 'cancel', 'delete', 'clear'],
@@ -47,10 +65,8 @@ class DefaultController extends Controller
 
     public function actionIndex()
     {
-        Yii::$app->formatter->sizeFormatBase = 1000;
         $searchModel = new HandlerSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $dataProvider->sort->attributes = ['handler_at' => ['desc' => ['handler_at' => SORT_DESC], 'asc' => ['handler_at' => SORT_DESC]]];
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -66,27 +82,15 @@ class DefaultController extends Controller
             throw new \Exception('keys JSON decode error');
         }
 
-        if ($keys) {
-            $handlers = Handler::find()
-                ->select(['handler_id', new Expression('round(handler_percent / 100, 2) as handler_percent'), 'handler_status'])
-                ->andWhere(['handler_id' => $keys])
-                ->asArray()
-                ->all();
-
-            return $handlers ? array_map(function ($handler) {
-                return [$handler['handler_id'], $handler['handler_percent'], $handler['handler_status']];
-            }, $handlers) : [];
-        }
-
-        return [];
+        return DoH::listen($keys);
     }
 
     public function actionCancel($id)
     {
         if (DoH::cancel($id)) {
-            return (object)['status' => 'success'];
+            return (object)['result' => 'success'];
         }
-        return (object)['status' => 'error'];
+        return (object)['result' => 'error'];
     }
 
     public function actionDownload($id)
@@ -100,17 +104,17 @@ class DefaultController extends Controller
     public function actionClear()
     {
         if (DoH::clear()) {
-            return (object)['status' => 'success'];
+            return (object)['result' => 'success'];
         }
-        return (object)['status' => 'error'];
+        return (object)['result' => 'error'];
     }
 
     public function actionDelete($id)
     {
-        if (DoH::delete($id)) {
-            return (object)['status' => 'success'];
+        if (!$errorMessage = DoH::delete($id)) {
+            return (object)['result' => 'success'];
         }
-        return (object)['status' => 'error'];
+        return (object)['result' => 'error', 'message' => $errorMessage];
     }
 
     public function actionTest()

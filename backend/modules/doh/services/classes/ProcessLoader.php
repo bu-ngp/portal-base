@@ -38,7 +38,7 @@ abstract class ProcessLoader extends BaseObject implements Job
     public function execute($queue)
     {
         $this->_handler = Handler::findOne($this->handler_id);
-        if ($this->_handler->handler_status !== Handler::QUEUE) {
+        if (!$this->_handler || $this->_handler->handler_status !== Handler::QUEUE) {
             return;
         }
         $this->begin();

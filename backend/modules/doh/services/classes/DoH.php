@@ -14,6 +14,7 @@ use domain\helpers\BinaryHelper;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\console\Controller;
+use yii\db\Expression;
 use yii\web\Session;
 use yii\web\User;
 
@@ -73,10 +74,27 @@ class DoH
         throw new \Exception('Need user and session components');
     }
 
+    public static function listen(array $handler_ids)
+    {
+        if (empty($handler_ids)) {
+            return [];
+        }
+
+        $handlers = Handler::find()
+            ->select(['handler_id', new Expression('round(handler_percent / 100, 2) as handler_percent'), 'handler_status'])
+            ->andWhere(['handler_id' => $handler_ids])
+            ->asArray()
+            ->all();
+
+        return $handlers ? array_map(function ($handler) {
+            return array_values($handler);
+        }, $handlers) : [];
+    }
+
     public static function cancel($handler_id)
     {
         $handler = Handler::findOne($handler_id);
-        if ($handler && $handler->handler_status === Handler::DURING) {
+        if ($handler && in_array($handler->handler_status, [Handler::QUEUE, Handler::DURING])) {
             $handler->handler_status = Handler::CANCELED;
             return $handler->save(false);
         }
@@ -87,12 +105,21 @@ class DoH
     public static function delete($handler_id)
     {
         $handler = Handler::findOne($handler_id);
-        if ($handler && !in_array($handler->handler_status, [Handler::QUEUE, Handler::DURING])) {
-            /** TODO Delete Files */
-            return $handler->delete();
+
+        if (!$handler) {
+            return Yii::t('doh', 'Handler "{id}" not found', ['id' => $handler_id]);
         }
 
-        return false;
+        if (in_array($handler->handler_status, [Handler::QUEUE, Handler::DURING])) {
+            return Yii::t('doh', 'Handler in queue or is during');
+        }
+
+        if ($handler->delete() === false) {
+            /** TODO Delete Files */
+            return 'Ошибка удаления';
+        }
+
+        return '';
     }
 
     public static function clear()

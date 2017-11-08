@@ -10,6 +10,7 @@ namespace doh\services\models\search;
 
 use doh\services\models\Handler;
 use domain\services\SearchModel;
+use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 
@@ -34,7 +35,14 @@ class handlerSearch extends SearchModel
             'handler_used_memory',
             'handler_short_report',
             'handler_files',
+            'dohFilesList',
         ];
+    }
+
+    public function beforeLoad(ActiveQuery $query, ActiveDataProvider $dataProvider, $params)
+    {
+        Yii::$app->formatter->sizeFormatBase = 1000;
+        $dataProvider->sort->attributes = ['handler_at' => ['desc' => ['handler_at' => SORT_DESC], 'asc' => ['handler_at' => SORT_DESC]]];
     }
 
     public function defaultSortOrder()
