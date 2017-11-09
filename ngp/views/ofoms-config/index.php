@@ -17,9 +17,7 @@ $this->title = Yii::t('ngp/config-ofoms', 'Update Ofoms Settings');
     <div class="config-ofoms-form">
         <?php $form = ActiveForm::begin(); ?>
 
-        <?= $form->field($modelForm, 'config_ofoms_host')->textInput(['wkkeep' => true, 'wkicon' => FA::_SERVER]) ?>
-
-        <?= $form->field($modelForm, 'config_ofoms_port')->maskedInput(['mask' => '9{1,5}', 'wkkeep' => true, 'wkicon' => FA::_LINK]) ?>
+        <?= $form->field($modelForm, 'config_ofoms_url')->textInput(['wkkeep' => true, 'wkicon' => FA::_SERVER]) ?>
 
         <?= $form->field($modelForm, 'config_ofoms_login')->textInput(['wkkeep' => true, 'wkicon' => FA::_USER_SECRET]) ?>
 

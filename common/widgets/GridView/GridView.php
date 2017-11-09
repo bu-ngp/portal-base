@@ -350,7 +350,7 @@ HTML;
                         }
                     });
                 
-                    if (!busy) {
+                    if (busy === false) {
                         $("#$id").yiiGridView('applyFilter');
                     } else {
                         setTimeout(function() {

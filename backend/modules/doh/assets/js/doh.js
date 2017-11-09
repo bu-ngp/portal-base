@@ -193,7 +193,7 @@ var reloadGrid = function () {
         busy = $(this)[0].busy;
     }
 
-    if (!busy) {
+    if (busy === false) {
         $("#handlerSearchGrid").yiiGridView("applyFilter");
     } else {
         setTimeout(function () {
