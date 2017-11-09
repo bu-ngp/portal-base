@@ -87,10 +87,10 @@ class DefaultController extends Controller
 
     public function actionCancel($id)
     {
-        if (DoH::cancel($id)) {
+        if (!$errorMessage = DoH::cancel($id)) {
             return (object)['result' => 'success'];
         }
-        return (object)['result' => 'error'];
+        return (object)['result' => 'error', 'message' => $errorMessage];
     }
 
     public function actionDownload($id)
@@ -99,14 +99,16 @@ class DefaultController extends Controller
         if ($dohFiles) {
             return Yii::$app->response->sendFile($dohFiles->file_path, $dohFiles->file_description);
         }
+
+        throw new \Exception(Yii::t('doh', "File with id = '$id' not found."));
     }
 
     public function actionClear()
     {
-        if (DoH::clear()) {
+        if (!$errorMessage = DoH::clear()) {
             return (object)['result' => 'success'];
         }
-        return (object)['result' => 'error'];
+        return (object)['result' => 'error', 'message' => $errorMessage];
     }
 
     public function actionDelete($id)

@@ -86,7 +86,7 @@ abstract class ProcessLoader extends BaseObject implements Job
     public function addFile($path, $description = '', $type = '')
     {
         if (file_exists($path)) {
-            $this->_handler->dohFiles = array_merge(HandlerFiles::findAll(['handler_id' => $this->_handler->primaryKey]), [
+            $this->_handler->dohFiles = array_merge(HandlerFiles::find()->select('doh_files_id')->andWhere(['handler_id' => $this->_handler->primaryKey])->column(), [
                 [
                     'file_type' => $this->getFileType($path, $type),
                     'file_path' => $path,
@@ -95,7 +95,6 @@ abstract class ProcessLoader extends BaseObject implements Job
             ]);
 
             if (!$this->_handler->save()) {
-                file_put_contents('test.txt', print_r($this->_handler->getErrors(), true));
                 $this->_handler->handler_short_report = "File '$path': " . print_r($this->_handler->getErrors(), true);
                 $this->_handler->save(false);
             }

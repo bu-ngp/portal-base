@@ -8,6 +8,7 @@
 
 namespace doh\services\models\search;
 
+use doh\services\classes\DoH;
 use doh\services\models\Handler;
 use domain\services\SearchModel;
 use Yii;
@@ -43,6 +44,8 @@ class handlerSearch extends SearchModel
     {
         Yii::$app->formatter->sizeFormatBase = 1000;
         $dataProvider->sort->attributes = ['handler_at' => ['desc' => ['handler_at' => SORT_DESC], 'asc' => ['handler_at' => SORT_DESC]]];
+
+        $query->andWhere(['identifier' => DoH::getCurrentIdentifierCondition()]);
     }
 
     public function defaultSortOrder()

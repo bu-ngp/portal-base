@@ -113,7 +113,7 @@ class Handler extends \yii\db\ActiveRecord
     public function getDohFilesList()
     {
         return $this->dohFiles ? '<ul>' . implode("", array_map(function ($dohFiles) {
-                return '<li><i class="fa fa-' . DohFiles::faFileType($dohFiles->file_type) . '"></i><a data-pjax="0" href="' . Yii::$app->get('urlManagerAdmin')->createUrl(['doh/download', 'id' => $dohFiles->primaryKey]) . '">&nbsp' . $dohFiles->file_description . '</a></li>';
+                return $this->getLink($dohFiles);
             }, $this->dohFiles)) . '</ul>' : '';
     }
 
@@ -137,6 +137,17 @@ class Handler extends \yii\db\ActiveRecord
                 break;
             default:
                 return 'default';
+        }
+    }
+
+    protected function getLink(DohFiles $dohFiles)
+    {
+        $path = DIRECTORY_SEPARATOR === '/' ? $dohFiles->file_path : mb_convert_encoding($dohFiles->file_path, 'Windows-1251', 'UTF-8');
+
+        if (file_exists($path)) {
+            return '<li><i class="fa fa-' . DohFiles::faFileType($dohFiles->file_type) . '"></i><a data-pjax="0" href="' . Yii::$app->get('urlManagerAdmin')->createUrl(['doh/download', 'id' => $dohFiles->primaryKey]) . '">&nbsp' . $dohFiles->file_description . '</a></li>';
+        } else {
+            return '<li class="wk-doh-file-missed"><i class="fa fa-' . DohFiles::faFileType($dohFiles->file_type) . '"></i>' . $dohFiles->file_description . '</li>';
         }
     }
 

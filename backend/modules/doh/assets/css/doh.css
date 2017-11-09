@@ -34,3 +34,7 @@
 .wk-doh-files i.fa-table {
     color: #63ab63;
 }
+
+.wk-doh-file-missed {
+    text-decoration: line-through;
+}

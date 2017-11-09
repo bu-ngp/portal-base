@@ -8,14 +8,12 @@ var progressBarOpts = {
     strokeWidth: 4,
     easing: 'easeInOut',
     duration: 1400,
-    color: '#FFEA82',
+    color: '#a0b6ff',
     trailColor: '#eee',
     trailWidth: 4,
     svgStyle: {width: '100%', height: '100%'},
     text: {
         style: {
-            // Text color.
-            // Default: same as stroke color (options.color)
             color: '#999',
             position: 'relative',
             left: '40%',
@@ -25,8 +23,6 @@ var progressBarOpts = {
         },
         autoStyleContainer: false
     },
-    from: {color: '#FFEA82'},
-    to: {color: '#ED6A5A'},
     step: function (state, bar) {
         bar.setText(Math.round(bar.value() * 100) + ' %');
     }
@@ -116,7 +112,11 @@ $(document).ready(function () {
                 $.ajax({
                     url: $button.attr("href"),
                     success: function (response) {
-                        $("#handlerSearchGrid").yiiGridView('applyFilter');
+                        if (response.result === 'success') {
+                            $("#handlerSearchGrid").yiiGridView('applyFilter');
+                        } else if (response.result === 'error') {
+                            $("#handlerSearchGrid-pjax").find('.wk-grid-errors').html("<div>" + response.message + "</div>");
+                        }
                     }
                 });
             }
@@ -143,8 +143,9 @@ var listenDoH = function () {
     $("#handlerSearchGrid tbody > tr[data-key]").each(function () {
         var id = $(this).find('.wk-progress').attr('key');
         var percent = $(this).find('.wk-progress').attr('percent');
-        var status = $(this).find('td[data-col-seq="' + dataColSeq + '"] > span').attr('key');
-        if (percent < 1 && [HANDLER_QUEUE, HANDLER_DURING].indexOf(parseInt(status)) >= 0) {
+
+        var status = $(this).find('td[data-col-seq="' + dataColSeq + '"]').children('span').attr('key');
+        if ([HANDLER_QUEUE, HANDLER_DURING].indexOf(parseInt(status)) >= 0) {
             keys.push(id);
         }
     });
@@ -162,7 +163,7 @@ var listenDoH = function () {
                     var status = this[2];
                     var barSelector = 'div.wk-progress[key="' + id + '"]';
                     var barPercent = $(barSelector).attr('percent');
-                    var barStatus = $('tr[data-key="' + id + '"] > td[data-col-seq="' + dataColSeq + '"] > span').attr('key');
+                    var barStatus = $('tr[data-key="' + id + '"]').children('td[data-col-seq="' + dataColSeq + '"]').children('span').attr('key');
 
                     if (parseInt(status) !== parseInt(barStatus)) {
                         reloadGrid();
@@ -199,4 +200,4 @@ var reloadGrid = function () {
             reloadGrid();
         }, 300);
     }
-}
+};
