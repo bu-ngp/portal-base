@@ -66,6 +66,10 @@ class Ofoms extends Model
     public $rstop;
     /** @var string(254) Территория страхования */
     public $ter_st;
+    /** @var string Вычислительное поле (Прикреплен, не прикреплен, снят с учета) */
+    public $ofomsStatus;
+    /** @var string Вычислительное поле с ФИО и должностью врача */
+    public $ofomsVrach;
 
     public function attributeLabels()
     {
@@ -91,6 +95,8 @@ class Ofoms extends Model
             'q_name' => 'Наименование СМО',
             'rstop' => 'Причина прекращения страхования',
             'ter_st' => 'Территория страхования',
+            'ofomsStatus' => 'Статус',
+            'ofomsVrach' => 'Врач',
         ];
     }
 

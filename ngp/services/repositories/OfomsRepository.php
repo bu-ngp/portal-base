@@ -26,26 +26,28 @@ class OfomsRepository
 
     public function search($searchString)
     {
-        $client = new Client();
-        $response = $client->createRequest()
-            ->setMethod('post')
-            ->setUrl($this->configOfoms->config_ofoms_url)
-            ->setHeaders([
-                'content-type' => 'application/x-www-form-urlencoded; charset=UTF-8',
-                'Accept' => '*/*',
-                'Host' => $this->configOfoms->config_ofoms_remote_host_name,
+        if (!empty($searchString)) {
+            $client = new Client();
+            $response = $client->createRequest()
+                ->setMethod('post')
+                ->setUrl($this->configOfoms->config_ofoms_url)
+                ->setHeaders([
+                    'content-type' => 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'Accept' => '*/*',
+                    'Host' => $this->configOfoms->config_ofoms_remote_host_name,
 
-            ])
-            ->setData([
-                'username' => $this->configOfoms->config_ofoms_login,
-                'password' => Yii::$app->security->decryptByPassword($this->configOfoms->config_ofoms_password, Yii::$app->request->cookieValidationKey),
-                'rtype' => 'json',
-                's' => $searchString,
-            ])
-            ->send();
+                ])
+                ->setData([
+                    'username' => $this->configOfoms->config_ofoms_login,
+                    'password' => Yii::$app->security->decryptByPassword($this->configOfoms->config_ofoms_password, Yii::$app->request->cookieValidationKey),
+                    'rtype' => 'json',
+                    's' => $searchString,
+                ])
+                ->send();
 
-        if ($response->isOk) {
-            return $response->data['persons'];
+            if ($response->isOk) {
+                return $response->data['persons'];
+            }
         }
 
         return [];

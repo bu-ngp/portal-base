@@ -8,9 +8,11 @@
 
 namespace ngp\controllers;
 
+use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\GridView\services\AjaxResponse;
 use domain\services\ProxyService;
 use ngp\helpers\RbacHelper;
+use ngp\services\forms\OfomsAttachForm;
 use ngp\services\models\search\OfomsSearch;
 use ngp\services\services\OfomsService;
 use Yii;
@@ -47,6 +49,11 @@ class OfomsController extends Controller
                         'actions' => ['index', 'search'],
                         'roles' => [RbacHelper::OFOMS_VIEW],
                     ],
+                    [
+                        'allow' => true,
+                        'actions' => ['attach'],
+                        'roles' => [RbacHelper::OFOMS_PRIK],
+                    ],
                 ],
             ],
             [
@@ -71,6 +78,23 @@ class OfomsController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionAttach()
+    {
+        $form = new OfomsAttachForm();
+
+        if ($form->load(Yii::$app->request->post())
+            && $form->validate()
+            && $this->service->attach($form)
+        ) {
+            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
+            return $this->redirect(Breadcrumbs::previousUrl());
+        }
+
+        return $this->render('attach', [
+            'modelForm' => $form,
         ]);
     }
 }

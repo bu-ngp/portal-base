@@ -9,6 +9,7 @@
 namespace ngp\services\services;
 
 use domain\services\Service;
+use ngp\services\forms\OfomsAttachForm;
 use ngp\services\repositories\OfomsRepository;
 use Yii;
 
@@ -25,11 +26,11 @@ class OfomsService extends Service
 
     public function search($searchString)
     {
-        if (Yii::$app->request->isAjax) {
-            throw new \Exception('ups');
-        }
-
-
         return $this->ofoms->search($searchString);
+    }
+
+    public function attach(OfomsAttachForm $form)
+    {
+
     }
 }

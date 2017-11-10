@@ -25,6 +25,7 @@ use yii\behaviors\TimestampBehavior;
  * @property Dolzh $dolzh
  * @property Person $person
  * @property Podraz $podraz
+ * @property EmployeeHistory $employeeHistory
  */
 class Employee extends \yii\db\ActiveRecord
 {
@@ -120,5 +121,14 @@ class Employee extends \yii\db\ActiveRecord
     function getPodraz()
     {
         return $this->hasOne(Podraz::className(), ['podraz_id' => 'podraz_id'])->from(['podraz' => Podraz::tableName()]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public
+    function getEmployeeHistory()
+    {
+        return $this->hasOne(EmployeeHistory::className(), ['person_id' => 'person_id', 'dolzh_id' => 'dolzh_id', 'podraz_id' => 'podraz_id'])->from(['employeeHistory' => EmployeeHistory::tableName()]);
     }
 }
