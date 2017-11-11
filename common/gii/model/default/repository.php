@@ -10,7 +10,7 @@
 /* @var $rules string[] list of validation rules */
 /* @var $relations array list of relations (name => relation declaration) */
 
-$ns = preg_replace('/(.*?\\\\)(\w+)(\\\\.*)/', '$1repositories$3', $generator->ns);
+$ns = preg_replace('/(.*?services\\\\)(\w+)(.*)/', '$1repositories$3', $generator->ns);
 
 echo "<?php\n";
 ?>

@@ -226,19 +226,19 @@ class Generator extends \yii\gii\Generator
                 $this->render('model.php', $params)
             );
 
-            $repositoryDir = Yii::getAlias('@' . preg_replace('/(.*?\\/)(\w+)(\\/.*)/', '$1repositories$3', str_replace('\\', '/', $this->ns)));
+            $repositoryDir = Yii::getAlias('@' . preg_replace('/(.*?services\\/)(\w+)(.*)/', '$1repositories$3', str_replace('\\', '/', $this->ns)));
             $files[] = new CodeFile(
                 $repositoryDir . '/' . $modelClassName . 'Repository.php',
                 $this->render('repository.php', $params)
             );
 
-            $formDir = Yii::getAlias('@' . preg_replace('/(.*?\\/)(\w+)(\\/.*)/', '$1forms$3', str_replace('\\', '/', $this->ns)));
+            $formDir = Yii::getAlias('@' . preg_replace('/(.*?services\\/)(\w+)(.*)/', '$1forms$3', str_replace('\\', '/', $this->ns)));
             $files[] = new CodeFile(
                 $formDir . '/' . $modelClassName . 'Form.php',
                 $this->render('form.php', $params)
             );
 
-            $serviceDir = Yii::getAlias('@' . preg_replace('/(.*?\\/)(\w+)(\\/.*)/', '$1services$3', str_replace('\\', '/', $this->ns)));
+            $serviceDir = Yii::getAlias('@' . preg_replace('/(.*?services\\/)(\w+)(.*)/', '$1services$3', str_replace('\\', '/', $this->ns)));
             $files[] = new CodeFile(
                 $serviceDir . '/' . $modelClassName . 'Service.php',
                 $this->render('service.php', $params)

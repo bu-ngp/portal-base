@@ -44,7 +44,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 <?php endif; ?>
 <?php if (count($timestampColumns) === 2): ?>
-use common\classes\BlameableBehavior;
+use domain\behaviors\BlameableBehavior;
 <?php endif; ?>
 use <?= preg_replace('/models/', 'forms', $generator->ns) ?>\<?= $className ?>Form;
 

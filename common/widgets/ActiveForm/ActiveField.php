@@ -183,6 +183,16 @@ class ActiveField extends \yii\bootstrap\ActiveField
         return $this->widget(Select2::className(), $options);
     }
 
+    public function textarea($options = [])
+    {
+        $this->initWKIcon($options);
+        $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield pmd-textfield-floating-label' : 'form-group pmd-textfield pmd-textfield-floating-label';
+
+        PropellerAsset::setWidget('input');
+
+        return parent::textarea($options);
+    }
+
     protected function initWKIcon(array &$options)
     {
         if (isset($options['wkicon'])) {

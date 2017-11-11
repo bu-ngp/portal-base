@@ -1,0 +1,34 @@
+.wk-tiles-preview {
+    max-width: 100%;
+    width: 310px;
+    height: 190px;
+    background-color: #b9b7b8;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    clip-path: url(#c3);
+}
+
+.wk-tiles-upload-input {
+    display: none !important;
+}
+
+button > i.fa {
+    margin-right: 5px;
+}
+
+.wk-tiles-upload-image-button, .wk-tiles-crop-button {
+    text-align: left !important;
+}
+
+.wk-tiles-image-container > div:first-child {
+    width: 310px;
+}
+
+.wk-tiles-image-container > div:last-child {
+    padding-left: 0;
+}
+
+#tilesform-tiles_description {
+    resize: none;
+    height: 160px;
+}

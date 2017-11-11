@@ -302,7 +302,7 @@
             $(this).prop("wkSelected", true);
         });
 
-        $(document).on('change dp.change', 'input[wkkeep]', function () {
+        $(document).on('change dp.change', 'input[wkkeep], textarea[wkkeep]', function () {
             getFromSessionStorage($widget, {
                 fail: function () {
                     getFromLocalStorage($widget);
