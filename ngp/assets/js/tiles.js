@@ -29,6 +29,8 @@ function showCoords(c) {
     $('#tilesform-tiles_thumbnail_x2').val(c.x2);
     $('#tilesform-tiles_thumbnail_y').val(c.y);
     $('#tilesform-tiles_thumbnail_y2').val(c.y2);
+    $('#tilesform-tiles_thumbnail_w').val(c.w);
+    $('#tilesform-tiles_thumbnail_h').val(c.h);
 }
 
 function readURL(input) {
@@ -47,7 +49,7 @@ function readURL(input) {
             jcrop_init = $.Jcrop('.wk-tiles-crop', {
                 onChange: showCoords,
                 onSelect: showCoords,
-                aspectRatio: 310 / 190,
+                aspectRatio: 290 / 170,
                 boxWidth: 866
                 //minSize: [310,190]
             });

@@ -5,6 +5,7 @@ use common\widgets\CardList\CardListHelper;
 use domain\models\base\search\AuthItemSearch;
 use domain\services\base\PersonService;
 use domain\services\ProxyService;
+use ngp\services\models\search\TilesMainPageSearch;
 use Yii;
 use yii\web\Controller;
 use yii\web\Response;
@@ -48,13 +49,22 @@ class SiteController extends Controller
         return $this->render('index', ['modelSearch' => $modelSearch]);
     }
 
-    public function actionTest()
-    {
+    public function actionTiles() {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $searchModel = new AuthItemSearch();
+        $searchModel = new TilesMainPageSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return CardListHelper::createAjaxCards($dataProvider, 'name', '', '', 'description', '', 'name');
+        return CardListHelper::createAjaxCards($dataProvider, 'tiles_name', 'tiles_link', 'tiles_thumbnail', 'tiles_description', '', 'tiles_id');
     }
+//
+//    public function actionTest()
+//    {
+//        Yii::$app->response->format = Response::FORMAT_JSON;
+//
+//        $searchModel = new AuthItemSearch();
+//        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+//
+//        return CardListHelper::createAjaxCards($dataProvider, 'name', '', '', 'description', '', 'name');
+//    }
 }

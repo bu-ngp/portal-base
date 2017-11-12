@@ -1,6 +1,6 @@
 <?php
 
-use yii\helpers\Html;
+use yii\bootstrap\Html;
 use rmrevin\yii\fontawesome\FA;
 use common\widgets\GridView\GridView;
 
@@ -18,11 +18,22 @@ $this->title = Yii::t('ngp/tiles', 'Tiles');
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            //'preview',
+            [
+                'attribute' => 'tiles_thumbnail',
+                'format' => 'html',
+                'value' => function ($model) {
+                    preg_match('/(.*)-\d+x\d+(\.\w+)$/', $model->tiles_thumbnail, $thumb);
+                    return Html::img($thumb[1] . '-145x85' . $thumb[2]);
+                }
+            ],
             'tiles_name',
             'tiles_description',
             [
                 'attribute' => 'tiles_link',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return Html::a($model->tiles_link, 'http://'.$model->tiles_link, ['target' => '_blank', 'data-pjax' => '0']);
+                },
             ],
             [
                 'attribute' => 'tiles_keywords',

@@ -40,12 +40,13 @@ class CardListHelper
                     $preview = [
                         'FAIcon' => 'cog',
                     ];
-                } elseif (substr($previewAttribute, 0, 6) == 'fa fa-') {
+                } elseif (substr($ar->$previewAttribute, 0, 6) == 'fa fa-') {
                     $preview = [
-                        'FAIcon' => substr($previewAttribute, 6),
+                        'FAIcon' => substr($ar->$previewAttribute, 6),
                     ];
                 } else {
-                    $preview = $ar->$descriptionAttribute;
+                    // $preview = $ar->$descriptionAttribute;
+                    $preview =  $ar->$previewAttribute;
                 }
 
                 $items[] = [

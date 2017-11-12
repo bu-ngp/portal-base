@@ -6,6 +6,8 @@ use ngp\services\models\Tiles;
 use ngp\services\repositories\TilesRepository;
 use domain\services\Service;
 use ngp\services\forms\TilesForm;
+use Yii;
+use yii\web\UploadedFile;
 
 class TilesService extends Service
 {

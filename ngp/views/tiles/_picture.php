@@ -15,7 +15,7 @@ use yii\bootstrap\Html;
         </div>
     </div>
     <div class="col-md-2 btn-group-vertical">
-        <?= $form->field($modelForm, 'tiles_thumbnail')->fileInput(['class' => 'wk-tiles-upload-input'])->label(false) ?>
+        <?= $form->field($modelForm, 'imageFile')->fileInput(['class' => 'wk-tiles-upload-input'])->label(false) ?>
         <?= Html::button(FA::icon(FA::_PICTURE_O) . Yii::t('ngp/tiles', 'Upload Image'), [
             'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary wk-tiles-upload-image-button',
         ]) ?>

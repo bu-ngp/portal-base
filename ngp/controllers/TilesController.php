@@ -43,7 +43,7 @@ class TilesController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index', 'create', 'update', 'delete','uploadPhoto'],
+                        'actions' => ['index', 'create', 'update', 'delete'],
                         'roles' => [RbacHelper::TILES_EDIT],
                     ],
                 ],
@@ -76,8 +76,8 @@ class TilesController extends Controller
     public function actionCreate()
     {
         $form = new TilesForm();
-
-        if (false && $form->load(Yii::$app->request->post())
+$a=$form->load(Yii::$app->request->post());
+        if ($form->load(Yii::$app->request->post())
             && $form->validate()
             && $this->service->create($form)
         ) {

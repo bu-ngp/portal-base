@@ -2,6 +2,9 @@
 
 namespace ngp\services\models;
 
+use ngp\services\rules\TilesRules;
+use ngp\services\validators\ThumbnailFilter;
+use ngp\services\validators\ThumbnailFilterValidator;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
@@ -39,12 +42,9 @@ class Tiles extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
-            [['tiles_name', 'tiles_link', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'required'],
-            [['created_at', 'updated_at'], 'integer'],
-            [['tiles_name', 'tiles_keywords', 'tiles_link', 'tiles_thumbnail', 'tiles_icon', 'tiles_icon_color', 'created_by', 'updated_by'], 'string', 'max' => 255],
-            [['tiles_description'], 'string', 'max' => 400],
-        ];
+        return array_merge(TilesRules::client(), [
+        //    [['tiles_thumbnail'], ThumbnailFilterValidator::className()],
+        ]);
     }
 
     /**
@@ -56,7 +56,7 @@ class Tiles extends \yii\db\ActiveRecord
             'tiles_id' => Yii::t('ngp/tiles', 'Tiles ID'),
             'tiles_name' => Yii::t('ngp/tiles', 'Tiles Name'),
             'tiles_description' => Yii::t('ngp/tiles', 'Tiles Description'),
-            'tiles_keywords' =>  Yii::t('ngp/tiles', 'Tiles Keywords'),
+            'tiles_keywords' => Yii::t('ngp/tiles', 'Tiles Keywords'),
             'tiles_link' => Yii::t('ngp/tiles', 'Tiles Link'),
             'tiles_thumbnail' => Yii::t('ngp/tiles', 'Tiles Thumbnail'),
             'tiles_icon' => Yii::t('ngp/tiles', 'Tiles Icon'),
@@ -85,10 +85,6 @@ class Tiles extends \yii\db\ActiveRecord
             'tiles_thumbnail' => $form->tiles_thumbnail,
             'tiles_icon' => $form->tiles_icon,
             'tiles_icon_color' => $form->tiles_icon_color,
-            'created_at' => $form->created_at,
-            'updated_at' => $form->updated_at,
-            'created_by' => $form->created_by,
-            'updated_by' => $form->updated_by,
         ]);
     }
 
@@ -100,10 +96,5 @@ class Tiles extends \yii\db\ActiveRecord
         $this->tiles_thumbnail = $form->tiles_thumbnail;
         $this->tiles_icon = $form->tiles_icon;
         $this->tiles_icon_color = $form->tiles_icon_color;
-        $this->created_at = $form->created_at;
-        $this->updated_at = $form->updated_at;
-        $this->created_by = $form->created_by;
-        $this->updated_by = $form->updated_by;
     }
-
 }

@@ -43,6 +43,8 @@ $this->title = Yii::t('ngp/tiles', 'Create Tiles');
         <?= $form->field($modelForm, 'tiles_thumbnail_x2')->hiddenInput()->label(false) ?>
         <?= $form->field($modelForm, 'tiles_thumbnail_y')->hiddenInput()->label(false) ?>
         <?= $form->field($modelForm, 'tiles_thumbnail_y2')->hiddenInput()->label(false) ?>
+        <?= $form->field($modelForm, 'tiles_thumbnail_w')->hiddenInput()->label(false) ?>
+        <?= $form->field($modelForm, 'tiles_thumbnail_h')->hiddenInput()->label(false) ?>
 
         <?= $form->field($modelForm, 'tiles_name')->textInput(['wkkeep' => true]) ?>
 
