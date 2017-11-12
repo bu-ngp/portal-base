@@ -10,13 +10,15 @@
  * template configuration file with detailed description for each parameter.
  */
 return [
-    'sourcePath' => '@app/..',
-    'messagePath' => 'common/messages',
+    'sourcePath' => '@ngp',
+    'messagePath' => 'ngp/messages',
     'languages' => ['ru-RU'],
+    'ignoreCategories' => [
+        'common*',
+        'domain/*',
+        'classes/*',
+    ],
     'except' => [
-        '/*/',
-        '!common/',
-        '!domain/',
         '.svn',
         '.git',
         '.gitignore',

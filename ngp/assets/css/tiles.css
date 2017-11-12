@@ -32,3 +32,7 @@ button > i.fa {
     resize: none;
     height: 160px;
 }
+
+#tilesform-tiles_link, #tilesform-tiles_keywords {
+    text-transform: lowercase;
+}

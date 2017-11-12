@@ -20,6 +20,15 @@ return [
         'urlManagerAdmin' => [
             'baseUrl' => 'manager',
         ],
+        'i18n' => [
+            'translations' => [
+                'ngp/*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@ngp/messages',
+                    'sourceLanguage' => 'en-US',
+                ],
+            ],
+        ],
     ],
     'params' => $params,
 ];

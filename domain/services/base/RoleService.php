@@ -126,7 +126,7 @@ class RoleService extends Service
         }
 
         if (!$assignedKeys) {
-            Yii::$app->session->addFlash('error', (Yii::t('common/roles', 'Need add roles')));
+            throw new \DomainException(Yii::t('common/roles', 'Need add roles'));
         }
 
         return $assignedKeys;

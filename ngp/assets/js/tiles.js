@@ -6,13 +6,20 @@ $(document).ready(function () {
     $(".wk-tiles-upload-input").change(function () {
         readURL(this);
     });
+
+    $("#tilesform-tiles_link").focusout(function () {
+        if ($(this).val() !== "") {
+            var matches = $(this).val().match(/^((https:\/\/)|(http:\/\/))?(.*)$/i);
+            if (matches[1] === undefined) {
+                $(this).val('http://' + matches[4]).trigger('change');
+            }
+        }
+    });
 });
 
 var jcrop_init;
 
 function showCoords(c) {
-    console.debug(c);
-
     var original = $('.wk-tiles-crop');
     var preview = $(".wk-tiles-preview");
     var oH = original.height();

@@ -53,7 +53,6 @@ class Tiles extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'tiles_id' => Yii::t('ngp/tiles', 'Tiles ID'),
             'tiles_name' => Yii::t('ngp/tiles', 'Tiles Name'),
             'tiles_description' => Yii::t('ngp/tiles', 'Tiles Description'),
             'tiles_keywords' => Yii::t('ngp/tiles', 'Tiles Keywords'),
@@ -61,10 +60,10 @@ class Tiles extends \yii\db\ActiveRecord
             'tiles_thumbnail' => Yii::t('ngp/tiles', 'Tiles Thumbnail'),
             'tiles_icon' => Yii::t('ngp/tiles', 'Tiles Icon'),
             'tiles_icon_color' => Yii::t('ngp/tiles', 'Tiles Icon Color'),
-            'created_at' => Yii::t('ngp/tiles', 'Created At'),
-            'updated_at' => Yii::t('ngp/tiles', 'Updated At'),
-            'created_by' => Yii::t('ngp/tiles', 'Created By'),
-            'updated_by' => Yii::t('ngp/tiles', 'Updated By'),
+            'created_at' => Yii::t('domain/base', 'Created At'),
+            'updated_at' => Yii::t('domain/base', 'Updated At'),
+            'created_by' => Yii::t('domain/base', 'Created By'),
+            'updated_by' => Yii::t('domain/base', 'Updated By'),
         ];
     }
 

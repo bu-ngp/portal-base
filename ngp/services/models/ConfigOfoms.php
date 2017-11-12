@@ -44,7 +44,6 @@ class ConfigOfoms extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'config_ofoms_id' => Yii::t('ngp/ofoms', 'Config Ofoms ID'),
             'config_ofoms_url' => Yii::t('ngp/ofoms', 'Config Ofoms Url'),
             'config_ofoms_login' => Yii::t('ngp/ofoms', 'Config Ofoms Login'),
             'config_ofoms_password' => Yii::t('ngp/ofoms', 'Config Ofoms Password'),

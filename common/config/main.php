@@ -96,15 +96,20 @@ return [
         ],
         'i18n' => [
             'translations' => [
-                '*' => [
+                'common*' => [
                     'class' => 'yii\i18n\PhpMessageSource',
-                    'basePath' => '@app/../common/messages',
+                    'basePath' => '@common/messages',
                     'sourceLanguage' => 'en-US',
-                    /*  'fileMap' => [
-                          'app' => 'app.php',
-                          'app/error' => 'error.php',
-                          'app/common' => 'common.php',
-                      ],*/
+                ],
+                'domain/*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@common/messages',
+                    'sourceLanguage' => 'en-US',
+                ],
+                'classes/*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@common/messages',
+                    'sourceLanguage' => 'en-US',
                 ],
             ],
         ],
