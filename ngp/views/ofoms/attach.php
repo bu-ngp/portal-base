@@ -25,7 +25,8 @@ $this->title = $modelForm->fam . ' ' . $modelForm->im . ' ' . $modelForm->ot;
         <?= $form->field($modelForm, 'dr')->textInput(['wkkeep' => true, 'maxlength' => true, 'disabled' => true]) ?>
         <?= $form->field($modelForm, 'vrach_inn')->select2([
             'activeRecordClass' => Person::className(),
-            'activeRecordAttribute' => 'person_id',
+            'activeRecordAttribute' => 'profile_inn',
+            'exceptAttributesFromResult' => ['profile_inn'],
             'queryCallback' => VrachQuery::select(),
             'ajaxConfig' => [
                 'searchAjaxCallback' => VrachQuery::search(),

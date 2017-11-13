@@ -34,10 +34,5 @@ return [
     'Rules' => 'Правила поиска',
     'Search' => 'Поиск',
     'Type to search input and press Enter button' => 'Введите строку поиска и нажмите клавишу Enter на клавиатуре',
-    'dr' => '',
-    'enp' => '',
-    'fam' => '',
-    'im' => '',
-    'ofomsVrach' => '',
-    'ot' => '',
+    'Vrach' => 'Врач',
 ];

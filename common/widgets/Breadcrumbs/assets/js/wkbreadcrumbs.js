@@ -450,6 +450,19 @@
 
             return false;
         },
+        changeCurrentUrl: function (url) {
+            var $widget = $(this);
+
+            if ($widget.data('wkbreadcrumbs').crumbs.length > 0) {
+                var bcObj = $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 1];
+                bcObj['url'] = url;
+                $widget.data('wkbreadcrumbs').crumbs[$widget.data('wkbreadcrumbs').crumbs.length - 1] = bcObj;
+                saveCrumbs($widget);
+                return true;
+            }
+
+            return false;
+        },
         destroy: function () {
             return this.each(function () {
                 var $widget = $(this),

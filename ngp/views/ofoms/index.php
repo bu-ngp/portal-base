@@ -9,7 +9,7 @@ use yii\bootstrap\Html;
 use yii\bootstrap\Modal;
 
 /* @var $this yii\web\View */
-/* @var $searchModel domain\models\base\search\BuildSearch */
+/* @var $searchModel \ngp\services\models\search\OfomsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('ngp/ofoms', 'Ofoms search');

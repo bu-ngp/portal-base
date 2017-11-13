@@ -84,8 +84,8 @@ class OfomsController extends Controller
     public function actionAttach()
     {
         $form = new OfomsAttachForm();
-
-        if ($form->load(Yii::$app->request->post())
+        if (isset(Yii::$app->request->post($form->formName())['vrach_inn'])
+            && $form->load(Yii::$app->request->post())
             && $form->validate()
             && $this->service->attach($form)
         ) {

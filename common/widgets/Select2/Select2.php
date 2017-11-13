@@ -34,6 +34,7 @@ class Select2 extends \kartik\select2\Select2
     public $queryCallback;
     /** @var string Полное имя класса ActiveRecord используемое для создания ActiveQuery */
     public $activeRecordClass;
+    public $activeRecordAttribute;
     /** @var  bool Если true, хранить выбранные значения в хлебных крошках, для восстановления при обновлении страницы, по умолчанию false */
     public $wkkeep = false;
     /** @var  string Имя класса иконок FontAwesome, для добавления иконки слева от select2
@@ -50,6 +51,7 @@ class Select2 extends \kartik\select2\Select2
     public $selectionGridUrl;
     /** @var bool Если true, исключить первичные ключи в результатах поиска, по умолчанию true */
     public $exceptPrimaryKeyFromResult = true;
+    public $exceptAttributesFromResult = [];
     /** @var array Конфигурация ajax поиска результатов
      * 'enabled' (bool) Включить ajax поиск результатов, по умолчанию true, если сконфигурирован Callback 'searchAjaxCallback'
      * 'searchAjaxCallback' => (\Closure) Анонимная функция ActiveQuery для задания условия поиска
@@ -111,9 +113,9 @@ class Select2 extends \kartik\select2\Select2
             $resultQuery = $dataQuery->asArray()->all();
             /** @var array $row */
             foreach ($resultQuery as $row) {
-                $row[$this->attribute] = $this->filterBinaryToString($row[$this->attribute]);
+                $row[$this->activeRecordAttribute] = $this->filterBinaryToString($row[$this->activeRecordAttribute]);
                 $resultString = $this->filterPrimaryKeysAttributes($row);
-                $this->data[$row[$this->attribute]] = implode(', ', $resultString);
+                $this->data[$row[$this->activeRecordAttribute]] = implode(', ', $resultString);
             }
         }
 
@@ -154,11 +156,11 @@ class Select2 extends \kartik\select2\Select2
                 $dataQuery = $this->getDataQuery();
                 $selectedID = $this->filterStringToBinary(Yii::$app->request->get('selected'));
 
-                $resultQuery = $dataQuery->andWhere([$this->attribute => $selectedID])->asArray()->one();
-                $resultQuery[$this->attribute] = $this->filterBinaryToString($resultQuery[$this->attribute]);
+                $resultQuery = $dataQuery->andWhere([$this->activeRecordAttribute => $selectedID])->asArray()->one();
+                $resultQuery[$this->activeRecordAttribute] = $this->filterBinaryToString($resultQuery[$this->activeRecordAttribute]);
                 $resultString = $this->filterPrimaryKeysAttributes($resultQuery);
                 if ($this->multiple) {
-                    $this->data[$resultQuery[$this->attribute]] = implode(', ', $resultString);
+                    $this->data[$resultQuery[$this->activeRecordAttribute]] = implode(', ', $resultString);
                 } else {
                     $this->initValueText = implode(', ', $resultString);
                 }
@@ -167,7 +169,7 @@ class Select2 extends \kartik\select2\Select2
                     $this->value = $this->value ?: [];
                 }
 
-                $this->multiple ? array_push($this->value, $resultQuery[$this->attribute]) : $this->value = $resultQuery[$this->attribute];
+                $this->multiple ? array_push($this->value, $resultQuery[$this->activeRecordAttribute]) : $this->value = $resultQuery[$this->activeRecordAttribute];
             }
         }
     }
@@ -217,11 +219,11 @@ class Select2 extends \kartik\select2\Select2
             $resultReturn = [];
 
             if ($id) {
-                $result = $query->andWhere([$this->attribute => $id])->asArray()->one();
+                $result = $query->andWhere([$this->activeRecordAttribute => $id])->asArray()->one();
 
-                $result[$this->attribute] = $this->filterBinaryToString($result[$this->attribute]);
+                $result[$this->activeRecordAttribute] = $this->filterBinaryToString($result[$this->activeRecordAttribute]);
                 $resultString = $this->filterPrimaryKeysAttributes($result);
-                $resultReturn = ['id' => $result[$this->attribute], 'text' => implode(', ', $resultString)];
+                $resultReturn = ['id' => $result[$this->activeRecordAttribute], 'text' => implode(', ', $resultString)];
 
                 $jsonObj = $resultReturn;
             } elseif ($q) {
@@ -229,9 +231,9 @@ class Select2 extends \kartik\select2\Select2
                 $result = $query->asArray()->all();
                 /** @var array $row */
                 foreach ($result as $row) {
-                    $row[$this->attribute] = $this->filterBinaryToString($row[$this->attribute]);
+                    $row[$this->activeRecordAttribute] = $this->filterBinaryToString($row[$this->activeRecordAttribute]);
                     $resultString = $this->filterPrimaryKeysAttributes($row);
-                    $resultReturn[] = ['id' => $row[$this->attribute], 'text' => implode(', ', $resultString)];
+                    $resultReturn[] = ['id' => $row[$this->activeRecordAttribute], 'text' => implode(', ', $resultString)];
                 }
 
                 $jsonObj = ['results' => $resultReturn];
@@ -248,7 +250,7 @@ class Select2 extends \kartik\select2\Select2
         $exceptPrimaryKeyFromResult = $this->exceptPrimaryKeyFromResult;
 
         return array_filter(array_map(function ($attribute, $value) use ($activeRecord, $exceptPrimaryKeyFromResult) {
-            if (!$exceptPrimaryKeyFromResult || $exceptPrimaryKeyFromResult && !$activeRecord->isPrimaryKey([$attribute])) {
+            if ((!$exceptPrimaryKeyFromResult || $exceptPrimaryKeyFromResult && !$activeRecord->isPrimaryKey([$attribute])) && !in_array($attribute, $this->exceptAttributesFromResult)) {
                 return $value;
             }
 
@@ -268,9 +270,9 @@ class Select2 extends \kartik\select2\Select2
 
     protected function initAjaxMultiple(ActiveQuery $dataQuery)
     {
-        $resultQuery = $dataQuery->andWhere([$this->attribute => $this->model->{$this->attribute}])->asArray()->all();
+        $resultQuery = $dataQuery->andWhere([$this->activeRecordAttribute => $this->model->{$this->attribute}])->asArray()->all();
 
-        $attribute = $this->attribute;
+        $attribute = $this->activeRecordAttribute;
         $data = [];
         $this->value = [];
         $resultQuery = array_map(function ($value) use ($attribute, &$data) {
@@ -281,7 +283,7 @@ class Select2 extends \kartik\select2\Select2
             return $value;
         }, $resultQuery);
 
-        $this->model->{$this->attribute} = ArrayHelper::getColumn($resultQuery, $this->attribute);
+        $this->model->{$this->attribute} = ArrayHelper::getColumn($resultQuery, $this->activeRecordAttribute);
         $this->data = $data;
     }
 
@@ -294,11 +296,11 @@ class Select2 extends \kartik\select2\Select2
 
     protected function initDataMultiple(ActiveQuery $dataQuery)
     {
-        $resultQuery = $dataQuery->andWhere([$this->attribute => $this->model->{$this->attribute}])->asArray()->one();
-        $resultQuery[$this->attribute] = $this->filterBinaryToString($resultQuery[$this->attribute]);
+        $resultQuery = $dataQuery->andWhere([$this->activeRecordAttribute => $this->model->{$this->attribute}])->asArray()->one();
+        $resultQuery[$this->activeRecordAttribute] = $this->filterBinaryToString($resultQuery[$this->activeRecordAttribute]);
         $resultString = $this->filterPrimaryKeysAttributes($resultQuery);
         $this->initValueText = implode(', ', $resultString);
-        $this->value = $resultQuery[$this->attribute];
+        $this->value = $resultQuery[$this->activeRecordAttribute];
     }
 
     protected function initSingle()
@@ -311,5 +313,6 @@ class Select2 extends \kartik\select2\Select2
         $this->ajaxConfig['enabled'] = ArrayHelper::getValue($this->ajaxConfig, 'enabled', $this->ajaxConfig['searchAjaxCallback'] instanceof \Closure);
         $this->ajaxConfig['minRecordsCountForUseAjax'] = ArrayHelper::getValue($this->ajaxConfig, 'minRecordsCountForUseAjax', 100);
         $this->ajaxConfig['onlyAjax'] = ArrayHelper::getValue($this->ajaxConfig, 'onlyAjax', false);
+        $this->activeRecordAttribute = $this->activeRecordAttribute ?: $this->attribute;
     }
 }

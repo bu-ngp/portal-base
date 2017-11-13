@@ -7,6 +7,7 @@ $(document).ready(function () {
 
     $("#ofomsGrid-pjax").on('pjax:success', function () {
         $(this)[0].busy = false;
+        $('.wkbc-breadcrumb').wkbreadcrumbs('changeCurrentUrl', window.location.href);
     });
 
     $("#ofomsGrid-pjax").on('pjax:beforeSend', function () {

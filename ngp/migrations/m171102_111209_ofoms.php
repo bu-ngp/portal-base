@@ -9,6 +9,7 @@ class m171102_111209_ofoms extends Migration
         $this->createTable('{{%config_ofoms}}', [
             'config_ofoms_id' => $this->primaryKey()->unsigned(),
             'config_ofoms_url' => $this->string(),
+            'config_ofoms_url_prik' => $this->string(),
             'config_ofoms_login' => $this->string()->notNull()->defaultValue(''),
             'config_ofoms_password' => $this->blob()->notNull(),
             'config_ofoms_remote_host_name' => $this->string(),

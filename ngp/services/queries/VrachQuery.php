@@ -16,7 +16,10 @@ class VrachQuery
     public static function select()
     {
         return function (ActiveQuery $query) {
-            return $query->select(['person_id', 'person_fullname']);
+            return $query
+                ->select(['profile.profile_inn', 'person_fullname', 'dolzh.dolzh_name'])
+                ->joinWith(['profile', 'employee.dolzh'])
+                ->andWhere(['not', ['profile.profile_inn' => null]]);
         };
     }
 

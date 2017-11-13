@@ -19,6 +19,8 @@ $this->title = Yii::t('ngp/config-ofoms', 'Update Ofoms Settings');
 
         <?= $form->field($modelForm, 'config_ofoms_url')->textInput(['wkkeep' => true, 'wkicon' => FA::_SERVER]) ?>
 
+        <?= $form->field($modelForm, 'config_ofoms_url_prik')->textInput(['wkkeep' => true, 'wkicon' => FA::_SERVER]) ?>
+
         <?= $form->field($modelForm, 'config_ofoms_login')->textInput(['wkkeep' => true, 'wkicon' => FA::_USER_SECRET]) ?>
 
         <?= $form->field($modelForm, 'config_ofoms_password')->passwordInput(['wkicon' => FA::_LOCK]) ?>

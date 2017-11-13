@@ -31,6 +31,22 @@ class OfomsService extends Service
 
     public function attach(OfomsAttachForm $form)
     {
+        if ($this->vrachChanged($form)) {
+            $result = $this->ofoms->attach($this->getFfio($form), $form->enp, $form->vrach_inn);
 
+            if ($result['status'] < 1) {
+                throw new \DomainException($result['message']);
+            }
+        }
+    }
+
+    protected function getFfio(OfomsAttachForm $form)
+    {
+        return mb_substr($form->fam, 0, 3, 'UTF-8') . mb_substr($form->im, 0, 1, 'UTF-8') . mb_substr($form->ot, 0, 1, 'UTF-8') . mb_substr($form->dr, 8, 2, 'UTF-8');
+    }
+
+    protected function vrachChanged(OfomsAttachForm $form)
+    {
+        return Yii::$app->request->get('vrach_inn') !== $form->vrach_inn;
     }
 }
