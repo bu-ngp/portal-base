@@ -8,6 +8,13 @@
     clip-path: url(#c3);
 }
 
+.wk-tiles-preview-icon {
+    max-width: 100%;
+    width: 310px;
+    height: 190px;
+    background-color: #b9b7b8;
+}
+
 .wk-tiles-upload-input {
     display: none !important;
 }

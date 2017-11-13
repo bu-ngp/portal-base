@@ -118,7 +118,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'toolbar' => [
                 Html::errorSummary($searchModel, ['class' => 'wk-ofoms-errors']),
             ],
-            'leftBottomToolbar' => Html::a(Yii::t('ngp/ofoms', 'Attach with list'), ['ofoms/attach-list'], ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-success']),
+            'leftBottomToolbar' => Html::a(Yii::t('ngp/ofoms', 'Attach with list'), ['ofoms/attach-list'], ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-success', 'data-pjax' => '0']),
             'rightBottomToolbar' => Html::button(Yii::t('ngp/ofoms', 'Rules'), [
                 'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-default',
                 'data-target' => '#ofoms-rules-dialog',

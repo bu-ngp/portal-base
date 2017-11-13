@@ -10,3 +10,24 @@
     margin: 0 0 15px 0;
     float: left;
 }
+
+.wk-ofoms-attach-list-input {
+    display: none !important;
+}
+
+button > i.fa {
+    margin-right: 5px;
+}
+
+div.wk-ofoms-icons > div > a {
+    width: 70px;
+    height: 70px;
+    font-size: 45px;
+    display: inline-block;
+    text-align: center;
+    border: solid #d0d0d0 1px
+}
+
+div.wk-ofoms-icons > div {
+    padding-bottom: 15px;
+}

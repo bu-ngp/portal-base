@@ -13,6 +13,7 @@ use common\widgets\GridView\services\AjaxResponse;
 use domain\services\ProxyService;
 use ngp\helpers\RbacHelper;
 use ngp\services\forms\OfomsAttachForm;
+use ngp\services\forms\OfomsAttachListForm;
 use ngp\services\models\search\OfomsSearch;
 use ngp\services\services\OfomsService;
 use Yii;
@@ -54,6 +55,11 @@ class OfomsController extends Controller
                         'actions' => ['attach'],
                         'roles' => [RbacHelper::OFOMS_PRIK],
                     ],
+                    [
+                        'allow' => true,
+                        'actions' => ['attach-list'],
+                        'roles' => [RbacHelper::OFOMS_PRIK_LIST],
+                    ],
                 ],
             ],
             [
@@ -94,6 +100,21 @@ class OfomsController extends Controller
         }
 
         return $this->render('attach', [
+            'modelForm' => $form,
+        ]);
+    }
+
+    public function actionAttachList()
+    {
+        $form = new OfomsAttachListForm();
+        if ($form->load(Yii::$app->request->post())
+            && $form->validate()
+            && $this->service->attachList($form)
+        ) {
+            return $this->redirect(['/doh']);
+        }
+
+        return $this->render('attach-list', [
             'modelForm' => $form,
         ]);
     }

@@ -3,6 +3,8 @@
 namespace ngp\controllers;
 
 use ngp\helpers\RbacHelper;
+use ReflectionClass;
+use rmrevin\yii\fontawesome\FA;
 use Yii;
 use ngp\services\models\Tiles;
 use ngp\services\models\search\TilesSearch;
@@ -43,7 +45,7 @@ class TilesController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index', 'create', 'update', 'delete'],
+                        'actions' => ['index', 'create', 'update', 'delete', 'icons'],
                         'roles' => [RbacHelper::TILES_EDIT],
                     ],
                 ],
@@ -76,7 +78,7 @@ class TilesController extends Controller
     public function actionCreate()
     {
         $form = new TilesForm();
-$a=$form->load(Yii::$app->request->post());
+
         if ($form->load(Yii::$app->request->post())
             && $form->validate()
             && $this->service->create($form)
@@ -117,5 +119,16 @@ $a=$form->load(Yii::$app->request->post());
         }
 
         return AjaxResponse::init(AjaxResponse::SUCCESS);
+    }
+
+    public function actionIcons($redirectTo = 'create')
+    {
+        $icons = (new ReflectionClass(get_class(new FA())))->getConstants();
+
+        $icons = array_filter($icons, function ($value) {
+            return !in_array($value, ['lg', '2x', '3x', '4x', '5x', '90', '180', '270', 'horizontal', 'vertical']);
+        });
+
+        return $this->render('icons', ['icons' => $icons, 'redirectTo' => $redirectTo]);
     }
 }

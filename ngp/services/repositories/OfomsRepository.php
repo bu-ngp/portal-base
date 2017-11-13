@@ -39,7 +39,7 @@ class OfomsRepository
                 ])
                 ->setData([
                     'username' => $this->configOfoms->config_ofoms_login,
-                    'password' => Yii::$app->security->decryptByPassword($this->configOfoms->config_ofoms_password, Yii::$app->request->cookieValidationKey),
+                    'password' => Yii::$app->security->decryptByPassword($this->configOfoms->config_ofoms_password,  Yii::$app->request->cookieValidationKey),
                     'rtype' => 'json',
                     's' => $searchString,
                 ])
@@ -75,7 +75,7 @@ class OfomsRepository
                 'doctor' => $doctor,
                 'rtype' => 'json',
                 'username' => $this->configOfoms->config_ofoms_login,
-                'password' => Yii::$app->security->decryptByPassword($this->configOfoms->config_ofoms_password, Yii::$app->request->cookieValidationKey),
+                'password' => Yii::$app->security->decryptByPassword($this->configOfoms->config_ofoms_password, 'FAMBuvzILQaR_U7GwIsUZXUtfXCgET1R'),
             ])
             ->send();
 

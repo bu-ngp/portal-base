@@ -13,6 +13,10 @@ $(document).ready(function () {
     $("#ofomsGrid-pjax").on('pjax:beforeSend', function () {
         $(this)[0].busy = true;
     });
+
+    $(".wk-ofoms-attach-list-button").click(function () {
+        $(".wk-ofoms-attach-list-input").click();
+    });
 });
 
 var reloadGrid = function () {

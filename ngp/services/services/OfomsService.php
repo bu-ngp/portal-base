@@ -8,8 +8,11 @@
 
 namespace ngp\services\services;
 
+use doh\services\classes\DoH;
 use domain\services\Service;
 use ngp\services\forms\OfomsAttachForm;
+use ngp\services\forms\OfomsAttachListForm;
+use ngp\services\proccesses\OfomsAttachListProccessLoader;
 use ngp\services\repositories\OfomsRepository;
 use Yii;
 
@@ -38,6 +41,12 @@ class OfomsService extends Service
                 throw new \DomainException($result['message']);
             }
         }
+    }
+
+    public function attachList(OfomsAttachListForm $form)
+    {
+        $doh = new DoH(new OfomsAttachListProccessLoader($form));
+        $doh->execute();
     }
 
     protected function getFfio(OfomsAttachForm $form)

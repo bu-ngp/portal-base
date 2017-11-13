@@ -34,7 +34,10 @@ $this->title = Yii::t('ngp/tiles', 'Create Tiles');
                 ],
                 [
                     'label' => Yii::t('ngp/tiles', 'Icon'),
-                    'content' => $this->render('_icon'),
+                    'content' => Panel::widget([
+                        'label' => 'Config',
+                        'content' => $this->render('_icon', ['form' => $form, 'modelForm' => $modelForm]),
+                    ]),
                 ],
             ],
         ]) ?>
