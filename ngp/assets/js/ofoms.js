@@ -17,6 +17,11 @@ $(document).ready(function () {
     $(".wk-ofoms-attach-list-button").click(function () {
         $(".wk-ofoms-attach-list-input").click();
     });
+
+    $(".wk-ofoms-attach-list-input").change(function() {
+        $('.wk-ofoms-attach-list-button').append('<span>'+$(this).val().replace(/C:\\fakepath\\/i, '')+'</span>');
+
+    });
 });
 
 var reloadGrid = function () {
