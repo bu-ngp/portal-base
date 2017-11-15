@@ -1,4 +1,7 @@
 <?php
+
+use yii\queue\ErrorEvent;
+
 return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'layoutPath' => dirname(dirname(__DIR__)) . '/common/views/layouts',

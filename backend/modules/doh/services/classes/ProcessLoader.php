@@ -49,7 +49,7 @@ abstract class ProcessLoader extends BaseObject implements Job
                 $this->cancel();
                 return;
             }
-
+         //   file_put_contents('test.txt', $e->getMessage(), FILE_APPEND);
             $this->error($e->getMessage());
             return;
         }

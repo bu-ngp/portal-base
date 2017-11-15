@@ -4,7 +4,6 @@ use ngp\assets\OfomsAsset;
 use rmrevin\yii\fontawesome\FA;
 use yii\bootstrap\Html;
 use common\widgets\ActiveForm\ActiveForm;
-use dosamigos\fileupload\FileUpload;
 
 /* @var $this yii\web\View */
 /* @var $modelForm \ngp\services\forms\OfomsAttachListForm */
@@ -16,7 +15,7 @@ $this->title = Yii::t('ngp/ofoms', 'Ofoms Prik List');
         <h1><?= Html::encode($this->title) ?></h1>
 
         <div class="ofoms-attach-list-form">
-            <?php $form = ActiveForm::begin(); ?>
+            <?php $form = ActiveForm::begin(['id' => 'test', 'options' => ['enctype' => 'multipart/form-data']]); ?>
 
             <div class="row">
                 <div class="col-md-12">
@@ -28,7 +27,7 @@ $this->title = Yii::t('ngp/ofoms', 'Ofoms Prik List');
             </div>
 
             <div class="form-group">
-                <?= Html::submitButton(Yii::t('ngp/ofoms', 'Attach'), ['class' => 'btn btn-primary']) ?>
+                <?= Html::submitButton(Yii::t('ngp/ofoms', 'Attach'), ['class' => 'btn btn-primary', 'form' => 'test']) ?>
             </div>
 
             <?php ActiveForm::end(); ?>

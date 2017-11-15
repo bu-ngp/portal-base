@@ -39,7 +39,7 @@ class OfomsRepository
                 ])
                 ->setData([
                     'username' => $this->configOfoms->config_ofoms_login,
-                    'password' => Yii::$app->security->decryptByPassword($this->configOfoms->config_ofoms_password,  Yii::$app->request->cookieValidationKey),
+                    'password' => Yii::$app->security->decryptByPassword($this->configOfoms->config_ofoms_password, Yii::$app->request->cookieValidationKey),
                     'rtype' => 'json',
                     's' => $searchString,
                 ])
@@ -53,7 +53,8 @@ class OfomsRepository
         return [];
     }
 
-    public function attach($ffio, $policy, $doctor) {
+    public function attach($ffio, $policy, $doctor)
+    {
         if (empty($ffio) || empty($policy) || empty($doctor)) {
             throw new \RuntimeException('attach error');
         }
@@ -61,7 +62,7 @@ class OfomsRepository
         $client = new Client();
         $response = $client->createRequest()
             ->setMethod('post')
-            ->setUrl('http://172.19.17.16/services/attach-person' /*$this->configOfoms->config_ofoms_url_prik*/)
+            ->setUrl($this->configOfoms->config_ofoms_url_prik)
             ->setHeaders([
                 'content-type' => 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Accept' => '*/*',

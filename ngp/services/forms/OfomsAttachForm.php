@@ -8,6 +8,9 @@ use ngp\services\models\Ofoms;
 use Yii;
 use yii\base\Model;
 
+/**
+ * @property string $ffio
+ */
 class OfomsAttachForm extends Model
 {
     public $enp;
@@ -38,5 +41,10 @@ class OfomsAttachForm extends Model
         return array_merge((new Ofoms)->attributeLabels(), [
             'vrach_inn' => Yii::t('ngp/ofoms', 'Vrach'),
         ]);
+    }
+
+    public function getFfio( )
+    {
+        return mb_substr($this->fam, 0, 3, 'UTF-8') . mb_substr($this->im, 0, 1, 'UTF-8') . mb_substr($this->ot, 0, 1, 'UTF-8') . mb_substr($this->dr, 8, 2, 'UTF-8');
     }
 }

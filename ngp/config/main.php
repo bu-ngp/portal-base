@@ -27,6 +27,10 @@ return [
                     'basePath' => '@ngp/messages',
                     'sourceLanguage' => 'en-US',
                 ],
+                'file-input*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@ngp/../vendor/2amigos/yii2-file-input-widget/src/messages/',
+                ],
             ],
         ],
     ],

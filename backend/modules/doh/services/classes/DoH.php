@@ -18,6 +18,8 @@ use Yii;
 use yii\console\Controller;
 use yii\db\Expression;
 use yii\helpers\StringHelper;
+use yii\queue\db\Queue;
+use yii\queue\ErrorEvent;
 use yii\web\Session;
 use yii\web\User;
 

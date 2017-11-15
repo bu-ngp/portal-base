@@ -24,7 +24,8 @@ class Module extends \yii\base\Module implements BootstrapInterface
                 ['class' => 'yii\web\UrlRule', 'pattern' => $this->id . '/cancel', 'route' => $this->id . '/default/cancel'],
                 ['class' => 'yii\web\UrlRule', 'pattern' => $this->id . '/delete', 'route' => $this->id . '/default/delete'],
                 ['class' => 'yii\web\UrlRule', 'pattern' => $this->id . '/clear', 'route' => $this->id . '/default/clear'],
-                ['class' => 'yii\web\UrlRule', 'pattern' => $this->id . '/download/<id:\d+>', 'route' => $this->id . '/default/download'],
+                ['class' => 'yii\web\UrlRule', 'pattern' => $this->id . '/download', 'route' => $this->id . '/default/download'],
+                //['class' => 'yii\web\UrlRule', 'pattern' => $this->id . '/download/<id:\d+>', 'route' => $this->id . '/default/download'],
             ], false);
         }
     }

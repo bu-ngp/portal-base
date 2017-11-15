@@ -8,6 +8,7 @@ use yii\web\UploadedFile;
 
 class OfomsAttachListForm extends Model
 {
+    /** @var  UploadedFile */
     public $listFile;
 
     public function rules()
@@ -27,8 +28,10 @@ class OfomsAttachListForm extends Model
 
     public function beforeValidate()
     {
-        $this->listFile = UploadedFile::getInstance($this, 'listFile');
-        $this->listFile->saveAs($this->listFile->tempName);
+        if ($this->listFile !== null) {
+            $this->listFile->saveAs($this->listFile->tempName);
+        }
+
         return parent::beforeValidate();
     }
 }

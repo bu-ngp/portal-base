@@ -35,7 +35,7 @@ class OfomsService extends Service
     public function attach(OfomsAttachForm $form)
     {
         if ($this->vrachChanged($form)) {
-            $result = $this->ofoms->attach($this->getFfio($form), $form->enp, $form->vrach_inn);
+            $result = $this->ofoms->attach($form->ffio, $form->enp, $form->vrach_inn);
 
             if ($result['status'] < 1) {
                 throw new \DomainException($result['message']);
@@ -47,11 +47,6 @@ class OfomsService extends Service
     {
         $doh = new DoH(new OfomsAttachListProccessLoader($form));
         $doh->execute();
-    }
-
-    protected function getFfio(OfomsAttachForm $form)
-    {
-        return mb_substr($form->fam, 0, 3, 'UTF-8') . mb_substr($form->im, 0, 1, 'UTF-8') . mb_substr($form->ot, 0, 1, 'UTF-8') . mb_substr($form->dr, 8, 2, 'UTF-8');
     }
 
     protected function vrachChanged(OfomsAttachForm $form)

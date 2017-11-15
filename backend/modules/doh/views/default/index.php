@@ -56,6 +56,10 @@ $handler_statuses = Handler::itemsValues('handler_status');
                 [
                     'attribute' => 'handler_short_report',
                     'filter' => false,
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        return preg_replace('/\\n/', '<br>', $model->handler_short_report);
+                    },
                 ],
                 [
                     'attribute' => 'dohFilesList',

@@ -22,6 +22,7 @@ use yii\filters\AjaxFilter;
 use yii\filters\ContentNegotiator;
 use yii\web\Controller;
 use yii\web\Response;
+use yii\web\UploadedFile;
 
 class OfomsController extends Controller
 {
@@ -107,11 +108,13 @@ class OfomsController extends Controller
     public function actionAttachList()
     {
         $form = new OfomsAttachListForm();
-        if ($form->load(Yii::$app->request->post())
-            && $form->validate()
-            && $this->service->attachList($form)
-        ) {
-            return $this->redirect(['/doh']);
+
+        if (Yii::$app->request->isPost) {
+            $form->listFile = UploadedFile::getInstance($form, 'listFile');
+
+            if ($form->validate() && $this->service->attachList($form)) {
+                return $this->redirect(['/doh']);
+            }
         }
 
         return $this->render('attach-list', [
