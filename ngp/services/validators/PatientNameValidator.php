@@ -6,19 +6,19 @@
  * Time: 17:51
  */
 
-namespace domain\validators;
+namespace ngp\services\validators;
 
 
 use yii\validators\Validator;
 
-class FIOValidator extends Validator
+class PatientNameValidator extends Validator
 {
     public function validateAttribute($model, $attribute)
     {
-        $this->filterFIO($model, $attribute);
+        $this->filterName($model, $attribute);
 
-        if (!preg_match('/^(\b[а-яё-]+\b)\s(\b[а-яё-]+\b)(\s(\b[а-яё-]+\b))?(\s(\b[а-яё-]+\b))?$/iu', $model->$attribute)) {
-            $model->addError($attribute, "\"{$model->getAttributeLabel($attribute)}\" должны состоять минимум из двух слов только на кирилице");
+        if (!preg_match('/^(\b[а-яё-]+\b)$/iu', $model->$attribute)) {
+            $model->addError($attribute, "\"{$model->getAttributeLabel($attribute)}\" должно состоять только на кирилице");
             return;
         }
 
@@ -28,7 +28,7 @@ class FIOValidator extends Validator
         }
     }
 
-    private function filterFIO($model, $attribute)
+    private function filterName($model, $attribute)
     {
         $model->$attribute = mb_strtoupper(trim($model->$attribute), 'UTF-8');
     }

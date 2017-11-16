@@ -12,6 +12,7 @@ namespace ngp\services\repositories;
 use ngp\services\models\ConfigOfoms;
 use Yii;
 use yii\httpclient\Client;
+use yii\httpclient\Response;
 
 class OfomsRepository
 {
@@ -27,26 +28,32 @@ class OfomsRepository
     public function search($searchString)
     {
         if (!empty($searchString)) {
-            $client = new Client();
-            $response = $client->createRequest()
-                ->setMethod('post')
-                ->setUrl($this->configOfoms->config_ofoms_url)
-                ->setHeaders([
-                    'content-type' => 'application/x-www-form-urlencoded; charset=UTF-8',
-                    'Accept' => '*/*',
-                    'Host' => $this->configOfoms->config_ofoms_remote_host_name,
+            try {
+                $client = new Client();
+                /** @var Response $response */
+                $response = $client->createRequest()
+                    ->setMethod('post')
+                    ->setUrl($this->configOfoms->config_ofoms_url)
+                    ->setHeaders([
+                        'content-type' => 'application/x-www-form-urlencoded; charset=UTF-8',
+                        'Accept' => '*/*',
+                        'Host' => $this->configOfoms->config_ofoms_remote_host_name,
 
-                ])
-                ->setData([
-                    'username' => $this->configOfoms->config_ofoms_login,
-                    'password' => Yii::$app->security->decryptByPassword($this->configOfoms->config_ofoms_password, Yii::$app->request->cookieValidationKey),
-                    'rtype' => 'json',
-                    's' => $searchString,
-                ])
-                ->send();
-
-            if ($response->isOk) {
-                return $response->data['persons'];
+                    ])
+                    ->setData([
+                        'username' => $this->configOfoms->config_ofoms_login,
+                        'password' => Yii::$app->security->decryptByPassword($this->configOfoms->config_ofoms_password, Yii::$app->request->cookieValidationKey),
+                        'rtype' => 'json',
+                        's' => $searchString,
+                    ])
+                    ->send();
+                if ($response->isOk) {
+                    return $response->data['persons'];
+                } else {
+                    throw new \Exception('Connection Error');
+                }
+            } catch (\Exception $e) {
+                throw new \DomainException(Yii::t('ngp/ofoms', 'Connection Error'));
             }
         }
 

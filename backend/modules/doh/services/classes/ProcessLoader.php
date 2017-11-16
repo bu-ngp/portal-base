@@ -16,11 +16,11 @@ use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\base\BaseObject;
 use yii\console\Controller;
-use yii\queue\Job;
+use yii\queue\JobInterface;
 use yii\web\Session;
 use yii\web\User;
 
-abstract class ProcessLoader extends BaseObject implements Job
+abstract class ProcessLoader extends BaseObject implements JobInterface
 {
     public $description = 'Process Loader';
     public $handler_id;
@@ -49,7 +49,7 @@ abstract class ProcessLoader extends BaseObject implements Job
                 $this->cancel();
                 return;
             }
-         //   file_put_contents('test.txt', $e->getMessage(), FILE_APPEND);
+            //   file_put_contents('test.txt', $e->getMessage(), FILE_APPEND);
             $this->error($e->getMessage());
             return;
         }
@@ -60,13 +60,15 @@ abstract class ProcessLoader extends BaseObject implements Job
     public function addPercentComplete($percent)
     {
         if ($this->isActive()) {
-            $this->_handler->handler_percent += $percent;
+            if ($this->_handler->handler_percent < $percent) {
+                $this->_handler->handler_percent = $percent;
 
-            if ($this->_handler->handler_percent > 100) {
-                $this->_handler->handler_percent = 100;
+                if ($this->_handler->handler_percent > 100) {
+                    $this->_handler->handler_percent = 100;
+                }
+
+                $this->_handler->save(false);
             }
-
-            $this->_handler->save(false);
         } elseif ($this->isCanceled()) {
             throw new CancelException;
         }

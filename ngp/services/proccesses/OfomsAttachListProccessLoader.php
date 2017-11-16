@@ -8,14 +8,12 @@ use ngp\services\forms\OfomsAttachListForm;
 use ngp\services\forms\OfomsAttachRESTForm;
 use ngp\services\repositories\OfomsRepository;
 use PHPExcel;
-use PHPExcel_IOFactory;
 use Yii;
-use yii\helpers\Html;
 
 class OfomsAttachListProccessLoader extends ProcessLoader
 {
     const CHUNK_SIZE = 1000;
-    const START_ROW = 2;
+    const START_ROW = 1;
 
     public $description = 'Прикрепление пациентов на портале ОФОМС';
 
@@ -47,8 +45,6 @@ class OfomsAttachListProccessLoader extends ProcessLoader
 
     public function body()
     {
-       // throw new \Exception('error');
-
         /** @var \PHPExcel_Reader_Excel2007|\PHPExcel_Reader_Excel5 $objReader */
         $objReader = \PHPExcel_IOFactory::createReaderForFile($this->fileName);
         $this->highestRow = $this->getHighestRow();
@@ -72,17 +68,10 @@ class OfomsAttachListProccessLoader extends ProcessLoader
                 }
 
                 if ($i % 50 === 0) {
-                    $this->addPercentComplete(round($i * 100 / $this->highestRow));
+                    $this->addPercentComplete(round($i * 99 / $this->highestRow));
                 }
 
-                $form = new OfomsAttachRESTForm([
-                    'doctor' => $row[0],
-                    'policy' => $row[1],
-                    'fam' => $row[2],
-                    'im' => $row[3],
-                    'ot' => $row[4],
-                    'dr' => $row[5],
-                ]);
+                $form = $this->getForm($row);
 
                 if ($form->validate()) {
                     $repository = new OfomsRepository();
@@ -90,7 +79,6 @@ class OfomsAttachListProccessLoader extends ProcessLoader
 
                     if ($result['status'] < 1) {
                         $this->addReportRow($i, $form, $result['message']);
-                      //  $this->addReportRow($i, $form, $this->sheetReport['message']);
                         $this->error++;
                     } else {
                         $this->success++;
@@ -108,39 +96,42 @@ class OfomsAttachListProccessLoader extends ProcessLoader
             }
         }
 
-        /** @var \PHPExcel_Writer_CSV $objWriter */
-        $objWriter = \PHPExcel_IOFactory::createWriter($this->objPHPExcelReport, 'CSV');
-        $objWriter->setDelimiter(';');
-        $reportPath = Yii::getAlias('@ngp/reports_attach-list/' . date('Y-m-d') . time() . '.csv');
-        $objWriter->save($reportPath);
+        if ($this->error) {
+            /** @var \PHPExcel_Writer_CSV $objWriter */
+            $objWriter = \PHPExcel_IOFactory::createWriter($this->objPHPExcelReport, 'CSV');
+            $objWriter->setDelimiter(';');
+            $reportPath = Yii::getAlias('@ngp/reports_attach-list/' . date('Y-m-d') . time() . '.csv');
+            $objWriter->save($reportPath);
+            file_put_contents($reportPath, mb_convert_encoding(file_get_contents($reportPath), 'windows-1251', 'UTF-8'));
+            $this->addFile($reportPath, 'Результат прикрепления.csv');
+        }
 
-        file_put_contents($reportPath, mb_convert_encoding(file_get_contents($reportPath), 'windows-1251', 'UTF-8'));
-
-        $this->addFile($reportPath, 'Результат прикрепления.csv');
-        $this->addShortReport("Итоги обработки:\n- Всего записей: {$this->rows};\n- Успешно: {$this->success};\n- Ошибок: {$this->error};");
+        $successPercent = round($this->success * 100 / $this->rows, 1);
+        $errorPercent = round($this->error * 100 / $this->rows, 1);
+        $this->addShortReport("Итоги обработки:\n- Всего записей: {$this->rows};\n- Успешно ($successPercent%): {$this->success};\n- Ошибок ($errorPercent%): {$this->error};");
 //            file_put_contents('test.txt', 'goood', FILE_APPEND);
-
     }
 
     protected function addReportHeader()
     {
         $this->sheetReport->setCellValueByColumnAndRow(0, $this->reportRow, 'Номер');
-        $this->sheetReport->setCellValueByColumnAndRow(1, $this->reportRow, 'Полис');
-        $this->sheetReport->setCellValueByColumnAndRow(2, $this->reportRow, 'ФИО');
-        $this->sheetReport->setCellValueByColumnAndRow(3, $this->reportRow, 'Дата рождения');
-        $this->sheetReport->setCellValueByColumnAndRow(4, $this->reportRow, 'ИНН врача');
-        $this->sheetReport->setCellValueByColumnAndRow(5, $this->reportRow, 'Текст ошибки');
+        $this->sheetReport->setCellValueByColumnAndRow(1, $this->reportRow, 'Текст ошибки');
+        $this->sheetReport->setCellValueByColumnAndRow(2, $this->reportRow, 'Данные');
         $this->reportRow++;
     }
 
     protected function addReportRow($i, OfomsAttachRESTForm $form, $message)
     {
-        $this->sheetReport->setCellValueByColumnAndRow(0, $this->reportRow, $i - 1);
-        $this->sheetReport->setCellValueByColumnAndRow(1, $this->reportRow, "'" . $form->policy);
-        $this->sheetReport->setCellValueByColumnAndRow(2, $this->reportRow, $form->fam . ' ' . $form->im . ' ' . $form->ot);
-        $this->sheetReport->setCellValueByColumnAndRow(3, $this->reportRow, $form->dr);
-        $this->sheetReport->setCellValueByColumnAndRow(4, $this->reportRow, "'" . $form->doctor);
-        $this->sheetReport->setCellValueByColumnAndRow(5, $this->reportRow, $message);
+        $this->sheetReport->setCellValueByColumnAndRow(0, $this->reportRow, $i);
+        $this->sheetReport->setCellValueByColumnAndRow(1, $this->reportRow, $message);
+        $this->sheetReport->setCellValueByColumnAndRow(2, $this->reportRow, implode('; ', [
+            $form->doctor,
+            $form->policy,
+            $form->fam,
+            $form->im,
+            $form->ot,
+            $form->dr,
+        ]));
         $this->reportRow++;
     }
 
@@ -153,5 +144,31 @@ class OfomsAttachListProccessLoader extends ProcessLoader
         unset($objPHPExcel);
         unset($objReader);
         return $highestRow;
+    }
+
+    protected function getForm(array $row)
+    {
+        $doctor = $row[0];
+        $policy = $row[1];
+        if (preg_match('/^(\b[а-я-]+\b)\s(\b[а-я-]+\b)(\s(\b[а-я-]+\b))?(\s(\b[а-я-]+\b))?$/iu', $row[2], $matches)) {
+            $fam = $matches[1];
+            $im = $matches[2];
+            $ot = $matches[4];
+            $dr = $row[3];
+        } else {
+            $fam = $row[2];
+            $im = $row[3];
+            $ot = $row[4];
+            $dr = $row[5];
+        }
+
+        return new OfomsAttachRESTForm([
+            'doctor' => $doctor,
+            'policy' => $policy,
+            'fam' => $fam,
+            'im' => $im,
+            'ot' => $ot,
+            'dr' => $dr,
+        ]);
     }
 }

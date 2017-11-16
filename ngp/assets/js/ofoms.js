@@ -10,6 +10,10 @@ $(document).ready(function () {
         $('.wkbc-breadcrumb').wkbreadcrumbs('changeCurrentUrl', window.location.href);
     });
 
+    $("#ofomsGrid-pjax").on('pjax:error', function (xhr, textStatus, error) {
+        $(this).find('.wk-grid-errors').html("<div>Ошибка соединения с порталом ОФОМС</div>");
+    });
+
     $("#ofomsGrid-pjax").on('pjax:beforeSend', function () {
         $(this)[0].busy = true;
     });
@@ -18,8 +22,8 @@ $(document).ready(function () {
         $(".wk-ofoms-attach-list-input").click();
     });
 
-    $(".wk-ofoms-attach-list-input").change(function() {
-        $('.wk-ofoms-attach-list-button').append('<span>'+$(this).val().replace(/C:\\fakepath\\/i, '')+'</span>');
+    $(".wk-ofoms-attach-list-input").change(function () {
+        $('.wk-ofoms-attach-list-button').append('<span>' + $(this).val().replace(/C:\\fakepath\\/i, '') + '</span>');
 
     });
 });

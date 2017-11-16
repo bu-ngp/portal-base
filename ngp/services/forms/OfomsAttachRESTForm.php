@@ -5,6 +5,8 @@ namespace ngp\services\forms;
 use domain\models\base\Profile;
 use domain\validators\WKDateValidator;
 use ngp\services\models\Ofoms;
+use ngp\services\validators\DRValidator;
+use ngp\services\validators\PatientNameValidator;
 use Yii;
 use yii\base\Model;
 
@@ -23,10 +25,14 @@ class OfomsAttachRESTForm extends Model
     public function rules()
     {
         return [
-            [['ot'], 'safe'],
             // [['dr'], WKDateValidator::className()],
-            [['policy', 'fam', 'im', 'dr', 'doctor'], 'required'],
+
             //  [['doctor'], 'exist', 'targetClass' => Profile::className(), 'targetAttribute' => 'profile_inn'],
+            [['doctor'], 'match', 'pattern' => '/\d{12}/'],
+            [['policy'], 'match', 'pattern' => '/\d+/'],
+            [['fam', 'im', 'ot'], PatientNameValidator::className()],
+            [['dr'], DRValidator::className()],
+            [['policy', 'fam', 'im', 'dr', 'doctor'], 'required'],
         ];
     }
 
