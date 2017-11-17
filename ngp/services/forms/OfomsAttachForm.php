@@ -3,7 +3,6 @@
 namespace ngp\services\forms;
 
 use domain\models\base\Profile;
-use domain\validators\WKDateValidator;
 use ngp\services\models\Ofoms;
 use Yii;
 use yii\base\Model;
@@ -23,6 +22,7 @@ class OfomsAttachForm extends Model
     public function __construct(array $config = [])
     {
         $this->load(Yii::$app->request->get(), '');
+        $this->vrach_inn = Profile::findOne(['profile_inn' => $this->vrach_inn]) ? $this->vrach_inn : null;
         parent::__construct($config);
     }
 
@@ -30,7 +30,7 @@ class OfomsAttachForm extends Model
     {
         return [
             [['ot'], 'safe'],
-           // [['dr'], WKDateValidator::className()],
+            // [['dr'], WKDateValidator::className()],
             [['enp', 'fam', 'im', 'dr', 'vrach_inn'], 'required'],
             [['vrach_inn'], 'exist', 'targetClass' => Profile::className(), 'targetAttribute' => 'profile_inn'],
         ];
@@ -43,8 +43,13 @@ class OfomsAttachForm extends Model
         ]);
     }
 
-    public function getFfio( )
+    public function getFfio()
     {
-        return mb_substr($this->fam, 0, 3, 'UTF-8') . mb_substr($this->im, 0, 1, 'UTF-8') . mb_substr($this->ot, 0, 1, 'UTF-8') . mb_substr($this->dr, 8, 2, 'UTF-8');
+        $fam = mb_substr($this->fam, 0, 3, 'UTF-8');
+        if (($chars = 3 - mb_strlen($fam, 'UTF-8')) > 0) {
+            $fam = $fam . implode('', array_pad([], $chars, ' '));
+        }
+
+        return $fam . mb_substr($this->im, 0, 1, 'UTF-8') . ($this->ot ? mb_substr($this->ot, 0, 1, 'UTF-8') : ' ') . mb_substr($this->dr, 8, 2, 'UTF-8');
     }
 }

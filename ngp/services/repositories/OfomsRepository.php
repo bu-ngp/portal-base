@@ -47,8 +47,13 @@ class OfomsRepository
                         's' => $searchString,
                     ])
                     ->send();
+
                 if ($response->isOk) {
-                    return $response->data['persons'];
+                    if ($response->data['status'] == 1) {
+                        return $response->data['persons'];
+                    } else {
+                        return ['error' => $response->data['message']];
+                    }
                 } else {
                     throw new \Exception('Connection Error');
                 }
@@ -66,31 +71,35 @@ class OfomsRepository
             throw new \RuntimeException('attach error');
         }
 
-        $client = new Client();
-        $response = $client->createRequest()
-            ->setMethod('post')
-            ->setUrl($this->configOfoms->config_ofoms_url_prik)
-            ->setHeaders([
-                'content-type' => 'application/x-www-form-urlencoded; charset=UTF-8',
-                'Accept' => '*/*',
-                'Host' => $this->configOfoms->config_ofoms_remote_host_name,
+        try {
+            $client = new Client();
+            $response = $client->createRequest()
+                ->setMethod('post')
+                ->setUrl($this->configOfoms->config_ofoms_url_prik)
+                ->setHeaders([
+                    'content-type' => 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'Accept' => '*/*',
+                    'Host' => $this->configOfoms->config_ofoms_remote_host_name,
 
-            ])
-            ->setData([
-                'typemp' => 1,
-                'ffio' => $ffio,
-                'policy' => $policy,
-                'doctor' => $doctor,
-                'rtype' => 'json',
-                'username' => $this->configOfoms->config_ofoms_login,
-                'password' => Yii::$app->security->decryptByPassword($this->configOfoms->config_ofoms_password, 'FAMBuvzILQaR_U7GwIsUZXUtfXCgET1R'),
-            ])
-            ->send();
+                ])
+                ->setData([
+                    'typemp' => 1,
+                    'ffio' => $ffio,
+                    'policy' => $policy,
+                    'doctor' => $doctor,
+                    'rtype' => 'json',
+                    'username' => $this->configOfoms->config_ofoms_login,
+                    'password' => Yii::$app->security->decryptByPassword($this->configOfoms->config_ofoms_password, 'FAMBuvzILQaR_U7GwIsUZXUtfXCgET1R'),
+                ])
+                ->send();
 
-        if ($response->isOk) {
-            return $response->data;
+            if ($response->isOk) {
+                return $response->data;
+            }
+
+            throw new \DomainException('Request error');
+        } catch (\Exception $e) {
+            throw new \DomainException(Yii::t('ngp/ofoms', 'Connection Error With OFOMS'));
         }
-
-        throw new \DomainException('Request error');
     }
 }

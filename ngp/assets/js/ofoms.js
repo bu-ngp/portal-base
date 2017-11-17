@@ -11,7 +11,7 @@ $(document).ready(function () {
     });
 
     $("#ofomsGrid-pjax").on('pjax:error', function (xhr, textStatus, error) {
-        $(this).find('.wk-grid-errors').html("<div>Ошибка соединения с порталом ОФОМС</div>");
+        toastr.error('Ошибка соединения с порталом ОФОМС', 'Ошибка!');
     });
 
     $("#ofomsGrid-pjax").on('pjax:beforeSend', function () {
@@ -20,11 +20,6 @@ $(document).ready(function () {
 
     $(".wk-ofoms-attach-list-button").click(function () {
         $(".wk-ofoms-attach-list-input").click();
-    });
-
-    $(".wk-ofoms-attach-list-input").change(function () {
-        $('.wk-ofoms-attach-list-button').append('<span>' + $(this).val().replace(/C:\\fakepath\\/i, '') + '</span>');
-
     });
 });
 
@@ -38,7 +33,7 @@ var reloadGrid = function () {
     if (busy === false) {
         $('#ofomsGrid').yiiGridView({
             "filterUrl": window.location.search,
-            "filterSelector": '#ofoms_search' //'field-ofomssearch-search_string input'
+            "filterSelector": '#ofoms_search'
         });
     }
 };

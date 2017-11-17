@@ -1,4 +1,5 @@
 <?php
+
 use console\classes\mysql\Migration;
 
 class m170929_074819_employee extends Migration
@@ -55,18 +56,18 @@ class m170929_074819_employee extends Migration
             'person_id' => $this->baseBinary()->notNull(),
             'dolzh_id' => $this->baseBinary()->notNull(),
             'podraz_id' => $this->baseBinary()->notNull(),
-            'employee_history_begin' => $this->date()->notNull()->unique(),
+            'employee_history_begin' => $this->date()->notNull(),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
             'created_by' => $this->string()->notNull(),
             'updated_by' => $this->string()->notNull(),
         ]);
 
+        $this->createIndex('idx_employee_history', '{{%employee_history}}', ['person_id', 'employee_history_begin'], true);
+
         $this->addForeignKey('person_id_employee_history', '{{%employee_history}}', 'person_id', '{{%person}}', 'person_id', 'CASCADE');
         $this->addForeignKey('dolzh_id_employee_history', '{{%employee_history}}', 'dolzh_id', '{{%dolzh}}', 'dolzh_id');
         $this->addForeignKey('podraz_id_employee_history', '{{%employee_history}}', 'podraz_id', '{{%podraz}}', 'podraz_id');
-
-       // $this->createIndex('idx_employee_history', '{{%employee_history}}', ['person_id', 'dolzh_id', 'podraz_id', 'employee_history_begin'], true);
 
         /*==============================*/
 

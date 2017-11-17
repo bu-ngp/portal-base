@@ -24,7 +24,7 @@ class m171104_052922_doh extends Migration
             'handler_at' => $this->integer()->notNull(),
             'handler_percent' => $this->integer()->unsigned()->defaultValue(0)->notNull(),
             'handler_status' => $this->boolean()->defaultValue(1)->notNull(),
-            'handler_done_time' => $this->integer(),
+            'handler_done_time' => $this->float(),
             'handler_used_memory' => $this->integer(),
             'handler_short_report' => $this->string(400),
             'handler_files' => $this->integer()->unsigned(),

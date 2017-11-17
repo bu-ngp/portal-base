@@ -49,9 +49,16 @@ class OfomsSearch extends Ofoms
             return $dataProvider;
         }
         if (Yii::$app->request->isAjax) {
-            $dataProvider->allModels = $this->service->search($this->search_string);
-            $dataProvider->allModels = $this->appendOfomsStatus($dataProvider->allModels);
-            $dataProvider->allModels = $this->appendOfomsVrach($dataProvider->allModels);
+            $result = $this->service->search($this->search_string);
+            if (isset($result['error'])) {
+                //Yii::$app->session->addFlash('error', $result['error']);
+                // TODO output error in grid
+                throw new \DomainException($result['error']);
+            } else {
+                $dataProvider->allModels = $result;
+                $dataProvider->allModels = $this->appendOfomsStatus($dataProvider->allModels);
+                $dataProvider->allModels = $this->appendOfomsVrach($dataProvider->allModels);
+            }
         }
 
         return $dataProvider;
@@ -103,7 +110,8 @@ class OfomsSearch extends Ofoms
                     ->one();
 
                 if ($vrach) {
-                    $row['ofomsVrach'] = $vrach->person_fullname . ', ' . $vrach->employee->dolzh->dolzh_name . ' (' . implode(', ', ArrayHelper::getColumn($vrach->employee->employeeHistory->employeeHistoryBuilds, 'build.build_name')) . ')';
+                    $builds = $vrach->employee->employeeHistory->employeeHistoryBuilds ? ' (' . implode(', ', ArrayHelper::getColumn($vrach->employee->employeeHistory->employeeHistoryBuilds, 'build.build_name')) . ')' : '';
+                    $row['ofomsVrach'] = $vrach->person_fullname . ', ' . $vrach->employee->dolzh->dolzh_name . $builds;
                 } else {
                     $row['ofomsVrach'] = $row['att_doct_amb'];
                 }

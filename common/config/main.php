@@ -1,5 +1,6 @@
 <?php
 
+use yii\i18n\MissingTranslationEvent;
 use yii\queue\ErrorEvent;
 
 return [
@@ -76,7 +77,7 @@ return [
             'showScriptName' => false,
             'rules' => [
                 'login' => 'site/login',
-               // 'doh/listen' => 'doh/default/listen',
+                // 'doh/listen' => 'doh/default/listen',
             ],
         ],
         'authManager' => [
@@ -110,6 +111,11 @@ return [
                     'sourceLanguage' => 'en-US',
                 ],
                 'classes/*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@common/messages',
+                    'sourceLanguage' => 'en-US',
+                ],
+                '*' => [
                     'class' => 'yii\i18n\PhpMessageSource',
                     'basePath' => '@common/messages',
                     'sourceLanguage' => 'en-US',

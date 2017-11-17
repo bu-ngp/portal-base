@@ -17,6 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Choose Icon' => '',
+    'Tiles Icon Color' => '',
+    'Update "{modelClass}": ' => '',
     'Close' => 'Закрыть',
     'Create Tiles' => 'Добавить плитку на главной странице',
     'Crop' => 'Обрезать',
@@ -26,11 +29,9 @@ return [
     'Tiles' => 'Плитки на главной странице',
     'Tiles Description' => 'Описание',
     'Tiles Icon' => 'Иконка',
-    'Tiles Icon Color' => '',
     'Tiles Keywords' => 'Ключевые слова для поиска',
     'Tiles Link' => 'Ссылка',
     'Tiles Name' => 'Название',
     'Tiles Thumbnail' => 'Превью',
-    'Update "{modelClass}": ' => '',
     'Upload Image' => 'Загрузить картинку',
 ];

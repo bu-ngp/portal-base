@@ -148,29 +148,37 @@ class GWPrepareColumns
 
     protected function addDataColumn(&$column)
     {
-        $column = [
-            'attribute' => $column,
-            'class' => '\kartik\grid\DataColumn',
-            'noWrap' => true,
-            'contentOptions' => function () {
+        if (is_array($column)) {
+            $column['class'] = '\kartik\grid\DataColumn';
+            $column['noWrap'] = true;
+            $column['contentOptions'] = function () {
                 return ['data-toggle' => 'tooltip', 'class' => 'wk-nowrap'];
-            },
-            'format' => 'html',
-            'value' => function ($model, $key, $index, $column) {
-                /** @var $model ActiveRecord */
-                try {
-                    $resultValue = $model;
-                    $splitAttributes = explode('.', $column->attribute);
-                    array_walk($splitAttributes, function ($value) use (&$resultValue) {
-                        $resultValue = $resultValue[$value];
-                    });
-                } catch (\Exception $e) {
-                    $resultValue = $model[$column->attribute];
-                }
+            };
+        } else {
+            $column = [
+                'attribute' => $column,
+                'class' => '\kartik\grid\DataColumn',
+                'noWrap' => true,
+                'contentOptions' => function () {
+                    return ['data-toggle' => 'tooltip', 'class' => 'wk-nowrap'];
+                },
+                'format' => 'html',
+                'value' => function ($model, $key, $index, $column) {
+                    /** @var $model ActiveRecord */
+                    try {
+                        $resultValue = $model;
+                        $splitAttributes = explode('.', $column->attribute);
+                        array_walk($splitAttributes, function ($value) use (&$resultValue) {
+                            $resultValue = $resultValue[$value];
+                        });
+                    } catch (\Exception $e) {
+                        $resultValue = $model[$column->attribute];
+                    }
 
-                return '<span>' . Html::encode($resultValue) . '</span>';
-            },
-        ];
+                    return '<span>' . Html::encode($resultValue) . '</span>';
+                },
+            ];
+        }
     }
 
     private function addRequiredProperties(&$column)
@@ -186,9 +194,9 @@ class GWPrepareColumns
 
     protected function addFilterProperties(&$column)
     {
+        /** @var ActiveRecord $model */
+        $model = $this->gridView->filterModel;
         if (isset($column['class']) && $column['class'] === '\kartik\grid\DataColumn') {
-            /** @var ActiveRecord $model */
-            $model = $this->gridView->filterModel;
             $attribute = isset($column['attribute']) ? $column['attribute'] : $column;
 
             if (
@@ -205,6 +213,20 @@ class GWPrepareColumns
                     return '<span key="' . $value . '">' . (isset($value) ? Html::encode($items[$value]) : '') . '</span>';
                 };
             }
+        }
+
+        if (is_string($column) && method_exists($model, 'itemsValues') && ($items = $model::itemsValues($column))) {
+            $column = [
+                'attribute' => $column,
+                'filter' => $items,
+                'format' => 'raw',
+                'value' => function ($model, $key, $index, $column) use ($items) {
+                    /** @var $model ActiveRecord */
+                    $value = $model[$column->attribute];
+
+                    return '<span key="' . $value . '">' . (isset($value) ? Html::encode($items[$value]) : '') . '</span>';
+                },
+            ];
         }
     }
 

@@ -49,10 +49,11 @@ class Handler extends \yii\db\ActiveRecord
     {
         return [
             [['identifier', 'handler_name', 'handler_description', 'handler_at'], 'required'],
-            [['handler_at', 'handler_percent', 'handler_status', 'handler_done_time', 'handler_files'], 'integer'],
+            [['handler_at', 'handler_percent', 'handler_status', 'handler_files', 'handler_used_memory'], 'integer'],
             [['identifier'], 'string', 'max' => 64],
-            [['handler_name', 'handler_used_memory'], 'string', 'max' => 255],
+            [['handler_name'], 'string', 'max' => 255],
             [['handler_description', 'handler_short_report'], 'string', 'max' => 400],
+            [['handler_done_time'], 'number'],
         ];
     }
 

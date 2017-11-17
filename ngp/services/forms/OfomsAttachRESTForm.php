@@ -2,12 +2,8 @@
 
 namespace ngp\services\forms;
 
-use domain\models\base\Profile;
-use domain\validators\WKDateValidator;
-use ngp\services\models\Ofoms;
 use ngp\services\validators\DRValidator;
 use ngp\services\validators\PatientNameValidator;
-use Yii;
 use yii\base\Model;
 
 /**
@@ -25,9 +21,6 @@ class OfomsAttachRESTForm extends Model
     public function rules()
     {
         return [
-            // [['dr'], WKDateValidator::className()],
-
-            //  [['doctor'], 'exist', 'targetClass' => Profile::className(), 'targetAttribute' => 'profile_inn'],
             [['doctor'], 'match', 'pattern' => '/\d{12}/'],
             [['policy'], 'match', 'pattern' => '/\d+/'],
             [['fam', 'im', 'ot'], PatientNameValidator::className()],
@@ -36,8 +29,25 @@ class OfomsAttachRESTForm extends Model
         ];
     }
 
+    public function attributeLabels()
+    {
+        return [
+            'policy' => 'Полис',
+            'fam' => 'Фамилия',
+            'im' => 'Имя',
+            'ot' => 'Отчество',
+            'dr' => 'Дата рождения',
+            'doctor' => 'ИНН врача',
+        ];
+    }
+
     public function getFfio()
     {
-        return mb_substr($this->fam, 0, 3, 'UTF-8') . mb_substr($this->im, 0, 1, 'UTF-8') . mb_substr($this->ot, 0, 1, 'UTF-8') . mb_substr($this->dr, 2, 2, 'UTF-8');
+        $fam = mb_substr($this->fam, 0, 3, 'UTF-8');
+        if (($chars = 3 - mb_strlen($fam, 'UTF-8')) > 0) {
+            $fam = $fam . implode('', array_pad([], $chars, ' '));
+        }
+
+        return $fam . mb_substr($this->im, 0, 1, 'UTF-8') . ($this->ot ? mb_substr($this->ot, 0, 1, 'UTF-8') : ' ') . mb_substr($this->dr, 2, 2, 'UTF-8');
     }
 }

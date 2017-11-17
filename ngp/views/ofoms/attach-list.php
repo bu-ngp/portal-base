@@ -8,7 +8,7 @@ use common\widgets\ActiveForm\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $modelForm \ngp\services\forms\OfomsAttachListForm */
 
-$this->title = Yii::t('ngp/ofoms', 'Ofoms Prik List');
+$this->title = Yii::t('ngp/ofoms', 'Attach with list');
 ?>
     <div class="ofoms-attach-list-update">
 
@@ -20,7 +20,7 @@ $this->title = Yii::t('ngp/ofoms', 'Ofoms Prik List');
             <div class="row">
                 <div class="col-md-12">
                     <?= \common\widgets\Panel\Panel::widget([
-                        'label' => Yii::t('ngp/ofoms', 'Ofoms Prik'),
+                        'label' => Yii::t('ngp/ofoms', 'Upload List'),
                         'content' => $this->render('_attach-list-panel', ['form' => $form, 'modelForm' => $modelForm]),
                     ]) ?>
                 </div>

@@ -17,6 +17,11 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Config Ofoms Url Prik' => 'Ссылка для прикрепления пациентов на портале ОФОМС',
+    'Connection Error' => '',
+    'Connection Error With OFOMS' => 'Ошибка соединения с порталом ОФОМС',
+    'List File' => '',
+    'Upload List' => 'Загрузить список пациентов',
     'Attach' => 'Прикрепить пациента',
     'Attach with list' => 'Прикрепление списком',
     'Attached' => 'Прикреплен',
@@ -25,7 +30,7 @@ return [
     'Config Ofoms Login' => 'Логин портала ОФОМС',
     'Config Ofoms Password' => 'Пароль портала ОФОМС',
     'Config Ofoms Remote Host Name' => 'Хост портала ОФОМС',
-    'Config Ofoms Url' => 'Ссылка для подключения к порталу ОФОМС',
+    'Config Ofoms Url' => 'Ссылка для проверки полисов на портале ОФОМС',
     'Don\'t attached to LPU' => 'Не прикреплен к ЛПУ',
     'Non Attached' => 'Не прикреплен',
     'Ofoms search' => 'Поиск',

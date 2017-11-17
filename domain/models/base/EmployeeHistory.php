@@ -52,7 +52,7 @@ class EmployeeHistory extends \yii\db\ActiveRecord
             [['dolzh_id'], 'exist', 'skipOnError' => true, 'targetClass' => Dolzh::className(), 'targetAttribute' => ['dolzh_id' => 'dolzh_id']],
             [['person_id'], 'exist', 'skipOnError' => true, 'targetClass' => Person::className(), 'targetAttribute' => ['person_id' => 'person_id']],
             [['podraz_id'], 'exist', 'skipOnError' => true, 'targetClass' => Podraz::className(), 'targetAttribute' => ['podraz_id' => 'podraz_id']],
-            [['employee_history_begin'], 'unique', 'targetAttribute' => ['employee_history_begin']],
+            [['employee_history_begin'], 'unique', 'targetAttribute' => ['person_id', 'employee_history_begin']],
         ]);
     }
 

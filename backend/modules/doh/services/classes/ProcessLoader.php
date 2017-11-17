@@ -30,11 +30,6 @@ abstract class ProcessLoader extends BaseObject implements JobInterface
 
     abstract public function body();
 
-    public function __construct($config = [])
-    {
-        parent::__construct($config);
-    }
-
     public function execute($queue)
     {
         $this->_handler = Handler::findOne($this->handler_id);
@@ -49,7 +44,6 @@ abstract class ProcessLoader extends BaseObject implements JobInterface
                 $this->cancel();
                 return;
             }
-            //   file_put_contents('test.txt', $e->getMessage(), FILE_APPEND);
             $this->error($e->getMessage());
             return;
         }
@@ -144,6 +138,10 @@ abstract class ProcessLoader extends BaseObject implements JobInterface
 
     protected function error($message)
     {
+        if (!mb_check_encoding($message, 'UTF-8')) {
+            $message = mb_convert_encoding($message, 'UTF-8', 'Windows-1251');
+        }
+
         $this->_handler->handler_status = Handler::ERROR;
         $this->_handler->handler_short_report = $message;
         $this->_handler->handler_done_time = microtime(true) - $this->_handler->handler_at;
