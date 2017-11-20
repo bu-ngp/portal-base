@@ -79,8 +79,6 @@ class Select2 extends \kartik\select2\Select2
     {
         $this->options['placeholder'] = ArrayHelper::getValue($this->options, 'placeholder', '');
         $this->pluginOptions['allowClear'] = ArrayHelper::getValue($this->pluginOptions, 'allowClear', true);
-        $dataQuery = $this->getDataQuery();
-        $resultQueryCount = $dataQuery->count();
 
         /** Восстановление значений при обновлении страницы */
         if ($this->wkkeep) {
@@ -98,48 +96,53 @@ class Select2 extends \kartik\select2\Select2
             $this->options['multiple'] = true;
         }
 
-        /** Включить ajax загрузку результатов, если превышен лимит количества результатов */
-        if ($this->ajaxConfig['enabled'] && ($resultQueryCount > $this->ajaxConfig['minRecordsCountForUseAjax'] || $this->ajaxConfig['onlyAjax'])) {
-            $this->options['wk-ajax'] = true;
-            $this->pluginOptions['minimumInputLength'] = ArrayHelper::getValue($this->pluginOptions, 'minimumInputLength', 3);
-            $this->pluginOptions['ajax']['url'] = Url::current();
-            $this->pluginOptions['ajax']['dataType'] = 'json';
-            $this->pluginOptions['ajax']['data'] = new JsExpression('function(params) { return {q:params.term}; }');
-            $this->pluginOptions['ajax']['delay'] = 500;
-            $this->pluginOptions['escapeMarkup'] = new JsExpression('function (markup) { return markup; }');
-            $this->pluginOptions['templateResult'] = new JsExpression('function(data) { return data.text; }');
-            $this->pluginOptions['templateSelection'] = new JsExpression('function (data) { return data.text; }');
-        } else {
-            $resultQuery = $dataQuery->asArray()->all();
-            /** @var array $row */
-            foreach ($resultQuery as $row) {
-                $row[$this->activeRecordAttribute] = $this->filterBinaryToString($row[$this->activeRecordAttribute]);
-                $resultString = $this->filterPrimaryKeysAttributes($row);
-                $this->data[$row[$this->activeRecordAttribute]] = implode(', ', $resultString);
-            }
-        }
+        if ($this->activeRecordClass) {
+            $dataQuery = $this->getDataQuery();
+            $resultQueryCount = $dataQuery->count();
 
-        /** Инициализировать значения, если они есть в модели */
-        if ($this->model->{$this->attribute}) {
-            if ($this->multiple) {
-                $this->options['wk-ajax'] ? $this->initAjaxMultiple($dataQuery) : $this->initAjaxSingle();
+            /** Включить ajax загрузку результатов, если превышен лимит количества результатов */
+            if ($this->ajaxConfig['enabled'] && ($resultQueryCount > $this->ajaxConfig['minRecordsCountForUseAjax'] || $this->ajaxConfig['onlyAjax'])) {
+                $this->options['wk-ajax'] = true;
+                $this->pluginOptions['minimumInputLength'] = ArrayHelper::getValue($this->pluginOptions, 'minimumInputLength', 3);
+                $this->pluginOptions['ajax']['url'] = Url::current();
+                $this->pluginOptions['ajax']['dataType'] = 'json';
+                $this->pluginOptions['ajax']['data'] = new JsExpression('function(params) { return {q:params.term}; }');
+                $this->pluginOptions['ajax']['delay'] = 500;
+                $this->pluginOptions['escapeMarkup'] = new JsExpression('function (markup) { return markup; }');
+                $this->pluginOptions['templateResult'] = new JsExpression('function(data) { return data.text; }');
+                $this->pluginOptions['templateSelection'] = new JsExpression('function (data) { return data.text; }');
             } else {
-                if ($this->options['wk-ajax']) {
-                    $this->initDataMultiple($dataQuery);
+                $resultQuery = $dataQuery->asArray()->all();
+                /** @var array $row */
+                foreach ($resultQuery as $row) {
+                    $row[$this->activeRecordAttribute] = $this->filterBinaryToString($row[$this->activeRecordAttribute]);
+                    $resultString = $this->filterPrimaryKeysAttributes($row);
+                    $this->data[$row[$this->activeRecordAttribute]] = implode(', ', $resultString);
                 }
-
-                $this->initSingle();
             }
-        }
 
-        /** Добавить кнопку выбора из грида */
-        if ($this->selectionGridUrl) {
-            $url = is_array($this->selectionGridUrl) ? Url::to($this->selectionGridUrl) : $this->selectionGridUrl;
-            $this->addon['append']['content'] = '<div class="input-group-addon wk-block-select2-choose-from-grid"><a class="btn btn-sm btn-success wk-widget-select2-choose-from-grid pmd-ripple-effect pmd-btn-fab" href="' . $url . '"><i class="fa fa-2x fa-ellipsis-h pmd-sm"></i></a></div>' . ArrayHelper::getValue($this->addon, 'append.content', '');
-            $this->addon['append']['asButton'] = true;
+            /** Инициализировать значения, если они есть в модели */
+            if ($this->model->{$this->attribute}) {
+                if ($this->multiple) {
+                    $this->options['wk-ajax'] ? $this->initAjaxMultiple($dataQuery) : $this->initAjaxSingle();
+                } else {
+                    if ($this->options['wk-ajax']) {
+                        $this->initDataMultiple($dataQuery);
+                    }
 
-            /** Проинициализировать выбранное значение из грида */
-            $this->selectedAttribute();
+                    $this->initSingle();
+                }
+            }
+
+            /** Добавить кнопку выбора из грида */
+            if ($this->selectionGridUrl) {
+                $url = is_array($this->selectionGridUrl) ? Url::to($this->selectionGridUrl) : $this->selectionGridUrl;
+                $this->addon['append']['content'] = '<div class="input-group-addon wk-block-select2-choose-from-grid"><a class="btn btn-sm btn-success wk-widget-select2-choose-from-grid pmd-ripple-effect pmd-btn-fab" href="' . $url . '"><i class="fa fa-2x fa-ellipsis-h pmd-sm"></i></a></div>' . ArrayHelper::getValue($this->addon, 'append.content', '');
+                $this->addon['append']['asButton'] = true;
+
+                /** Проинициализировать выбранное значение из грида */
+                $this->selectedAttribute();
+            }
         }
 
         $this->registerWKAssets1();

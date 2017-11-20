@@ -53,8 +53,23 @@ class TilesRepository
      */
     public function delete($tiles)
     {
+
+
         if (!$tiles->delete()) {
             throw new \DomainException(Yii::t('domain/base', 'Deleting error.'));
+        }
+    }
+
+    protected function removeOldThumbs($pathThumb)
+    {
+        if ($pathThumb) {
+            preg_match('/\/(\d+-)\d+x\d+(\.\w+)$/', $pathThumb, $matches);
+            if ($matches[1] && $matches[2]) {
+                // TODO
+
+                unlink($this->path . '/' . $matches[1] . '290x170' . $matches[2]);
+                unlink($this->path . '/' . $matches[1] . '145x85' . $matches[2]);
+            }
         }
     }
 }

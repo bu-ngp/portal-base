@@ -1,5 +1,7 @@
 <?php
 
+use common\widgets\CardList\CardList;
+use ngp\assets\TilesAsset;
 use yii\bootstrap\Html;
 use rmrevin\yii\fontawesome\FA;
 use common\widgets\GridView\GridView;
@@ -22,8 +24,14 @@ $this->title = Yii::t('ngp/tiles', 'Tiles');
                 'attribute' => 'tiles_thumbnail',
                 'format' => 'html',
                 'value' => function ($model) {
-                    preg_match('/(.*)-\d+x\d+(\.\w+)$/', $model->tiles_thumbnail, $thumb);
-                    return Html::img($thumb[1] . '-145x85' . $thumb[2]);
+                    if ($model->tiles_thumbnail) {
+                        preg_match('/(.*)-\d+x\d+(\.\w+)$/', $model->tiles_thumbnail, $thumb);
+                        return Html::img($thumb[1] . '-145x85' . $thumb[2]);
+                    } else {
+                        $icon = $model->tiles_icon ?: FA::_WINDOW_MAXIMIZE;
+                        $color = $model->tiles_icon_color ?: CardList::GREY_STYLE;
+                        return Html::tag('div', FA::icon($icon), ['class' => "wk-tiles-preview-grid $color"]);
+                    }
                 }
             ],
             'tiles_name',
@@ -32,7 +40,7 @@ $this->title = Yii::t('ngp/tiles', 'Tiles');
                 'attribute' => 'tiles_link',
                 'format' => 'raw',
                 'value' => function ($model) {
-                    return Html::a($model->tiles_link, 'http://'.$model->tiles_link, ['target' => '_blank', 'data-pjax' => '0']);
+                    return Html::a($model->tiles_link, 'http://' . $model->tiles_link, ['target' => '_blank', 'data-pjax' => '0']);
                 },
             ],
             [
@@ -70,3 +78,4 @@ $this->title = Yii::t('ngp/tiles', 'Tiles');
     ]); ?>
 
 </div>
+<?php TilesAsset::register($this) ?>

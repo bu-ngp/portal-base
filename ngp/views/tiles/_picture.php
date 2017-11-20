@@ -1,5 +1,6 @@
 <?php
 /* @var $modelForm ngp\services\forms\TilesForm */
+
 /* @var $form \common\widgets\ActiveForm\ActiveForm */
 
 use rmrevin\yii\fontawesome\FA;
@@ -16,6 +17,7 @@ use yii\bootstrap\Html;
     </div>
     <div class="col-md-3 btn-group-vertical">
         <?= $form->field($modelForm, 'imageFile')->fileInput(['class' => 'wk-tiles-upload-input'])->label(false) ?>
+        <?= $form->field($modelForm, 'tiles_thumbnail')->hiddenInput()->label(false) ?>
         <?= Html::button(FA::icon(FA::_PICTURE_O) . Yii::t('ngp/tiles', 'Upload Image'), [
             'class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary wk-tiles-upload-image-button',
         ]) ?>

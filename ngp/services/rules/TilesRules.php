@@ -16,7 +16,7 @@ class TilesRules
         return
             [
                 [['tiles_name', 'tiles_link'], 'required'],
-                [['tiles_name', 'tiles_keywords', 'tiles_link', 'tiles_thumbnail', 'tiles_icon', 'tiles_icon_color'], 'string', 'max' => 255],
+                [['tiles_name', 'tiles_keywords', 'tiles_link', '!tiles_thumbnail', 'tiles_icon', 'tiles_icon_color'], 'string', 'max' => 255],
                 [['tiles_description'], 'string', 'max' => 400],
             ];
     }

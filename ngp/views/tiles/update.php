@@ -1,14 +1,18 @@
 <?php
 
+use common\widgets\Panel\Panel;
+use common\widgets\Tabs\Tabs;
+use ngp\assets\JcropAsset;
+use ngp\assets\TilesAsset;
+use ngp\services\models\Tiles;
 use yii\bootstrap\Html;
 use common\widgets\ActiveForm\ActiveForm;
+use yii\bootstrap\Modal;
 
 /* @var $this yii\web\View */
 /* @var $modelForm ngp\services\forms\TilesForm */
 
-$this->title = Yii::t('ngp/tiles', 'Update "{modelClass}": ', [
-    'modelClass' => $modelForm->tiles_name,
-]);
+$this->title = Yii::t('ngp/tiles', 'Update Tiles');
 ?>
 <div class="tiles-update">
 
@@ -18,25 +22,49 @@ $this->title = Yii::t('ngp/tiles', 'Update "{modelClass}": ', [
 
         <?php $form = ActiveForm::begin(); ?>
 
-                <?= $form->field($modelForm, 'tiles_name')->textInput(['wkkeep' => true, 'maxlength' => true]) ?>
+        <?= Tabs::widget([
+            'items' => [
+                [
+                    'label' => Yii::t('ngp/tiles', 'Picture'),
+                    'content' => Panel::widget([
+                        'label' => 'Config',
+                        'content' => $this->render('_picture', ['form' => $form, 'modelForm' => $modelForm]),
+                    ]),
+                ],
+                [
+                    'label' => Yii::t('ngp/tiles', 'Icon'),
+                    'content' => Panel::widget([
+                        'label' => 'Config',
+                        'content' => $this->render('_icon', ['form' => $form, 'modelForm' => $modelForm]),
+                    ]),
+                ],
+            ],
+        ]) ?>
 
-<?= $form->field($modelForm, 'tiles_description')->textInput(['wkkeep' => true, 'maxlength' => true]) ?>
+        <?= $form->field($modelForm, 'tiles_thumbnail_x')->hiddenInput()->label(false) ?>
+        <?= $form->field($modelForm, 'tiles_thumbnail_x2')->hiddenInput()->label(false) ?>
+        <?= $form->field($modelForm, 'tiles_thumbnail_y')->hiddenInput()->label(false) ?>
+        <?= $form->field($modelForm, 'tiles_thumbnail_y2')->hiddenInput()->label(false) ?>
+        <?= $form->field($modelForm, 'tiles_thumbnail_w')->hiddenInput()->label(false) ?>
+        <?= $form->field($modelForm, 'tiles_thumbnail_h')->hiddenInput()->label(false) ?>
 
-<?= $form->field($modelForm, 'tiles_link')->textInput(['wkkeep' => true, 'maxlength' => true]) ?>
+        <?= $form->field($modelForm, 'tiles_icon_color')->select2([
+            'data' => Tiles::items()['tiles_icon_color'],
+            'hideSearch' => true,
+            'wkkeep' => true,
+            // 'wkicon' => FA::_WINDOW_RESTORE,
+            'pluginEvents' => [
+                "change" => "function() { changeIconColor($(this).val()); }",
+            ],
+        ]) ?>
 
-<?= $form->field($modelForm, 'tiles_thumbnail')->textInput(['wkkeep' => true, 'maxlength' => true]) ?>
+        <?= $form->field($modelForm, 'tiles_name')->textInput(['wkkeep' => true]) ?>
 
-<?= $form->field($modelForm, 'tiles_icon')->textInput(['wkkeep' => true, 'maxlength' => true]) ?>
+        <?= $form->field($modelForm, 'tiles_description')->textarea(['wkkeep' => true]) ?>
 
-<?= $form->field($modelForm, 'tiles_icon_color')->textInput(['wkkeep' => true, 'maxlength' => true]) ?>
+        <?= $form->field($modelForm, 'tiles_link')->textInput(['wkkeep' => true]) ?>
 
-<?= $form->field($modelForm, 'created_at')->textInput(['wkkeep' => true, 'maxlength' => true]) ?>
-
-<?= $form->field($modelForm, 'updated_at')->textInput(['wkkeep' => true, 'maxlength' => true]) ?>
-
-<?= $form->field($modelForm, 'created_by')->textInput(['wkkeep' => true, 'maxlength' => true]) ?>
-
-<?= $form->field($modelForm, 'updated_by')->textInput(['wkkeep' => true, 'maxlength' => true]) ?>
+        <?= $form->field($modelForm, 'tiles_keywords')->textInput(['wkkeep' => true]) ?>
 
         <div class="form-group">
             <?= Html::submitButton(Yii::t('common', 'Update'), ['class' => 'btn btn-primary']) ?>
@@ -46,3 +74,25 @@ $this->title = Yii::t('ngp/tiles', 'Update "{modelClass}": ', [
 
     </div>
 </div>
+
+<?php Modal::begin([
+    'id' => 'cropper-dialog',
+    'size' => Modal::SIZE_LARGE,
+    'header' => '<h2 class="pmd-card-title-text">' . Yii::t('ngp/tiles', 'Cropper dialog') . '</h2>',
+    'footer' => '<button data-dismiss="modal" class="btn pmd-btn-flat pmd-ripple-effect btn-default" type="button">' . Yii::t('ngp/tiles', 'Close') . '</button>',
+    'footerOptions' => [
+        'class' => 'pmd-modal-action pmd-modal-bordered text-right',
+    ],
+]) ?>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="wk-tiles-crop-wrap">
+                <img class="wk-tiles-crop">
+            </div>
+        </div>
+    </div>
+
+<?php Modal::end() ?>
+<?php JcropAsset::register($this) ?>
+<?php TilesAsset::register($this) ?>

@@ -37,6 +37,7 @@ class ThumbnailFilterValidator extends Validator
         $model->$attribute->saveAs($tmpOrigFileName);
         $imagine = Image::getImagine();
         $image = $imagine->open($tmpOrigFileName);
+        $oldThumb = $model->{$this->thumbnailAttribute};
 
         $image->crop(new Point($model->{$this->xAttribute}, $model->{$this->yAttribute}), new Box($model->{$this->widthAttribute}, $model->{$this->heightAttribute}));
         foreach ($this->to as $key => $resize) {
@@ -48,5 +49,17 @@ class ThumbnailFilterValidator extends Validator
         }
 
         unlink($tmpOrigFileName);
+        $this->removeOldThumbs($oldThumb);
+    }
+
+    protected function removeOldThumbs($pathThumb)
+    {
+        if ($pathThumb) {
+            preg_match('/\/(\d+-)\d+x\d+(\.\w+)$/', $pathThumb, $matches);
+            if ($matches[1] && $matches[2]) {
+                unlink($this->path . '/' . $matches[1] . '290x170' . $matches[2]);
+                unlink($this->path . '/' . $matches[1] . '145x85' . $matches[2]);
+            }
+        }
     }
 }

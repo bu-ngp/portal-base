@@ -2,6 +2,7 @@
 
 namespace ngp\services\models;
 
+use common\widgets\CardList\CardList;
 use ngp\services\rules\TilesRules;
 use ngp\services\validators\ThumbnailFilter;
 use ngp\services\validators\ThumbnailFilterValidator;
@@ -43,7 +44,7 @@ class Tiles extends \yii\db\ActiveRecord
     public function rules()
     {
         return array_merge(TilesRules::client(), [
-        //    [['tiles_thumbnail'], ThumbnailFilterValidator::className()],
+            //    [['tiles_thumbnail'], ThumbnailFilterValidator::className()],
         ]);
     }
 
@@ -95,5 +96,18 @@ class Tiles extends \yii\db\ActiveRecord
         $this->tiles_thumbnail = $form->tiles_thumbnail;
         $this->tiles_icon = $form->tiles_icon;
         $this->tiles_icon_color = $form->tiles_icon_color;
+    }
+
+    public static function items()
+    {
+        return [
+            'tiles_icon_color' => [
+                CardList::GREY_STYLE => 'Серый',
+                CardList::RED_STYLE => 'Красный',
+                CardList::BLUE_STYLE => 'Синий',
+                CardList::GREEN_STYLE => 'Зеленый',
+                CardList::YELLOW_STYLE => 'Желтый',
+            ],
+        ];
     }
 }
