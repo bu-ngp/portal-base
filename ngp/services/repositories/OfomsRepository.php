@@ -13,6 +13,7 @@ use ngp\services\models\ConfigOfoms;
 use Yii;
 use yii\httpclient\Client;
 use yii\httpclient\Response;
+use yii\web\Response as WebResponse;
 
 class OfomsRepository
 {
@@ -55,10 +56,12 @@ class OfomsRepository
                         return ['error' => $response->data['message']];
                     }
                 } else {
-                    throw new \Exception('Connection Error');
+                    Yii::$app->response->format = WebResponse::FORMAT_JSON;
+                    throw new \DomainException(Yii::t('ngp/ofoms','Connection Error With OFOMS'));
                 }
             } catch (\Exception $e) {
-                throw new \DomainException(Yii::t('ngp/ofoms', 'Connection Error'));
+                Yii::$app->response->format = WebResponse::FORMAT_JSON;
+                throw new \DomainException(Yii::t('ngp/ofoms','Connection Error With OFOMS'));
             }
         }
 

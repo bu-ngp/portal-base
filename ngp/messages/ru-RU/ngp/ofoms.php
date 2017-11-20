@@ -18,7 +18,7 @@
  */
 return [
     'Config Ofoms Url Prik' => 'Ссылка для прикрепления пациентов на портале ОФОМС',
-    'Connection Error' => '',
+    'Connection Error' => 'Ошибка соединения',
     'Connection Error With OFOMS' => 'Ошибка соединения с порталом ОФОМС',
     'List File' => '',
     'Upload List' => 'Загрузить список пациентов',

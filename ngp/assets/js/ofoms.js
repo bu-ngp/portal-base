@@ -10,8 +10,9 @@ $(document).ready(function () {
         $('.wkbc-breadcrumb').wkbreadcrumbs('changeCurrentUrl', window.location.href);
     });
 
-    $("#ofomsGrid-pjax").on('pjax:error', function (xhr, textStatus, error) {
-        toastr.error('Ошибка соединения с порталом ОФОМС', 'Ошибка!');
+    $("#ofomsGrid-pjax").on('pjax:error', function (e, xhr) {
+        var response = $.parseJSON(xhr.responseText);
+        toastr.error(response.message, 'Ошибка!');
     });
 
     $("#ofomsGrid-pjax").on('pjax:beforeSend', function () {

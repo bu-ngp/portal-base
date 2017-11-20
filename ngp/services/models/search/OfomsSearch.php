@@ -15,6 +15,7 @@ use ngp\services\services\OfomsService;
 use Yii;
 use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
+use yii\web\Response;
 
 class OfomsSearch extends Ofoms
 {
@@ -51,8 +52,7 @@ class OfomsSearch extends Ofoms
         if (Yii::$app->request->isAjax) {
             $result = $this->service->search($this->search_string);
             if (isset($result['error'])) {
-                //Yii::$app->session->addFlash('error', $result['error']);
-                // TODO output error in grid
+                Yii::$app->response->format = Response::FORMAT_JSON;
                 throw new \DomainException($result['error']);
             } else {
                 $dataProvider->allModels = $result;
