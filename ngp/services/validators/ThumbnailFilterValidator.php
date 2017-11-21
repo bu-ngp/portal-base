@@ -56,10 +56,17 @@ class ThumbnailFilterValidator extends Validator
     {
         if ($pathThumb) {
             preg_match('/\/(\d+-)\d+x\d+(\.\w+)$/', $pathThumb, $matches);
-            if ($matches[1] && $matches[2]) {
-                unlink($this->path . '/' . $matches[1] . '290x170' . $matches[2]);
-                unlink($this->path . '/' . $matches[1] . '145x85' . $matches[2]);
-            }
+
+            $resolutions = ['290x170', '145x85'];
+            $path = $this->path;
+
+            array_walk($resolutions, function ($resolution) use ($matches, $path) {
+                if ($matches[1] && $matches[2]) {
+                    if (file_exists($path . '/' . $matches[1] . $resolution . $matches[2])) {
+                        unlink($path . '/' . $matches[1] . $resolution . $matches[2]);
+                    }
+                }
+            });
         }
     }
 }

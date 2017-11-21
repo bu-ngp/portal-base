@@ -53,23 +53,30 @@ class TilesRepository
      */
     public function delete($tiles)
     {
-
+        $thumbPath = $tiles->tiles_thumbnail;
 
         if (!$tiles->delete()) {
             throw new \DomainException(Yii::t('domain/base', 'Deleting error.'));
         }
+
+        $this->removeOldThumbs($thumbPath);
     }
 
     protected function removeOldThumbs($pathThumb)
     {
         if ($pathThumb) {
             preg_match('/\/(\d+-)\d+x\d+(\.\w+)$/', $pathThumb, $matches);
-            if ($matches[1] && $matches[2]) {
-                // TODO
 
-                unlink($this->path . '/' . $matches[1] . '290x170' . $matches[2]);
-                unlink($this->path . '/' . $matches[1] . '145x85' . $matches[2]);
-            }
+            $resolutions = ['290x170', '145x85'];
+            $path = Yii::getAlias('@thumbsPath');
+
+            array_walk($resolutions, function ($resolution) use ($matches, $path) {
+                if ($matches[1] && $matches[2]) {
+                    if (file_exists($path . '/' . $matches[1] . $resolution . $matches[2])) {
+                        unlink($path . '/' . $matches[1] . $resolution . $matches[2]);
+                    }
+                }
+            });
         }
     }
 }

@@ -63,7 +63,7 @@ class TilesForm extends Model
                 'heightAttribute' => 'tiles_thumbnail_h',
                 'xAttribute' => 'tiles_thumbnail_x',
                 'yAttribute' => 'tiles_thumbnail_y',
-                'path' => Yii::getAlias('@webroot/thumbs'),
+                'path' => Yii::getAlias('@thumbsPath'),
                 'web' => Yii::getAlias('@web/thumbs'),
                 'thumbnailAttribute' => 'tiles_thumbnail',
                 'to' => [
