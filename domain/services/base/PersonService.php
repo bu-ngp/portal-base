@@ -61,6 +61,11 @@ class PersonService extends Service
         return $this->profiles->has($uuid) ? $this->profiles->find($uuid) : false;
     }
 
+    public function getUserByINN($inn)
+    {
+        return $this->profiles->hasByINN($inn) ? $this->persons->findByINN($inn) : false;
+    }
+
     public function create(UserForm $userForm, ProfileForm $profileForm)
     {
         $this->guardPasswordLength($userForm);

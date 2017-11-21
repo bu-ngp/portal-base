@@ -20,6 +20,11 @@ class PodrazRepository
         return $podraz;
     }
 
+    public function findByName($podraz_name)
+    {
+        return Podraz::findOne(['like', 'podraz_name', trim($podraz_name), false]);
+    }
+
     /**
      * @param Podraz $podraz
      */

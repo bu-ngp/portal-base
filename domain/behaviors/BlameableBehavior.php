@@ -4,6 +4,7 @@ namespace domain\behaviors;
 
 use Yii;
 use yii\behaviors\AttributeBehavior;
+use yii\console\Application;
 use yii\db\BaseActiveRecord;
 use yii\web\User;
 
@@ -50,6 +51,10 @@ class BlameableBehavior extends AttributeBehavior
     protected function getValue($event)
     {
         if ($this->value === null) {
+            if (Yii::$app instanceof Application) {
+                return 'CONSOLE';
+            }
+
             /** @var User $user */
             $user = Yii::$app->get('user', false);
 

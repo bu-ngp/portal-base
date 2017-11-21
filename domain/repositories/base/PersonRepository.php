@@ -25,6 +25,11 @@ class PersonRepository
         return $person;
     }
 
+    public function findByINN($inn)
+    {
+        return Person::find()->joinWith(['profile'])->andWhere(['profile.profile_inn' => $inn])->one();
+    }
+
     /**
      * @param Person $person
      */

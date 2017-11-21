@@ -14,6 +14,7 @@ use domain\rules\base\UserRules;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Inflector;
 
 class UserForm extends Model
 {
@@ -41,5 +42,16 @@ class UserForm extends Model
             'person_password' => Yii::t('domain/person', 'Person Password'),
             'person_password_repeat' => Yii::t('domain/person', 'Person Password Repeat'),
         ]);
+    }
+
+    public static function generateUserName($fullname)
+    {
+        preg_match('/^(\b[а-яё-]+\b)\s([а-яё])(.*\s([а-яё]))?/ui', $fullname, $matches);
+
+        if ($matches[1] && $matches[2]) {
+            return Inflector::transliterate($matches[1] . $matches[2] . $matches[4]);
+        }
+
+        return 'user' . rand(100000, 999999);
     }
 }

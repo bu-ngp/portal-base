@@ -25,6 +25,10 @@ class DolzhService extends Service
         return $this->dolzhs->find($uuid);
     }
 
+    public function findByName($dolzh_name) {
+        return $this->dolzhs->findByName($dolzh_name);
+    }
+
     public function create(DolzhForm $form)
     {
         $dolzh = Dolzh::create($form);

@@ -26,6 +26,10 @@ class PodrazService extends Service
         return $this->podrazs->find($uuid);
     }
 
+    public function findByName($podraz_name) {
+        return $this->podrazs->findByName($podraz_name);
+    }
+
     public function create(PodrazForm $form)
     {
         $podraz = Podraz::create($form);

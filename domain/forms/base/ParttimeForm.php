@@ -18,7 +18,7 @@ class ParttimeForm extends Model
 
     public $assignBuilds;
 
-    public function __construct(Parttime $parttime = null, $config = [])
+    public function __construct(Parttime $parttime = null, $autoFill = true, $config = [])
     {
         if ($parttime) {
             $this->person_id = $parttime->person_id;
@@ -26,7 +26,7 @@ class ParttimeForm extends Model
             $this->podraz_id = $parttime->podraz_id;
             $this->parttime_begin = $parttime->parttime_begin;
             $this->parttime_end = $parttime->parttime_end;
-        } else {
+        } elseif ($autoFill) {
             $this->person_id = Yii::$app->request->get('person');
             $this->parttime_begin = date('Y-m-d');
         }

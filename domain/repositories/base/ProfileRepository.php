@@ -28,6 +28,11 @@ class ProfileRepository
         return boolval(Profile::findOne($id));
     }
 
+    public function hasByINN($inn)
+    {
+        return boolval(Profile::findOne(['profile_inn' => $inn]));
+    }
+
     /**
      * @param Profile $profile
      */
