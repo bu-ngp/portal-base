@@ -20,13 +20,20 @@ class DolzhService extends Service
         $this->dolzhs = $dolzhs;
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $uuid = BinaryHelper::isBinaryValidString($id) ? Uuid::str2uuid($id) : $id;
         return $this->dolzhs->find($uuid);
     }
 
-    public function findByName($dolzh_name) {
-        return $this->dolzhs->findByName($dolzh_name);
+    public function findIDByName($dolzh_name)
+    {
+        $dolzh = $this->dolzhs->findByName($dolzh_name);
+        if ($dolzh) {
+            return $dolzh->primaryKey;
+        }
+
+        return false;
     }
 
     public function create(DolzhForm $form)

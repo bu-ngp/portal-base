@@ -16,7 +16,6 @@ use domain\services\base\ParttimeService;
 use domain\services\base\PersonService;
 use domain\services\base\PodrazService;
 use domain\services\ProxyService;
-use domain\services\Service;
 use ngp\services\classes\ChunkReadFilter;
 use PHPExcel;
 use wartron\yii2uuid\helpers\Uuid;
@@ -78,114 +77,32 @@ class EmployeeProccessLoader extends ProcessLoader
             $objWorksheet = $objPHPExcel->getActiveSheet();
             for ($i = self::START_ROW; $i < self::START_ROW + self::CHUNK_SIZE; $i++) {
                 $this->rows++;
-                $row = $objWorksheet->rangeToArray('A' . $i . ':N' . $i, null, true, false);
-                $row = $row[key($row)];
+                $row = $this->getExcelRow($objWorksheet, $i);
 
-                if (empty($row[0])) {
-                    $this->executing = false;
+                if ($this->isEnd($row)) {
                     break;
                 }
 
-                if ($i % 50 === 0) {
-                    $this->addPercentComplete(round($i * 99 / $this->highestRow));
-                }
-
+                $this->calculatePercentCompleted($i);
                 $form = $this->getForm($row);
 
                 if ($form->validate()) {
-                    /** @var PersonService $personService */
-                    $personService = new ProxyService(Yii::$container->get('domain\services\base\PersonService'), false);
-
-                    if (!$person = $personService->getUserByINN($form->inn)) {
-                        $userForm = new UserForm([
-                            'person_fullname' => $form->fio,
-                            'person_username' => UserForm::generateUserName($form->fio),
-                            'person_password' => 11111111,
-                            'person_password_repeat' => 11111111,
-                            'assignRoles' => '[]',
-                        ]);
-
-                        $profileForm = new ProfileForm(null, [
-                            'profile_inn' => $form->inn,
-                            'profile_dr' => $form->dr,
-                            'profile_pol' => $form->pol,
-                            'profile_snils' => $form->snils,
-                            'profile_address' => $form->address,
-                        ]);
-
-                        if (!$person_id = $personService->create($userForm, $profileForm)) {
-                            $this->addReportRow($i, $form, $this->getErrorsFromService($personService) . $this->getErrorsFromForm($userForm) . $this->getErrorsFromForm($profileForm));
-                            $this->error++;
-                            continue;
-                        }
-                    } else {
-                        $person_id = $person->person_id;
-                    }
-
-                    /** @var DolzhService $dolzhService */
-                    $dolzhService = new ProxyService(Yii::$container->get('domain\services\base\DolzhService'), false);
-                    /** @var PodrazService $podrazService */
-                    $podrazService = new ProxyService(Yii::$container->get('domain\services\base\PodrazService'), false);
-
-                    if (!$dolzh = $dolzhService->findByName($form->dolzh)) {
-                        $dolzhForm = new DolzhForm(null, ['dolzh_name' => $form->dolzh]);
-                        $dolzh_id = $dolzhService->create($dolzhForm);
-                    } else {
-                        $dolzh_id = $dolzh->dolzh_id;
-                    }
-
-                    if (!$podraz = $podrazService->findByName($form->podraz)) {
-                        $podrazForm = new PodrazForm(null, ['podraz_name' => $form->podraz]);
-                        $podraz_id = $podrazService->create($podrazForm);
-                    } else {
-                        $podraz_id = $podraz->podraz_id;
-                    }
-
-                    if (!$statusEmployee = $this->statusEmployee($form)) {
-                        $this->addReportRow($i, $form, 'Не определен статус сутрудника');
-                        $this->error++;
+                    if (($person_id = $this->makePerson($form, $i)) === false) {
                         continue;
                     }
-
-                    if ($statusEmployee === self::STATUS_GENERAL) {
-                        file_put_contents('test.txt', "\n" .print_r([$person_id, $dolzh_id, $podraz_id], true), FILE_APPEND);
-
-                        /** @var EmployeeHistoryService $employeeHistoryService */
-                        $employeeHistoryService = new ProxyService(Yii::$container->get('domain\services\base\EmployeeHistoryService'), false);
-                        $employeeHistoryForm = new EmployeeHistoryForm(null, false, [
-                            'person_id' => Uuid::uuid2str($person_id),
-                            'dolzh_id' => Uuid::uuid2str($dolzh_id),
-                            'podraz_id' => Uuid::uuid2str($podraz_id),
-                            'employee_history_begin' => $form->dateBegin,
-                            'assignBuilds' => '[]',
-                        ]);
-
-                        if ($employeeHistoryService->create($employeeHistoryForm)) {
-                            $this->success++;
-                        } else {
-                            $this->addReportRow($i, $form, $this->getErrorsFromService($employeeHistoryService) . $this->getErrorsFromForm($employeeHistoryForm));
+                    $dolzh_id = $this->makeDolzh($form);
+                    $podraz_id = $this->makePodraz($form);
+                    file_put_contents('test.txt', print_r([$person_id, $dolzh_id, $podraz_id], true), FILE_APPEND);
+                    switch ($this->statusEmployee($form)) {
+                        case self::STATUS_GENERAL:
+                            $this->makeEmployee($form, $i, $person_id, $dolzh_id, $podraz_id);
+                            break;
+                        case self::STATUS_PART_TIME:
+                            $this->makeParttime($form, $i, $person_id, $dolzh_id, $podraz_id);
+                            break;
+                        default:
+                            $this->addReportRow($i, $form, 'Не определен статус сутрудника');
                             $this->error++;
-                            continue;
-                        }
-                    } elseif ($statusEmployee === self::STATUS_PART_TIME) {
-                        /** @var ParttimeService $parttimeService */
-                        $parttimeService = new ProxyService(Yii::$container->get('domain\services\base\ParttimeService'), false);
-                        $parttimeForm = new ParttimeForm(null, false, [
-                            'person_id' => Uuid::uuid2str($person_id),
-                            'dolzh_id' => Uuid::uuid2str($dolzh_id),
-                            'podraz_id' => Uuid::uuid2str($podraz_id),
-                            'parttime_begin' => $form->dateBegin,
-                            'parttime_end' => $form->dateEnd,
-                            'assignBuilds' => '[]',
-                        ]);
-
-                        if ($parttimeService->create($parttimeForm)) {
-                            $this->success++;
-                        } else {
-                            $this->addReportRow($i, $form, $this->getErrorsFromService($parttimeService) . $this->getErrorsFromForm($parttimeForm));
-                            $this->error++;
-                            continue;
-                        }
                     }
                 } else {
                     $this->addReportRow($i, $form, $this->getErrorsFromForm($form));
@@ -195,19 +112,10 @@ class EmployeeProccessLoader extends ProcessLoader
         }
 
         if ($this->error) {
-            /** @var \PHPExcel_Writer_CSV $objWriter */
-            $objWriter = \PHPExcel_IOFactory::createWriter($this->objPHPExcelReport, 'CSV');
-            $objWriter->setDelimiter(';');
-            $reportPath = Yii::getAlias('@common/ftpimport/reports/' . date('Y-m-d') . time() . '.csv');
-            $objWriter->save($reportPath);
-            file_put_contents($reportPath, mb_convert_encoding(file_get_contents($reportPath), 'windows-1251', 'UTF-8'));
-            $this->addFile($reportPath, 'Результат импорта.csv');
+            $this->saveReport();
         }
-
-        $successPercent = round($this->success * 100 / $this->rows, 1);
-        $errorPercent = round($this->error * 100 / $this->rows, 1);
-        $this->addShortReport("Итоги обработки:\n- Всего записей: {$this->rows};\n- Успешно ($successPercent%): {$this->success};\n- Ошибок ($errorPercent%): {$this->error};");
-//            file_put_contents('test.txt', 'goood', FILE_APPEND);
+        $this->addItog();
+        //file_put_contents('test.txt', 'goood', FILE_APPEND);
     }
 
     protected function addReportHeader()
@@ -291,5 +199,147 @@ class EmployeeProccessLoader extends ProcessLoader
         }
 
         return false;
+    }
+
+    protected function getExcelRow(\PHPExcel_Worksheet $worksheet, $rowNum)
+    {
+        $row = $worksheet->rangeToArray('A' . $rowNum . ':N' . $rowNum, null, true, false);
+        return $row[key($row)];
+    }
+
+    protected function isEnd(array $row)
+    {
+        if (empty($row[0])) {
+            $this->executing = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function calculatePercentCompleted($rowNum)
+    {
+        if ($rowNum % 50 === 0) {
+            $this->addPercentComplete(round($rowNum * 99 / $this->highestRow));
+        }
+    }
+
+    protected function makePerson(ImportEmployeeForm $form, $rowNum)
+    {
+        /** @var PersonService $personService */
+        $personService = new ProxyService(Yii::$container->get('domain\services\base\PersonService'), false);
+
+        if (!$person = $personService->getUserByINN($form->inn)) {
+            $userForm = new UserForm([
+                'person_fullname' => $form->fio,
+                'person_username' => UserForm::generateUserName($form->fio),
+                'person_password' => 11111111,
+                'person_password_repeat' => 11111111,
+                'assignRoles' => '[]',
+            ]);
+
+            $profileForm = new ProfileForm(null, [
+                'profile_inn' => $form->inn,
+                'profile_dr' => $form->dr,
+                'profile_pol' => $form->pol,
+                'profile_snils' => $form->snils,
+                'profile_address' => $form->address,
+            ]);
+
+            if (!$person_id = $personService->create($userForm, $profileForm)) {
+                $this->addReportRow($rowNum, $form, $this->getErrorsFromService($personService) . $this->getErrorsFromForm($userForm) . $this->getErrorsFromForm($profileForm));
+                $this->error++;
+                return false;
+            }
+        } else {
+            $person_id = $person->person_id;
+        }
+
+        return Uuid::uuid2str($person_id);
+    }
+
+    protected function makeDolzh(ImportEmployeeForm $form)
+    {
+        /** @var DolzhService $dolzhService */
+        $dolzhService = new ProxyService(Yii::$container->get('domain\services\base\DolzhService'), false);
+
+        if (!($dolzh_id = $dolzhService->findIDByName($form->dolzh))) {
+            $dolzhForm = new DolzhForm(null, ['dolzh_name' => $form->dolzh]);
+            $dolzh_id = $dolzhService->create($dolzhForm);
+        }
+
+        return Uuid::uuid2str($dolzh_id);
+    }
+
+    protected function makePodraz(ImportEmployeeForm $form)
+    {
+        /** @var PodrazService $podrazService */
+        $podrazService = new ProxyService(Yii::$container->get('domain\services\base\PodrazService'), false);
+
+        if (!($podraz_id = $podrazService->findIDByName($form->podraz))) {
+            $podrazForm = new PodrazForm(null, ['podraz_name' => $form->podraz]);
+            $podraz_id = $podrazService->create($podrazForm);
+        }
+
+        return Uuid::uuid2str($podraz_id);
+    }
+
+    protected function makeEmployee(ImportEmployeeForm $form, $rowNum, $person_id, $dolzh_id, $podraz_id)
+    {
+        /** @var EmployeeHistoryService $employeeHistoryService */
+        $employeeHistoryService = new ProxyService(Yii::$container->get('domain\services\base\EmployeeHistoryService'), false);
+        $employeeHistoryForm = new EmployeeHistoryForm(null, false, [
+            'person_id' => $person_id,
+            'dolzh_id' => $dolzh_id,
+            'podraz_id' => $podraz_id,
+            'employee_history_begin' => $form->dateBegin,
+            'assignBuilds' => '[]',
+        ]);
+
+        if ($employeeHistoryService->create($employeeHistoryForm)) {
+            $this->success++;
+        } else {
+            $this->addReportRow($rowNum, $form, $this->getErrorsFromService($employeeHistoryService) . $this->getErrorsFromForm($employeeHistoryForm));
+            $this->error++;
+        }
+    }
+
+    protected function makeParttime(ImportEmployeeForm $form, $rowNum, $person_id, $dolzh_id, $podraz_id)
+    {
+        /** @var ParttimeService $parttimeService */
+        $parttimeService = new ProxyService(Yii::$container->get('domain\services\base\ParttimeService'), false);
+        $parttimeForm = new ParttimeForm(null, false, [
+            'person_id' => $person_id,
+            'dolzh_id' => $dolzh_id,
+            'podraz_id' => $podraz_id,
+            'parttime_begin' => $form->dateBegin,
+            'parttime_end' => $form->dateEnd,
+            'assignBuilds' => '[]',
+        ]);
+
+        if ($parttimeService->create($parttimeForm)) {
+            $this->success++;
+        } else {
+            $this->addReportRow($rowNum, $form, $this->getErrorsFromService($parttimeService) . $this->getErrorsFromForm($parttimeForm));
+            $this->error++;
+        }
+    }
+
+    protected function saveReport()
+    {
+        /** @var \PHPExcel_Writer_CSV $objWriter */
+        $objWriter = \PHPExcel_IOFactory::createWriter($this->objPHPExcelReport, 'CSV');
+        $objWriter->setDelimiter(';');
+        $reportPath = Yii::getAlias('@common/ftpimport/reports/' . date('Y-m-d') . time() . '.csv');
+        $objWriter->save($reportPath);
+        file_put_contents($reportPath, mb_convert_encoding(file_get_contents($reportPath), 'windows-1251', 'UTF-8'));
+        $this->addFile($reportPath, 'Результат импорта.csv');
+    }
+
+    protected function addItog()
+    {
+        $successPercent = round($this->success * 100 / $this->rows, 1);
+        $errorPercent = round($this->error * 100 / $this->rows, 1);
+        $this->addShortReport("Итоги обработки:\n- Всего записей: {$this->rows};\n- Успешно ($successPercent%): {$this->success};\n- Ошибок ($errorPercent%): {$this->error};");
     }
 }

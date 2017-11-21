@@ -20,6 +20,10 @@ class DolzhRepository
         return $dolzh;
     }
 
+    /**
+     * @param $dolzh_name
+     * @return null|Dolzh
+     */
     public function findByName($dolzh_name)
     {
         return Dolzh::findOne(['like', 'dolzh_name', trim($dolzh_name), false]);
