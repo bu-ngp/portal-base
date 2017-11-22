@@ -49,6 +49,7 @@ abstract class ProcessLoader extends BaseObject// implements JobInterface
         }
 
         $this->end();
+        $a='';
     }
 
     public function addPercentComplete($percent)

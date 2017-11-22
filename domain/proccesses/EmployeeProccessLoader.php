@@ -265,7 +265,9 @@ class EmployeeProccessLoader extends ProcessLoader
 
         if (!($dolzh_id = $dolzhService->findIDByName($form->dolzh))) {
             $dolzhForm = new DolzhForm(null, ['dolzh_name' => $form->dolzh]);
-            $dolzh_id = $dolzhService->create($dolzhForm);
+            if ($dolzhService->create($dolzhForm)) {
+                $dolzh_id = $dolzhService->findIDByName($form->dolzh);
+            }
         }
 
         return Uuid::uuid2str($dolzh_id);
@@ -278,7 +280,9 @@ class EmployeeProccessLoader extends ProcessLoader
 
         if (!($podraz_id = $podrazService->findIDByName($form->podraz))) {
             $podrazForm = new PodrazForm(null, ['podraz_name' => $form->podraz]);
-            $podraz_id = $podrazService->create($podrazForm);
+            if  ($podrazService->create($podrazForm)) {
+                $podraz_id = $podrazService->findIDByName($form->podraz);
+            }
         }
 
         return Uuid::uuid2str($podraz_id);
