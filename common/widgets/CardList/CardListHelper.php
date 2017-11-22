@@ -12,7 +12,6 @@ namespace common\widgets\CardList;
 use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
-use yii\db\ActiveQueryInterface;
 use yii\db\Expression;
 
 class CardListHelper
@@ -23,39 +22,33 @@ class CardListHelper
      * @param ActiveDataProvider $dataProvider Провайдер данных модели
      * @param string $titleAttribute Имя атрибута модели, из которого будет браться название карты
      * @param string $linkAttribute Имя атрибута модели, из которого будет браться ссылка, по умолчанию '#'
-     * @param string $previewAttribute Имя атрибута модели, из которого будет браться класс иконки 'fa fa-cog' или url картинки, по умолчанию 'fa fa-cog'
+     * @param string $previewAttribute Имя атрибута модели, из которого будет браться url картинки
+     * @param string $iconAttribute Имя атрибута модели, из которого будет браться класс иконки, например 'fa fa-cog', по умолчанию 'fa fa-picture'
      * @param string $descriptionAttribute Имя атрибута модели, из которого будет браться описание карты
      * @param string $styleClassAttribute Имя атрибута модели, из которого будет браться класс стиля карты
      * @param string $popularityID Имя атрибута модели, из которого будет браться ИД для сортировки по популярности, должно быть уникальным в рамках одного виджета
+     * @param bool $linkNewWindow Открывать ссылку в новом окне
      * @return array массив карт
      */
-    public static function createAjaxCards(ActiveDataProvider &$dataProvider, $titleAttribute, $linkAttribute = '', $previewAttribute = '', $descriptionAttribute = '', $styleClassAttribute = '', $popularityID = '')
+    public static function createAjaxCards(ActiveDataProvider &$dataProvider, $titleAttribute, $linkAttribute = '', $previewAttribute = '', $iconAttribute = '', $descriptionAttribute = '', $styleClassAttribute = '', $popularityID = '', $linkNewWindow = true)
     {
         $items = [];
         $dataProvider->getCount();
 
         if ($_GET['page'] <= $dataProvider->getPagination()->getPage() + 1) {
             foreach ($dataProvider->getModels() as $ar) {
-                if (empty($previewAttribute)) {
-                    $preview = [
-                        'FAIcon' => 'cog',
-                    ];
-                } elseif (substr($ar->$previewAttribute, 0, 6) == 'fa fa-') {
-                    $preview = [
-                        'FAIcon' => substr($ar->$previewAttribute, 6),
-                    ];
-                } else {
-                    // $preview = $ar->$descriptionAttribute;
-                    $preview =  $ar->$previewAttribute;
-                }
+                $icon = empty($iconAttribute) ? 'fa fa-picture' : (empty($ar->$iconAttribute) ? 'fa fa-picture' : $ar->$iconAttribute);
+                $preview = empty($previewAttribute) ? '' : (empty($ar->$previewAttribute) ? '' : $ar->$previewAttribute);
 
                 $items[] = [
                     'preview' => $preview,
+                    'icon' => $icon,
                     'title' => Html::encode($ar->$titleAttribute),
                     'description' => empty($descriptionAttribute) ? '' : Html::encode($ar->$descriptionAttribute),
                     'styleClass' => empty($styleClassAttribute) ? CardList::GREY_STYLE : Html::encode($ar->$styleClassAttribute),
                     'link' => empty($linkAttribute) ? '#' : Html::encode($ar->$linkAttribute),
                     'popularityID' => empty($popularityID) ? '' : Html::encode($ar->$popularityID),
+                    'linkNewWindow' => $linkNewWindow,
                 ];
             }
         }

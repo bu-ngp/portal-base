@@ -85,6 +85,7 @@ class Tiles extends \yii\db\ActiveRecord
             'tiles_thumbnail' => $form->tiles_thumbnail,
             'tiles_icon' => $form->tiles_icon,
             'tiles_icon_color' => $form->tiles_icon_color,
+            'tiles_keywords' => $form->tiles_keywords,
         ]);
     }
 
@@ -96,6 +97,7 @@ class Tiles extends \yii\db\ActiveRecord
         $this->tiles_thumbnail = $form->tiles_thumbnail;
         $this->tiles_icon = $form->tiles_icon;
         $this->tiles_icon_color = $form->tiles_icon_color;
+        $this->tiles_keywords = $form->tiles_keywords;
     }
 
     public static function items()

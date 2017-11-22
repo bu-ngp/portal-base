@@ -16,6 +16,10 @@ $(document).ready(function () {
         }
     });
 
+    $('#tilesform-tiles_icon_color').on('change', function () {
+        $('div.wk-tiles-preview-icon').find('div').attr('class', $(this).val());
+    });
+
     if ($('#tilesform-tiles_icon_color').val() !== "") {
         $('div.wk-tiles-preview-icon').find('div').attr('class', $('#tilesform-tiles_icon_color').val());
     }
@@ -32,6 +36,19 @@ $(document).ready(function () {
 
         $('div.wk-tiles-preview-icon').find('i').attr('class', 'fa fa-' + $('#tilesform-tiles_icon').val());
     }
+
+    // floating label textarea
+    $('.pmd-textfield textarea.form-control').each(function () {
+        if ($(this).val() !== "") {
+            $(this).closest('.pmd-textfield').addClass("pmd-textfield-floating-label-completed");
+        }
+    });
+    // floating change label textarea
+    $(".pmd-textfield textarea.form-control").on('change', function () {
+        if ($(this).val() !== "") {
+            $(this).closest('.pmd-textfield').addClass("pmd-textfield-floating-label-completed");
+        }
+    });
 });
 
 var jcrop_init;
@@ -82,8 +99,4 @@ function readURL(input) {
 
         reader.readAsDataURL(input.files[0]);
     }
-}
-
-function changeIconColor(value) {
-    $('div.wk-tiles-preview-icon').find('div').attr('class', value);
 }

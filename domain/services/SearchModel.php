@@ -233,12 +233,7 @@ class SearchModel extends Model
 
     private function initAttributeLabels()
     {
-        $labels = [];
-        foreach ($this->attributes() as $attribute) {
-            $labels[$attribute] = $this->activeRecord->getAttributeLabel($attribute);
-        }
-
-        return $labels;
+        return $this->activeRecord->attributeLabels();
     }
 
     private function initSortAttributes()

@@ -64,6 +64,7 @@
 
             var $media = makeMedia({
                 preview: props.preview,
+                icon: props.icon,
                 styleClass: props.styleClass
             });
 
@@ -73,7 +74,8 @@
             });
 
             var $actions = makeActions($widget, {
-                link: props.link
+                link: props.link,
+                linkNewWindow: props.linkNewWindow
             });
 
             var $cardInside = $media.add($title).add($actions);
@@ -89,10 +91,10 @@
     var makeMedia = function (contentObj) {
         var preview = '';
         var styleWidgetMedia = '';
-        if (typeof contentObj.preview === 'string') {
+        if (("preview" in contentObj) && typeof contentObj.preview === "string" && contentObj.preview !== '') {
             preview = '<img class="img-responsive" src="' + contentObj.preview + '">';
-        } else if (typeof contentObj.preview === 'object') {
-            preview = '<i class="fa fa-' + contentObj.preview.FAIcon + ' wk-style"></i>';
+        } else {
+            preview = '<i class="' + contentObj.icon + ' wk-style"></i>';
             styleWidgetMedia = contentObj.styleClass;
         }
 
@@ -113,8 +115,9 @@
     };
 
     var makeActions = function ($widget, contentObj) {
+        var newWindow = ("linkNewWindow" in contentObj) && contentObj.linkNewWindow === true ? ' target="_blank"' : '';
         return $('<div class="pmd-card-actions">' +
-            '<a href="' + contentObj.link + '" class="btn pmd-btn-flat pmd-ripple-effect btn-primary">' +
+            '<a href="' + contentObj.link + '" class="btn pmd-btn-flat pmd-ripple-effect btn-primary"' + newWindow + '>' +
             $widget.data('wkcardlist').settings.messages.followLinkMessage +
             '</a>' +
             '</div>');
@@ -308,10 +311,12 @@
                 $.each(props.items, function () {
                     $card = makeCard($widget, {
                         preview: this.preview,
+                        icon: this.icon,
                         styleClass: this.styleClass,
                         title: this.title,
                         description: this.description,
                         link: this.link,
+                        linkNewWindow: this.linkNewWindow,
                         popularityID: this.popularityID,
                         scroll: props.scroll,
                         widgetID: props.widgetID

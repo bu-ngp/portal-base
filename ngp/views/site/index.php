@@ -4,9 +4,11 @@
 
 use common\widgets\CardList\CardList;
 use domain\models\base\search\AuthItemSearch;
+use ngp\services\models\search\TilesMainPageSearch;
+use ngp\services\models\search\TilesSearch;
 use yii\helpers\Url;
 
-/* @var $modelSearch AuthItemSearch */
+/* @var $modelSearch TilesMainPageSearch */
 
 $this->title = 'My Yii Application';
 ?>
@@ -14,7 +16,7 @@ $this->title = 'My Yii Application';
 
     <?= CardList::widget([
         'url' => Url::to(['site/tiles']),
-'items' => [],
+//'items' => [],
 //        'items' => [
 //            [
 //                'styleClass' => CardList::RED_STYLE,
@@ -49,7 +51,7 @@ $this->title = 'My Yii Application';
 //        ],
         'search' => [
             'modelSearch' => $modelSearch,
-            'searchAttributeName' => 'tiles_name',
+            'searchAttributeName' => 'search_string',
         ],
         'popularity' => true,
     ])

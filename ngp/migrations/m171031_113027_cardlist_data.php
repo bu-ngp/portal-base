@@ -23,7 +23,7 @@ class m171031_113027_cardlist_data extends Migration
                 'Добавление/Редактирование/Удаление плиток',
                 'wk-yellow-style',
                 'FrontendUrlManager[tiles]',
-                'list-alt',
+                'fa fa-list-alt',
                 RbacHelper::TILES_EDIT,
             ],
             [
@@ -32,7 +32,7 @@ class m171031_113027_cardlist_data extends Migration
                 'Проверка полисов на портале ОФОМС. Прикрепление пациентов к врачам ЛПУ',
                 'wk-blue-style',
                 'FrontendUrlManager[ofoms]',
-                'list-alt',
+                'fa fa-list-alt',
                 RbacHelper::OFOMS_VIEW,
             ],
             [
@@ -41,7 +41,7 @@ class m171031_113027_cardlist_data extends Migration
                 '',
                 'wk-blue-style',
                 'FrontendUrlManager[ofoms-config]',
-                'list-alt',
+                'fa fa-list-alt',
                 BaseRbacHelper::ADMINISTRATOR,
             ],
         ]);

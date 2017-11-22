@@ -13,6 +13,7 @@ use common\widgets\CardList\assets\CardListAsset;
 use common\widgets\PropellerAssets\PropellerAsset;
 use Exception;
 use Yii;
+use yii\base\Model;
 use yii\bootstrap\Html;
 use yii\bootstrap\Widget;
 use yii\db\ActiveRecord;
@@ -93,7 +94,7 @@ class CardList extends Widget
                 'search' => true,
             ]);
         } elseif (isset($this->search['modelSearch'])
-            && $this->search['modelSearch'] instanceof ActiveRecord
+            && $this->search['modelSearch'] instanceof Model
             && isset($this->search['searchAttributeName'])
         ) {
             $options = array_replace_recursive($options, [
@@ -115,21 +116,23 @@ class CardList extends Widget
 
     protected function filterByRoles()
     {
-        $this->items = array_filter($this->items, function ($item) {
-            if (isset($item['roles'])) {
-                $item['roles'] = is_array($item['roles']) ? $item['roles'] : [$item['roles']];
+        if ($this->items) {
+            $this->items = array_filter($this->items, function ($item) {
+                if (isset($item['roles'])) {
+                    $item['roles'] = is_array($item['roles']) ? $item['roles'] : [$item['roles']];
 
-                foreach ($item['roles'] as $role) {
-                    if (Yii::$app->user->can($role)) {
-                        return true;
+                    foreach ($item['roles'] as $role) {
+                        if (Yii::$app->user->can($role)) {
+                            return true;
+                        }
                     }
+
+                    return false;
                 }
 
-                return false;
-            }
-
-            return true;
-        });
+                return true;
+            });
+        }
     }
 
     protected function getItemsFromDB()
@@ -157,9 +160,7 @@ class CardList extends Widget
                     if ($this->allowTileForPage($tile)) {
                         $this->items[] = [
                             'styleClass' => $tile['cardlist_style'],
-                            'preview' => [
-                                'FAIcon' => $tile['cardlist_icon'],
-                            ],
+                            'icon' => $tile['cardlist_icon'],
                             'title' => $tile['cardlist_title'],
                             'description' => $tile['cardlist_description'],
                             'link' => $this->getLinkFromDBField($tile),

@@ -10,6 +10,8 @@ use yii\db\ActiveQuery;
 
 class TilesMainPageSearch extends SearchModel
 {
+    public $search_string;
+
     public static function activeRecord()
     {
         return new Tiles;
@@ -17,26 +19,16 @@ class TilesMainPageSearch extends SearchModel
 
     public function attributes()
     {
-        return [
-            'tiles_name',
-            'tiles_description',
-            'tiles_keywords',
-            'tiles_link',
-            'tiles_thumbnail',
-            'tiles_icon',
-            'tiles_icon_color',
-        ];
+        return ['search_string'];
     }
 
     public function afterLoad(ActiveQuery $query, ActiveDataProvider $dataProvider, $params)
     {
         CardListHelper::applyPopularityOrder($query, 'tiles_id');
-    }
-
-    public function filter()
-    {
-        return [
-
-        ];
+        $query
+            ->orFilterWhere(['like', 'tiles_name', $this->search_string])
+            ->orFilterWhere(['like', 'tiles_description', $this->search_string])
+            ->orFilterWhere(['like', 'tiles_keywords', $this->search_string])
+            ->orFilterWhere(['like', 'tiles_link', $this->search_string]);
     }
 }

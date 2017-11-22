@@ -16,6 +16,9 @@ class TilesRules
         return
             [
                 [['tiles_name', 'tiles_link'], 'required'],
+                [['tiles_icon'], 'filter', 'filter' => function ($value) {
+                    return preg_match('/^fa\sfa-/', $value) ? $value : ('fa fa-' . $value);
+                }],
                 [['tiles_name', 'tiles_keywords', 'tiles_link', '!tiles_thumbnail', 'tiles_icon', 'tiles_icon_color'], 'string', 'max' => 255],
                 [['tiles_description'], 'string', 'max' => 400],
             ];

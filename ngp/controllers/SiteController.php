@@ -45,7 +45,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $modelSearch = new AuthItemSearch();
+        $modelSearch = new TilesMainPageSearch();
         return $this->render('index', ['modelSearch' => $modelSearch]);
     }
 
@@ -55,7 +55,7 @@ class SiteController extends Controller
         $searchModel = new TilesMainPageSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return CardListHelper::createAjaxCards($dataProvider, 'tiles_name', 'tiles_link', 'tiles_thumbnail', 'tiles_description', '', 'tiles_id');
+        return CardListHelper::createAjaxCards($dataProvider, 'tiles_name', 'tiles_link', 'tiles_thumbnail', 'tiles_icon','tiles_description', 'tiles_icon_color', 'tiles_id');
     }
 //
 //    public function actionTest()

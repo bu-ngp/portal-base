@@ -4,6 +4,9 @@ namespace ngp\services\models\search;
 
 use ngp\services\models\Tiles;
 use domain\services\SearchModel;
+use Yii;
+use yii\data\ActiveDataProvider;
+use yii\db\ActiveQuery;
 
 class TilesSearch extends SearchModel
 {
@@ -18,9 +21,7 @@ class TilesSearch extends SearchModel
             'tiles_name',
             'tiles_description',
             'tiles_link',
-            'tiles_thumbnail',
-            'tiles_icon',
-            'tiles_icon_color',
+            'tiles_keywords',
             'created_at',
             'updated_at',
             'created_by',
@@ -36,7 +37,8 @@ class TilesSearch extends SearchModel
     public function filter()
     {
         return [
-
+            [['tiles_name', 'tiles_description', 'tiles_link', 'tiles_keywords', 'created_by', 'updated_by'], SearchModel::CONTAIN],
+            [['created_at', 'updated_at'], SearchModel::DATETIME],
         ];
     }
 }
