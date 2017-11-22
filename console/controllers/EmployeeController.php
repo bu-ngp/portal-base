@@ -23,4 +23,12 @@ class EmployeeController extends Controller
 
         echo "finish\n";
     }
+
+    public function actionImport2()
+    {
+        $doh = new DoH(new EmployeeProccessLoader(Yii::getAlias('@common/ftpimport/Upload_Kamin_SotrInfo3.xlsx')));
+        $doh->execute();
+
+        echo "finish\n";
+    }
 }

@@ -78,7 +78,7 @@ class Handler extends \yii\db\ActiveRecord
         ];
     }
 
-    public function behaviors()
+   /* public function behaviors()
     {
         return [
             'saveRelations' => [
@@ -93,7 +93,7 @@ class Handler extends \yii\db\ActiveRecord
         return [
             self::SCENARIO_DEFAULT => self::OP_ALL,
         ];
-    }
+    }*/
 
     /**
      * @return \yii\db\ActiveQuery

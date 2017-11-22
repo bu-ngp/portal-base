@@ -8,6 +8,7 @@ use domain\forms\base\EmployeeHistoryForm;
 use domain\helpers\DateHelper;
 use domain\rules\base\EmployeeHistoryRules;
 use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
+use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -52,7 +53,11 @@ class EmployeeHistory extends \yii\db\ActiveRecord
             [['dolzh_id'], 'exist', 'skipOnError' => true, 'targetClass' => Dolzh::className(), 'targetAttribute' => ['dolzh_id' => 'dolzh_id']],
             [['person_id'], 'exist', 'skipOnError' => true, 'targetClass' => Person::className(), 'targetAttribute' => ['person_id' => 'person_id']],
             [['podraz_id'], 'exist', 'skipOnError' => true, 'targetClass' => Podraz::className(), 'targetAttribute' => ['podraz_id' => 'podraz_id']],
-            [['employee_history_begin'], 'unique', 'targetAttribute' => ['person_id', 'employee_history_begin']],
+            [['employee_history_begin'], 'unique', 'targetAttribute' => ['person_id', 'employee_history_begin'], 'message' => Yii::t('domain/employee', 'Unique Error By Values [{person_id}, {person_fullname}, {employee_history_begin}]', [
+                'person_id' => Uuid::uuid2str($this->person_id),
+                'person_fullname' => $this->person->person_fullname,
+                'employee_history_begin' => $this->employee_history_begin,
+            ])],
         ]);
     }
 
@@ -81,7 +86,7 @@ class EmployeeHistory extends \yii\db\ActiveRecord
             TimestampBehavior::className(),
             BlameableBehavior::className(),
             'saveRelations' => [
-                'class'     => SaveRelationsBehavior::className(),
+                'class' => SaveRelationsBehavior::className(),
                 'relations' => ['builds'],
             ],
         ];

@@ -20,7 +20,7 @@ use yii\queue\JobInterface;
 use yii\web\Session;
 use yii\web\User;
 
-abstract class ProcessLoader extends BaseObject implements JobInterface
+abstract class ProcessLoader extends BaseObject// implements JobInterface
 {
     public $description = 'Process Loader';
     public $handler_id;
@@ -30,7 +30,7 @@ abstract class ProcessLoader extends BaseObject implements JobInterface
 
     abstract public function body();
 
-    public function execute($queue)
+    public function execute(/*$queue*/)
     {
         $this->_handler = Handler::findOne($this->handler_id);
         if (!$this->_handler || $this->_handler->handler_status !== Handler::QUEUE) {
@@ -82,18 +82,45 @@ abstract class ProcessLoader extends BaseObject implements JobInterface
     public function addFile($path, $description = '', $type = '')
     {
         if (file_exists($path)) {
-            $this->_handler->dohFiles = array_merge(HandlerFiles::find()->select('doh_files_id')->andWhere(['handler_id' => $this->_handler->primaryKey])->column(), [
-                [
+//            $this->_handler->dohFiles = array_merge(HandlerFiles::find()->select('doh_files_id')->andWhere(['handler_id' => $this->_handler->primaryKey])->column(), [
+//                [
+//                    'file_type' => $this->getFileType($path, $type),
+//                    'file_path' => $path,
+//                    'file_description' => $this->getFileDescription($path, $description),
+//                ]
+//            ]);
+
+//            $transaction = Yii::$app->db->beginTransaction();
+//            try {
+
+                $dohFiles = new DohFiles([
                     'file_type' => $this->getFileType($path, $type),
                     'file_path' => $path,
                     'file_description' => $this->getFileDescription($path, $description),
-                ]
-            ]);
+                ]);
+                if ($dohFiles->save()) {
+                    $handlerFiles = new HandlerFiles([
+                        'doh_files_id' => $dohFiles->primaryKey,
+                        'handler_id' => $this->_handler->primaryKey,
+                    ]);
 
-            if (!$this->_handler->save()) {
-                $this->_handler->handler_short_report = "File '$path': " . print_r($this->_handler->getErrors(), true);
-                $this->_handler->save(false);
-            }
+                    if ($handlerFiles->save()) {
+                        if (!$this->_handler->save()) {
+                            $this->_handler->handler_short_report = "File '$path': " . print_r($this->_handler->getErrors(), true);
+                            $this->_handler->save(false);
+                        }
+                    }
+                }
+
+//                $transaction->commit();
+//            } catch (\Exception $e) {
+//                $transaction->rollBack();
+//            }
+
+//            if (!$this->_handler->save()) {
+//                $this->_handler->handler_short_report = "File '$path': " . print_r($this->_handler->getErrors(), true);
+//                $this->_handler->save(false);
+//            }
         } else {
             $this->_handler->handler_short_report = "File '$path' not exist";
             $this->_handler->save(false);

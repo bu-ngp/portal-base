@@ -52,7 +52,8 @@ class DoH
 
     public function execute()
     {
-        Yii::$app->queue->push($this->_loader);
+      //  Yii::$app->queue->push($this->_loader);
+        $this->_loader->execute();
     }
 
     public static function getIdentifier()

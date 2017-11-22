@@ -8,6 +8,7 @@ use domain\helpers\DateHelper;
 use domain\rules\base\ParttimeRules;
 use domain\validators\ParttimeValidator;
 use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
+use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -52,7 +53,14 @@ class Parttime extends \yii\db\ActiveRecord
             [['person_id'], 'exist', 'skipOnError' => true, 'targetClass' => Person::className(), 'targetAttribute' => ['person_id' => 'person_id']],
             [['podraz_id'], 'exist', 'skipOnError' => true, 'targetClass' => Podraz::className(), 'targetAttribute' => ['podraz_id' => 'podraz_id']],
             [['parttime_begin', 'parttime_end'], ParttimeValidator::className()],
-            [['parttime_begin'], 'unique', 'targetAttribute' => ['person_id', 'dolzh_id', 'podraz_id', 'parttime_begin', 'parttime_end']],
+            [['parttime_begin'], 'unique', 'targetAttribute' => ['person_id', 'dolzh_id', 'podraz_id', 'parttime_begin', 'parttime_end'], 'message' => Yii::t('domain/employee', 'Unique Error By Values [PersonID: {person_id}, DolzhID: {dolzh_id}, PodrazID: {podraz_id}, {person_fullname}, From: {parttime_begin}, To: {parttime_end}]', [
+                'person_id' => Uuid::uuid2str($this->person_id),
+                'dolzh_id' => Uuid::uuid2str($this->dolzh_id),
+                'podraz_id' => Uuid::uuid2str($this->podraz_id),
+                'person_fullname' => $this->person->person_fullname,
+                'parttime_begin' => $this->parttime_begin,
+                'parttime_end' => $this->parttime_end,
+            ])],
         ]);
     }
 
