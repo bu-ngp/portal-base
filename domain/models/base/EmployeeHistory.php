@@ -101,13 +101,12 @@ class EmployeeHistory extends \yii\db\ActiveRecord
 
     public static function create(EmployeeHistoryForm $form)
     {
-        return new self([
+        return new self(array_merge([
             'person_id' => $form->person_id,
             'dolzh_id' => $form->dolzh_id,
             'podraz_id' => $form->podraz_id,
             'employee_history_begin' => $form->employee_history_begin,
-            'builds' => $form->assignBuilds,
-        ]);
+        ], empty($form->assignBuilds) ? [] : ['builds' => $form->assignBuilds]));
     }
 
     public function edit(EmployeeHistoryForm $form)

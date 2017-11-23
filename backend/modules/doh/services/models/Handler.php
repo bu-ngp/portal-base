@@ -50,6 +50,15 @@ class Handler extends \yii\db\ActiveRecord
         return [
             [['identifier', 'handler_name', 'handler_description', 'handler_at'], 'required'],
             [['handler_at', 'handler_percent', 'handler_status', 'handler_files', 'handler_used_memory'], 'integer'],
+            [['identifier'], 'filter', 'filter' => function ($value) {
+                return mb_substr($value, 0, 64, 'UTF-8');
+            }],
+            [['handler_name'], 'filter', 'filter' => function ($value) {
+                return mb_substr($value, 0, 255, 'UTF-8');
+            }],
+            [['handler_description', 'handler_short_report'], 'filter', 'filter' => function ($value) {
+                return mb_substr($value, 0, 400, 'UTF-8');
+            }],
             [['identifier'], 'string', 'max' => 64],
             [['handler_name'], 'string', 'max' => 255],
             [['handler_description', 'handler_short_report'], 'string', 'max' => 400],
@@ -78,7 +87,7 @@ class Handler extends \yii\db\ActiveRecord
         ];
     }
 
-   /* public function behaviors()
+    public function behaviors()
     {
         return [
             'saveRelations' => [
@@ -93,7 +102,7 @@ class Handler extends \yii\db\ActiveRecord
         return [
             self::SCENARIO_DEFAULT => self::OP_ALL,
         ];
-    }*/
+    }
 
     /**
      * @return \yii\db\ActiveQuery

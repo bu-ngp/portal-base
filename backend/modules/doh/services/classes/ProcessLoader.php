@@ -49,7 +49,6 @@ abstract class ProcessLoader extends BaseObject// implements JobInterface
         }
 
         $this->end();
-        $a='';
     }
 
     public function addPercentComplete($percent)
@@ -75,7 +74,7 @@ abstract class ProcessLoader extends BaseObject// implements JobInterface
             $this->_handler->handler_short_report = $reportString;
             if (!$this->_handler->save()) {
                 $this->_handler->handler_short_report = print_r($this->_handler->getErrors(), true);
-                $this->_handler->save(false);
+                $this->_handler->save();
             };
         }
     }
@@ -83,48 +82,21 @@ abstract class ProcessLoader extends BaseObject// implements JobInterface
     public function addFile($path, $description = '', $type = '')
     {
         if (file_exists($path)) {
-//            $this->_handler->dohFiles = array_merge(HandlerFiles::find()->select('doh_files_id')->andWhere(['handler_id' => $this->_handler->primaryKey])->column(), [
-//                [
-//                    'file_type' => $this->getFileType($path, $type),
-//                    'file_path' => $path,
-//                    'file_description' => $this->getFileDescription($path, $description),
-//                ]
-//            ]);
-
-//            $transaction = Yii::$app->db->beginTransaction();
-//            try {
-
-                $dohFiles = new DohFiles([
+            $this->_handler->dohFiles = array_merge(HandlerFiles::find()->select('doh_files_id')->andWhere(['handler_id' => $this->_handler->primaryKey])->column(), [
+                [
                     'file_type' => $this->getFileType($path, $type),
                     'file_path' => $path,
                     'file_description' => $this->getFileDescription($path, $description),
-                ]);
-                if ($dohFiles->save()) {
-                    $handlerFiles = new HandlerFiles([
-                        'doh_files_id' => $dohFiles->primaryKey,
-                        'handler_id' => $this->_handler->primaryKey,
-                    ]);
+                ]
+            ]);
 
-                    if ($handlerFiles->save()) {
-                        if (!$this->_handler->save()) {
-                            $this->_handler->handler_short_report = "File '$path': " . print_r($this->_handler->getErrors(), true);
-                            $this->_handler->save(false);
-                        }
-                    }
-                }
-
-//                $transaction->commit();
-//            } catch (\Exception $e) {
-//                $transaction->rollBack();
-//            }
-
-//            if (!$this->_handler->save()) {
-//                $this->_handler->handler_short_report = "File '$path': " . print_r($this->_handler->getErrors(), true);
-//                $this->_handler->save(false);
-//            }
+            if (!$this->_handler->save()) {
+                $this->_handler->handler_short_report = "File '$path': " . print_r($this->_handler->getErrors(), true);
+                $this->_handler->save();
+            }
         } else {
             $this->_handler->handler_short_report = "File '$path' not exist";
-            $this->_handler->save(false);
+            $this->_handler->save();
         }
     }
 
@@ -174,7 +146,7 @@ abstract class ProcessLoader extends BaseObject// implements JobInterface
         $this->_handler->handler_short_report = $message;
         $this->_handler->handler_done_time = microtime(true) - $this->_handler->handler_at;
         $this->_handler->handler_used_memory = memory_get_usage(true);
-        $this->_handler->save(false);
+        $this->_handler->save();
     }
 
     protected function getFileDescription($path, $description)

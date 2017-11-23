@@ -105,14 +105,13 @@ class Parttime extends \yii\db\ActiveRecord
 
     public static function create(ParttimeForm $form)
     {
-        return new self([
+        return new self(array_merge([
             'person_id' => $form->person_id,
             'dolzh_id' => $form->dolzh_id,
             'podraz_id' => $form->podraz_id,
             'parttime_begin' => $form->parttime_begin,
             'parttime_end' => $form->parttime_end,
-            'builds' => $form->assignBuilds,
-        ]);
+        ], empty($form->assignBuilds) ? [] : ['builds' => $form->assignBuilds]));
     }
 
     public function edit(ParttimeForm $form)

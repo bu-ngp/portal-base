@@ -21,6 +21,7 @@ use PHPExcel;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\base\Model;
+use yii\helpers\VarDumper;
 
 class EmployeeProccessLoader extends ProcessLoader
 {
@@ -92,7 +93,8 @@ class EmployeeProccessLoader extends ProcessLoader
                     }
                     $dolzh_id = $this->makeDolzh($form);
                     $podraz_id = $this->makePodraz($form);
-                    file_put_contents('test.txt', print_r([$person_id, $dolzh_id, $podraz_id], true), FILE_APPEND);
+                    //file_put_contents('test.txt', print_r([$person_id, $dolzh_id, $podraz_id], true), FILE_APPEND);
+                //    print_r([$person_id, $dolzh_id, $podraz_id]);
                     switch ($this->statusEmployee($form)) {
                         case self::STATUS_GENERAL:
                             $this->makeEmployee($form, $i, $person_id, $dolzh_id, $podraz_id);
@@ -280,7 +282,7 @@ class EmployeeProccessLoader extends ProcessLoader
 
         if (!($podraz_id = $podrazService->findIDByName($form->podraz))) {
             $podrazForm = new PodrazForm(null, ['podraz_name' => $form->podraz]);
-            if  ($podrazService->create($podrazForm)) {
+            if ($podrazService->create($podrazForm)) {
                 $podraz_id = $podrazService->findIDByName($form->podraz);
             }
         }
@@ -342,6 +344,7 @@ class EmployeeProccessLoader extends ProcessLoader
 
     protected function addItog()
     {
+        $this->rows--;
         $successPercent = round($this->success * 100 / $this->rows, 1);
         $errorPercent = round($this->error * 100 / $this->rows, 1);
         $this->addShortReport("Итоги обработки:\n- Всего записей: {$this->rows};\n- Успешно ($successPercent%): {$this->success};\n- Ошибок ($errorPercent%): {$this->error};");
