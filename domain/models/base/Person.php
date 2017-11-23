@@ -40,7 +40,7 @@ use yii\web\IdentityInterface;
  * @property Employee $employee
  * @property EmployeeHistory[] $employeeHistories
  * @property Parttime[] $parttimes
- * @property Profile $person
+ * @property Profile $profile
  */
 class Person extends \yii\db\ActiveRecord implements LdapModelInterface
 {

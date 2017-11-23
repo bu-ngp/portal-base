@@ -26,7 +26,7 @@ class ProxyService
     {
         try {
             $result = call_user_func_array([$this->serviceClass, $method], $arguments);
-            
+
             return $result === null ?: $result;
         } catch (\DomainException $e) {
             if ($e->getMessage()) {
@@ -40,8 +40,14 @@ class ProxyService
         return false;
     }
 
-    public function getErrorsProxyService()
+    public function getErrorsProxyService($clearErrors = false)
     {
+        if ($clearErrors) {
+            $errors = $this->storeErrors;
+            $this->storeErrors = [];
+            return $errors;
+        }
+
         return $this->storeErrors;
     }
 }

@@ -9,19 +9,22 @@ use domain\forms\base\ParttimeForm;
 use domain\forms\base\PodrazForm;
 use domain\forms\base\ProfileForm;
 use domain\forms\base\UserForm;
+use domain\forms\base\UserFormUpdate;
 use domain\forms\ImportEmployeeForm;
+use domain\forms\ImportEmployeeOrigForm;
+use domain\models\base\Person;
 use domain\services\base\DolzhService;
 use domain\services\base\EmployeeHistoryService;
 use domain\services\base\ParttimeService;
 use domain\services\base\PersonService;
 use domain\services\base\PodrazService;
 use domain\services\ProxyService;
+use domain\services\TransactionManager;
 use ngp\services\classes\ChunkReadFilter;
 use PHPExcel;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\base\Model;
-use yii\helpers\VarDumper;
 
 class EmployeeProccessLoader extends ProcessLoader
 {
@@ -39,13 +42,29 @@ class EmployeeProccessLoader extends ProcessLoader
     private $objPHPExcelReport;
     /** @var \PHPExcel_Worksheet */
     private $sheetReport;
+    /** @var PersonService */
+    private $personService;
+    /** @var DolzhService */
+    private $dolzhService;
+    /** @var PodrazService */
+    private $podrazService;
+    /** @var EmployeeHistoryService */
+    private $employeeService;
+    /** @var ParttimeService */
+    private $parttimeService;
+    /** @var  TransactionManager */
+    private $transactionManager;
 
     private $success = 0;
+    private $changes = 0;
     private $error = 0;
     private $rows = 0;
     private $reportRow = 1;
 
     private $highestRow;
+    /** @var ImportEmployeeOrigForm */
+    private $formOrigData;
+    private $currentRow;
 
     /**
      * EmployeeProccessLoader constructor.
@@ -58,6 +77,14 @@ class EmployeeProccessLoader extends ProcessLoader
         $this->objPHPExcelReport = new \PHPExcel();
         $this->sheetReport = $this->objPHPExcelReport->getActiveSheet();
         $this->addReportHeader();
+
+        $this->personService = new ProxyService(Yii::$container->get('domain\services\base\PersonService'), false);
+        $this->dolzhService = new ProxyService(Yii::$container->get('domain\services\base\DolzhService'), false);
+        $this->podrazService = new ProxyService(Yii::$container->get('domain\services\base\PodrazService'), false);
+        $this->employeeService = new ProxyService(Yii::$container->get('domain\services\base\EmployeeHistoryService'), false);
+        $this->parttimeService = new ProxyService(Yii::$container->get('domain\services\base\ParttimeService'), false);
+        $this->transactionManager = Yii::$container->get('domain\services\TransactionManager');
+
         parent::__construct($config);
     }
 
@@ -76,44 +103,63 @@ class EmployeeProccessLoader extends ProcessLoader
             $objPHPExcel = $objReader->load($this->importFilePath);
             $objPHPExcel->setActiveSheetIndex(0);
             $objWorksheet = $objPHPExcel->getActiveSheet();
-            for ($i = self::START_ROW; $i < self::START_ROW + self::CHUNK_SIZE; $i++) {
+            for ($this->currentRow = self::START_ROW; $this->currentRow < self::START_ROW + self::CHUNK_SIZE; $this->currentRow++) {
                 $this->rows++;
-                $row = $this->getExcelRow($objWorksheet, $i);
+                $row = $this->getExcelRow($objWorksheet);
 
                 if ($this->isEnd($row)) {
                     break;
                 }
 
-                $this->calculatePercentCompleted($i);
+                $this->calculatePercentCompleted();
                 $form = $this->getForm($row);
+                $this->formOrigData = $this->getFormOriginalData($row);
+                $this->formOrigData->validate();
 
                 if ($form->validate()) {
-                    if (($person_id = $this->makePerson($form, $i)) === false) {
-                        continue;
-                    }
-                    $dolzh_id = $this->makeDolzh($form);
-                    $podraz_id = $this->makePodraz($form);
-                    //file_put_contents('test.txt', print_r([$person_id, $dolzh_id, $podraz_id], true), FILE_APPEND);
-                //    print_r([$person_id, $dolzh_id, $podraz_id]);
-                    switch ($this->statusEmployee($form)) {
-                        case self::STATUS_GENERAL:
-                            $this->makeEmployee($form, $i, $person_id, $dolzh_id, $podraz_id);
-                            break;
-                        case self::STATUS_PART_TIME:
-                            $this->makeParttime($form, $i, $person_id, $dolzh_id, $podraz_id);
-                            break;
-                        default:
-                            $this->addReportRow($i, $form, 'Не определен статус сутрудника');
-                            $this->error++;
+
+                    $transaction = Yii::$app->db->beginTransaction();
+                    try {
+                        if (($person_id = $this->makePerson($form)) === false) {
+                            $transaction->rollBack();
+                            continue;
+                        }
+                        if (($dolzh_id = $this->makeDolzh($form)) === false) {
+                            $transaction->rollBack();
+                            continue;
+                        }
+                        if (($podraz_id = $this->makePodraz($form)) === false) {
+                            $transaction->rollBack();
+                            continue;
+                        }
+                        //file_put_contents('test.txt', print_r([$person_id, $dolzh_id, $podraz_id], true), FILE_APPEND);
+                        // print_r([$person_id, $dolzh_id, $podraz_id]);
+                        switch ($this->statusEmployee($form)) {
+                            case self::STATUS_GENERAL:
+                                $this->makeEmployee($form, $person_id, $dolzh_id, $podraz_id);
+                                break;
+                            case self::STATUS_PART_TIME:
+                                $this->makeParttime($form, $person_id, $dolzh_id, $podraz_id);
+                                break;
+                            default:
+                                $transaction->rollBack();
+                                $this->addReportRow('Не определен статус сутрудника');
+                                $this->error++;
+                        }
+
+                        $transaction->commit();
+                    } catch (\Exception $e) {
+                        $transaction->rollBack();
+                        throw $e;
                     }
                 } else {
-                    $this->addReportRow($i, $form, $this->getErrorsFromForm($form));
+                    $this->addReportRow($this->getErrorsFromForm($form));
                     $this->error++;
                 };
             }
         }
 
-        if ($this->error) {
+        if ($this->error || $this->changes) {
             $this->saveReport();
         }
         $this->addItog();
@@ -128,23 +174,23 @@ class EmployeeProccessLoader extends ProcessLoader
         $this->reportRow++;
     }
 
-    protected function addReportRow($i, ImportEmployeeForm $form, $message)
+    protected function addReportRow($message)
     {
-        $this->sheetReport->setCellValueByColumnAndRow(0, $this->reportRow, $i);
+        $this->sheetReport->setCellValueByColumnAndRow(0, $this->reportRow, $this->currentRow);
         $this->sheetReport->setCellValueByColumnAndRow(1, $this->reportRow, $message);
         $this->sheetReport->setCellValueByColumnAndRow(2, $this->reportRow, implode('; ', [
-            $form->period,
-            $form->fio,
-            $form->dr,
-            $form->pol,
-            $form->snils,
-            $form->inn,
-            $form->dolzh,
-            $form->status,
-            $form->podraz,
-            $form->dateBegin,
-            $form->dateEnd,
-            $form->address,
+            $this->formOrigData->period,
+            $this->formOrigData->fio,
+            $this->formOrigData->dr,
+            $this->formOrigData->pol,
+            $this->formOrigData->snils,
+            $this->formOrigData->inn,
+            $this->formOrigData->dolzh,
+            $this->formOrigData->status,
+            $this->formOrigData->podraz,
+            $this->formOrigData->dateBegin,
+            $this->formOrigData->dateEnd,
+            $this->formOrigData->address,
         ]));
         $this->reportRow++;
     }
@@ -178,9 +224,27 @@ class EmployeeProccessLoader extends ProcessLoader
         ]);
     }
 
+    protected function getFormOriginalData(array $row)
+    {
+        return new ImportEmployeeOrigForm([
+            'period' => $row[0],
+            'fio' => $row[1],
+            'dr' => $row[2],
+            'pol' => $row[3],
+            'snils' => $row[4],
+            'inn' => $row[5],
+            'dolzh' => $row[6],
+            'status' => $row[7],
+            'podraz' => $row[9],
+            'dateBegin' => $row[10],
+            'dateEnd' => $row[11],
+            'address' => $row[12],
+        ]);
+    }
+
     protected function getErrorsFromService(ProxyService $service)
     {
-        return implode(',', $service->getErrorsProxyService());
+        return implode(',', $service->getErrorsProxyService(true));
     }
 
     protected function getErrorsFromForm(Model $form)
@@ -203,9 +267,9 @@ class EmployeeProccessLoader extends ProcessLoader
         return false;
     }
 
-    protected function getExcelRow(\PHPExcel_Worksheet $worksheet, $rowNum)
+    protected function getExcelRow(\PHPExcel_Worksheet $worksheet)
     {
-        $row = $worksheet->rangeToArray('A' . $rowNum . ':N' . $rowNum, null, true, false);
+        $row = $worksheet->rangeToArray('A' . $this->currentRow . ':N' . $this->currentRow, null, true, false);
         return $row[key($row)];
     }
 
@@ -219,78 +283,121 @@ class EmployeeProccessLoader extends ProcessLoader
         return false;
     }
 
-    protected function calculatePercentCompleted($rowNum)
+    protected function calculatePercentCompleted()
     {
-        if ($rowNum % 50 === 0) {
-            $this->addPercentComplete(round($rowNum * 99 / $this->highestRow));
+        if ($this->currentRow % 50 === 0) {
+            $this->addPercentComplete(round($this->currentRow * 99 / $this->highestRow));
         }
     }
 
-    protected function makePerson(ImportEmployeeForm $form, $rowNum)
+    protected function makePerson(ImportEmployeeForm $form)
     {
-        /** @var PersonService $personService */
-        $personService = new ProxyService(Yii::$container->get('domain\services\base\PersonService'), false);
-
-        if (!$person = $personService->getUserByINN($form->inn)) {
-            $userForm = new UserForm([
-                'person_fullname' => $form->fio,
-                'person_username' => UserForm::generateUserName($form->fio),
-                'person_password' => 11111111,
-                'person_password_repeat' => 11111111,
-                'assignRoles' => '[]',
-            ]);
-
-            $profileForm = new ProfileForm(null, [
-                'profile_inn' => $form->inn,
-                'profile_dr' => $form->dr,
-                'profile_pol' => $form->pol,
-                'profile_snils' => $form->snils,
-                'profile_address' => $form->address,
-            ]);
-
-            if (!$person_id = $personService->create($userForm, $profileForm)) {
-                $this->addReportRow($rowNum, $form, $this->getErrorsFromService($personService) . $this->getErrorsFromForm($userForm) . $this->getErrorsFromForm($profileForm));
-                $this->error++;
+        if (!$person = $this->personService->getUserByINN($form->inn)) {
+            if (($person_id = $this->createPerson($form)) === false) {
                 return false;
             }
         } else {
-            $person_id = $person->person_id;
+            if (($person_id = $this->updatePerson($person, $form)) === false) {
+                return false;
+            }
         }
 
         return Uuid::uuid2str($person_id);
     }
 
+    protected function createPerson(ImportEmployeeForm $form)
+    {
+        $userForm = new UserForm([
+            'person_fullname' => $form->fio,
+            'person_username' => UserForm::generateUserName($form->fio),
+            'person_password' => 11111111,
+            'person_password_repeat' => 11111111,
+            'assignRoles' => '[]',
+        ]);
+
+        $profileForm = new ProfileForm(null, [
+            'profile_inn' => $form->inn,
+            'profile_dr' => $form->dr,
+            'profile_pol' => $form->pol,
+            'profile_snils' => $form->snils,
+            'profile_address' => $form->address,
+        ]);
+
+        return $this->createByService($this->personService, [$userForm, $profileForm]);
+    }
+
+    protected function updatePerson(Person $person, ImportEmployeeForm $form)
+    {
+        $fromUserForm = $person->attributes;
+        $fromUserForm['person_fullname'] = $form->fio;
+        $diffUser = array_diff_assoc($fromUserForm, $person->attributes);
+
+        $profile = $this->personService->getProfile($person->primaryKey);
+        $fromProfileForm = $profile->attributes;
+        $fromProfileForm['profile_dr'] = $form->dr;
+        $fromProfileForm['profile_pol'] = $form->pol;
+        $fromProfileForm['profile_snils'] = $form->snils;
+        $fromProfileForm['profile_address'] = $form->address;
+        $diffProfile = array_diff_assoc($fromProfileForm, $profile->attributes);
+
+        $diff = array_merge($diffUser, $diffProfile);
+        $diffWas = array_merge(array_diff_assoc($profile->attributes, $fromProfileForm), array_diff_assoc($person->attributes, $fromUserForm));
+
+        if ($diff) {
+            $userFormUpdate = new UserFormUpdate($person, $diffUser);
+            $profileForm = new ProfileForm($profile, $diffProfile);
+
+            if ($this->updateByService($this->personService, $form, [$person->primaryKey, $userFormUpdate, $profileForm], $diff, $diffWas) === false) {
+                return false;
+            };
+        }
+
+        return $person->person_id;
+    }
+
     protected function makeDolzh(ImportEmployeeForm $form)
     {
-        /** @var DolzhService $dolzhService */
-        $dolzhService = new ProxyService(Yii::$container->get('domain\services\base\DolzhService'), false);
-
-        if (!($dolzh_id = $dolzhService->findIDByName($form->dolzh))) {
-            $dolzhForm = new DolzhForm(null, ['dolzh_name' => $form->dolzh]);
-            if ($dolzhService->create($dolzhForm)) {
-                $dolzh_id = $dolzhService->findIDByName($form->dolzh);
+        if (!$dolzh_id = $this->dolzhService->findIDByName($form->dolzh)) {
+            if (($dolzh_id = $this->createDolzh($form)) === false) {
+                return false;
             }
         }
 
         return Uuid::uuid2str($dolzh_id);
     }
 
+    protected function createDolzh(ImportEmployeeForm $form)
+    {
+        $dolzhForm = new DolzhForm(null, ['dolzh_name' => $form->dolzh]);
+        if ($this->createByService($this->dolzhService, [$dolzhForm])) {
+            return $this->dolzhService->findIDByName($form->dolzh);
+        }
+
+        return false;
+    }
+
     protected function makePodraz(ImportEmployeeForm $form)
     {
-        /** @var PodrazService $podrazService */
-        $podrazService = new ProxyService(Yii::$container->get('domain\services\base\PodrazService'), false);
-
-        if (!($podraz_id = $podrazService->findIDByName($form->podraz))) {
-            $podrazForm = new PodrazForm(null, ['podraz_name' => $form->podraz]);
-            if ($podrazService->create($podrazForm)) {
-                $podraz_id = $podrazService->findIDByName($form->podraz);
+        if (!$podraz_id = $this->podrazService->findIDByName($form->podraz)) {
+            if (($podraz_id = $this->createPodraz($form)) === false) {
+                return false;
             }
         }
 
         return Uuid::uuid2str($podraz_id);
     }
 
-    protected function makeEmployee(ImportEmployeeForm $form, $rowNum, $person_id, $dolzh_id, $podraz_id)
+    protected function createPodraz(ImportEmployeeForm $form)
+    {
+        $podrazForm = new PodrazForm(null, ['podraz_name' => $form->podraz]);
+        if ($this->createByService($this->podrazService, [$podrazForm])) {
+            return $this->podrazService->findIDByName($form->podraz);
+        }
+
+        return false;
+    }
+
+    protected function makeEmployee(ImportEmployeeForm $form, $person_id, $dolzh_id, $podraz_id)
     {
         /** @var EmployeeHistoryService $employeeHistoryService */
         $employeeHistoryService = new ProxyService(Yii::$container->get('domain\services\base\EmployeeHistoryService'), false);
@@ -305,12 +412,12 @@ class EmployeeProccessLoader extends ProcessLoader
         if ($employeeHistoryService->create($employeeHistoryForm)) {
             $this->success++;
         } else {
-            $this->addReportRow($rowNum, $form, $this->getErrorsFromService($employeeHistoryService) . $this->getErrorsFromForm($employeeHistoryForm));
+            $this->addReportRow($this->getErrorsFromService($employeeHistoryService) . $this->getErrorsFromForm($employeeHistoryForm));
             $this->error++;
         }
     }
 
-    protected function makeParttime(ImportEmployeeForm $form, $rowNum, $person_id, $dolzh_id, $podraz_id)
+    protected function makeParttime(ImportEmployeeForm $form, $person_id, $dolzh_id, $podraz_id)
     {
         /** @var ParttimeService $parttimeService */
         $parttimeService = new ProxyService(Yii::$container->get('domain\services\base\ParttimeService'), false);
@@ -326,7 +433,7 @@ class EmployeeProccessLoader extends ProcessLoader
         if ($parttimeService->create($parttimeForm)) {
             $this->success++;
         } else {
-            $this->addReportRow($rowNum, $form, $this->getErrorsFromService($parttimeService) . $this->getErrorsFromForm($parttimeForm));
+            $this->addReportRow($this->getErrorsFromService($parttimeService) . $this->getErrorsFromForm($parttimeForm));
             $this->error++;
         }
     }
@@ -346,7 +453,51 @@ class EmployeeProccessLoader extends ProcessLoader
     {
         $this->rows--;
         $successPercent = round($this->success * 100 / $this->rows, 1);
+        $changesPercent = round($this->changes * 100 / $this->rows, 1);
         $errorPercent = round($this->error * 100 / $this->rows, 1);
-        $this->addShortReport("Итоги обработки:\n- Всего записей: {$this->rows};\n- Успешно ($successPercent%): {$this->success};\n- Ошибок ($errorPercent%): {$this->error};");
+        $this->addShortReport("Итоги обработки:\n- Всего записей: {$this->rows};\n- Успешно ($successPercent%): {$this->success};\n- Изменено ($changesPercent%): {$this->changes};\n- Ошибок ($errorPercent%): {$this->error};");
+    }
+
+    protected function createByService(ProxyService $service, array $forms)
+    {
+        $result = call_user_func_array([$service, 'create'], $forms);
+
+        if ($result) {
+            return $result;
+        } else {
+            $this->addReportRow($this->getMessageFromServiceAndForms($service, $forms));
+            $this->error++;
+            return false;
+        }
+    }
+
+    protected function getMessageFromServiceAndForms(ProxyService $service, array $forms)
+    {
+        $that = $this;
+        return implode('; ', [$this->getErrorsFromService($service), implode('; ', array_map(function ($form) use ($that) {
+            return $that->getErrorsFromForm($form);
+        }, $forms))]);
+    }
+
+    protected function updateByService(ProxyService $service, ImportEmployeeForm $formData, array $params, array $diff, array $diffWas)
+    {
+        $result = call_user_func_array([$service, 'update'], $params);
+
+        if ($result) {
+            $this->addReportRow($this->getMessageFromDiff($diff, $diffWas));
+            $this->changes++;
+            return $result;
+        } else {
+            $this->addReportRow($this->getMessageFromServiceAndForms($service, $params));
+            $this->error++;
+            return false;
+        }
+    }
+
+    protected function getMessageFromDiff(array $diff, array $diffWas)
+    {
+        return "Запись именена: " . implode('; ', array_map(function ($attr, $now) use ($diffWas) {
+                return "[$attr][Было:{$diffWas[$attr]}][Стало:$now]";
+            }, array_keys($diff), $diff));
     }
 }
