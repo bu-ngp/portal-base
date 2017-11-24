@@ -43,6 +43,11 @@ class EmployeeHistoryService extends Service
         return $this->employeeHistories->find($id);
     }
 
+    public function getEmployeeByDate($date)
+    {
+        return $this->employeeHistories->findByDate($date);
+    }
+
     public function create(EmployeeHistoryForm $form)
     {
         $this->guardPersonExists($form);

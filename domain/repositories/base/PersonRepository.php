@@ -10,6 +10,7 @@ namespace domain\repositories\base;
 
 use domain\models\base\Person;
 use Yii;
+use yii\db\ActiveRecord;
 
 class PersonRepository
 {
@@ -25,6 +26,10 @@ class PersonRepository
         return $person;
     }
 
+    /**
+     * @param $inn
+     * @return null|Person|ActiveRecord
+     */
     public function findByINN($inn)
     {
         return Person::find()->joinWith(['profile'])->andWhere(['profile.profile_inn' => $inn])->one();

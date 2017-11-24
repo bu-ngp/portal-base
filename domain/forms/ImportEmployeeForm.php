@@ -45,6 +45,12 @@ class ImportEmployeeForm extends Model
                         return $value;
                 }
             }],
+            [['snils'], 'filter', 'filter' => function ($value) {
+                return preg_replace('/[-\s]/', '', $value);
+            }],
+            [['fio'], 'filter', 'filter' => function ($value) {
+                return mb_strtoupper($value, 'UTF-8');
+            }],
             [['period', 'fio', 'dr', 'pol', 'snils', 'inn', 'dolzh', 'status', 'podraz', 'dateBegin', 'dateEnd', 'address'], 'safe'],
         ];
     }

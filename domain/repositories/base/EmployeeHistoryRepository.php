@@ -23,6 +23,15 @@ class EmployeeHistoryRepository
     }
 
     /**
+     * @param $date
+     * @return null|EmployeeHistory|ActiveRecord
+     */
+    public function findByDate($date)
+    {
+        return EmployeeHistory::findOne(['employee_history_begin' => $date]);
+    }
+
+    /**
      * @param EmployeeHistory $employeeHistory
      */
     public function add(EmployeeHistory $employeeHistory)

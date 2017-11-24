@@ -61,6 +61,11 @@ class PersonService extends Service
         return $this->profiles->has($uuid) ? $this->profiles->find($uuid) : false;
     }
 
+
+    /**
+     * @param $inn
+     * @return bool|null|Person
+     */
     public function getUserByINN($inn)
     {
         return $this->profiles->hasByINN($inn) ? $this->persons->findByINN($inn) : false;

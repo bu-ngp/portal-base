@@ -12,6 +12,7 @@ use domain\forms\base\UserForm;
 use domain\forms\base\UserFormUpdate;
 use domain\forms\ImportEmployeeForm;
 use domain\forms\ImportEmployeeOrigForm;
+use domain\models\base\EmployeeHistory;
 use domain\models\base\Person;
 use domain\services\base\DolzhService;
 use domain\services\base\EmployeeHistoryService;
@@ -25,6 +26,7 @@ use PHPExcel;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\base\Model;
+use yii\db\Exception;
 
 class EmployeeProccessLoader extends ProcessLoader
 {
@@ -55,8 +57,8 @@ class EmployeeProccessLoader extends ProcessLoader
     /** @var  TransactionManager */
     private $transactionManager;
 
-    private $success = 0;
-    private $changes = 0;
+    private $added = 0;
+    private $changed = 0;
     private $error = 0;
     private $rows = 0;
     private $reportRow = 1;
@@ -136,10 +138,16 @@ class EmployeeProccessLoader extends ProcessLoader
                         // print_r([$person_id, $dolzh_id, $podraz_id]);
                         switch ($this->statusEmployee($form)) {
                             case self::STATUS_GENERAL:
-                                $this->makeEmployee($form, $person_id, $dolzh_id, $podraz_id);
+                                if (!$this->makeEmployee($form, $person_id, $dolzh_id, $podraz_id)) {
+                                    $transaction->rollBack();
+                                    continue;
+                                }
                                 break;
                             case self::STATUS_PART_TIME:
-                                $this->makeParttime($form, $person_id, $dolzh_id, $podraz_id);
+//                                if (!$this->makeParttime($form, $person_id, $dolzh_id, $podraz_id)) {
+//                                    $transaction->rollBack();
+//                                    continue;
+//                                }
                                 break;
                             default:
                                 $transaction->rollBack();
@@ -159,7 +167,7 @@ class EmployeeProccessLoader extends ProcessLoader
             }
         }
 
-        if ($this->error || $this->changes) {
+        if ($this->error || $this->changed) {
             $this->saveReport();
         }
         $this->addItog();
@@ -347,7 +355,7 @@ class EmployeeProccessLoader extends ProcessLoader
             $userFormUpdate = new UserFormUpdate($person, $diffUser);
             $profileForm = new ProfileForm($profile, $diffProfile);
 
-            if ($this->updateByService($this->personService, $form, [$person->primaryKey, $userFormUpdate, $profileForm], $diff, $diffWas) === false) {
+            if ($this->updateByService($this->personService, [$person->primaryKey, $userFormUpdate, $profileForm], $diff, $diffWas) === false) {
                 return false;
             };
         }
@@ -399,22 +407,17 @@ class EmployeeProccessLoader extends ProcessLoader
 
     protected function makeEmployee(ImportEmployeeForm $form, $person_id, $dolzh_id, $podraz_id)
     {
-        /** @var EmployeeHistoryService $employeeHistoryService */
-        $employeeHistoryService = new ProxyService(Yii::$container->get('domain\services\base\EmployeeHistoryService'), false);
-        $employeeHistoryForm = new EmployeeHistoryForm(null, false, [
-            'person_id' => $person_id,
-            'dolzh_id' => $dolzh_id,
-            'podraz_id' => $podraz_id,
-            'employee_history_begin' => $form->dateBegin,
-            'assignBuilds' => '[]',
-        ]);
-
-        if ($employeeHistoryService->create($employeeHistoryForm)) {
-            $this->success++;
+        if (!$employee = $this->employeeService->getEmployeeByDate($form->dateBegin)) {
+            if ($result = $this->createEmployee($form, $person_id, $dolzh_id, $podraz_id)) {
+                $this->added++;
+            }
         } else {
-            $this->addReportRow($this->getErrorsFromService($employeeHistoryService) . $this->getErrorsFromForm($employeeHistoryForm));
-            $this->error++;
+            if ($result = $this->updateEmployee($employee, $form, $person_id, $dolzh_id, $podraz_id)) {
+                $this->changed++;
+            }
         }
+
+        return $result;
     }
 
     protected function makeParttime(ImportEmployeeForm $form, $person_id, $dolzh_id, $podraz_id)
@@ -431,7 +434,7 @@ class EmployeeProccessLoader extends ProcessLoader
         ]);
 
         if ($parttimeService->create($parttimeForm)) {
-            $this->success++;
+            $this->added++;
         } else {
             $this->addReportRow($this->getErrorsFromService($parttimeService) . $this->getErrorsFromForm($parttimeForm));
             $this->error++;
@@ -452,10 +455,10 @@ class EmployeeProccessLoader extends ProcessLoader
     protected function addItog()
     {
         $this->rows--;
-        $successPercent = round($this->success * 100 / $this->rows, 1);
-        $changesPercent = round($this->changes * 100 / $this->rows, 1);
+        $addedPercent = round($this->added * 100 / $this->rows, 1);
+        $changedPercent = round($this->changed * 100 / $this->rows, 1);
         $errorPercent = round($this->error * 100 / $this->rows, 1);
-        $this->addShortReport("Итоги обработки:\n- Всего записей: {$this->rows};\n- Успешно ($successPercent%): {$this->success};\n- Изменено ($changesPercent%): {$this->changes};\n- Ошибок ($errorPercent%): {$this->error};");
+        $this->addShortReport("Итоги обработки:\n- Всего записей: {$this->rows};\n- Добавлено ($addedPercent%): {$this->added};\n- Изменено ($changedPercent%): {$this->changed};\n- Ошибок ($errorPercent%): {$this->error};");
     }
 
     protected function createByService(ProxyService $service, array $forms)
@@ -479,13 +482,13 @@ class EmployeeProccessLoader extends ProcessLoader
         }, $forms))]);
     }
 
-    protected function updateByService(ProxyService $service, ImportEmployeeForm $formData, array $params, array $diff, array $diffWas)
+    protected function updateByService(ProxyService $service, array $params, array $diff, array $diffWas)
     {
         $result = call_user_func_array([$service, 'update'], $params);
 
         if ($result) {
             $this->addReportRow($this->getMessageFromDiff($diff, $diffWas));
-            $this->changes++;
+            $this->changed++;
             return $result;
         } else {
             $this->addReportRow($this->getMessageFromServiceAndForms($service, $params));
@@ -499,5 +502,76 @@ class EmployeeProccessLoader extends ProcessLoader
         return "Запись именена: " . implode('; ', array_map(function ($attr, $now) use ($diffWas) {
                 return "[$attr][Было:{$diffWas[$attr]}][Стало:$now]";
             }, array_keys($diff), $diff));
+    }
+
+    protected function createEmployee($form, $person_id, $dolzh_id, $podraz_id)
+    {
+        $employeeHistoryForm = new EmployeeHistoryForm(null, false, [
+            'person_id' => $person_id,
+            'dolzh_id' => $dolzh_id,
+            'podraz_id' => $podraz_id,
+            'employee_history_begin' => $form->dateBegin,
+            'assignBuilds' => '[]',
+        ]);
+
+        return $this->createByService($this->employeeService, [$employeeHistoryForm]);
+    }
+
+    protected function updateEmployee(EmployeeHistory $employee, ImportEmployeeForm $form, $person_id, $dolzh_id, $podraz_id)
+    {
+        if ($this->employeeExist($employee, $person_id, $dolzh_id, $podraz_id)) {
+            if ($this->differenceEmployeeDateEnd($employee, $form->dateEnd)) {
+                return $this->updateEmployeeDateEnd($employee, $form->dateEnd);
+            }
+
+            return true;
+        } else {
+            return $this->updateCurrentEmployee($employee, $person_id, $dolzh_id, $podraz_id)
+                && $this->updateEmployeeDateEnd($employee, $form->dateEnd);
+        }
+    }
+
+    protected function employeeExist(EmployeeHistory $employee, $person_id, $dolzh_id, $podraz_id)
+    {
+        return $employee->person_id === Uuid::str2uuid($person_id)
+            && $employee->dolzh_id === Uuid::str2uuid($dolzh_id)
+            && $employee->podraz_id === Uuid::str2uuid($podraz_id);
+    }
+
+    protected function differenceEmployeeDateEnd(EmployeeHistory $employee, $dateEnd)
+    {
+        return $employee->person->person_fired != $dateEnd;
+    }
+
+    protected function updateEmployeeDateEnd(EmployeeHistory $employee, $dateEnd)
+    {
+        $diffWas = ['person_fired' => $employee->person->person_fired];
+        $diff = ['person_fired' => $dateEnd];
+        $userFormUpdate = new UserFormUpdate($employee->person, ['person_fired' => $dateEnd]);
+        $profile = $this->personService->getProfile($employee->person->primaryKey);
+        $profileForm = new ProfileForm($profile, []);
+
+        return $this->updateByService($this->personService, [$employee->person_id, $userFormUpdate, $profileForm], $diff, $diffWas);
+    }
+
+    protected function updateCurrentEmployee(EmployeeHistory $employee, $person_id, $dolzh_id, $podraz_id)
+    {
+        $employeeForm = $employee->attributes;
+        $employeeForm['person_id'] = Uuid::str2uuid($person_id);
+        $employeeForm['dolzh_id'] = Uuid::str2uuid($dolzh_id);
+        $employeeForm['podraz_id'] = Uuid::str2uuid($podraz_id);
+
+        $diff = array_diff_assoc($employeeForm, $employee->attributes);
+        $diffWas = array_diff_assoc($employee->attributes, $employeeForm);
+
+        if ($diff) {
+            $employeeHistoryForm = new EmployeeHistoryForm($employee, false, $diff);
+
+            if ($this->updateByService($this->employeeService, [$employee->primaryKey, $employeeHistoryForm], $diff, $diffWas) === false) {
+                return false;
+            };
+        }
+
+        return true;
     }
 }
