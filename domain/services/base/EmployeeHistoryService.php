@@ -45,7 +45,12 @@ class EmployeeHistoryService extends Service
 
     public function getEmployeeByDate($date)
     {
-        return $this->employeeHistories->findByDate($date);
+        $result = $this->employeeHistories->findByDate($date);
+        if ($result === null) {
+            return false;
+        }
+
+        return $result;
     }
 
     public function create(EmployeeHistoryForm $form)

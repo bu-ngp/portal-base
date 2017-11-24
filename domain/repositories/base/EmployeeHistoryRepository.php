@@ -28,6 +28,7 @@ class EmployeeHistoryRepository
      */
     public function findByDate($date)
     {
+        $a=EmployeeHistory::findOne(['employee_history_begin' => $date]);
         return EmployeeHistory::findOne(['employee_history_begin' => $date]);
     }
 

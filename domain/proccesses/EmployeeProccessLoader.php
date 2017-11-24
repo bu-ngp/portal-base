@@ -407,7 +407,7 @@ class EmployeeProccessLoader extends ProcessLoader
 
     protected function makeEmployee(ImportEmployeeForm $form, $person_id, $dolzh_id, $podraz_id)
     {
-        if (!$employee = $this->employeeService->getEmployeeByDate($form->dateBegin)) {
+        if (!($employee = $this->employeeService->getEmployeeByDate($form->dateBegin))) {
             if ($result = $this->createEmployee($form, $person_id, $dolzh_id, $podraz_id)) {
                 $this->added++;
             }
