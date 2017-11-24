@@ -104,3 +104,7 @@ div.pmd-card-media.wk-grey-style {
 .wk-widget-search-panel-icon > i {
     color: rgba(0, 0, 0, 0.4);
 }
+
+.wk-widget-card .pmd-card-media {
+    min-height: 190px;
+}
