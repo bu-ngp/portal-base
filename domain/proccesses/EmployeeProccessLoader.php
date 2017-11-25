@@ -83,7 +83,7 @@ class EmployeeProccessLoader extends ProcessLoader
     public function __construct($importFilePath, $config = [])
     {
         ini_set('max_execution_time', 14400);  // 1000 seconds
-        ini_set('memory_limit', 3342177280); // 1Gbyte Max Memory
+        ini_set('memory_limit', 5342177280); // 1Gbyte Max Memory
 
         $this->importFilePath = $importFilePath;
         $this->objPHPExcelReport = new \PHPExcel();
@@ -291,7 +291,7 @@ class EmployeeProccessLoader extends ProcessLoader
 
     protected function statusEmployee($form)
     {
-        if ($form->status === 'Основное место работы') {
+        if (in_array($form->status, ['Основное место работы', 'Внешний совместитель'])) {
             return self::STATUS_GENERAL;
         }
 
