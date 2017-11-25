@@ -36,6 +36,11 @@ class EmployeeProccessLoader extends ProcessLoader
     const STATUS_GENERAL = 'status_general';
     const STATUS_PART_TIME = 'status_part_time';
 
+    const REPORT_STATUS_ADDED = 'Добавлено';
+    const REPORT_STATUS_CHANGED = 'Изменено';
+    const REPORT_STATUS_UNCHANGED = 'Без изменений';
+    const REPORT_STATUS_ERROR = 'Ошибка';
+
     public $description = 'Импорт сотрудников';
     /** @var string */
     private $importFilePath;
@@ -67,6 +72,8 @@ class EmployeeProccessLoader extends ProcessLoader
     /** @var ImportEmployeeOrigForm */
     private $formOrigData;
     private $currentRow;
+
+    private $reportStatus;
 
     /**
      * EmployeeProccessLoader constructor.
@@ -107,6 +114,7 @@ class EmployeeProccessLoader extends ProcessLoader
             $objWorksheet = $objPHPExcel->getActiveSheet();
             for ($this->currentRow = self::START_ROW; $this->currentRow < self::START_ROW + self::CHUNK_SIZE; $this->currentRow++) {
                 $this->rows++;
+                $this->reportStatus = self::REPORT_STATUS_UNCHANGED;
                 $row = $this->getExcelRow($objWorksheet);
 
                 if ($this->isEnd($row)) {
@@ -119,18 +127,20 @@ class EmployeeProccessLoader extends ProcessLoader
                 $this->formOrigData->validate();
 
                 if ($form->validate()) {
-
                     $transaction = Yii::$app->db->beginTransaction();
                     try {
                         if (($person_id = $this->makePerson($form)) === false) {
+                            $this->error++;
                             $transaction->rollBack();
                             continue;
                         }
                         if (($dolzh_id = $this->makeDolzh($form)) === false) {
+                            $this->error++;
                             $transaction->rollBack();
                             continue;
                         }
                         if (($podraz_id = $this->makePodraz($form)) === false) {
+                            $this->error++;
                             $transaction->rollBack();
                             continue;
                         }
@@ -139,6 +149,7 @@ class EmployeeProccessLoader extends ProcessLoader
                         switch ($this->statusEmployee($form)) {
                             case self::STATUS_GENERAL:
                                 if (!$this->makeEmployee($form, $person_id, $dolzh_id, $podraz_id)) {
+                                    $this->error++;
                                     $transaction->rollBack();
                                     continue;
                                 }
@@ -150,9 +161,19 @@ class EmployeeProccessLoader extends ProcessLoader
 //                                }
                                 break;
                             default:
-                                $transaction->rollBack();
-                                $this->addReportRow('Не определен статус сутрудника');
                                 $this->error++;
+                                $transaction->rollBack();
+                                $this->addReportRow(self::REPORT_STATUS_ERROR, 'Не определен статус сутрудника');
+
+                        }
+
+                        switch ($this->reportStatus) {
+                            case self::REPORT_STATUS_ADDED:
+                                $this->added++;
+                                break;
+                            case self::REPORT_STATUS_CHANGED:
+                                $this->changed++;
+                                break;
                         }
 
                         $transaction->commit();
@@ -161,13 +182,13 @@ class EmployeeProccessLoader extends ProcessLoader
                         throw $e;
                     }
                 } else {
-                    $this->addReportRow($this->getErrorsFromForm($form));
                     $this->error++;
+                    $this->addReportRow(self::REPORT_STATUS_ERROR, $this->getErrorsFromForm($form));
                 };
             }
         }
 
-        if ($this->error || $this->changed) {
+        if ($this->error || $this->changed || $this->added) {
             $this->saveReport();
         }
         $this->addItog();
@@ -177,16 +198,18 @@ class EmployeeProccessLoader extends ProcessLoader
     protected function addReportHeader()
     {
         $this->sheetReport->setCellValueByColumnAndRow(0, $this->reportRow, 'Номер');
-        $this->sheetReport->setCellValueByColumnAndRow(1, $this->reportRow, 'Текст ошибки');
-        $this->sheetReport->setCellValueByColumnAndRow(2, $this->reportRow, 'Данные');
+        $this->sheetReport->setCellValueByColumnAndRow(1, $this->reportRow, 'Результат');
+        $this->sheetReport->setCellValueByColumnAndRow(2, $this->reportRow, 'Сообщение');
+        $this->sheetReport->setCellValueByColumnAndRow(3, $this->reportRow, 'Данные');
         $this->reportRow++;
     }
 
-    protected function addReportRow($message)
+    protected function addReportRow($status, $message)
     {
         $this->sheetReport->setCellValueByColumnAndRow(0, $this->reportRow, $this->currentRow);
-        $this->sheetReport->setCellValueByColumnAndRow(1, $this->reportRow, $message);
-        $this->sheetReport->setCellValueByColumnAndRow(2, $this->reportRow, implode('; ', [
+        $this->sheetReport->setCellValueByColumnAndRow(1, $this->reportRow, $status);
+        $this->sheetReport->setCellValueByColumnAndRow(2, $this->reportRow, $message);
+        $this->sheetReport->setCellValueByColumnAndRow(3, $this->reportRow, implode('; ', [
             $this->formOrigData->period,
             $this->formOrigData->fio,
             $this->formOrigData->dr,
@@ -225,10 +248,10 @@ class EmployeeProccessLoader extends ProcessLoader
             'inn' => $row[5],
             'dolzh' => $row[6],
             'status' => $row[7],
-            'podraz' => $row[9],
-            'dateBegin' => $row[10],
-            'dateEnd' => $row[11],
-            'address' => $row[12],
+            'podraz' => $row[8],
+            'dateBegin' => $row[9],
+            'dateEnd' => $row[10],
+            'address' => $row[11],
         ]);
     }
 
@@ -243,10 +266,10 @@ class EmployeeProccessLoader extends ProcessLoader
             'inn' => $row[5],
             'dolzh' => $row[6],
             'status' => $row[7],
-            'podraz' => $row[9],
-            'dateBegin' => $row[10],
-            'dateEnd' => $row[11],
-            'address' => $row[12],
+            'podraz' => $row[8],
+            'dateBegin' => $row[9],
+            'dateEnd' => $row[10],
+            'address' => $row[11],
         ]);
     }
 
@@ -331,7 +354,12 @@ class EmployeeProccessLoader extends ProcessLoader
             'profile_address' => $form->address,
         ]);
 
-        return $this->createByService($this->personService, [$userForm, $profileForm]);
+        if ($result = $this->createByService($this->personService, [$userForm, $profileForm])) {
+            $this->reportStatus = self::REPORT_STATUS_ADDED;
+            $this->addReportRow(self::REPORT_STATUS_ADDED, "Добавлен сотрудник '{$userForm->person_fullname}'");
+        }
+
+        return $result;
     }
 
     protected function updatePerson(Person $person, ImportEmployeeForm $form)
@@ -357,6 +385,8 @@ class EmployeeProccessLoader extends ProcessLoader
 
             if ($this->updateByService($this->personService, [$person->primaryKey, $userFormUpdate, $profileForm], $diff, $diffWas) === false) {
                 return false;
+            } else {
+                $this->reportStatus = self::REPORT_STATUS_CHANGED;
             };
         }
 
@@ -378,6 +408,8 @@ class EmployeeProccessLoader extends ProcessLoader
     {
         $dolzhForm = new DolzhForm(null, ['dolzh_name' => $form->dolzh]);
         if ($this->createByService($this->dolzhService, [$dolzhForm])) {
+            $this->reportStatus === self::REPORT_STATUS_UNCHANGED ? self::REPORT_STATUS_CHANGED : $this->reportStatus;
+            $this->addReportRow(self::REPORT_STATUS_ADDED, "Добавлена должность '{$dolzhForm->dolzh_name}'");
             return $this->dolzhService->findIDByName($form->dolzh);
         }
 
@@ -399,6 +431,8 @@ class EmployeeProccessLoader extends ProcessLoader
     {
         $podrazForm = new PodrazForm(null, ['podraz_name' => $form->podraz]);
         if ($this->createByService($this->podrazService, [$podrazForm])) {
+            $this->reportStatus === self::REPORT_STATUS_UNCHANGED ? self::REPORT_STATUS_CHANGED : $this->reportStatus;
+            $this->addReportRow(self::REPORT_STATUS_ADDED, "Добавлено подразделение '{$podrazForm->podraz_name}'");
             return $this->podrazService->findIDByName($form->podraz);
         }
 
@@ -407,17 +441,9 @@ class EmployeeProccessLoader extends ProcessLoader
 
     protected function makeEmployee(ImportEmployeeForm $form, $person_id, $dolzh_id, $podraz_id)
     {
-        if (!($employee = $this->employeeService->getEmployeeByDate($form->dateBegin))) {
-            if ($result = $this->createEmployee($form, $person_id, $dolzh_id, $podraz_id)) {
-                $this->added++;
-            }
-        } else {
-            if ($result = $this->updateEmployee($employee, $form, $person_id, $dolzh_id, $podraz_id)) {
-                $this->changed++;
-            }
-        }
-
-        return $result;
+        return ($employee = $this->employeeService->getEmployeeByDate($form->dateBegin))
+            ? $this->updateEmployee($employee, $form, $person_id, $dolzh_id, $podraz_id)
+            : $this->createEmployee($form, $person_id, $dolzh_id, $podraz_id);
     }
 
     protected function makeParttime(ImportEmployeeForm $form, $person_id, $dolzh_id, $podraz_id)
@@ -434,10 +460,10 @@ class EmployeeProccessLoader extends ProcessLoader
         ]);
 
         if ($parttimeService->create($parttimeForm)) {
-            $this->added++;
+
         } else {
             $this->addReportRow($this->getErrorsFromService($parttimeService) . $this->getErrorsFromForm($parttimeForm));
-            $this->error++;
+
         }
     }
 
@@ -468,8 +494,7 @@ class EmployeeProccessLoader extends ProcessLoader
         if ($result) {
             return $result;
         } else {
-            $this->addReportRow($this->getMessageFromServiceAndForms($service, $forms));
-            $this->error++;
+            $this->addReportRow(self::REPORT_STATUS_ERROR, $this->getMessageFromServiceAndForms($service, $forms));
             return false;
         }
     }
@@ -487,12 +512,10 @@ class EmployeeProccessLoader extends ProcessLoader
         $result = call_user_func_array([$service, 'update'], $params);
 
         if ($result) {
-            $this->addReportRow($this->getMessageFromDiff($diff, $diffWas));
-            $this->changed++;
+            $this->addReportRow(self::REPORT_STATUS_CHANGED, $this->getMessageFromDiff($diff, $diffWas));
             return $result;
         } else {
-            $this->addReportRow($this->getMessageFromServiceAndForms($service, $params));
-            $this->error++;
+            $this->addReportRow(self::REPORT_STATUS_ERROR, $this->getMessageFromServiceAndForms($service, $params));
             return false;
         }
     }
@@ -504,7 +527,7 @@ class EmployeeProccessLoader extends ProcessLoader
             }, array_keys($diff), $diff));
     }
 
-    protected function createEmployee($form, $person_id, $dolzh_id, $podraz_id)
+    protected function createEmployee(ImportEmployeeForm $form, $person_id, $dolzh_id, $podraz_id)
     {
         $employeeHistoryForm = new EmployeeHistoryForm(null, false, [
             'person_id' => $person_id,
@@ -514,7 +537,17 @@ class EmployeeProccessLoader extends ProcessLoader
             'assignBuilds' => '[]',
         ]);
 
-        return $this->createByService($this->employeeService, [$employeeHistoryForm]);
+        if ($result = $this->createByService($this->employeeService, [$employeeHistoryForm])) {
+            $this->reportStatus = $this->reportStatus === self::REPORT_STATUS_UNCHANGED ? self::REPORT_STATUS_CHANGED : $this->reportStatus;
+            $dateBegin = Yii::$app->formatter->asDate($form->dateBegin);
+            $this->addReportRow(self::REPORT_STATUS_ADDED, "Добавлена основная специальность '{$form->dolzh}' на дату '$dateBegin'");
+
+            if ($form->dateEnd) {
+                $result = $this->updatePersonDateEnd($form, $person_id);
+            }
+        }
+
+        return $result;
     }
 
     protected function updateEmployee(EmployeeHistory $employee, ImportEmployeeForm $form, $person_id, $dolzh_id, $podraz_id)
@@ -551,7 +584,24 @@ class EmployeeProccessLoader extends ProcessLoader
         $profile = $this->personService->getProfile($employee->person->primaryKey);
         $profileForm = new ProfileForm($profile, []);
 
-        return $this->updateByService($this->personService, [$employee->person_id, $userFormUpdate, $profileForm], $diff, $diffWas);
+        if ($result = $this->updateByService($this->personService, [$employee->person_id, $userFormUpdate, $profileForm], $diff, $diffWas)) {
+            $this->reportStatus = self::REPORT_STATUS_CHANGED;
+        }
+
+        return $result;
+    }
+
+    protected function updatePersonDateEnd(ImportEmployeeForm $form, $person_id)
+    {
+        $diffWas = ['person_fired' => ''];
+        $diff = ['person_fired' => $form->dateEnd];
+        $person = $this->personService->getUser(Uuid::str2uuid($person_id));
+
+        $userFormUpdate = new UserFormUpdate($person, ['person_fired' => $form->dateEnd]);
+        $profile = $this->personService->getProfile($person->primaryKey);
+        $profileForm = new ProfileForm($profile, []);
+
+        return $this->updateByService($this->personService, [$person->primaryKey, $userFormUpdate, $profileForm], $diff, $diffWas);
     }
 
     protected function updateCurrentEmployee(EmployeeHistory $employee, $person_id, $dolzh_id, $podraz_id)
@@ -570,6 +620,8 @@ class EmployeeProccessLoader extends ProcessLoader
             if ($this->updateByService($this->employeeService, [$employee->primaryKey, $employeeHistoryForm], $diff, $diffWas) === false) {
                 return false;
             };
+
+            $this->reportStatus = self::REPORT_STATUS_CHANGED;
         }
 
         return true;

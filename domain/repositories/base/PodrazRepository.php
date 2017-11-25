@@ -4,6 +4,7 @@ namespace domain\repositories\base;
 
 use domain\models\base\Podraz;
 use Yii;
+use yii\db\ActiveRecord;
 
 class PodrazRepository
 {
@@ -22,11 +23,11 @@ class PodrazRepository
 
     /**
      * @param $podraz_name
-     * @return null|Podraz
+     * @return null|Podraz|ActiveRecord
      */
     public function findByName($podraz_name)
     {
-        return Podraz::findOne(['like', 'podraz_name', trim($podraz_name), false]);
+        return Podraz::find()->andWhere(['like', 'podraz_name', trim($podraz_name), false])->one();
     }
 
     /**

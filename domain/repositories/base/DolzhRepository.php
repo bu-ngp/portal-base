@@ -4,6 +4,7 @@ namespace domain\repositories\base;
 
 use domain\models\base\Dolzh;
 use Yii;
+use yii\db\ActiveRecord;
 
 class DolzhRepository
 {
@@ -22,11 +23,11 @@ class DolzhRepository
 
     /**
      * @param $dolzh_name
-     * @return null|Dolzh
+     * @return null|Dolzh|ActiveRecord
      */
     public function findByName($dolzh_name)
     {
-        return Dolzh::findOne(['like', 'dolzh_name', trim($dolzh_name), false]);
+        return Dolzh::find()->andWhere(['like', 'dolzh_name', trim($dolzh_name), false])->one();
     }
 
     /**
