@@ -43,9 +43,9 @@ class EmployeeHistoryService extends Service
         return $this->employeeHistories->find($id);
     }
 
-    public function getEmployeeByDate($date)
+    public function getEmployeeByDate($person_id, $date)
     {
-        $result = $this->employeeHistories->findByDate($date);
+        $result = $this->employeeHistories->findByDate($person_id, $date);
         if ($result === null) {
             return false;
         }

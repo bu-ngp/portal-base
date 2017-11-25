@@ -4,6 +4,7 @@ namespace domain\repositories\base;
 
 use domain\models\base\Parttime;
 use Yii;
+use yii\db\ActiveRecord;
 
 class ParttimeRepository
 {
@@ -18,6 +19,16 @@ class ParttimeRepository
         }
 
         return $parttime;
+    }
+
+    /**
+     * @param $person_id
+     * @param $date
+     * @return Parttime|null|ActiveRecord
+     */
+    public function findByDate($person_id, $date)
+    {
+        return Parttime::findOne(['person_id' => $person_id, 'parttime_begin' => $date]);
     }
 
     /**

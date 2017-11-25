@@ -13,6 +13,7 @@ use domain\forms\base\UserFormUpdate;
 use domain\forms\ImportEmployeeForm;
 use domain\forms\ImportEmployeeOrigForm;
 use domain\models\base\EmployeeHistory;
+use domain\models\base\Parttime;
 use domain\models\base\Person;
 use domain\services\base\DolzhService;
 use domain\services\base\EmployeeHistoryService;
@@ -26,7 +27,6 @@ use PHPExcel;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\base\Model;
-use yii\db\Exception;
 
 class EmployeeProccessLoader extends ProcessLoader
 {
@@ -82,6 +82,9 @@ class EmployeeProccessLoader extends ProcessLoader
      */
     public function __construct($importFilePath, $config = [])
     {
+        ini_set('max_execution_time', 14400);  // 1000 seconds
+        ini_set('memory_limit', 3342177280); // 1Gbyte Max Memory
+
         $this->importFilePath = $importFilePath;
         $this->objPHPExcelReport = new \PHPExcel();
         $this->sheetReport = $this->objPHPExcelReport->getActiveSheet();
@@ -151,20 +154,21 @@ class EmployeeProccessLoader extends ProcessLoader
                                 if (!$this->makeEmployee($form, $person_id, $dolzh_id, $podraz_id)) {
                                     $this->error++;
                                     $transaction->rollBack();
-                                    continue;
+                                    continue 2;
                                 }
                                 break;
                             case self::STATUS_PART_TIME:
-//                                if (!$this->makeParttime($form, $person_id, $dolzh_id, $podraz_id)) {
-//                                    $transaction->rollBack();
-//                                    continue;
-//                                }
+                                if (!$this->makeParttime($form, $person_id, $dolzh_id, $podraz_id)) {
+                                    $this->error++;
+                                    $transaction->rollBack();
+                                    continue 2;
+                                }
                                 break;
                             default:
                                 $this->error++;
                                 $transaction->rollBack();
                                 $this->addReportRow(self::REPORT_STATUS_ERROR, 'Не определен статус сутрудника');
-
+                                continue 2;
                         }
 
                         switch ($this->reportStatus) {
@@ -441,30 +445,16 @@ class EmployeeProccessLoader extends ProcessLoader
 
     protected function makeEmployee(ImportEmployeeForm $form, $person_id, $dolzh_id, $podraz_id)
     {
-        return ($employee = $this->employeeService->getEmployeeByDate($form->dateBegin))
+        return ($employee = $this->employeeService->getEmployeeByDate(Uuid::str2uuid($person_id), $form->dateBegin))
             ? $this->updateEmployee($employee, $form, $person_id, $dolzh_id, $podraz_id)
             : $this->createEmployee($form, $person_id, $dolzh_id, $podraz_id);
     }
 
     protected function makeParttime(ImportEmployeeForm $form, $person_id, $dolzh_id, $podraz_id)
     {
-        /** @var ParttimeService $parttimeService */
-        $parttimeService = new ProxyService(Yii::$container->get('domain\services\base\ParttimeService'), false);
-        $parttimeForm = new ParttimeForm(null, false, [
-            'person_id' => $person_id,
-            'dolzh_id' => $dolzh_id,
-            'podraz_id' => $podraz_id,
-            'parttime_begin' => $form->dateBegin,
-            'parttime_end' => $form->dateEnd,
-            'assignBuilds' => '[]',
-        ]);
-
-        if ($parttimeService->create($parttimeForm)) {
-
-        } else {
-            $this->addReportRow($this->getErrorsFromService($parttimeService) . $this->getErrorsFromForm($parttimeForm));
-
-        }
+        return ($parttime = $this->parttimeService->getParttimeByDate(Uuid::str2uuid($person_id), $form->dateBegin))
+            ? $this->updateParttime($parttime, $form, $person_id, $dolzh_id, $podraz_id)
+            : $this->createParttime($form, $person_id, $dolzh_id, $podraz_id);
     }
 
     protected function saveReport()
@@ -487,14 +477,17 @@ class EmployeeProccessLoader extends ProcessLoader
         $this->addShortReport("Итоги обработки:\n- Всего записей: {$this->rows};\n- Добавлено ($addedPercent%): {$this->added};\n- Изменено ($changedPercent%): {$this->changed};\n- Ошибок ($errorPercent%): {$this->error};");
     }
 
-    protected function createByService(ProxyService $service, array $forms)
+    protected function createByService(ProxyService $service, array $params)
     {
-        $result = call_user_func_array([$service, 'create'], $forms);
+        $result = call_user_func_array([$service, 'create'], $params);
 
         if ($result) {
             return $result;
         } else {
-            $this->addReportRow(self::REPORT_STATUS_ERROR, $this->getMessageFromServiceAndForms($service, $forms));
+            $params = array_filter($params, function ($param) {
+                return $param instanceof Model;
+            });
+            $this->addReportRow(self::REPORT_STATUS_ERROR, $this->getMessageFromServiceAndForms($service, $params));
             return false;
         }
     }
@@ -502,9 +495,9 @@ class EmployeeProccessLoader extends ProcessLoader
     protected function getMessageFromServiceAndForms(ProxyService $service, array $forms)
     {
         $that = $this;
-        return implode('; ', [$this->getErrorsFromService($service), implode('; ', array_map(function ($form) use ($that) {
+        return implode('; ', array_filter([$this->getErrorsFromService($service), implode('; ', array_map(function ($form) use ($that) {
             return $that->getErrorsFromForm($form);
-        }, $forms))]);
+        }, $forms))]));
     }
 
     protected function updateByService(ProxyService $service, array $params, array $diff, array $diffWas)
@@ -515,6 +508,9 @@ class EmployeeProccessLoader extends ProcessLoader
             $this->addReportRow(self::REPORT_STATUS_CHANGED, $this->getMessageFromDiff($diff, $diffWas));
             return $result;
         } else {
+            $params = array_filter($params, function ($param) {
+                return $param instanceof Model;
+            });
             $this->addReportRow(self::REPORT_STATUS_ERROR, $this->getMessageFromServiceAndForms($service, $params));
             return false;
         }
@@ -538,13 +534,35 @@ class EmployeeProccessLoader extends ProcessLoader
         ]);
 
         if ($result = $this->createByService($this->employeeService, [$employeeHistoryForm])) {
-            $this->reportStatus = $this->reportStatus === self::REPORT_STATUS_UNCHANGED ? self::REPORT_STATUS_CHANGED : $this->reportStatus;
+            //$this->reportStatus = $this->reportStatus === self::REPORT_STATUS_UNCHANGED ? self::REPORT_STATUS_CHANGED : $this->reportStatus;
+            $this->reportStatus = self::REPORT_STATUS_ADDED;
             $dateBegin = Yii::$app->formatter->asDate($form->dateBegin);
             $this->addReportRow(self::REPORT_STATUS_ADDED, "Добавлена основная специальность '{$form->dolzh}' на дату '$dateBegin'");
 
             if ($form->dateEnd) {
                 $result = $this->updatePersonDateEnd($form, $person_id);
             }
+        }
+
+        return $result;
+    }
+
+    protected function createParttime(ImportEmployeeForm $form, $person_id, $dolzh_id, $podraz_id)
+    {
+        $parttimeForm = new ParttimeForm(null, false, [
+            'person_id' => $person_id,
+            'dolzh_id' => $dolzh_id,
+            'podraz_id' => $podraz_id,
+            'parttime_begin' => $form->dateBegin,
+            'parttime_end' => $form->dateEnd,
+            'assignBuilds' => '[]',
+        ]);
+
+        if ($result = $this->createByService($this->parttimeService, [$parttimeForm])) {
+            //   $this->reportStatus = $this->reportStatus === self::REPORT_STATUS_UNCHANGED ? self::REPORT_STATUS_CHANGED : $this->reportStatus;
+            $this->reportStatus = self::REPORT_STATUS_ADDED;
+            $dateBegin = Yii::$app->formatter->asDate($form->dateBegin);
+            $this->addReportRow(self::REPORT_STATUS_ADDED, "Добавлено совместительство '{$form->dolzh}' на дату '$dateBegin'");
         }
 
         return $result;
@@ -562,6 +580,11 @@ class EmployeeProccessLoader extends ProcessLoader
             return $this->updateCurrentEmployee($employee, $person_id, $dolzh_id, $podraz_id)
                 && $this->updateEmployeeDateEnd($employee, $form->dateEnd);
         }
+    }
+
+    protected function updateParttime(Parttime $parttime, ImportEmployeeForm $form, $person_id, $dolzh_id, $podraz_id)
+    {
+        return $this->updateCurrentParttime($parttime, $person_id, $dolzh_id, $podraz_id, $form->dateEnd);
     }
 
     protected function employeeExist(EmployeeHistory $employee, $person_id, $dolzh_id, $podraz_id)
@@ -618,6 +641,30 @@ class EmployeeProccessLoader extends ProcessLoader
             $employeeHistoryForm = new EmployeeHistoryForm($employee, false, $diff);
 
             if ($this->updateByService($this->employeeService, [$employee->primaryKey, $employeeHistoryForm], $diff, $diffWas) === false) {
+                return false;
+            };
+
+            $this->reportStatus = self::REPORT_STATUS_CHANGED;
+        }
+
+        return true;
+    }
+
+    protected function updateCurrentParttime(Parttime $parttime, $person_id, $dolzh_id, $podraz_id, $dateEnd)
+    {
+        $parttimeForm = $parttime->attributes;
+        $parttimeForm['person_id'] = Uuid::str2uuid($person_id);
+        $parttimeForm['dolzh_id'] = Uuid::str2uuid($dolzh_id);
+        $parttimeForm['podraz_id'] = Uuid::str2uuid($podraz_id);
+        $parttimeForm['parttime_end'] = $dateEnd;
+
+        $diff = array_diff_assoc($parttimeForm, $parttime->attributes);
+        $diffWas = array_diff_assoc($parttime->attributes, $parttimeForm);
+
+        if ($diff) {
+            $parttimeCurrentForm = new ParttimeForm($parttime, false, $diff);
+
+            if ($this->updateByService($this->parttimeService, [$parttime->primaryKey, $parttimeCurrentForm], $diff, $diffWas) === false) {
                 return false;
             };
 

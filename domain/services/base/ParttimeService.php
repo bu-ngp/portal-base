@@ -30,6 +30,15 @@ class ParttimeService extends Service
         return $this->parttimes->find($id);
     }
 
+    public function getParttimeByDate($person_id, $date) {
+        $result = $this->parttimes->findByDate($person_id, $date);
+        if ($result === null) {
+            return false;
+        }
+
+        return $result;
+    }
+
     public function create(ParttimeForm $form)
     {
         $this->guardPersonExists($form);

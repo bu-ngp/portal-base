@@ -23,12 +23,13 @@ class EmployeeHistoryRepository
     }
 
     /**
+     * @param $person_id
      * @param $date
-     * @return null|EmployeeHistory|ActiveRecord
+     * @return EmployeeHistory|null|ActiveRecord
      */
-    public function findByDate($date)
+    public function findByDate($person_id, $date)
     {
-        return EmployeeHistory::findOne(['employee_history_begin' => $date]);
+        return EmployeeHistory::findOne(['person_id' => $person_id, 'employee_history_begin' => $date]);
     }
 
     /**
