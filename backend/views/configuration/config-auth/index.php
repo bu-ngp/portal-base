@@ -12,9 +12,7 @@ $this->title = Yii::t('common/config', 'Authorization');
         'items' => [
             [
                 'styleClass' => CardList::RED_STYLE,
-                'preview' => [
-                    'FAIcon' => 'list-alt',
-                ],
+                'icon' => 'fa fa-list-alt',
                 'title' => Yii::t('common/roles', 'Roles'),
                 'description' => 'Создание и редактирование ролей в системе',
                 'link' => Yii::$app->urlManager->createUrl(['configuration/roles']),
@@ -22,18 +20,14 @@ $this->title = Yii::t('common/config', 'Authorization');
             ],
             [
                 'styleClass' => CardList::RED_STYLE,
-                'preview' => [
-                    'FAIcon' => 'list-alt',
-                ],
+                'icon' => 'fa fa-list-alt',
                 'title' => Yii::t('common/config-ldap', 'LDAP settings'),
                 'link' => Yii::$app->urlManager->createUrl(['configuration/config-ldap/update']),
                 'roles' => RbacHelper::ROLE_EDIT,
             ],
             [
                 'styleClass' => CardList::GREEN_STYLE,
-                'preview' => [
-                    'FAIcon' => 'list-alt',
-                ],
+                'icon' => 'fa fa-list-alt',
                 'title' => Yii::t('common/config-ldap', 'Users of system'),
                 'description' => 'Пользователи системы',
                 'link' => Yii::$app->urlManager->createUrl(['configuration/users']),

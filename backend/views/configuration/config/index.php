@@ -14,9 +14,7 @@ $this->title = Yii::t('common/config', 'Portal configuration');
         'items' => [
             [
                 'styleClass' => CardList::RED_STYLE,
-                'preview' => [
-                    'FAIcon' => 'list-alt',
-                ],
+                'icon' => 'fa fa-list-alt',
                 'title' => Yii::t('common/config', 'Authorization'),
                 'link' => Yii::$app->urlManager->createUrl(['configuration/config-auth']),
                 'roles' => [RbacHelper::ROLE_EDIT, RbacHelper::USER_EDIT],

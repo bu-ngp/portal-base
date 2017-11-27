@@ -20,27 +20,21 @@ $this->title = Yii::t('common/config', 'Spravochniki');
         'items' => [
             [
                 'styleClass' => CardList::RED_STYLE,
-                'preview' => [
-                    'FAIcon' => 'list-alt',
-                ],
+                'icon' => 'fa fa-list-alt',
                 'title' => Yii::t('common/dolzh', 'Dolzh'),
                 'link' => Yii::$app->urlManager->createUrl(['configuration/spravochniki/dolzh']),
                 'roles' => RbacHelper::AUTHORIZED,
             ],
             [
                 'styleClass' => CardList::RED_STYLE,
-                'preview' => [
-                    'FAIcon' => 'list-alt',
-                ],
+                'icon' => 'fa fa-list-alt',
                 'title' => Yii::t('common/podraz', 'Podraz'),
                 'link' => Yii::$app->urlManager->createUrl(['configuration/spravochniki/podraz']),
                 'roles' => RbacHelper::AUTHORIZED,
             ],
             [
                 'styleClass' => CardList::GREEN_STYLE,
-                'preview' => [
-                    'FAIcon' => 'list-alt',
-                ],
+                'icon' => 'fa fa-list-alt',
                 'title' => Yii::t('common/build', 'Build'),
                 'link' => Yii::$app->urlManager->createUrl(['configuration/spravochniki/build']),
                 'roles' => RbacHelper::AUTHORIZED,
