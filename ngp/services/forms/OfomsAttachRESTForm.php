@@ -21,6 +21,7 @@ class OfomsAttachRESTForm extends Model
     public function rules()
     {
         return [
+            [['doctor', 'policy', 'fam', 'im', 'ot', 'dr'], 'filter', 'filter' => 'trim'],
             [['doctor'], 'match', 'pattern' => '/\d{12}/'],
             [['policy'], 'match', 'pattern' => '/\d+/'],
             [['fam', 'im', 'ot'], PatientNameValidator::className()],

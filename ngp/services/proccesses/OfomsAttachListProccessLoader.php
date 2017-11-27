@@ -33,9 +33,14 @@ class OfomsAttachListProccessLoader extends ProcessLoader
 
     private $highestRow;
 
+    private $reportPath;
+    private $reportRowCountBuffer = 0;
+    private $reportName;
+
     public function __construct(OfomsAttachListForm $form, $config = [])
     {
         $this->form = $form;
+        $this->reportName = date('Y-m-d') . time() . '.xlsx';
         $this->fileName = $this->form->listFile->tempName;
         $this->objPHPExcelReport = new \PHPExcel();
         $this->sheetReport = $this->objPHPExcelReport->getActiveSheet();
@@ -98,12 +103,16 @@ class OfomsAttachListProccessLoader extends ProcessLoader
 
         if ($this->error) {
             /** @var \PHPExcel_Writer_CSV $objWriter */
-            $objWriter = \PHPExcel_IOFactory::createWriter($this->objPHPExcelReport, 'CSV');
-            $objWriter->setDelimiter(';');
-            $reportPath = Yii::getAlias('@ngp/reports_attach-list/' . date('Y-m-d') . time() . '.csv');
-            $objWriter->save($reportPath);
-            file_put_contents($reportPath, mb_convert_encoding(file_get_contents($reportPath), 'windows-1251', 'UTF-8'));
-            $this->addFile($reportPath, 'Результат прикрепления.csv');
+//            $objWriter = \PHPExcel_IOFactory::createWriter($this->objPHPExcelReport, 'CSV');
+//            $objWriter->setDelimiter(';');
+//            $reportPath = Yii::getAlias('@ngp/reports_attach-list/' . date('Y-m-d') . time() . '.csv');
+//            $objWriter->save($reportPath);
+//            file_put_contents($reportPath, mb_convert_encoding(file_get_contents($reportPath), 'windows-1251', 'UTF-8'));
+//            $this->addFile($reportPath, 'Результат прикрепления.csv');
+
+            if ($this->reportRowCountBuffer > 0) {
+                $this->saveReport();
+            }
         }
 
         $successPercent = round($this->success * 100 / $this->rows, 1);
@@ -133,6 +142,12 @@ class OfomsAttachListProccessLoader extends ProcessLoader
             $form->dr,
         ]));
         $this->reportRow++;
+        $this->reportRowCountBuffer++;
+
+        if ($this->reportRowCountBuffer > 50) {
+            $this->saveReport();
+            $this->reportRowCountBuffer = 0;
+        }
     }
 
     protected function getHighestRow()
@@ -150,7 +165,7 @@ class OfomsAttachListProccessLoader extends ProcessLoader
     {
         $doctor = $row[0];
         $policy = $row[1];
-        if (preg_match('/^(\b[а-я-]+\b)\s(\b[а-я-]+\b)(\s(\b[а-я-]+\b))?(\s(\b[а-я-]+\b))?$/iu', $row[2], $matches)) {
+        if (preg_match('/^(\b[а-яё-]+\b)\s(\b[а-яё-]+\b)(\s(\b[а-яё-]+\b))?(\s(\b[а-яё-]+\b))?$/iu', trim($row[2]), $matches)) {
             $fam = $matches[1];
             $im = $matches[2];
             $ot = $matches[4];
@@ -170,5 +185,41 @@ class OfomsAttachListProccessLoader extends ProcessLoader
             'ot' => $ot,
             'dr' => $dr,
         ]);
+    }
+
+    protected function saveReport()
+    {
+        if ($this->reportPath) {
+            $this->appendReport();
+        } else {
+            $this->addReport();
+        }
+    }
+
+    protected function addReport()
+    {
+        /** @var \PHPExcel_Writer_CSV $objWriter */
+        $objWriter = \PHPExcel_IOFactory::createWriter($this->objPHPExcelReport, 'Excel2007');
+        $this->reportPath = Yii::getAlias('@ngp/reports_attach-list/' . $this->reportName);
+        $objWriter->save($this->reportPath);
+        //file_put_contents($reportPath, mb_convert_encoding(file_get_contents($reportPath), 'windows-1251', 'UTF-8'));
+        $this->addFile($this->reportPath, 'Результат прикрепления.xlsx');
+
+        /** @var \PHPExcel_Reader_CSV $objReader */
+        $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
+        $this->objPHPExcelReport = $objReader->load($this->reportPath);
+        $this->sheetReport = $this->objPHPExcelReport->getActiveSheet();
+    }
+
+    protected function appendReport()
+    {
+        /** @var \PHPExcel_Writer_CSV $objWriter */
+        $objWriter = \PHPExcel_IOFactory::createWriter($this->objPHPExcelReport, 'Excel2007');
+        $objWriter->save($this->reportPath);
+
+        /** @var \PHPExcel_Reader_CSV $objReader */
+        $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
+        $this->objPHPExcelReport = $objReader->load($this->reportPath);
+        $this->sheetReport = $this->objPHPExcelReport->getActiveSheet();
     }
 }

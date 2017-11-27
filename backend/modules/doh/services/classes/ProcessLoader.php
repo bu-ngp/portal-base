@@ -11,14 +11,8 @@ namespace doh\services\classes;
 use doh\services\models\DohFiles;
 use doh\services\models\Handler;
 use doh\services\models\HandlerFiles;
-use domain\helpers\BinaryHelper;
-use wartron\yii2uuid\helpers\Uuid;
-use Yii;
 use yii\base\BaseObject;
-use yii\console\Controller;
 use yii\queue\JobInterface;
-use yii\web\Session;
-use yii\web\User;
 
 abstract class ProcessLoader extends BaseObject// implements JobInterface
 {

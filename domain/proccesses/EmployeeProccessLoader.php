@@ -75,6 +75,10 @@ class EmployeeProccessLoader extends ProcessLoader
 
     private $reportStatus;
 
+    private $reportPath;
+    private $reportRowCountBuffer = 0;
+    private $reportName;
+
     /**
      * EmployeeProccessLoader constructor.
      * @param string $importFilePath
@@ -86,6 +90,7 @@ class EmployeeProccessLoader extends ProcessLoader
         ini_set('memory_limit', 5342177280); // 1Gbyte Max Memory
 
         $this->importFilePath = $importFilePath;
+        $this->reportName = date('Y-m-d') . time() . '.xlsx';
         $this->objPHPExcelReport = new \PHPExcel();
         $this->sheetReport = $this->objPHPExcelReport->getActiveSheet();
         $this->addReportHeader();
@@ -193,7 +198,10 @@ class EmployeeProccessLoader extends ProcessLoader
         }
 
         if ($this->error || $this->changed || $this->added) {
-            $this->saveReport();
+            if ($this->reportRowCountBuffer > 0) {
+                $this->saveReport();
+            }
+            $this->addFile($this->reportPath, 'Результат импорта.xlsx');
         }
         $this->addItog();
         //file_put_contents('test.txt', 'goood', FILE_APPEND);
@@ -228,6 +236,32 @@ class EmployeeProccessLoader extends ProcessLoader
             $this->formOrigData->address,
         ]));
         $this->reportRow++;
+        $this->reportRowCountBuffer++;
+
+        if ($this->reportRowCountBuffer > 50) {
+            $this->saveReport();
+            $this->reportRowCountBuffer = 0;
+        }
+    }
+
+    protected function saveReport()
+    {
+        if (!$this->reportPath) {
+            $this->reportPath = Yii::getAlias('@common/ftpimport/reports/' . $this->reportName);
+        }
+
+        $this->appendToFileReport();
+    }
+
+    protected function appendToFileReport()
+    {
+        /** @var \PHPExcel_Writer_Excel2007 $objWriter */
+        $objWriter = \PHPExcel_IOFactory::createWriter($this->objPHPExcelReport, 'Excel2007');
+        $objWriter->save($this->reportPath);
+        /** @var \PHPExcel_Reader_Excel2007|\PHPExcel_Reader_Excel5 $objReader */
+        $objReader = \PHPExcel_IOFactory::createReaderForFile($this->reportPath);
+        $this->objPHPExcelReport = $objReader->load($this->reportPath);
+        $this->sheetReport = $this->objPHPExcelReport->getActiveSheet();
     }
 
     protected function getHighestRow()
@@ -455,17 +489,6 @@ class EmployeeProccessLoader extends ProcessLoader
         return ($parttime = $this->parttimeService->getParttimeByDate(Uuid::str2uuid($person_id), $form->dateBegin))
             ? $this->updateParttime($parttime, $form, $person_id, $dolzh_id, $podraz_id)
             : $this->createParttime($form, $person_id, $dolzh_id, $podraz_id);
-    }
-
-    protected function saveReport()
-    {
-        /** @var \PHPExcel_Writer_CSV $objWriter */
-        $objWriter = \PHPExcel_IOFactory::createWriter($this->objPHPExcelReport, 'CSV');
-        $objWriter->setDelimiter(';');
-        $reportPath = Yii::getAlias('@common/ftpimport/reports/' . date('Y-m-d') . time() . '.csv');
-        $objWriter->save($reportPath);
-        file_put_contents($reportPath, mb_convert_encoding(file_get_contents($reportPath), 'windows-1251', 'UTF-8'));
-        $this->addFile($reportPath, 'Результат импорта.csv');
     }
 
     protected function addItog()
