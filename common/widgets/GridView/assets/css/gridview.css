@@ -154,7 +154,7 @@ div.wk-filterDialog-content {
     opacity: 0;
 }
 
-.wk-widget-grid-loading > .wk-widget-grid-loading-container, .wk-container-loading {
+.wk-widget-grid-loading .wk-widget-grid-loading-container, .wk-container-loading {
     opacity: 0.8;
     background: #ffffff url("../svg/loading.svg") center center no-repeat;
     background-size: 150px;

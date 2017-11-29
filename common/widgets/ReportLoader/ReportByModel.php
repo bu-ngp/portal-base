@@ -17,6 +17,7 @@ use PHPExcel_Worksheet_PageSetup;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 class ReportByModel
 {
@@ -302,11 +303,16 @@ class ReportByModel
 
     private function itemsValueExists(ActiveRecord $model, $attribute)
     {
-        if (method_exists($model, 'itemsValues') && $items = $model::itemsValues($attribute)) {
-            return $items[$model[$attribute]];
+        if (preg_match('/\./', $attribute)) {
+            $model = ArrayHelper::getValue($model, preg_replace('/(.*)\.(\w+)/', '$1', $attribute));
+            $attribute = preg_replace('/(.*)\.(\w+)/', '$2', $attribute);
         }
 
-        return $model[$attribute];
+        if (method_exists($model, 'itemsValues') && $items = $model::itemsValues($attribute)) {
+            return $items[ArrayHelper::getValue($model, $attribute)];
+        }
+
+        return ArrayHelper::getValue($model, $attribute);
     }
 
     private function widthSetup()

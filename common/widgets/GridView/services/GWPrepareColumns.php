@@ -10,6 +10,7 @@ namespace common\widgets\GridView\services;
 
 
 use common\widgets\GridView\GridView;
+use domain\services\SearchModel;
 use yii\bootstrap\Html;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
@@ -140,7 +141,7 @@ class GWPrepareColumns
             } elseif (empty($column['value'])) {
                 $column['value'] = function ($model, $key, $index, $column) {
                     /** @var $model ActiveRecord */
-                    return '<span>' . Html::encode($model[$column->attribute]) . '</span>';
+                    return '<span>' . Html::encode(ArrayHelper::getValue($model, $column->attribute)) . '</span>';
                 };
             }
         }
@@ -172,7 +173,7 @@ class GWPrepareColumns
                             $resultValue = $resultValue[$value];
                         });
                     } catch (\Exception $e) {
-                        $resultValue = $model[$column->attribute];
+                        $resultValue = ArrayHelper::getValue($model, $column->attribute);
                     }
 
                     return '<span>' . Html::encode($resultValue) . '</span>';
@@ -196,9 +197,17 @@ class GWPrepareColumns
     {
         /** @var ActiveRecord $model */
         $model = $this->gridView->filterModel;
-        if (isset($column['class']) && $column['class'] === '\kartik\grid\DataColumn') {
-            $attribute = isset($column['attribute']) ? $column['attribute'] : $column;
+        $attribute = isset($column['attribute']) ? $column['attribute'] : $column;
 
+        if ((isset($column['class']) && $column['class'] === '\kartik\grid\DataColumn' || is_string($column)) && preg_match('/\./', $attribute)) {
+          //  $a=preg_replace('/(.*)\.(\w+)/', '$1', $attribute);
+            /** @var SearchModel $model */
+           // $a=$model::activeRecord();
+            $model = ArrayHelper::getValue($model , preg_replace('/(.*)\.(\w+)/', '$1', $attribute));
+            $attribute = preg_replace('/(.*)\.(\w+)/', '$2', $attribute);
+        }
+
+        if (isset($column['class']) && $column['class'] === '\kartik\grid\DataColumn') {
             if (
                 (isset($column['value']) && !is_callable($column['value']) || !isset($column['value']))
                 && method_exists($model, 'itemsValues')
@@ -208,26 +217,29 @@ class GWPrepareColumns
                 $column['format'] = 'raw';
                 $column['value'] = function ($model, $key, $index, $column) use ($items) {
                     /** @var $model ActiveRecord */
-                    $value = $model[$column->attribute];
+                    $value = ArrayHelper::getValue($model, $column->attribute);
 
                     return '<span key="' . $value . '">' . (isset($value) ? Html::encode($items[$value]) : '') . '</span>';
                 };
             }
+
+
+            if (is_string($column) && method_exists($model, 'itemsValues') && ($items = $model::itemsValues($column))) {
+                $column = [
+                    'attribute' => $column,
+                    'filter' => $items,
+                    'format' => 'raw',
+                    'value' => function ($model, $key, $index, $column) use ($items) {
+                        /** @var $model ActiveRecord */
+                        $value = ArrayHelper::getValue($model, $column->attribute);
+
+                        return '<span key="' . $value . '">' . (isset($value) ? Html::encode($items[$value]) : '') . '</span>';
+                    },
+                ];
+            }
         }
 
-        if (is_string($column) && method_exists($model, 'itemsValues') && ($items = $model::itemsValues($column))) {
-            $column = [
-                'attribute' => $column,
-                'filter' => $items,
-                'format' => 'raw',
-                'value' => function ($model, $key, $index, $column) use ($items) {
-                    /** @var $model ActiveRecord */
-                    $value = $model[$column->attribute];
 
-                    return '<span key="' . $value . '">' . (isset($value) ? Html::encode($items[$value]) : '') . '</span>';
-                },
-            ];
-        }
     }
 
     protected function addVisibleProperties(&$column)

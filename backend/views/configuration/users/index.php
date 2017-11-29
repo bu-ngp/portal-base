@@ -9,7 +9,6 @@
 use domain\models\base\Person;
 use common\widgets\GridView\GridView;
 use console\helpers\RbacHelper;
-use domain\models\base\AuthItem;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 
@@ -34,16 +33,30 @@ $this->params['breadcrumbs'][] = $this->title;
              'filterModel' => $filterModel,
              //    'filterView' => '_filter_old',
          ],*/
-        /*  'exportGrid' => [
-              'idReportLoader' => 'wk-Report-Loader',
-          ],*/
+        'exportGrid' => [
+            'idReportLoader' => 'wk-Report-Loader',
+        ],
         //'customizeDialog' => false,
         //  'minHeight' => 450,
         'columns' => [
             'person_code',
+            [
+                'attribute' => 'person_username',
+                'visible' => false,
+            ],
             'person_fullname',
-            'employee.dolzh.dolzh_name',
-            'employee.podraz.podraz_name',
+            [
+                'attribute' => 'person_email',
+                'visible' => false,
+            ],
+            [
+                'attribute' => 'employee.dolzh.dolzh_name',
+                'label' => Yii::t('domain/employee', 'Dolzh ID'),
+            ],
+            [
+                'attribute' => 'employee.podraz.podraz_name',
+                'label' => Yii::t('domain/employee', 'Podraz ID'),
+            ],
             [
                 'attribute' => 'person_hired',
                 'format' => 'date',
@@ -52,6 +65,27 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'person_fired',
                 'format' => 'date',
+            ],
+            [
+                'attribute' => 'profile.profile_dr',
+                'format' => 'date',
+                'visible' => false,
+            ],
+            'profile.profile_pol',
+            [
+                'attribute' => 'profile.profile_inn',
+                'visible' => false,
+            ],
+            [
+                'attribute' => 'profile.profile_snils',
+                'value' => function ($model, $key, $index, $column) {
+                    return preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1-$2-$3 $4', \yii\helpers\ArrayHelper::getValue($model, $column->attribute));
+                },
+                'visible' => false,
+            ],
+            [
+                'attribute' => 'profile.profile_address',
+                'visible' => false,
             ],
             [
                 'attribute' => 'created_at',

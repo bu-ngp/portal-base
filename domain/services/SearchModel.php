@@ -15,6 +15,7 @@ use yii\data\ActiveDataProvider;
 use yii\data\Sort;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 use yii\validators\NumberValidator;
 
 class SearchModel extends Model
@@ -200,7 +201,7 @@ class SearchModel extends Model
                 $this->getQuery()->andFilterWhere([$this->digitZnak($this->$attribute), $this->getSQLAttribute($attribute), $this->digitValue($this->$attribute)]);
                 break;
             case SearchModel::DATE:
-                $this->getQuery()->andFilterWhere($this->convertDateValueToCondition($this->getSQLAttribute($attribute), $this->$attribute));
+                $this->getQuery()->andFilterWhere($this->convertDateValueToCondition($attribute, $this->$attribute));
                 break;
             case SearchModel::DATETIME:
                 $this->getQuery()->andFilterWhere($this->convertDateValueToCondition($attribute, $this->$attribute));
@@ -261,11 +262,11 @@ class SearchModel extends Model
         });
 
         if ($WKDateValidators) {
-            return (new DateTimeCondition($this->getSQLAttribute($attribute), $value, DateTimeCondition::INT))->convert();
+            return (new DateTimeCondition($this->getSQLAttribute($attribute), $value, DateTimeCondition::DATE))->convert();
         }
 
         if ($NumberValidators) {
-            return (new DateTimeCondition($this->getSQLAttribute($attribute), $value, DateTimeCondition::DATE))->convert();
+            return (new DateTimeCondition($this->getSQLAttribute($attribute), $value, DateTimeCondition::INT))->convert();
         }
 
         return [];
