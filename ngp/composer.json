@@ -1,0 +1,28 @@
+{
+  "name": "vovancho/ngp-portal",
+  "description": "Портал БУ НГП",
+  "keywords": [
+    "yii2",
+    "Портал БУ НГП"
+  ],
+  "type": "project",
+  "license": "BSD-3-Clause",
+  "minimum-stability": "stable",
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
+  "require": {
+    "bower-asset/Jcrop": "=0.9.12",
+    "yiisoft/yii2-imagine": "*"
+  },
+  "config": {
+    "process-timeout": 1800
+  },
+  "scripts": {
+    "production-set": "php init --env=Production --overwrite=n",
+    "development-set": "php init --env=Development --overwrite=n"
+  }
+}
