@@ -13,10 +13,10 @@ use Yii;
 class OfomsAttachListProccessLoader extends ProcessLoader
 {
     const CHUNK_SIZE = 1000;
-    const START_ROW = 1;
 
     public $description = 'Прикрепление пациентов на портале ОФОМС';
 
+    private $startRow = 1;
     /** @var OfomsAttachListForm */
     private $form;
     private $fileName;
@@ -59,11 +59,11 @@ class OfomsAttachListProccessLoader extends ProcessLoader
         $objReader->setReadDataOnly(true);
 
         while ($this->executing) {
-            $chunkFilter->setRows(self::START_ROW, self::CHUNK_SIZE);
+            $chunkFilter->setRows($this->startRow, self::CHUNK_SIZE);
             $objPHPExcel = $objReader->load($this->fileName);
             $objPHPExcel->setActiveSheetIndex(0);
             $objWorksheet = $objPHPExcel->getActiveSheet();
-            for ($i = self::START_ROW; $i < self::START_ROW + self::CHUNK_SIZE; $i++) {
+            for ($i = $this->startRow; $i < $this->startRow + self::CHUNK_SIZE; $i++) {
                 $row = $objWorksheet->rangeToArray('A' . $i . ':F' . $i, null, true, false);
                 $row = $row[key($row)];
 
@@ -99,6 +99,7 @@ class OfomsAttachListProccessLoader extends ProcessLoader
 
                 $this->rows++;
             }
+            $this->startRow += self::CHUNK_SIZE;
         }
 
         if ($this->error) {

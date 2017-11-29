@@ -6,3 +6,5 @@ codecept bootstrap --namespace domain\tests domain
 codecept generate:test unit Dolzh --config domain
 
 php -dxdebug.remote_enable=1 -dxdebug.remote_mode=req -dxdebug.remote_port=9000 -dxdebug.remote_host=localhost -dxdebug.remote_connect_back=0 -dxdebug.remote_handler=dbgp -dxdebug.idekey="PHPSTORM" -dxdebug.remote_autostart=1 yii employee/import2
+
+php -d memory_limit=3000M yii queue/listen --memory=3000M --timeoutProcess=7200

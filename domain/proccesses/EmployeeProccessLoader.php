@@ -31,7 +31,6 @@ use yii\base\Model;
 class EmployeeProccessLoader extends ProcessLoader
 {
     const CHUNK_SIZE = 1000;
-    const START_ROW = 2;
 
     const STATUS_GENERAL = 'status_general';
     const STATUS_PART_TIME = 'status_part_time';
@@ -42,6 +41,7 @@ class EmployeeProccessLoader extends ProcessLoader
     const REPORT_STATUS_ERROR = 'Ошибка';
 
     public $description = 'Импорт сотрудников';
+    private $startRow = 2;
     /** @var string */
     private $importFilePath;
     private $executing = true;
@@ -86,9 +86,6 @@ class EmployeeProccessLoader extends ProcessLoader
      */
     public function __construct($importFilePath, $config = [])
     {
-        ini_set('max_execution_time', 14400);  // 1000 seconds
-        ini_set('memory_limit', 5342177280); // 1Gbyte Max Memory
-
         $this->importFilePath = $importFilePath;
         $this->reportName = date('Y-m-d') . time() . '.xlsx';
         $this->objPHPExcelReport = new \PHPExcel();
@@ -116,11 +113,11 @@ class EmployeeProccessLoader extends ProcessLoader
         $objReader->setReadDataOnly(true);
 
         while ($this->executing) {
-            $chunkFilter->setRows(self::START_ROW, self::CHUNK_SIZE);
+            $chunkFilter->setRows($this->startRow, self::CHUNK_SIZE);
             $objPHPExcel = $objReader->load($this->importFilePath);
             $objPHPExcel->setActiveSheetIndex(0);
             $objWorksheet = $objPHPExcel->getActiveSheet();
-            for ($this->currentRow = self::START_ROW; $this->currentRow < self::START_ROW + self::CHUNK_SIZE; $this->currentRow++) {
+            for ($this->currentRow = $this->startRow; $this->currentRow < $this->startRow + self::CHUNK_SIZE; $this->currentRow++) {
                 $this->rows++;
                 $this->reportStatus = self::REPORT_STATUS_UNCHANGED;
                 $row = $this->getExcelRow($objWorksheet);
@@ -195,12 +192,12 @@ class EmployeeProccessLoader extends ProcessLoader
                     $this->addReportRow(self::REPORT_STATUS_ERROR, $this->getErrorsFromForm($form));
                 };
             }
+            $this->startRow += self::CHUNK_SIZE;
         }
 
         if ($this->error || $this->changed || $this->added) {
-            if ($this->reportRowCountBuffer > 0) {
-                $this->saveReport();
-            }
+            $this->finishFormatReport();
+            $this->saveReport();
             $this->addFile($this->reportPath, 'Результат импорта.xlsx');
         }
         $this->addItog();
@@ -325,7 +322,7 @@ class EmployeeProccessLoader extends ProcessLoader
 
     protected function statusEmployee($form)
     {
-        if (in_array($form->status, ['Основное место работы', 'Внешний совместитель'])) {
+        if (in_array($form->status, ['Основное место работы'])) {
             return self::STATUS_GENERAL;
         }
 
@@ -518,9 +515,9 @@ class EmployeeProccessLoader extends ProcessLoader
     protected function getMessageFromServiceAndForms(ProxyService $service, array $forms)
     {
         $that = $this;
-        return implode('; ', array_filter([$this->getErrorsFromService($service), implode('; ', array_map(function ($form) use ($that) {
+        return implode('; ', array_filter([$this->getErrorsFromService($service), implode('; ', array_filter(array_map(function ($form) use ($that) {
             return $that->getErrorsFromForm($form);
-        }, $forms))]));
+        }, $forms)))]));
     }
 
     protected function updateByService(ProxyService $service, array $params, array $diff, array $diffWas)
@@ -695,5 +692,12 @@ class EmployeeProccessLoader extends ProcessLoader
         }
 
         return true;
+    }
+
+    protected function finishFormatReport()
+    {
+        for ($i = 1; $i <= 4; $i++) {
+            $this->objPHPExcelReport->getActiveSheet()->getColumnDimensionByColumn($i)->setAutoSize(true);
+        }
     }
 }

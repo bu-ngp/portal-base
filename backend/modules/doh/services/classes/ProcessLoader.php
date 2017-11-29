@@ -14,7 +14,7 @@ use doh\services\models\HandlerFiles;
 use yii\base\BaseObject;
 use yii\queue\JobInterface;
 
-abstract class ProcessLoader extends BaseObject// implements JobInterface
+abstract class ProcessLoader extends BaseObject implements JobInterface
 {
     public $description = 'Process Loader';
     public $handler_id;
@@ -24,7 +24,7 @@ abstract class ProcessLoader extends BaseObject// implements JobInterface
 
     abstract public function body();
 
-    public function execute(/*$queue*/)
+    public function execute($queue)
     {
         $this->_handler = Handler::findOne($this->handler_id);
         if (!$this->_handler || $this->_handler->handler_status !== Handler::QUEUE) {

@@ -131,6 +131,7 @@ return [
         ],
         'queue' => [
             'class' => \yii\queue\db\Queue::className(),
+            'commandClass' => \console\classes\queue\Command::className(),
             'mutex' => \yii\mutex\MysqlMutex::className(),
         ],
     ],

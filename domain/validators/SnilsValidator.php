@@ -30,10 +30,11 @@ class SnilsValidator extends Validator
             $model->addError($attribute, 'СНИЛС должен быть длинной ' . static::$LENGTH . ' символов');
             return;
         }
-        if (preg_match('/(\d)\1{2}/', $model->{$attribute})) {
+        if (preg_match('/(\d)\1{2}/', mb_substr($model->{$attribute}, 0, 9))) {
             $model->addError($attribute, 'Цифры в СНИЛС повторяются три и более раз');
             return;
         }
+
         if (substr($model->{$attribute}, -2, 2) != $this->getSnilsFactor($model->{$attribute})) {
             $model->addError($attribute, 'Неверная контрольная сумма СНИЛС');
             return;
@@ -52,7 +53,7 @@ class SnilsValidator extends Validator
             return 0;
         }
 
-        return $sum % 101;
+        return substr($sum % 101, -2, 2) ;
     }
 
     private function calcSum($value)

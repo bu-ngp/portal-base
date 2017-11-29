@@ -49,7 +49,15 @@ class UserForm extends Model
         preg_match('/^(\b[а-яё-]+\b)\s([а-яё])(.*\s([а-яё]))?/ui', $fullname, $matches);
 
         if ($matches[1] && $matches[2]) {
-            return Inflector::transliterate($matches[1] . $matches[2] . $matches[4]);
+            $i = 2;
+            $login = Inflector::transliterate($matches[1] . $matches[2] . $matches[4]);
+
+            while (Person::findOne(['person_username' => $login])) {
+                $login = Inflector::transliterate($matches[1] . $matches[2] . $matches[4] . $i);
+                $i++;
+            }
+
+            return $login;
         }
 
         return 'user' . rand(100000, 999999);

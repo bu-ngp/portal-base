@@ -50,8 +50,8 @@ class DoH
 
     public function execute()
     {
-      //  Yii::$app->queue->push($this->_loader);
-        $this->_loader->execute();
+        Yii::$app->queue->push($this->_loader);
+        //  $this->_loader->execute();
     }
 
     public static function getIdentifier()
@@ -77,8 +77,9 @@ class DoH
         throw new \Exception('Need user and session components');
     }
 
-    public static function getCurrentIdentifierCondition() {
-       return array_filter([self::getIdentifier(), Yii::$app->user->can(RbacHelper::ADMINISTRATOR) ? self::CONSOLE : null]);
+    public static function getCurrentIdentifierCondition()
+    {
+        return array_filter([self::getIdentifier(), Yii::$app->user->can(RbacHelper::ADMINISTRATOR) ? self::CONSOLE : null]);
     }
 
     public static function listen(array $handler_ids)
