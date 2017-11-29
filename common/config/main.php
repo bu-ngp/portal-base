@@ -16,6 +16,7 @@ return [
         'assetsAutoCompress',
         'log',
         'queue',
+        'queueExecutor',
         'domain\bootstrap\BaseDomainBootstrap',
         'common\bootstrap\Documenter',
         'common\bootstrap\Breadcrumbs',
@@ -132,6 +133,10 @@ return [
         'queue' => [
             'class' => \yii\queue\db\Queue::className(),
             'commandClass' => \console\classes\queue\Command::className(),
+            'mutex' => \yii\mutex\MysqlMutex::className(),
+        ],
+        'queueExecutor' => [
+            'class' => \yii\queue\db\Queue::className(),
             'mutex' => \yii\mutex\MysqlMutex::className(),
         ],
     ],
