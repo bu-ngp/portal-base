@@ -24,6 +24,7 @@ $(document).ready(function () {
                 if (matches[1] && matches[4]) {
                     $("#userform-person_username").closest(".form-group.pmd-textfield.pmd-textfield-floating-label").addClass("pmd-textfield-floating-label-completed");
                     $("#userform-person_username").val(matches[1] + matches[4] + (matches[7] || ''));
+                    $("#userform-person_username").trigger('change');
                 }
             }
         }

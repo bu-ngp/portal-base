@@ -68,9 +68,9 @@ class Select2 extends \kartik\select2\Select2
 
     public function init()
     {
+        $this->initConfig();
         /** Если ajax запрос, вернуть json с результатами */
         $this->returnAjaxData();
-        $this->initConfig();
 
         parent::init();
     }
@@ -209,40 +209,24 @@ class Select2 extends \kartik\select2\Select2
 
     protected function returnAjaxData()
     {
-        if (Yii::$app->request->isAjax && Yii::$app->request->get('q')) {
+        if (Yii::$app->request->isAjax && $q = Yii::$app->request->get('q')) {
             Yii::$app->response->clearOutputBuffers();
-            $jsonObj = [];
-
-            $id = $this->filterStringToBinary($_GET['id']);
-            $q = $_GET['q'];
-
+            $resultReturn = [];
             /** @var ActiveQuery $query */
             $query = call_user_func([$this->activeRecordClass, 'find']);
+
             call_user_func($this->queryCallback, $query);
-            $resultReturn = [];
+            call_user_func($this->ajaxConfig['searchAjaxCallback'], $query, $q);
 
-            if ($id) {
-                $result = $query->andWhere([$this->activeRecordAttribute => $id])->asArray()->one();
-
-                $result[$this->activeRecordAttribute] = $this->filterBinaryToString($result[$this->activeRecordAttribute]);
-                $resultString = $this->filterPrimaryKeysAttributes($result);
-                $resultReturn = ['id' => $result[$this->activeRecordAttribute], 'text' => implode(', ', $resultString)];
-
-                $jsonObj = $resultReturn;
-            } elseif ($q) {
-                call_user_func($this->ajaxConfig['searchAjaxCallback'], $query, $q);
-                $result = $query->asArray()->all();
-                /** @var array $row */
-                foreach ($result as $row) {
-                    $row[$this->activeRecordAttribute] = $this->filterBinaryToString($row[$this->activeRecordAttribute]);
-                    $resultString = $this->filterPrimaryKeysAttributes($row);
-                    $resultReturn[] = ['id' => $row[$this->activeRecordAttribute], 'text' => implode(', ', $resultString)];
-                }
-
-                $jsonObj = ['results' => $resultReturn];
+            $result = $query->asArray()->all();
+            /** @var array $row */
+            foreach ($result as $row) {
+                $row[$this->activeRecordAttribute] = $this->filterBinaryToString($row[$this->activeRecordAttribute]);
+                $resultString = $this->filterPrimaryKeysAttributes($row);
+                $resultReturn[] = ['id' => $row[$this->activeRecordAttribute], 'text' => implode(', ', $resultString)];
             }
 
-            exit(json_encode($jsonObj));
+            exit(json_encode(['results' => $resultReturn]));
         }
     }
 
