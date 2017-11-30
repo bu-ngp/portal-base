@@ -145,9 +145,8 @@ class Select2 extends \kartik\select2\Select2
             }
         }
 
-        $this->registerWKAssets1();
         parent::run();
-        $this->registerWKAssets2();
+        $this->registerWKAssets();
     }
 
     protected function selectedAttribute()
@@ -188,23 +187,13 @@ class Select2 extends \kartik\select2\Select2
         return $query;
     }
 
-    protected function registerWKAssets1()
+    protected function registerWKAssets()
     {
         $view = $this->getView();
 
-        //TextFieldAsset::register($view);
-
-    }
-
-    protected function registerWKAssets2()
-    {
-        $view = $this->getView();
-
-        //PropellerSelect2Asset::register($view);
         Select2Asset::register($view);
         $view->registerJs("$('#{$this->options['id']}').wkselect2();");
         PropellerAsset::setWidget(self::className());
-        //TextFieldAsset::assetDepend(self::className());
     }
 
     protected function returnAjaxData()
@@ -262,11 +251,12 @@ class Select2 extends \kartik\select2\Select2
         $attribute = $this->activeRecordAttribute;
         $data = [];
         $this->value = [];
-        $resultQuery = array_map(function ($value) use ($attribute, &$data) {
+        $that = $this;
+        $resultQuery = array_map(function ($value) use ($attribute, &$data, $that) {
             $value[$attribute] = $this->filterBinaryToString($value[$attribute]);
             $resultString = $this->filterPrimaryKeysAttributes($value);
             $data[$value[$attribute]] = implode(', ', $resultString);
-            array_push($this->value, $value[$attribute]);
+            array_push($that->value, $value[$attribute]);
             return $value;
         }, $resultQuery);
 

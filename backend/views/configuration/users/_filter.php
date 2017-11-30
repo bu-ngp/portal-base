@@ -15,7 +15,20 @@ use common\widgets\Tabs\Tabs;
     'items' => [
         [
             'label' => Yii::t('common/person', 'Main'),
-            'content' => $form->field($filterModel, 'person_active_mark')->checkbox(),
+            'content' => Panel::widget([
+                    'label' => 'Пользователь',
+                    'content' => $form->field($filterModel, 'person_active_mark')->checkbox()
+                        . $form->field($filterModel, 'person_parttime_exist_mark')->checkbox()
+                        . $form->field($filterModel, 'person_parttime_not_exist_mark')->checkbox()
+                        . $form->field($filterModel, 'person_roles_exist_mark')->checkbox()
+                        . $form->field($filterModel, 'person_roles_not_exist_mark')->checkbox()
+                    ,
+                ]) . Panel::widget([
+                    'label' => 'Профиль',
+                    'content' => $form->field($filterModel, 'profile_inn_not_exist_mark')->checkbox()
+                        . $form->field($filterModel, 'profile_snils_not_exist_mark')->checkbox()
+                        . $form->field($filterModel, 'profile_dr_not_exist_mark')->checkbox(),
+                ]),
         ],
     ],
 ]) ?>
