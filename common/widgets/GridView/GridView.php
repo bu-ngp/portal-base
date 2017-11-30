@@ -55,6 +55,19 @@ class GridView extends \kartik\grid\GridView
         //  'loadingCssClass' => false,
         // 'options' => ['clientOptions' => ['async' => false]],
     ];
+    public $panelTemplate = <<< HTML
+        <div class="{prefix}{type}">   
+            {panelHeading}
+            {panelBefore}
+             <div class="wk-widget-grid-container">
+                {items}
+                <div class="wk-widget-grid-loading-container"></div>
+             </div>
+             
+            {panelAfter}
+            {panelFooter}   
+        </div>
+HTML;
     public $panelAfterTemplate = <<< HTML
         <div class="btn-toolbar kv-grid-toolbar" role="toolbar" style="display: inline-block;">
             <div class="btn-group">
@@ -217,12 +230,6 @@ HTML;
         }
 
         parent::endPjax();
-    }
-
-    protected function initLayout()
-    {
-        parent::initLayout();
-        $this->layout = strtr($this->layout, ['{items}' => '{items}<div class="wk-widget-grid-loading-container"></div>']);
     }
 
     public function registerJs($script)

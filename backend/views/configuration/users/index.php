@@ -29,10 +29,10 @@ $this->params['breadcrumbs'][] = $this->title;
     GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        /* 'filterDialog' => [
+        'filterDialog' => [
              'filterModel' => $filterModel,
              //    'filterView' => '_filter_old',
-         ],*/
+         ],
         'exportGrid' => [
             'idReportLoader' => 'wk-Report-Loader',
         ],

@@ -40,24 +40,24 @@ class AuthItemFilter extends Model
         ];
     }
 
-    public function filter_authitem_system_roles_mark($alias)
+    public function filter_authitem_system_roles_mark($modelTable, $alias)
     {
         return AuthItem::find()
-            ->andWhere(['name' => new Expression("[[$alias.name]]")])
+            ->andWhere(["$modelTable.name" => new Expression("[[name]]")])
             ->andWhere(['view' => '1']);
     }
 
-    public function filter_authitem_users_roles_mark($alias)
+    public function filter_authitem_users_roles_mark($modelTable, $alias)
     {
         return AuthItem::find()
-            ->andWhere(['name' => new Expression("[[$alias.name]]")])
+            ->andWhere(["$modelTable.name" => new Expression("[[name]]")])
             ->andWhere(['view' => '0']);
     }
 
-    public function filter_authitem_name($alias)
+    public function filter_authitem_name($modelTable, $alias)
     {
         return AuthItem::find()
-            ->andWhere(['name' => new Expression("[[$alias.name]]")])
+            ->andWhere(["$modelTable.name" => new Expression("[[name]]")])
             ->andWhere(['LIKE', 'name', $this->authitem_name]);
     }
 }

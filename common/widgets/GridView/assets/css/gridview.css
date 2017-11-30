@@ -146,7 +146,7 @@ div.wk-filterDialog-content {
 }
 
 /*-/\----Filter----/\-*/
-.kv-grid-container {
+.kv-grid-container, .wk-widget-grid-container {
     position: relative;
 }
 

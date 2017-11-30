@@ -15,6 +15,7 @@ use console\helpers\RbacHelper;
 use domain\forms\base\ProfileForm;
 use domain\forms\base\UserForm;
 use domain\forms\base\UserFormUpdate;
+use domain\models\base\filter\UsersFilter;
 use domain\models\base\search\AllEmployeeSearch;
 use domain\models\base\search\AuthItemSearch;
 use domain\models\base\search\AuthItemUpdateSearch;
@@ -79,12 +80,13 @@ class UsersController extends Controller
         // $filterModel = new AuthItemFilter();
         // $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $searchModel = new UsersSearch();
+        $filterModel = new UsersFilter();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            //    'filterModel' => $filterModel,
+            'filterModel' => $filterModel,
         ]);
     }
 

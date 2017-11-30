@@ -147,15 +147,28 @@ EOT;
 
         $alias = 't' . time();
 
-        $query->alias($alias);
+        // $query->alias($alias);
 
         foreach (array_keys(get_object_vars($filterModel)) as $propertyFilter) {
             $methodFilter = 'filter_' . $propertyFilter;
             if (!empty($filterModel->$propertyFilter) && method_exists($filterModel, $methodFilter)) {
+                /** @var ActiveQuery $subQuery */
+                $subQuery = $filterModel->$methodFilter($this->getTableName($query), $alias);
+                $subQuery->alias($alias);
+
                 $query->andWhere(['exists',
-                    $filterModel->$methodFilter($alias)
+                    $subQuery
                 ]);
             }
         }
+    }
+
+    protected function getTableName(ActiveQuery $query)
+    {
+        if ($query->from) {
+            return is_array($query->from) ? key($query->from) : $query->from;
+        }
+
+        return call_user_func([$query->modelClass, 'tableName']);
     }
 }
