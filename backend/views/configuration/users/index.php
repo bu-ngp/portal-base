@@ -71,7 +71,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'date',
                 'visible' => false,
             ],
-            'profile.profile_pol',
+           // [
+                /*'attribute' =*/ 'profile.profile_pol',
+            //],
             [
                 'attribute' => 'profile.profile_inn',
                 'visible' => false,

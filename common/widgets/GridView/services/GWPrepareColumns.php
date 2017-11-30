@@ -45,7 +45,6 @@ class GWPrepareColumns
                     $this->addTooltip($column);
                     $this->addFilterProperties($column);
                     $this->addValueToSpan($column);
-
                 } else {
                     $this->addFilterProperties($column);
                     $this->addDataColumn($column);
@@ -195,19 +194,24 @@ class GWPrepareColumns
 
     protected function addFilterProperties(&$column)
     {
-        /** @var ActiveRecord $model */
-        $model = $this->gridView->filterModel;
+        /** @var SearchModel $model */
+        $model = $this->gridView->filterModel;//->activeRecord();
         $attribute = isset($column['attribute']) ? $column['attribute'] : $column;
 
         if ((isset($column['class']) && $column['class'] === '\kartik\grid\DataColumn' || is_string($column)) && preg_match('/\./', $attribute)) {
-          //  $a=preg_replace('/(.*)\.(\w+)/', '$1', $attribute);
-            /** @var SearchModel $model */
-           // $a=$model::activeRecord();
-            $model = ArrayHelper::getValue($model , preg_replace('/(.*)\.(\w+)/', '$1', $attribute));
+            $model = $model::activeRecord();
+            $relatedPath = preg_replace('/(.*)\.(\w+)/', '$1', $attribute);
             $attribute = preg_replace('/(.*)\.(\w+)/', '$2', $attribute);
+
+            $relatedArray = explode('.', $relatedPath);
+            array_walk($relatedArray, function ($arString) use (&$model) {
+                /** @var ActiveRecord $model */
+                $relation = $model->getRelation($arString);
+                $model = new $relation->modelClass;
+            });
         }
 
-        if (isset($column['class']) && $column['class'] === '\kartik\grid\DataColumn') {
+        if (is_array($column) && isset($column['class']) && $column['class'] === '\kartik\grid\DataColumn') {
             if (
                 (isset($column['value']) && !is_callable($column['value']) || !isset($column['value']))
                 && method_exists($model, 'itemsValues')
@@ -222,24 +226,21 @@ class GWPrepareColumns
                     return '<span key="' . $value . '">' . (isset($value) ? Html::encode($items[$value]) : '') . '</span>';
                 };
             }
-
-
-            if (is_string($column) && method_exists($model, 'itemsValues') && ($items = $model::itemsValues($column))) {
-                $column = [
-                    'attribute' => $column,
-                    'filter' => $items,
-                    'format' => 'raw',
-                    'value' => function ($model, $key, $index, $column) use ($items) {
-                        /** @var $model ActiveRecord */
-                        $value = ArrayHelper::getValue($model, $column->attribute);
-
-                        return '<span key="' . $value . '">' . (isset($value) ? Html::encode($items[$value]) : '') . '</span>';
-                    },
-                ];
-            }
         }
 
+        if (is_string($column) && method_exists($model, 'itemsValues') && ($items = $model::itemsValues($attribute))) {
+            $column = [
+                'attribute' => $column,
+                'filter' => $items,
+                'format' => 'raw',
+                'value' => function ($model, $key, $index, $column) use ($items) {
+                    /** @var $model ActiveRecord */
+                    $value = ArrayHelper::getValue($model, $column->attribute);
 
+                    return '<span key="' . $value . '">' . (isset($value) ? Html::encode($items[$value]) : '') . '</span>';
+                },
+            ];
+        }
     }
 
     protected function addVisibleProperties(&$column)

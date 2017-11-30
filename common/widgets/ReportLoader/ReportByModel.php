@@ -161,6 +161,7 @@ class ReportByModel
 
                     foreach ($this->columnsFromGrid as $index => $column) {
                         $value = $this->itemsValueExists($ar, $column->attribute);
+                        $value = $this->filterDateTimeValue($value);
                         $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($index + 1, $this->row, $value);
                     }
 
@@ -303,16 +304,17 @@ class ReportByModel
 
     private function itemsValueExists(ActiveRecord $model, $attribute)
     {
+        $modelWithValue = $model;
         if (preg_match('/\./', $attribute)) {
-            $model = ArrayHelper::getValue($model, preg_replace('/(.*)\.(\w+)/', '$1', $attribute));
+            $modelWithValue = ArrayHelper::getValue($model, preg_replace('/(.*)\.(\w+)/', '$1', $attribute));
             $attribute = preg_replace('/(.*)\.(\w+)/', '$2', $attribute);
         }
 
-        if (method_exists($model, 'itemsValues') && $items = $model::itemsValues($attribute)) {
-            return $items[ArrayHelper::getValue($model, $attribute)];
+        if (method_exists($modelWithValue, 'itemsValues') && $items = $modelWithValue::itemsValues($attribute)) {
+            return $items[ArrayHelper::getValue($modelWithValue, $attribute)];
         }
 
-        return ArrayHelper::getValue($model, $attribute);
+        return $modelWithValue->$attribute;
     }
 
     private function widthSetup()
@@ -334,5 +336,11 @@ class ReportByModel
         if ($widthPage > 116) {
             $this->objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
         }
+    }
+
+    protected function filterDateTimeValue($value)
+    {
+        $value = preg_replace('/(\d{4})-(\d{2})-(\d{2})\s(\d{2}):(\d{2}):(\d{2})/', '$3.$2.$1 $5:$6:$7', $value);
+        return preg_replace('/(\d{4})-(\d{2})-(\d{2})/', '$3.$2.$1', $value);
     }
 }
