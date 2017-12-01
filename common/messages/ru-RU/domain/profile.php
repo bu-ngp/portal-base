@@ -17,11 +17,14 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Dr Not Exist' => 'Отсутствует дата рождения',
+    'INN Not Exist' => 'Отсутствует ИНН',
+    'SNILS Not Exist' => 'Отсутствует СНИЛС',
+    'INN required 12 digits' => 'ИНН должен содержать 12 знаков',
     'Profile Address' => 'Адрес',
     'Profile Dr' => 'Дата рождения',
     'Profile ID' => 'ИД Пользователя',
     'Profile Inn' => 'ИНН',
     'Profile Pol' => 'Пол',
     'Profile Snils' => 'СНИЛС',
-    'INN required 12 digits' => 'ИНН должен содержать 12 знаков',
 ];

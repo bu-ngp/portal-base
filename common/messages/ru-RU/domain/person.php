@@ -17,18 +17,22 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Active Users' => 'Работающие сотрудники',
+    'Parttime Exist' => 'Имеется совмещение',
+    'Parttime Not Exist' => 'Отсутсвует совмещение',
     'Person Auth Key' => '',
+    'Person Password Hash' => '',
+    'Roles Exist' => 'Имеются роли',
+    'Roles Not Exist' => 'Отсутствуют роли',
+    'Password very short. Need minimum 6 characters.' => 'Пароль должен содержать не менее 6 символов.',
     'Person Code' => 'Код',
     'Person Email' => 'Электронная почта',
     'Person Fired' => 'Дата увольнения',
     'Person Fullname' => 'Фамилия Имя Отчество',
     'Person Hired' => 'Дата приема на работу',
     'Person ID' => 'ИД Пользователя',
-    'Person Password Hash' => '',
-    'Person Username' => 'Логин',
-    'Person is saved. Add speciality.' => 'Пользователь сохранен. Добавьте специальность.',
-    'Password very short. Need minimum 6 characters.' => 'Пароль должен содержать не менее 6 символов.',
     'Person Password' => 'Пароль',
     'Person Password Repeat' => 'Повторите ввод пароля',
+    'Person Username' => 'Логин',
     'Person not found.' => 'Пользователь не найден',
 ];

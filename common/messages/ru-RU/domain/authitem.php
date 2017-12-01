@@ -18,15 +18,14 @@
  */
 return [
     'Data' => '',
-    'Ldap Group' => 'Имя группы LDAP',
     'Rule Name' => '',
-    'Additional' => 'Дополнительные',
+    'Deleting error. Remove Role Fail.' => 'Ошибка удаления. Неудачная попытка удаления роли.',
     'Description' => 'Наименование',
+    'Ldap Group' => 'Имя группы LDAP',
     'Name' => 'Идентификатор',
     'Role Name' => 'Имя роли',
     'System Roles Only' => 'Только системные роли',
     'Type' => 'Тип',
     'Users Roles Only' => 'Только пользовательские роли',
     'View' => 'Вид',
-    'Deleting error. Remove Role Fail.' => 'Ошибка удаления. Неудачная попытка удаления роли.',
 ];

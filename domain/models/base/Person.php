@@ -131,7 +131,7 @@ class Person extends \yii\db\ActiveRecord implements LdapModelInterface
      */
     public function getAuthAssignments()
     {
-        return $this->hasMany(AuthAssignment::className(), ['user_id' => 'person_id'])->from(['authAssignments' => Employee::tableName()]);
+        return $this->hasMany(AuthAssignment::className(), ['user_id' => 'person_id'])->from(['authAssignments' => AuthAssignment::tableName()]);
     }
 
     /**
