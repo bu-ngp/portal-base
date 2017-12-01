@@ -17,6 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'LDAP settings' => 'Настройки LDAP',
+    'Update Ldap Settings' => 'Настройки LDAP',
+    'Users of system' => 'Пользователи системы',
     'LDAP can\'t connect' => 'Не удалось подключиться к контроллеру домена',
     'Ldap config not correct' => 'Некорректные настройки LDAP',
 ];

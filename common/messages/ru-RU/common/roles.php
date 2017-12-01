@@ -17,5 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Create Auth Item' => 'Добавить роль',
+    'Main' => 'Основные',
+    'Roles' => 'Роли',
     'Need add roles' => 'Необходимо добавить роли',
 ];

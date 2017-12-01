@@ -10,11 +10,13 @@
  * template configuration file with detailed description for each parameter.
  */
 return [
-    'sourcePath' => '@app/..',
+    'sourcePath' => '@common/..',
     'messagePath' => 'common/messages',
     'languages' => ['ru-RU'],
     'except' => [
         '/*/',
+        '!backend/',
+        'backend/modules/doh',
         '!common/',
         '!domain/',
         '.svn',

@@ -17,6 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Additional' => 'Дополнительные',
     'Data' => '',
     'Rule Name' => '',
     'Deleting error. Remove Role Fail.' => 'Ошибка удаления. Неудачная попытка удаления роли.',
