@@ -99,6 +99,9 @@ return [
             // this is the name of the session cookie used for login
             'name' => 'wk-portal',
         ],
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+        ],
         'i18n' => [
             'translations' => [
                 'common*' => [

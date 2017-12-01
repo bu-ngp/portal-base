@@ -98,7 +98,6 @@ class EmployeeProccessLoader extends ProcessLoader
         $this->employeeService = new ProxyService(Yii::$container->get('domain\services\base\EmployeeHistoryService'), false);
         $this->parttimeService = new ProxyService(Yii::$container->get('domain\services\base\ParttimeService'), false);
         $this->transactionManager = Yii::$container->get('domain\services\TransactionManager');
-
         parent::__construct($config);
     }
 
@@ -111,7 +110,7 @@ class EmployeeProccessLoader extends ProcessLoader
         $chunkFilter = new ChunkReadFilter();
         $objReader->setReadFilter($chunkFilter);
         $objReader->setReadDataOnly(true);
-
+        throw new \Exception('Niggas Error');
         while ($this->executing) {
             $chunkFilter->setRows($this->startRow, self::CHUNK_SIZE);
             $objPHPExcel = $objReader->load($this->importFilePath);

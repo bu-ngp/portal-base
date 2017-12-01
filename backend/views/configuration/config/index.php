@@ -19,6 +19,13 @@ $this->title = Yii::t('common/config', 'Portal configuration');
                 'link' => Yii::$app->urlManager->createUrl(['configuration/config-auth']),
                 'roles' => [RbacHelper::ROLE_EDIT, RbacHelper::USER_EDIT],
             ],
+            [
+                'styleClass' => CardList::RED_STYLE,
+                'icon' => 'fa fa-list-alt',
+                'title' => Yii::t('common/config', 'Common'),
+                'link' => Yii::$app->urlManager->createUrl(['configuration/config-common']),
+                'roles' => [RbacHelper::ADMINISTRATOR],
+            ],
         ],
     ]) ?>
 </div>

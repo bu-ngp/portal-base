@@ -8,14 +8,18 @@
 
 namespace doh\services\classes;
 
+use doh\events\ProccessErrorEvent;
 use doh\services\models\DohFiles;
 use doh\services\models\Handler;
 use doh\services\models\HandlerFiles;
-use yii\base\BaseObject;
+use Yii;
+use yii\base\Component;
 use yii\queue\JobInterface;
 
-abstract class ProcessLoader extends BaseObject implements JobInterface
+abstract class ProcessLoader extends Component implements JobInterface
 {
+    const EVENT_PROCCESS_ERROR = 'processError';
+
     public $description = 'Process Loader';
     public $handler_id;
 
@@ -39,6 +43,7 @@ abstract class ProcessLoader extends BaseObject implements JobInterface
                 return;
             }
             $this->error($e->getMessage());
+            $this->trigger(self::EVENT_PROCCESS_ERROR, Yii::createObject(['class' => ProccessErrorEvent::className(), 'exception' => $e]));
             return;
         }
 

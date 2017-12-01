@@ -17,8 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Common' => 'Общие настройки портала',
-    'Authorization' => 'Авторизация',
-    'Portal configuration' => 'Настройки портала',
-    'Spravochniki' => 'Справочники',
+    'Config Common ID' => '',
+    'Config Common Mail Administrators' => 'Электронные адреса администраторов',
+    'Config Common Portal Mail' => 'Электронный адрес портала',
 ];
