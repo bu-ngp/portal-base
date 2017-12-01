@@ -11,11 +11,11 @@ namespace doh\events;
 
 use yii\base\Event;
 
-class ProccessErrorEvent extends Event
+class ProccessCancelEvent extends Event
 {
     public $handlerAt;
     public $handlerDescription;
+    public $handlerDoneTime;
+    public $handlerUsedMemory;
     public $handlerPercent;
-    /** @var \Exception */
-    public $exception;
 }

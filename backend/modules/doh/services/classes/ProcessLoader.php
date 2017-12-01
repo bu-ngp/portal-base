@@ -8,7 +8,10 @@
 
 namespace doh\services\classes;
 
+use doh\events\ProccessCancelEvent;
+use doh\events\ProccessCompleteEvent;
 use doh\events\ProccessErrorEvent;
+use doh\events\ProccessSuccessEvent;
 use doh\services\models\DohFiles;
 use doh\services\models\Handler;
 use doh\services\models\HandlerFiles;
@@ -19,6 +22,9 @@ use yii\queue\JobInterface;
 abstract class ProcessLoader extends Component implements JobInterface
 {
     const EVENT_PROCCESS_ERROR = 'processError';
+    const EVENT_PROCCESS_CANCEL = 'processCancel';
+    const EVENT_PROCCESS_SUCCESS = 'processSuccess';
+    const EVENT_PROCCESS_COMPLETE = 'processComplete';
 
     public $description = 'Process Loader';
     public $handler_id;
@@ -37,17 +43,56 @@ abstract class ProcessLoader extends Component implements JobInterface
         $this->begin();
         try {
             $this->body();
+            $this->trigger(self::EVENT_PROCCESS_SUCCESS, Yii::createObject([
+                'class' => ProccessSuccessEvent::className(),
+                'handlerAt' => $this->_handler->handler_at,
+                'handlerDescription' => $this->_handler->handler_description,
+                'handlerDoneTime' => $this->_handler->handler_done_time,
+                'handlerUsedMemory' => $this->_handler->handler_used_memory,
+                'handlerShortReport' => $this->_handler->handler_short_report,
+                'handlerFiles' => array_map(function ($dohFile) {
+                    /** @var $dohFile DohFiles */
+                    return $dohFile->file_path;
+                }, $this->_handler->dohFiles),
+            ]));
         } catch (\Exception $e) {
             if ($e instanceof CancelException) {
                 $this->cancel();
+                $this->trigger(self::EVENT_PROCCESS_CANCEL, Yii::createObject([
+                    'class' => ProccessCancelEvent::className(),
+                    'handlerAt' => $this->_handler->handler_at,
+                    'handlerDescription' => $this->_handler->handler_description,
+                    'handlerDoneTime' => $this->_handler->handler_done_time,
+                    'handlerUsedMemory' => $this->_handler->handler_used_memory,
+                    'handlerPercent' => $this->_handler->handler_percent,
+                ]));
                 return;
             }
             $this->error($e->getMessage());
-            $this->trigger(self::EVENT_PROCCESS_ERROR, Yii::createObject(['class' => ProccessErrorEvent::className(), 'exception' => $e]));
+            $this->trigger(self::EVENT_PROCCESS_ERROR, Yii::createObject([
+                'class' => ProccessErrorEvent::className(),
+                'handlerAt' => $this->_handler->handler_at,
+                'handlerDescription' => $this->_handler->handler_description,
+                'handlerPercent' => $this->_handler->handler_percent,
+                'exception' => $e,
+            ]));
             return;
         }
 
         $this->end();
+        $this->trigger(self::EVENT_PROCCESS_ERROR, Yii::createObject([
+            'class' => ProccessCompleteEvent::className(),
+            'handlerAt' => $this->_handler->handler_at,
+            'handlerDescription' => $this->_handler->handler_description,
+            'handlerDoneTime' => $this->_handler->handler_done_time,
+            'handlerPercent' => $this->_handler->handler_percent,
+            'handlerUsedMemory' => $this->_handler->handler_used_memory,
+            'handlerShortReport' => $this->_handler->handler_short_report,
+            'handlerFiles' => array_map(function ($dohFile) {
+                /** @var $dohFile DohFiles */
+                return $dohFile->file_path;
+            }, $this->_handler->dohFiles),
+        ]));
     }
 
     public function addPercentComplete($percent)

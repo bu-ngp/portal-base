@@ -110,7 +110,7 @@ class EmployeeProccessLoader extends ProcessLoader
         $chunkFilter = new ChunkReadFilter();
         $objReader->setReadFilter($chunkFilter);
         $objReader->setReadDataOnly(true);
-        throw new \Exception('Niggas Error');
+
         while ($this->executing) {
             $chunkFilter->setRows($this->startRow, self::CHUNK_SIZE);
             $objPHPExcel = $objReader->load($this->importFilePath);
