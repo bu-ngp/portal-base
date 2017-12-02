@@ -57,7 +57,7 @@ class ThumbnailFilterValidator extends Validator
         if ($pathThumb) {
             preg_match('/\/(\d+-)\d+x\d+(\.\w+)$/', $pathThumb, $matches);
 
-            $resolutions = ['290x170', '145x85'];
+            $resolutions = ['330x190', '165x95'];
             $path = $this->path;
 
             array_walk($resolutions, function ($resolution) use ($matches, $path) {

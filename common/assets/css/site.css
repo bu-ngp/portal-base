@@ -1,3 +1,13 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto/Roboto-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Roboto Light';
+    src: url('../fonts/Roboto/Roboto-Light.ttf') format('truetype');
+}
+
 html,
 body {
     display: table;
@@ -8,10 +18,6 @@ body {
 .wrapper {
     display: table-row;
     height: 100%;
-}
-
-.container {
-
 }
 
 .container > .wrap {
@@ -25,7 +31,7 @@ body {
 }
 
 .footer > .container-footer {
-    border-top: 1px solid #ddd;
+    /*border-top: 1px solid #ddd;*/
     padding-top: 20px;
     height: 60px;
     min-height: 30px; /* real browsers */
@@ -178,7 +184,7 @@ div.wk-widget-input-prepend-icon > span {
     min-width: 50px;
 }
 
-.pmd-tabs+.pmd-card-body {
+.pmd-tabs + .pmd-card-body {
     margin-top: 10px;
 }
 
@@ -201,3 +207,153 @@ div.wk-widget-input-prepend-icon > span {
 .dropdown-menu > li > a {
     text-align: left;
 }
+
+/* Style \/ */
+
+body {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e0c3fc+0,8ec5fc+100 */
+    background: #8ec5fc; /* Old browsers */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e0c3fc', endColorstr='#8ec5fc', GradientType=0); /* IE6-9 */
+    background: -moz-linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+
+.navbar-inverse {
+    background-color: rgb(241, 239, 255);
+    border-color: transparent;
+    box-shadow: none;
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 0.05em;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-inverse .btn-link, .navbar-inverse .navbar-nav > li > a {
+    color: #9cb3e5;
+}
+
+.container > .wrap {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.footer {
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.08);
+}
+
+/* ------- CardList ------- */
+
+.pmd-card {
+    background-color: rgba(255, 255, 255, 0.49);
+    box-shadow: none;
+}
+
+h2.pmd-card-title-text {
+    font-family: 'Roboto', sans-serif;
+    color: #9eb0d5;
+    font-size: 2rem;
+}
+
+.pmd-card-subtitle-text {
+    font-family: 'Roboto Light', sans-serif;
+    color: #64718b;
+}
+
+div.pmd-card {
+    border-radius: 0;
+}
+
+.wk-widget-masonry-container {
+    box-shadow: none;
+}
+
+.pmd-card-actions {
+    padding: 0;
+}
+
+.pmd-card-actions .btn.pmd-btn-flat {
+    margin: 0;
+    font-family: 'Roboto Light', sans-serif;
+    background-color: rgba(210, 219, 255, 0.5);
+    font-size: 1.2em;
+    color: rgb(184, 190, 225);
+    letter-spacing: 0.1em;
+}
+
+div.pmd-card-media, div.pmd-card-media > img {
+    margin: 0;
+    border-radius: 0;
+    border: none;
+}
+
+div.pmd-card-media > i, .wk-widget-search-panel-icon > i {
+    text-shadow: rgba(0, 0, 0, 0.02) 3px 6px 3px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+div.pmd-card-media.wk-blue-style, div.pmd-card-media > img.wk-blue-style {
+    background-color: transparent;
+    border-bottom: solid rgba(122, 169, 255, 0.4) 5px;
+}
+
+div.pmd-card-media.wk-red-style, div.pmd-card-media > img.wk-red-style {
+    background-color: transparent;
+    border-bottom: solid rgba(255, 107, 115, 0.4) 5px;
+}
+
+div.pmd-card-media.wk-yellow-style, div.pmd-card-media > img.wk-yellow-style {
+    background-color: transparent;
+    border-bottom: solid rgba(249, 250, 147, 0.4) 5px;
+}
+
+div.pmd-card-media.wk-green-style, div.pmd-card-media > img.wk-green-style {
+    background-color: transparent;
+    border-bottom: solid rgba(166, 231, 158, 0.4) 5px;
+}
+
+div.pmd-card-media.wk-grey-style, div.pmd-card-media > img.wk-grey-style {
+    background-color: transparent;
+    border-bottom: solid rgba(185, 183, 184, 0.4) 5px;
+}
+
+.pmd-card-title-text {
+    max-height: inherit;
+    overflow: inherit;
+}
+
+.wk-widget-search-panel {
+    box-shadow: 0px 2px 7px 0px #00000014;
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.wk-widget-search-panel-field > div > label {
+    color: #9eb0d5;
+    font-size: 2rem;
+    padding-left: 10px;
+    font-family: 'Roboto Light', sans-serif;
+}
+
+.wk-widget-search-panel-field > div > input.form-control {
+    color: #bebed9;
+    background-color: rgba(255, 255, 255, 0.4);
+    font-family: 'Roboto', sans-serif;
+    padding-left: 10px;
+    box-shadow: inset 0px 2px 4px 0 rgba(0, 0, 0, 0.05);
+}
+
+.wk-widget-search-panel-field > div > input.form-control::selection {
+    background-color: #9696bc;
+}
+
+.wk-widget-search-panel-field > div > input.form-control::-moz-selection {
+    background-color: #9696bc;
+}
+
+.pmd-textfield-floating-label.pmd-textfield-floating-label-completed label {
+    color: #bcc5e5;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* ------- CardList ------- */
+
+/* Style /\ */

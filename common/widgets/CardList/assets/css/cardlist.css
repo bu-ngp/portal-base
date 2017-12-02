@@ -22,11 +22,6 @@ div.pmd-card {
 
 div.pmd-card-media.wk-red-style {
     background-color: #ffb2b2;
-    background: #ef7375;
-    background: -moz-radial-gradient(center, ellipse cover, #ef7375 0%, #8e525f 44%, #6b2a38 100%);
-    background: -webkit-radial-gradient(center, ellipse cover, #ef7375 0%, #8e525f 44%, #6b2a38 100%);
-    background: radial-gradient(ellipse at center, #e47779 0%, #e86985 44%, #6b2a38 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ef7375', endColorstr='#6b2a38', GradientType=1);
 }
 
 div.pmd-card-media.wk-blue-style {

@@ -56,9 +56,6 @@ $this->title = Yii::t('ngp/tiles', 'Create Tiles');
             'hideSearch' => true,
             'wkkeep' => true,
             // 'wkicon' => FA::_WINDOW_RESTORE,
-            'pluginEvents' => [
-                "change" => "function() { changeIconColor($(this).val()); }",
-            ],
         ]) ?>
 
         <?= $form->field($modelForm, 'tiles_name')->textInput(['wkkeep' => true]) ?>

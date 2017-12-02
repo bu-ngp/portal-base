@@ -55,8 +55,8 @@ class TilesForm extends Model
         return array_merge(TilesRules::client(), [
             [['tiles_thumbnail_x', 'tiles_thumbnail_x2', 'tiles_thumbnail_y', 'tiles_thumbnail_y2', 'tiles_thumbnail_w', 'tiles_thumbnail_h'], 'safe'],
             [['tiles_thumbnail_x', 'tiles_thumbnail_y'], 'default', 'value' => 0],
-            [['tiles_thumbnail_w'], 'default', 'value' => 290],
-            [['tiles_thumbnail_h'], 'default', 'value' => 170],
+            [['tiles_thumbnail_w'], 'default', 'value' => 330],
+            [['tiles_thumbnail_h'], 'default', 'value' => 190],
             [['imageFile'], 'file', 'extensions' => ['jpg', 'png']],
             [['imageFile'], ThumbnailFilterValidator::className(),
                 'widthAttribute' => 'tiles_thumbnail_w',
@@ -67,8 +67,8 @@ class TilesForm extends Model
                 'web' => Yii::getAlias('@web/thumbs'),
                 'thumbnailAttribute' => 'tiles_thumbnail',
                 'to' => [
-                    [290, 170],
-                    [145, 85],
+                    [330, 190],
+                    [165, 95],
                 ],
             ],
         ]);

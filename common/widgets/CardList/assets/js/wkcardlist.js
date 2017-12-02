@@ -90,12 +90,11 @@
 
     var makeMedia = function (contentObj) {
         var preview = '';
-        var styleWidgetMedia = '';
+        var styleWidgetMedia = contentObj.styleClass;
         if (("preview" in contentObj) && typeof contentObj.preview === "string" && contentObj.preview !== '') {
             preview = '<img class="img-responsive" src="' + contentObj.preview + '">';
         } else {
             preview = '<i class="' + contentObj.icon + ' wk-style"></i>';
-            styleWidgetMedia = contentObj.styleClass;
         }
 
         return $('<div class="pmd-card-media ' + styleWidgetMedia + '">' +
@@ -117,7 +116,7 @@
     var makeActions = function ($widget, contentObj) {
         var newWindow = ("linkNewWindow" in contentObj) && contentObj.linkNewWindow === true ? ' target="_blank"' : '';
         return $('<div class="pmd-card-actions">' +
-            '<a href="' + contentObj.link + '" class="btn pmd-btn-flat pmd-ripple-effect btn-primary"' + newWindow + '>' +
+            '<a href="' + contentObj.link + '" class="btn btn-block pmd-btn-flat pmd-ripple-effect btn-primary"' + newWindow + '>' +
             $widget.data('wkcardlist').settings.messages.followLinkMessage +
             '</a>' +
             '</div>');

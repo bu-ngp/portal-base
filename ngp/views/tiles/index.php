@@ -27,7 +27,7 @@ $this->title = Yii::t('ngp/tiles', 'Tiles');
                 'value' => function ($model) {
                     if ($model->tiles_thumbnail) {
                         preg_match('/(.*)-\d+x\d+(\.\w+)$/', $model->tiles_thumbnail, $thumb);
-                        return Html::img($thumb[1] . '-145x85' . $thumb[2]);
+                        return Html::img($thumb[1] . '-165x95' . $thumb[2]);
                     } else {
                         $icon = '<i class="' . $model->tiles_icon . '"></i>' ?: FA::icon(FA::_WINDOW_MAXIMIZE);
                         $color = $model->tiles_icon_color ?: CardList::GREY_STYLE;

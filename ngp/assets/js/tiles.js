@@ -89,7 +89,7 @@ function readURL(input) {
             jcrop_init = $.Jcrop('.wk-tiles-crop', {
                 onChange: showCoords,
                 onSelect: showCoords,
-                aspectRatio: 290 / 170,
+                aspectRatio: 330 / 190,
                 boxWidth: 866
                 //minSize: [310,190]
             });

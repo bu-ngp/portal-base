@@ -12,12 +12,12 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use common\assets\AppCommonAsset;
 
-if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
+/*if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
     $this->beginContent('@app/views/layouts/assets.php');
     $this->endContent();
 } else {
     AppCommonAsset::register($this);
-}
+}*/
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -37,7 +37,7 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
     <div class="container">
         <?php
         NavBar::begin([
-            'brandLabel' => 'My Company',
+            'brandLabel' => '',
             'brandUrl' => Yii::$app->homeUrl,
             'options' => [
                 'class' => 'navbar navbar-inverse navbar-fixed-top pmd-navbar pmd-z-depth',
@@ -117,6 +117,7 @@ if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
 <?php
     PropellerAsset::setWidget('yii\bootstrap\NavBar');
     PropellerAsset::register($this);
+    AppCommonAsset::register($this);
     $this->endBody()
 ?>
 </body>
