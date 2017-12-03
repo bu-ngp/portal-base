@@ -104,9 +104,8 @@ use common\assets\AppCommonAsset;
 </div>
 <footer class="footer">
     <div class="container-footer">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <p>&copy; My Company <?= date('Y') ?></p>
+        <p>Author Portal</p>
     </div>
 </footer>
 <?= ReportLoader::widget(['id' => 'wk-Report-Loader']) ?>
