@@ -637,7 +637,7 @@ ul.breadcrumb li {
     height: 40px; /* total height */
     list-style-type: none;
     padding: 10px 5px 5px 30px; /* padding around text, last should include arrow width */
-    border-right: 3px solid rgba(255, 255, 255, 0.3); /* width: gap between arrows, color: background of document */
+    border-right: 6px solid #d3d6fd; /* width: gap between arrows, color: background of document */
     position: relative;
     margin-top: 5px;
     text-align: center;
@@ -679,6 +679,10 @@ ul.breadcrumb a {
     color: #a2a1e4;
     text-decoration: none;
     transition: color 0.5s;
+}
+
+ul.breadcrumb li:first-child a {
+    font-family: 'Roboto', sans-serif;
 }
 
 ul.breadcrumb li:not(:last-child):hover > a {
