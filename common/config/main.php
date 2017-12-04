@@ -142,6 +142,9 @@ return [
             'class' => \yii\queue\db\Queue::className(),
             'mutex' => \yii\mutex\MysqlMutex::className(),
         ],
+        'config' => [
+            'class' => \domain\services\ConfigComponent::className(),
+        ],
     ],
     'modules' => [
         'noty' => [

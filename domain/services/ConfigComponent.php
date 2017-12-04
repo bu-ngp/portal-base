@@ -1,47 +1,33 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: VOVANCHO
- * Date: 14.05.2017
- * Time: 11:17
+ * User: sysadmin
+ * Date: 04.12.2017
+ * Time: 9:08
  */
 
-namespace domain\forms\base;
+namespace domain\services;
+
 
 use domain\models\base\ConfigCommon;
-use domain\rules\base\ConfigCommonRules;
-use yii\base\Model;
+use yii\base\Component;
 
-class ConfigCommonUpdateForm extends Model
+class ConfigComponent extends Component
 {
     public $config_common_portal_mail;
     public $config_common_mail_administrators;
     public $config_common_footer_company;
     public $config_common_footer_addition;
 
-    public function __construct(ConfigCommon $configCommon, $config = [])
+    public function __construct($config = [])
     {
+        $configCommon = ConfigCommon::findOne(1);
+
         $this->config_common_portal_mail = $configCommon->config_common_portal_mail;
         $this->config_common_mail_administrators = $configCommon->config_common_mail_administrators;
         $this->config_common_footer_company = $configCommon->config_common_footer_company;
         $this->config_common_footer_addition = $configCommon->config_common_footer_addition;
 
         parent::__construct($config);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return ConfigCommonRules::client();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return (new ConfigCommon)->attributeLabels();
     }
 }

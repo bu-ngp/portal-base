@@ -22,6 +22,11 @@ $this->title = Yii::t('common/config-common', 'Common Settings');
             'content' => $this->render('_mail_config', ['form' => $form, 'modelForm' => $modelForm])
         ]) ?>
 
+        <?= \common\widgets\Panel\Panel::widget([
+            'label' => Yii::t('common/config-common', 'Footer Config'),
+            'content' => $this->render('_footer_config', ['form' => $form, 'modelForm' => $modelForm])
+        ]) ?>
+
         <div class="form-group">
             <?= Html::submitButton(Yii::t('common', 'Update'), ['class' => 'btn btn-primary']) ?>
         </div>

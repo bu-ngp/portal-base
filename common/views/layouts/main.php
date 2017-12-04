@@ -1,6 +1,7 @@
 <?php
 
 /* @var $this \yii\web\View */
+
 /* @var $content string */
 
 use common\widgets\Breadcrumbs\Breadcrumbs;
@@ -97,15 +98,18 @@ use common\assets\AppCommonAsset;
         ?>
 
         <div class="wrap">
-            <?= Breadcrumbs::widget() ?>
+            <?php $a = $this->context->id === "site" && $this->context->action->id === "login" ?>
+            <?php //$this->context->id === "site" && $this->context->action->id === "login" ?  $a2=Breadcrumbs::root() : null ?>
+            <?= ''//Breadcrumbs::widget() ?>
             <?= $content ?>
         </div>
     </div>
 </div>
 <footer class="footer">
     <div class="container-footer">
-        <p>&copy; My Company <?= date('Y') ?></p>
-        <p>Author Portal</p>
+        <p>
+            &copy; <?= Yii::$app->get('config')->config_common_footer_company ?: 'My Company' ?> <?= date('Y') ?></p>
+        <p> <?= Yii::$app->get('config')->config_common_footer_addition ?: 'Author Portal' ?></p>
     </div>
 </footer>
 <?= ReportLoader::widget(['id' => 'wk-Report-Loader']) ?>
@@ -114,10 +118,10 @@ use common\assets\AppCommonAsset;
 ]) ?>
 
 <?php
-    PropellerAsset::setWidget('yii\bootstrap\NavBar');
-    PropellerAsset::register($this);
-    AppCommonAsset::register($this);
-    $this->endBody()
+PropellerAsset::setWidget('yii\bootstrap\NavBar');
+PropellerAsset::register($this);
+AppCommonAsset::register($this);
+$this->endBody()
 ?>
 </body>
 </html>

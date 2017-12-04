@@ -13,6 +13,8 @@ class m171201_082438_configCommon extends Migration
             'config_common_id' => $this->primaryKey()->unsigned(),
             'config_common_portal_mail' => $this->string(),
             'config_common_mail_administrators' => $this->string(),
+            'config_common_footer_company' => $this->string(),
+            'config_common_footer_addition' => $this->string(),
         ]);
 
         $this->insert('{{%config_common}}', []);

@@ -12,6 +12,8 @@ use Yii;
  * @property string $config_common_portal_id
  * @property string $config_common_portal_mail
  * @property string $config_common_mail_administrators
+ * @property string config_common_footer_company
+ * @property string config_common_footer_addition
  */
 class ConfigCommon extends \yii\db\ActiveRecord
 {
@@ -40,6 +42,8 @@ class ConfigCommon extends \yii\db\ActiveRecord
             'config_common_id' => Yii::t('domain/config-common', 'Config Common ID'),
             'config_common_portal_mail' => Yii::t('domain/config-common', 'Config Common Portal Mail'),
             'config_common_mail_administrators' => Yii::t('domain/config-common', 'Config Common Mail Administrators'),
+            'config_common_footer_company' => Yii::t('domain/config-common', 'Config Common Footer Company'),
+            'config_common_footer_addition' => Yii::t('domain/config-common', 'Config Common Footer Addition'),
         ];
     }
 
@@ -47,5 +51,7 @@ class ConfigCommon extends \yii\db\ActiveRecord
     {
         $this->config_common_portal_mail = $form->config_common_portal_mail;
         $this->config_common_mail_administrators = $form->config_common_mail_administrators;
+        $this->config_common_footer_company = $form->config_common_footer_company;
+        $this->config_common_footer_addition = $form->config_common_footer_addition;
     }
 }

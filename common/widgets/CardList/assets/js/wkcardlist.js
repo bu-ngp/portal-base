@@ -190,7 +190,7 @@
 
     var makeScrollPager = function ($widget, scrollHandler) {
         $widget.data('wkcardlist').pager = $('<div id="' + $widget[0].id + '-scroll-pager" class="wk-widget-pager" style="display: none;">' +
-            '<i class="fa fa-refresh fa-4x fa-spin"></i>' +
+            '<div class="wk-pager-loading"></div>' +
             '</div>').insertAfter($widget.data('wkcardlist').$masonryContainer);
 
         $widget.data('wkcardlist').currentPage = 1;

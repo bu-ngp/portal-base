@@ -18,6 +18,7 @@ div.pmd-card-media > img {
 
 div.pmd-card {
     border-radius: 20px;
+    padding: 0;
 }
 
 div.pmd-card-media.wk-red-style {
@@ -58,6 +59,7 @@ div.pmd-card-media.wk-grey-style {
     color: #717171;
     text-align: center;
     margin-top: 20px;
+    height: 40px;
 }
 
 .pmd-card-subtitle-text {
@@ -102,4 +104,13 @@ div.pmd-card-media.wk-grey-style {
 
 .wk-widget-card .pmd-card-media {
     min-height: 190px;
+}
+
+.wk-pager-loading {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0) url("../svg/bars.svg") center center no-repeat;
+    width: 100px;
+    height: 40px;
+    position: absolute;
+    margin-left: -50px;
 }

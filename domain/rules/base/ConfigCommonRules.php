@@ -16,7 +16,7 @@ class ConfigCommonRules
         return
             [
                 [['config_common_portal_mail'], 'email'],
-                [['config_common_mail_administrators'], 'string', 'max' => 255],
+                [['config_common_mail_administrators', 'config_common_footer_company', 'config_common_footer_addition'], 'string', 'max' => 255],
             ];
     }
 }

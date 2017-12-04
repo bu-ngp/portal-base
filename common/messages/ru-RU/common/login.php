@@ -17,7 +17,10 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Footer Config' => 'Конфигурация подвала портала',
-    'Common Settings' => 'Общие настройки портала',
-    'Mail Config' => 'Настройка рассылки',
+    'Enter to close part of Portal' => 'Вход в закрытую часть портала',
+    'Login' => 'Войти',
+    'Login Page' => 'Вход на портал',
+    'Password' => 'Пароль',
+    'Remember Me' => 'Запомнить',
+    'Username' => 'Пользователь',
 ];

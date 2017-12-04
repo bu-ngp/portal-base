@@ -339,7 +339,7 @@ h2.pmd-card-title-text {
 }
 
 /*.wk-widget-card > .pmd-card:active h2.pmd-card-title-text {*/
-    /*color: #5c77ae;*/
+/*color: #5c77ae;*/
 /*}*/
 
 .pmd-card-subtitle-text {
@@ -429,29 +429,29 @@ div.pmd-card-media.wk-red-style, div.pmd-card-media > img.wk-red-style {
 }
 
 /*div.pmd-card-media.wk-red-style:before {*/
-    /*position: absolute;*/
-    /*bottom: 0;*/
-    /*left: 0;*/
-    /*right: 0;*/
-    /*height: 5px;*/
-    /*content: '';*/
-    /*background-image: radial-gradient(rgba(255, 107, 115, 0.4) 0%, rgba(255, 107, 115, 0.4) 70%, rgba(255, 107, 115, 0.4) 100%);*/
+/*position: absolute;*/
+/*bottom: 0;*/
+/*left: 0;*/
+/*right: 0;*/
+/*height: 5px;*/
+/*content: '';*/
+/*background-image: radial-gradient(rgba(255, 107, 115, 0.4) 0%, rgba(255, 107, 115, 0.4) 70%, rgba(255, 107, 115, 0.4) 100%);*/
 /*}*/
 
 /*div.pmd-card-media.wk-red-style:after {*/
-    /*position: absolute;*/
-    /*bottom: 0;*/
-    /*left: 0;*/
-    /*right: 0;*/
-    /*height: 5px;*/
-    /*content: '';*/
-    /*background-image: radial-gradient(rgba(255, 0, 14, 0.79) 0%, rgba(192, 192, 192, 0.71) 100%);*/
-    /*transition: opacity 0.3s;*/
-    /*opacity: 0;*/
+/*position: absolute;*/
+/*bottom: 0;*/
+/*left: 0;*/
+/*right: 0;*/
+/*height: 5px;*/
+/*content: '';*/
+/*background-image: radial-gradient(rgba(255, 0, 14, 0.79) 0%, rgba(192, 192, 192, 0.71) 100%);*/
+/*transition: opacity 0.3s;*/
+/*opacity: 0;*/
 /*}*/
 
 /*.wk-widget-card > .pmd-card:active div.pmd-card-media.wk-red-style:after {*/
-    /*opacity: 1;*/
+/*opacity: 1;*/
 /*}*/
 
 div.pmd-card-media.wk-yellow-style, div.pmd-card-media > img.wk-yellow-style {
@@ -526,5 +526,94 @@ div.pmd-card-media.wk-grey-style, div.pmd-card-media > img.wk-grey-style {
 }
 
 /* ------- CardList ------- */
+
+/* ------- LoginForm ------- */
+
+.site-login > div.row:nth-child(:first-child) {
+    margin-top: 100px;
+}
+
+.wk-login-container {
+    background-color: rgba(255, 255, 255, 0.3);
+    padding: 0;
+}
+
+.wk-login-container-logo {
+    background-color: rgba(255, 255, 255, 0.3);
+    text-align: center;
+}
+
+.wk-login-container-logo > i {
+    font-size: 160px;
+    text-shadow: rgba(0, 0, 0, 0.02) 3px 6px 3px;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 20px 0 0 0;
+}
+
+.wk-login-container-logo > p {
+    color: #8095b3;
+}
+
+.wk-login-container .pmd-textfield, .field-loginform-rememberme, .wk-login-container input.form-control, .form-group-lg.pmd-textfield-floating-label label {
+    padding: 0 15px;
+}
+
+.form-group-lg.pmd-textfield-floating-label label {
+    font-family: 'Roboto Light', sans-serif;
+    letter-spacing: 0.02em;
+}
+
+.wk-login-container input.form-control {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.wk-login-container div.form-group:last-child {
+    margin: 0;
+}
+
+.wk-login-container div.form-group:last-child > button {
+    background-color: rgba(255, 255, 255, 0.3);
+    color: #bebed9;
+    height: 80px;
+    -webkit-transition: background-color 0.5s, color 0.5s;
+    -moz-transition: background-color 0.5s, color 0.5s;
+    -ms-transition: background-color 0.5s, color 0.5s;
+    -o-transition: background-color 0.5s, color 0.5s;
+    transition: background-color 0.5s, color 0.5s;
+}
+
+.wk-login-container div.form-group:last-child > button:hover {
+    background-color: #342c66;
+    color: #d1deff;
+}
+
+.wk-login-container div.form-group:last-child > button:active {
+    background-color: rgb(183, 190, 235);
+    color: #d1deff;
+}
+
+.wk-login-container {
+    font-family: 'Roboto', sans-serif;
+}
+
+.pmd-switch label input[type="checkbox"]:checked + .pmd-switch-label, .togglebutton-default label input[type="checkbox"]:checked + .pmd-switch-label {
+    background-color: rgb(195, 208, 232);
+}
+
+.pmd-switch label input[type="checkbox"]:checked + .pmd-switch-label::after, .togglebutton-default label input[type="checkbox"]:checked + .pmd-switch-label::after {
+    background-color: rgb(153, 183, 241);
+    box-shadow: 0 1px 1px 0px rgba(0, 0, 0, 0.4);
+}
+
+.field-loginform-rememberme .control-label {
+    color: #555;
+    letter-spacing: 0.05em;
+}
+
+.wk-login-container div.form-group.pmd-textfield.required > label.control-label:after {
+    content: '';
+}
+
+/* ------- LoginForm ------- */
 
 /* Style /\ */
