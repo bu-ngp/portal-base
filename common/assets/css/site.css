@@ -625,29 +625,36 @@ ul.breadcrumb {
     overflow: hidden;
 }
 
+ul.breadcrumb li:first-child {
+    border-top-left-radius: 50px;
+}
+
 ul.breadcrumb li {
     float: left;
     margin-left: 0;
-    width: 150px; /* 100 / number of steps */
-    height: 70px; /* total height */
+    width: auto; /* 100 / number of steps */
+    min-width: 100px;
+    height: 40px; /* total height */
     list-style-type: none;
-    padding: 5px 5px 5px 30px; /* padding around text, last should include arrow width */
+    padding: 10px 5px 5px 30px; /* padding around text, last should include arrow width */
     border-right: 3px solid rgba(255, 255, 255, 0.3); /* width: gap between arrows, color: background of document */
     position: relative;
+    margin-top: 5px;
+    text-align: center;
 }
 
 ul.breadcrumb li:first-child {
-    padding-left: 5px;
+    padding-left: 30px;
 }
 
 ul.breadcrumb li:nth-child(n+2)::before {
     position: absolute;
-    top:0;
-    left:0;
+    top: 0;
+    left: 0;
     display: block;
-    border-left: 25px solid #d3d6fd; /* width: arrow width, color: background of document */
-    border-top: 40px solid transparent; /* width: half height */
-    border-bottom: 40px solid transparent; /* width: half height */
+    border-left: 25px solid #ddd5fd; /* width: arrow width, color: background of document */
+    border-top: 20px solid transparent; /* width: half height */
+    border-bottom: 20px solid transparent; /* width: half height */
     width: 0;
     height: 0;
     content: " ";
@@ -660,39 +667,83 @@ ul.breadcrumb li::after {
     right: -25px; /* arrow width (negated) */
     display: block;
     border-left: 25px solid #d3d6fd; /* width: arrow width */
-    border-top: 40px solid transparent; /* width: half height */
-    border-bottom: 40px solid transparent; /* width: half height */
-    width:0;
-    height:0;
+    border-top: 20px solid transparent; /* width: half height */
+    border-bottom: 20px solid transparent; /* width: half height */
+    width: 0;
+    height: 0;
     content: " ";
 }
 
 ul.breadcrumb a {
     text-align: center;
-    color: #d3d6fd;
+    color: #a2a1e4;
     text-decoration: none;
+    transition: color 0.5s;
+}
+
+ul.breadcrumb li:not(:last-child):hover > a {
+    color: #d0d0f7;
+}
+
+ul.breadcrumb li:not(:last-child):active > a {
+    color: #d5d6fd;
 }
 
 /* Completed */
-ul.breadcrumb li { background-color: #89A8FF; }
-ul.breadcrumb li::after { border-left-color: #89A8FF; }
+ul.breadcrumb li {
+    background-color: #e3e3fb;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    transition: border-left-color 0.5s, background-color 0.5s;
+}
+
+ul.breadcrumb li::after {
+    border-left-color: #e3e3fb;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    transition: border-left-color 0.5s, background-color 0.5s;
+}
 
 /* Current */
-ul.breadcrumb li.current { background-color: #89A8FF; }
-ul.breadcrumb li.current::after { border-left-color: #89A8FF; }
+ul.breadcrumb li.active {
+    background-color: #5d5498;
+}
 
-/* Following */
-ul.breadcrumb li.current ~ li { background-color: #89A8FF; }
-ul.breadcrumb li.current ~ li::after { border-left-color: #89A8FF; }
+ul.breadcrumb li.active::after {
+    border-left-color: #5d5498;
+}
 
 /* Hover for completed and current */
-ul.breadcrumb li:hover {background-color: #696}
-ul.breadcrumb li:hover::after {border-left-color: #696}
+ul.breadcrumb li:not(:last-child):hover {
+    background-color: #837bb7;
+}
+
+ul.breadcrumb li:not(:last-child):hover::after {
+    border-left-color: #837bb7;
+
+}
+
+/* Hover for completed and current */
+ul.breadcrumb li:not(:last-child):active {
+    background-color: #5d5498;
+}
+
+ul.breadcrumb li:not(:last-child):active::after {
+    border-left-color: #5d5498;
+
+}
 
 ul.breadcrumb li.active {
-    color: #3146b3;
+    color: #d5d6fd;
     font-family: 'Roboto', sans-serif;
     letter-spacing: 0.01em;
+    border-right: 0;
 }
 
 .breadcrumb > li + li:before {
