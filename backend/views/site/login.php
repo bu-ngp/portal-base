@@ -32,7 +32,7 @@ $this->title = Yii::t('common/login', 'Login Page');
 
             <?= $form->field($model, 'rememberMe')->toggleSwitch() ?>
 
-            <div class="form-group">
+            <div class="form-group wk-login-button">
                 <?= Html::submitButton(Yii::t('common/login', 'Login'), ['class' => 'btn btn-block btn-lg', 'name' => 'login-button']) ?>
             </div>
 

@@ -567,11 +567,11 @@ div.pmd-card-media.wk-grey-style, div.pmd-card-media > img.wk-grey-style {
     background-color: rgba(255, 255, 255, 0.3);
 }
 
-.wk-login-container div.form-group:last-child {
+.wk-login-button {
     margin: 0;
 }
 
-.wk-login-container div.form-group:last-child > button {
+.wk-login-button > button {
     background-color: rgba(255, 255, 255, 0.3);
     color: #bebed9;
     height: 80px;
@@ -582,12 +582,12 @@ div.pmd-card-media.wk-grey-style, div.pmd-card-media > img.wk-grey-style {
     transition: background-color 0.5s, color 0.5s;
 }
 
-.wk-login-container div.form-group:last-child > button:hover {
+.wk-login-button > button:hover {
     background-color: #342c66;
     color: #d1deff;
 }
 
-.wk-login-container div.form-group:last-child > button:active {
+.wk-login-button > .btn:active {
     background-color: rgb(183, 190, 235);
     color: #d1deff;
 }
@@ -615,5 +615,92 @@ div.pmd-card-media.wk-grey-style, div.pmd-card-media > img.wk-grey-style {
 }
 
 /* ------- LoginForm ------- */
+
+ul.breadcrumb {
+    background-color: transparent;
+    font-family: 'Roboto Light', sans-serif;
+    letter-spacing: 0.03em;
+    margin: 20px 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+ul.breadcrumb li {
+    float: left;
+    margin-left: 0;
+    width: 150px; /* 100 / number of steps */
+    height: 70px; /* total height */
+    list-style-type: none;
+    padding: 5px 5px 5px 30px; /* padding around text, last should include arrow width */
+    border-right: 3px solid rgba(255, 255, 255, 0.3); /* width: gap between arrows, color: background of document */
+    position: relative;
+}
+
+ul.breadcrumb li:first-child {
+    padding-left: 5px;
+}
+
+ul.breadcrumb li:nth-child(n+2)::before {
+    position: absolute;
+    top:0;
+    left:0;
+    display: block;
+    border-left: 25px solid #d3d6fd; /* width: arrow width, color: background of document */
+    border-top: 40px solid transparent; /* width: half height */
+    border-bottom: 40px solid transparent; /* width: half height */
+    width: 0;
+    height: 0;
+    content: " ";
+}
+
+ul.breadcrumb li::after {
+    z-index: 1; /* need to bring this above the next item */
+    position: absolute;
+    top: 0;
+    right: -25px; /* arrow width (negated) */
+    display: block;
+    border-left: 25px solid #d3d6fd; /* width: arrow width */
+    border-top: 40px solid transparent; /* width: half height */
+    border-bottom: 40px solid transparent; /* width: half height */
+    width:0;
+    height:0;
+    content: " ";
+}
+
+ul.breadcrumb a {
+    text-align: center;
+    color: #d3d6fd;
+    text-decoration: none;
+}
+
+/* Completed */
+ul.breadcrumb li { background-color: #89A8FF; }
+ul.breadcrumb li::after { border-left-color: #89A8FF; }
+
+/* Current */
+ul.breadcrumb li.current { background-color: #89A8FF; }
+ul.breadcrumb li.current::after { border-left-color: #89A8FF; }
+
+/* Following */
+ul.breadcrumb li.current ~ li { background-color: #89A8FF; }
+ul.breadcrumb li.current ~ li::after { border-left-color: #89A8FF; }
+
+/* Hover for completed and current */
+ul.breadcrumb li:hover {background-color: #696}
+ul.breadcrumb li:hover::after {border-left-color: #696}
+
+ul.breadcrumb li.active {
+    color: #3146b3;
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 0.01em;
+}
+
+.breadcrumb > li + li:before {
+    content: "";
+}
+
+/* ------- Breadcrumbs ------- */
+
+/* ------- Breadcrumbs ------- */
 
 /* Style /\ */
