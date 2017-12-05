@@ -1,6 +1,7 @@
 <?php
 
 use common\widgets\ActiveForm\ActiveForm;
+use common\widgets\Breadcrumbs\Breadcrumbs;
 use ngp\assets\OfomsAsset;
 use ngp\helpers\RbacHelper;
 use rmrevin\yii\fontawesome\FA;
@@ -12,8 +13,8 @@ use yii\bootstrap\Modal;
 /* @var $searchModel \ngp\services\models\search\OfomsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
+Breadcrumbs::root();
 $this->title = Yii::t('ngp/ofoms', 'Ofoms search');
-$this->params['breadcrumbs'][] = $this->title;
 ?>
     <div class="ofoms-index">
 

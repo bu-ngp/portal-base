@@ -11,7 +11,6 @@ use yii\bootstrap\Html;
 /* @var $gridExcludeIdsFunc Closure */
 
 $this->title = Yii::t('common/roles', 'Roles');
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="auth-item-index">
 

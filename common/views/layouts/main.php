@@ -98,8 +98,7 @@ use common\assets\AppCommonAsset;
         ?>
 
         <div class="wrap">
-            <?php $a = $this->context->id === "site" && $this->context->action->id === "login" ?>
-            <?php //$this->context->id === "site" && $this->context->action->id === "login" ?  $a2=Breadcrumbs::root() : null ?>
+            <?php $this->context->id === "site" && $this->context->action->id === "login" ? Breadcrumbs::hide() : null ?>
             <?= Breadcrumbs::widget() ?>
             <?= $content ?>
         </div>

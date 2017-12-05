@@ -1,5 +1,6 @@
 <?php
 
+use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\CardList\CardList;
 use ngp\assets\TilesAsset;
 use yii\bootstrap\Html;
@@ -10,6 +11,7 @@ use common\widgets\GridView\GridView;
 /* @var $searchModel ngp\services\models\search\TilesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
+Breadcrumbs::root();
 $this->title = Yii::t('ngp/tiles', 'Tiles');
 ?>
 <div class="tiles-index">

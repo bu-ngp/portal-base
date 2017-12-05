@@ -12,7 +12,6 @@ use yii\helpers\Html;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('common/roles', 'Roles');
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="auth-item-index">
 

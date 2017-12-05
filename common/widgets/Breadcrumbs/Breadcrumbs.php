@@ -20,6 +20,7 @@ class Breadcrumbs extends Widget
     public static $show;
     public $defaultShow = true;
     public static $cookieId = 'wk_breadcrumb';
+    /** @var bool Устанавливает хлебную крошку в начало пути */
     public static $root = false;
     public $id;
 
@@ -105,8 +106,21 @@ class Breadcrumbs extends Widget
         }
     }
 
+    /**
+     * Устанавливает хлебную крошку в начало пути, например Главная / Настройки
+     */
     public static function root()
     {
         self::$root = true;
+    }
+
+    public static function show()
+    {
+        self::$show = true;
+    }
+
+    public static function hide()
+    {
+        self::$show = false;
     }
 }

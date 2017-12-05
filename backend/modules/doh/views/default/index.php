@@ -14,8 +14,6 @@ use yii\helpers\Url;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('doh', 'Handlers');
-$this->params['breadcrumbs'][] = $this->title;
-
 $handler_statuses = Handler::itemsValues('handler_status');
 ?>
     <div class="handler-index">

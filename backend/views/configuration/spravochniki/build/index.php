@@ -11,7 +11,6 @@ use common\widgets\GridView\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('common/build', 'Builds');
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="build-index">
 
