@@ -1,9 +1,9 @@
 <?php
 
 use common\widgets\ActiveForm\ActiveForm;
+use common\widgets\Html\Html;
 use common\widgets\Panel\Panel;
 use common\widgets\Tabs\Tabs;
-use yii\bootstrap\Html;
 
 /* @var $this yii\web\View */
 /* @var $modelUserForm domain\forms\base\UserForm */
@@ -57,8 +57,8 @@ $this->title = Yii::t('common/person', 'Create User');
             ],
         ]) ?>
 
-        <div class="form-group">
-            <?= Html::submitButton(Yii::t('common', 'Next'), ['class' => 'btn btn-primary', 'form' => $modelUserForm->formName()]) ?>
+        <div class="form-group toolbox-form-group">
+            <?= Html::nextButton(['form' => $modelUserForm->formName()]) ?>
         </div>
 
     </div>

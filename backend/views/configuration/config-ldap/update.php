@@ -1,8 +1,8 @@
 <?php
 
+use common\widgets\Html\Html;
 use domain\forms\base\RoleUpdateForm;
 use rmrevin\yii\fontawesome\FA;
-use yii\helpers\Html;
 use common\widgets\ActiveForm\ActiveForm;
 
 /* @var $this yii\web\View */
@@ -29,8 +29,8 @@ $this->title = Yii::t('common/config-ldap', 'Update Ldap Settings');
 
         <?= $form->field($modelForm, 'config_ldap_active')->toggleSwitch(['wkkeep' => true]) ?>
 
-        <div class="form-group">
-            <?= Html::submitButton(Yii::t('common', 'Update'), ['class' => 'btn btn-primary']) ?>
+        <div class="form-group toolbox-form-group">
+            <?= Html::updateButton() ?>
         </div>
 
         <?php ActiveForm::end(); ?>

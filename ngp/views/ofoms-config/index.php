@@ -2,8 +2,8 @@
 
 use ngp\services\forms\ConfigOfomsUpdateForm;
 use rmrevin\yii\fontawesome\FA;
-use yii\helpers\Html;
 use common\widgets\ActiveForm\ActiveForm;
+use common\widgets\Html\Html;
 
 /* @var $this yii\web\View */
 /* @var $modelForm ConfigOfomsUpdateForm */
@@ -29,8 +29,8 @@ $this->title = Yii::t('ngp/config-ofoms', 'Update Ofoms Settings');
 
         <?= $form->field($modelForm, 'config_ofoms_active')->toggleSwitch(['wkkeep' => true]) ?>
 
-        <div class="form-group">
-            <?= Html::submitButton(Yii::t('common', 'Update'), ['class' => 'btn btn-primary']) ?>
+        <div class="form-group toolbox-form-group">
+            <?= Html::updateButton() ?>
         </div>
 
         <?php ActiveForm::end(); ?>

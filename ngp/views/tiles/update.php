@@ -1,11 +1,11 @@
 <?php
 
+use common\widgets\Html\Html;
 use common\widgets\Panel\Panel;
 use common\widgets\Tabs\Tabs;
 use ngp\assets\JcropAsset;
 use ngp\assets\TilesAsset;
 use ngp\services\models\Tiles;
-use yii\bootstrap\Html;
 use common\widgets\ActiveForm\ActiveForm;
 use yii\bootstrap\Modal;
 
@@ -63,8 +63,8 @@ $this->title = Yii::t('ngp/tiles', 'Update Tiles');
 
         <?= $form->field($modelForm, 'tiles_keywords')->textInput(['wkkeep' => true]) ?>
 
-        <div class="form-group">
-            <?= Html::submitButton(Yii::t('common', 'Update'), ['class' => 'btn btn-primary']) ?>
+        <div class="form-group toolbox-form-group">
+            <?= Html::updateButton() ?>
         </div>
 
         <?php ActiveForm::end(); ?>

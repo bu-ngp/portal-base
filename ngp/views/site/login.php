@@ -4,7 +4,7 @@
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $LoginForm \domain\forms\base\LoginForm */
 
-use yii\helpers\Html;
+use common\widgets\Html\Html;
 use yii\bootstrap\ActiveForm;
 
 $this->title = 'Login';

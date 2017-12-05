@@ -1,9 +1,9 @@
 <?php
 
+use common\widgets\Html\Html;
 use domain\forms\base\RoleUpdateForm;
 use domain\models\base\AuthItem;
 use domain\models\base\AuthItemChild;
-use yii\helpers\Html;
 use common\widgets\ActiveForm\ActiveForm;
 
 /* @var $this yii\web\View */
@@ -62,8 +62,8 @@ $this->title = $modelForm->description;
             ],
         ]) ?>
 
-        <div class="form-group">
-            <?= Html::submitButton(Yii::t('common', 'Update'), ['class' => 'btn btn-primary', 'form' => $modelForm->formName()]) ?>
+        <div class="form-group toolbox-form-group">
+            <?= Html::updateButton(['form' => $modelForm->formName()]) ?>
         </div>
 
     </div>

@@ -1,11 +1,9 @@
 <?php
 
 use common\widgets\ActiveForm\ActiveForm;
-use common\widgets\Breadcrumbs\Breadcrumbs;
+use common\widgets\Html\Html;
 use common\widgets\Panel\Panel;
 use common\widgets\Tabs\Tabs;
-use wartron\yii2uuid\helpers\Uuid;
-use yii\bootstrap\Html;
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */
@@ -100,8 +98,8 @@ $this->title = Yii::t('common/person', $modelUserFormUpdate->person_fullname);
             ],
         ]) ?>
 
-        <div class="form-group">
-            <?= Html::submitButton(Yii::t('common', 'Update'), ['class' => 'btn btn-primary', 'form' => $modelUserFormUpdate->formName()]) ?>
+        <div class="form-group toolbox-form-group">
+            <?= Html::updateButton(['form' => $modelUserFormUpdate->formName()]) ?>
         </div>
 
         <?php

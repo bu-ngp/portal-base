@@ -1,7 +1,7 @@
 <?php
 
-use yii\helpers\Html;
 use common\widgets\ActiveForm\ActiveForm;
+use common\widgets\Html\Html;
 
 /* @var $this yii\web\View */
 /* @var $modelForm domain\forms\base\DolzhForm */
@@ -18,8 +18,8 @@ $this->title = Yii::t('common/dolzh', 'Create Dolzh');
 
         <?= $form->field($modelForm, 'dolzh_name')->textInput(['maxlength' => true, 'wkkeep' => true]) ?>
 
-        <div class="form-group">
-            <?= Html::submitButton(Yii::t('common', 'Create'), ['class' => 'btn btn-success']) ?>
+        <div class="form-group toolbox-form-group">
+            <?= Html::createButton() ?>
         </div>
 
         <?php ActiveForm::end(); ?>

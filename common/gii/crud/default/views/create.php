@@ -9,7 +9,7 @@ use yii\helpers\StringHelper;
 echo "<?php\n";
 ?>
 
-use yii\bootstrap\Html;
+use common\widgets\Html\Html;
 use common\widgets\ActiveForm\ActiveForm;
 
 /* @var $this yii\web\View */
@@ -38,8 +38,8 @@ $this->title = <?= $generator->generateString('Create ' . Inflector::camel2words
                 echo "<?= " . preg_replace('/\(\$model/','($modelForm',$generator->generateActiveField($attribute))  . " ?>\n\n";
             }
         } ?>
-        <div class="form-group">
-            <?= "<?= " ?>Html::submitButton(Yii::t('common', 'Create'), ['class' => 'btn btn-success']) ?>
+        <div class="form-group toolbox-form-group">
+            <?= "<?= " ?>Html::createButton() ?>
         </div>
 
         <?= "<?php " ?>ActiveForm::end(); ?>

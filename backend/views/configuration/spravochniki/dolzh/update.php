@@ -1,7 +1,7 @@
 <?php
 
 use common\widgets\ActiveForm\ActiveForm;
-use yii\helpers\Html;
+use common\widgets\Html\Html;
 
 /* @var $this yii\web\View */
 /* @var $modelForm domain\forms\base\DolzhForm */
@@ -18,8 +18,8 @@ $this->title = $modelForm->dolzh_name;
 
         <?= $form->field($modelForm, 'dolzh_name')->textInput(['maxlength' => true, 'wkkeep' => true]) ?>
 
-        <div class="form-group">
-            <?= Html::submitButton(Yii::t('common', 'Update'), ['class' => 'btn btn-primary']) ?>
+        <div class="form-group toolbox-form-group">
+            <?= Html::updateButton() ?>
         </div>
 
         <?php ActiveForm::end(); ?>

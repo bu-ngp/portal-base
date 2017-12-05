@@ -1,7 +1,8 @@
 <?php
 
-use yii\helpers\Html;
+
 use common\widgets\ActiveForm\ActiveForm;
+use common\widgets\Html\Html;
 
 /* @var $this yii\web\View */
 /* @var $modelForm domain\models\base\AuthItem */
@@ -43,8 +44,8 @@ $this->title = Yii::t('common/roles', 'Create Auth Item');
             ],
         ]) ?>
 
-        <div class="form-group">
-            <?= Html::submitButton(Yii::t('common', 'Create'), ['class' => 'btn btn-success', 'form' => $modelForm->formName()]) ?>
+        <div class="form-group toolbox-form-group">
+            <?= Html::createButton(['form' => $modelForm->formName()]) ?>
         </div>
 
     </div>

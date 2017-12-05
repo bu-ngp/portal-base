@@ -1,9 +1,9 @@
 <?php
 
+use common\widgets\Html\Html;
 use domain\models\base\Person;
 use ngp\services\queries\VrachQuery;
 use rmrevin\yii\fontawesome\FA;
-use yii\bootstrap\Html;
 use common\widgets\ActiveForm\ActiveForm;
 
 /* @var $this yii\web\View */
@@ -36,8 +36,8 @@ $this->title = $modelForm->fam . ' ' . $modelForm->im . ' ' . $modelForm->ot;
             'selectionGridUrl' => Yii::$app->get('urlManagerAdmin')->createUrl(['users/index']),
         ]) ?>
 
-        <div class="form-group">
-            <?= Html::submitButton(Yii::t('ngp/ofoms', 'Attach'), ['class' => 'btn btn-primary']) ?>
+        <div class="form-group toolbox-form-group">
+            <?= Html::updateButton([], Yii::t('ngp/ofoms', 'Attach')) ?>
         </div>
 
         <?php ActiveForm::end(); ?>

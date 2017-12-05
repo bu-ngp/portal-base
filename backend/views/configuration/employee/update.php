@@ -2,9 +2,9 @@
 
 use common\widgets\ActiveForm\ActiveForm;
 use common\widgets\GridView\GridView;
+use common\widgets\Html\Html;
 use common\widgets\Panel\Panel;
 use rmrevin\yii\fontawesome\FA;
-use yii\bootstrap\Html;
 
 /* @var $this yii\web\View */
 /* @var $modelForm domain\forms\base\EmployeeHistoryForm */
@@ -49,8 +49,8 @@ $this->title = \domain\models\base\EmployeeHistory::findOne(Yii::$app->request->
         ]);
         ?>
 
-        <div class="form-group">
-            <?= Html::submitButton(Yii::t('common', 'Update'), ['class' => 'btn btn-primary', 'form' => $modelForm->formName()]) ?>
+        <div class="form-group toolbox-form-group">
+            <?= Html::updateButton(['form' => $modelForm->formName()]) ?>
         </div>
 
     </div>

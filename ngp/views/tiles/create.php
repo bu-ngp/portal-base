@@ -1,16 +1,14 @@
 <?php
 
+use common\widgets\Html\Html;
 use common\widgets\Panel\Panel;
 use common\widgets\Tabs\Tabs;
-use domain\models\base\Podraz;
 use ngp\assets\JcropAsset;
 use ngp\assets\TilesAsset;
 use ngp\services\models\Tiles;
-use yii\bootstrap\Html;
 use common\widgets\ActiveForm\ActiveForm;
 use yii\bootstrap\Modal;
 use budyaga\cropper\Widget;
-use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $modelForm ngp\services\forms\TilesForm */
@@ -66,8 +64,8 @@ $this->title = Yii::t('ngp/tiles', 'Create Tiles');
 
         <?= $form->field($modelForm, 'tiles_keywords')->textInput(['wkkeep' => true]) ?>
 
-        <div class="form-group">
-            <?= Html::submitButton(Yii::t('common', 'Create'), ['class' => 'btn btn-success']) ?>
+        <div class="form-group toolbox-form-group">
+            <?= Html::createButton() ?>
         </div>
 
         <?php ActiveForm::end(); ?>

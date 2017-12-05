@@ -1,7 +1,7 @@
 <?php
 
-use yii\helpers\Html;
 use common\widgets\ActiveForm\ActiveForm;
+use common\widgets\Html\Html;
 
 /* @var $this yii\web\View */
 /* @var $modelForm domain\forms\base\BuildForm */
@@ -17,8 +17,8 @@ $this->title = $modelForm->build_name;
 
         <?= $form->field($modelForm, 'build_name')->textInput(['wkkeep' => true, 'maxlength' => true]) ?>
 
-        <div class="form-group">
-            <?= Html::submitButton(Yii::t('common', 'Update'), ['class' => 'btn btn-primary']) ?>
+        <div class="form-group toolbox-form-group">
+            <?= Html::createButton() ?>
         </div>
 
         <?php ActiveForm::end(); ?>

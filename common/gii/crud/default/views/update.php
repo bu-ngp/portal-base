@@ -11,7 +11,7 @@ $urlParams = $generator->generateUrlParams();
 echo "<?php\n";
 ?>
 
-use yii\bootstrap\Html;
+use common\widgets\Html\Html;
 use common\widgets\ActiveForm\ActiveForm;
 
 /* @var $this yii\web\View */
@@ -42,8 +42,8 @@ $this->title = Yii::t('<?= $generator->messageCategory ?>', 'Update "{modelClass
                 echo "<?= " . preg_replace('/\(\$model/','($modelForm',$generator->generateActiveField($attribute)) . " ?>\n\n";
             }
         } ?>
-        <div class="form-group">
-            <?= "<?= " ?>Html::submitButton(Yii::t('common', 'Update'), ['class' => 'btn btn-primary']) ?>
+        <div class="form-group toolbox-form-group">
+            <?= "<?= " ?>Html::updateButton() ?>
         </div>
 
         <?= "<?php " ?>ActiveForm::end(); ?>

@@ -13,6 +13,7 @@ body {
     display: table;
     height: 100%;
     width: 100%;
+    font-family: 'Roboto', sans-serif;
 }
 
 .wrapper {
@@ -157,7 +158,7 @@ a.desc:after {
 }
 
 .pmd-input-group-label {
-    padding-left: 45px;
+    padding-left: 55px;
 }
 
 div.form-group.pmd-textfield.required > label.control-label:after,
@@ -503,8 +504,9 @@ div.pmd-card-media.wk-grey-style, div.pmd-card-media > img.wk-grey-style {
 }
 
 .pmd-textfield-floating-label.pmd-textfield-floating-label-completed label {
-    color: #bcc5e5;
-    font-family: 'Roboto', sans-serif;
+    color: #726ba0;
+    font-family: 'Roboto Light', sans-serif;
+    letter-spacing: 0.01em;
 }
 
 .wk-widget-card > .pmd-card .wk-style {
@@ -601,7 +603,7 @@ div.pmd-card-media.wk-grey-style, div.pmd-card-media > img.wk-grey-style {
 }
 
 .pmd-switch label input[type="checkbox"]:checked + .pmd-switch-label::after, .togglebutton-default label input[type="checkbox"]:checked + .pmd-switch-label::after {
-    background-color: rgb(153, 183, 241);
+    background-color: #726ba0;
     box-shadow: 0 1px 1px 0px rgba(0, 0, 0, 0.4);
 }
 
@@ -615,6 +617,8 @@ div.pmd-card-media.wk-grey-style, div.pmd-card-media > img.wk-grey-style {
 }
 
 /* ------- LoginForm ------- */
+
+/* ------- Breadcrumbs ------- */
 
 ul.breadcrumb {
     background-color: transparent;
@@ -636,11 +640,16 @@ ul.breadcrumb li {
     min-width: 100px;
     height: 40px; /* total height */
     list-style-type: none;
-    padding: 10px 5px 5px 30px; /* padding around text, last should include arrow width */
+    padding: 0 5px 0 30px; /* padding around text, last should include arrow width */
     border-right: 6px solid #d3d6fd; /* width: gap between arrows, color: background of document */
     position: relative;
     margin-top: 5px;
     text-align: center;
+}
+
+ul.breadcrumb li:last-child {
+    padding: 10px 5px 5px 30px;
+    cursor: default;
 }
 
 ul.breadcrumb li:first-child {
@@ -679,6 +688,9 @@ ul.breadcrumb a {
     color: #a2a1e4;
     text-decoration: none;
     transition: color 0.5s;
+    height: 100%;
+    padding-top: 10px;
+    display: block;
 }
 
 ul.breadcrumb li:first-child a {
@@ -717,6 +729,10 @@ ul.breadcrumb li::after {
 /* Current */
 ul.breadcrumb li.active {
     background-color: #5d5498;
+    color: #d5d6fd;
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 0.01em;
+    border-right: 0;
 }
 
 ul.breadcrumb li.active::after {
@@ -740,14 +756,6 @@ ul.breadcrumb li:not(:last-child):active {
 
 ul.breadcrumb li:not(:last-child):active::after {
     border-left-color: #5d5498;
-
-}
-
-ul.breadcrumb li.active {
-    color: #d5d6fd;
-    font-family: 'Roboto', sans-serif;
-    letter-spacing: 0.01em;
-    border-right: 0;
 }
 
 .breadcrumb > li + li:before {
@@ -756,6 +764,72 @@ ul.breadcrumb li.active {
 
 /* ------- Breadcrumbs ------- */
 
-/* ------- Breadcrumbs ------- */
+/* ------- Forms ------- */
+
+div.wrap > div:not(.wkbc-breadcrumb):not(div .wk-widget-container) {
+    background-color: rgba(255, 255, 255, 0.3);
+    padding: 10px;
+}
+
+div.wrap > div:not(.wkbc-breadcrumb) > h1 {
+    color: #726ba0;
+    background-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 1px 2px 1px rgba(0, 0, 0, 0.1);
+    font-size: 20px;
+    padding: 20px 10px;
+}
+
+div.wrap > div:not(.wkbc-breadcrumb) > div:not(.wk-widget-container):not(.modal-dialog) {
+    background-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 1px 2px 1px rgba(0, 0, 0, 0.1);
+    padding: 20px 10px;
+}
+
+.pmd-textfield .input-group .form-control {
+    padding: 5px 10px;
+    background-color: rgba(255, 255, 255, 0.3);
+    color: #726ba0;
+}
+
+.input-group i {
+    color: #726ba0;
+}
+
+.pmd-textfield-floating-label label {
+    transform: translateY(33px);
+    -webkit-transform: translateY(33px);
+    -ms-transform: translateY(33px);
+}
+
+.pmd-textfield label {
+    color: #a6acc5;
+    font-family: 'Roboto Light', sans-serif;
+    letter-spacing: 0.01em;
+}
+
+div.wrap > div:not(.wkbc-breadcrumb) .panel {
+    background-color: transparent;
+}
+
+div.wrap > div:not(.wkbc-breadcrumb) .panel-body {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+div.wrap > div:not(.wkbc-breadcrumb) .panel-heading {
+    color: #cfd6fd;
+    background-color: #726ba0;
+}
+
+.panel {
+    box-shadow: none;
+    border: none;
+}
+
+.toolbox-form-group {
+    background-color: rgba(255, 255, 255, 0.3);
+    padding: 10px 20px;
+}
+
+/* ------- Forms ------- */
 
 /* Style /\ */

@@ -2,10 +2,9 @@
 
 use common\widgets\ActiveForm\ActiveForm;
 use common\widgets\GridView\GridView;
+use common\widgets\Html\Html;
 use common\widgets\Panel\Panel;
-use common\widgets\Tabs\Tabs;
 use rmrevin\yii\fontawesome\FA;
-use yii\bootstrap\Html;
 
 /* @var $this yii\web\View */
 /* @var $modelForm domain\forms\base\ParttimeForm */
@@ -50,8 +49,8 @@ $this->title = Yii::t('common/employee', 'Create Parttime');
             ],
         ]) ?>
 
-        <div class="form-group">
-            <?= Html::submitButton(Yii::t('common', 'Create'), ['class' => 'btn btn-success', 'form' => $modelForm->formName()]) ?>
+        <div class="form-group toolbox-form-group">
+            <?= Html::createButton(['form' => $modelForm->formName()]) ?>
         </div>
 
     </div>

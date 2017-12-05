@@ -1,8 +1,7 @@
 <?php
 
+use common\widgets\Html\Html;
 use ngp\assets\OfomsAsset;
-use rmrevin\yii\fontawesome\FA;
-use yii\bootstrap\Html;
 use common\widgets\ActiveForm\ActiveForm;
 
 /* @var $this yii\web\View */
@@ -26,8 +25,8 @@ $this->title = Yii::t('ngp/ofoms', 'Attach with list');
                 </div>
             </div>
 
-            <div class="form-group">
-                <?= Html::submitButton(Yii::t('ngp/ofoms', 'Attach'), ['class' => 'btn btn-primary', 'form' => 'test']) ?>
+            <div class="form-group toolbox-form-group">
+                <?= Html::updateButton(['form' => 'test'], Yii::t('ngp/ofoms', 'Attach')) ?>
             </div>
 
             <?php ActiveForm::end(); ?>

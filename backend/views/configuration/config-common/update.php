@@ -1,7 +1,8 @@
 <?php
 
-use yii\helpers\Html;
+
 use common\widgets\ActiveForm\ActiveForm;
+use common\widgets\Html\Html;
 
 /* @var $this yii\web\View */
 /* @var $modelForm \domain\forms\base\ConfigCommonUpdateForm */
@@ -27,8 +28,8 @@ $this->title = Yii::t('common/config-common', 'Common Settings');
             'content' => $this->render('_footer_config', ['form' => $form, 'modelForm' => $modelForm])
         ]) ?>
 
-        <div class="form-group">
-            <?= Html::submitButton(Yii::t('common', 'Update'), ['class' => 'btn btn-primary']) ?>
+        <div class="form-group toolbox-form-group">
+            <?= Html::updateButton() ?>
         </div>
 
         <?php ActiveForm::end(); ?>
