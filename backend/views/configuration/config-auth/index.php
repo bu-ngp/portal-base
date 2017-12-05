@@ -20,14 +20,14 @@ $this->title = Yii::t('common/config', 'Authorization');
             ],
             [
                 'styleClass' => CardList::RED_STYLE,
-                'icon' => 'fa fa-list-alt',
+                'icon' => 'fa fa-map-o',
                 'title' => Yii::t('common/config-ldap', 'LDAP settings'),
                 'link' => Yii::$app->urlManager->createUrl(['configuration/config-ldap/update']),
                 'roles' => RbacHelper::ROLE_EDIT,
             ],
             [
                 'styleClass' => CardList::GREEN_STYLE,
-                'icon' => 'fa fa-list-alt',
+                'icon' => 'fa fa-user',
                 'title' => Yii::t('common/config-ldap', 'Users of system'),
                 'description' => 'Пользователи системы',
                 'link' => Yii::$app->urlManager->createUrl(['configuration/users']),

@@ -27,7 +27,7 @@ $this->title = Yii::t('common/config-ldap', 'Update Ldap Settings');
 
         <?= $form->field($modelForm, 'config_ldap_admin_password')->passwordInput(['wkicon' => FA::_LOCK]) ?>
 
-        <?= $form->field($modelForm, 'config_ldap_active')->toggleSwitch(['wkkeep' => true])/*->checkbox(['wkkeep' => true])*/ ?>
+        <?= $form->field($modelForm, 'config_ldap_active')->toggleSwitch(['wkkeep' => true]) ?>
 
         <div class="form-group">
             <?= Html::submitButton(Yii::t('common', 'Update'), ['class' => 'btn btn-primary']) ?>
