@@ -20,7 +20,7 @@ use yii\helpers\Html;
 
 $this->title = Yii::t('common/person', 'Users');
 ?>
-<div class="users-index">
+<div class="users-index content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

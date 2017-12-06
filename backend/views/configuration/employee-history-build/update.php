@@ -9,7 +9,7 @@ use domain\models\base\Build;
 
 $this->title = Build::findOne($modelForm->build_id)->build_name;
 ?>
-<div class="employee-history-build-update">
+<div class="employee-history-build-update content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

@@ -9,7 +9,7 @@ use domain\models\base\Build;
 
 $this->title = Build::findOne($modelForm->build_id)->build_name;
 ?>
-<div class="parttime-build-update">
+<div class="parttime-build-update content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

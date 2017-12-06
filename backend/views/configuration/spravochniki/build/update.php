@@ -8,7 +8,7 @@ use common\widgets\Html\Html;
 
 $this->title = $modelForm->build_name;
 ?>
-<div class="build-update">
+<div class="build-update content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

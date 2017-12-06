@@ -13,6 +13,6 @@ Breadcrumbs::root();
 $this->title = Yii::t('common/updates','Updates');
 ?>
 
-<div class="updates-index">
+<div class="updates-index content-container">
     <?= Documenter::widget() ?>
 </div>

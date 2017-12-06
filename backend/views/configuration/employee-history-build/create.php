@@ -8,7 +8,7 @@ use common\widgets\Panel\Panel;
 
 $this->title = Yii::t('common/employee', 'Add Build');
 ?>
-<div class="employee-history-build-create">
+<div class="employee-history-build-create content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

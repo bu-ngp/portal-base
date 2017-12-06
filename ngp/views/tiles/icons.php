@@ -17,7 +17,7 @@ use yii\helpers\Url;
 
 $this->title = Yii::t('ngp/tiles', 'Choose Icon');
 ?>
-    <div class="tiles-icons">
+    <div class="tiles-icons content-container">
 
         <h1><?= Html::encode($this->title) ?></h1>
 

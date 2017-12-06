@@ -8,7 +8,7 @@ use common\widgets\Html\Html;
 
 $this->title = $modelForm->podraz_name;
 ?>
-<div class="podraz-update">
+<div class="podraz-update content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

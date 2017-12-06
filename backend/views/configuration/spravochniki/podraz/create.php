@@ -8,7 +8,7 @@ use common\widgets\Html\Html;
 
 $this->title = Yii::t('common/podraz', 'Create Podraz');
 ?>
-<div class="podraz-create">
+<div class="podraz-create content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

@@ -15,7 +15,7 @@ use budyaga\cropper\Widget;
 
 $this->title = Yii::t('ngp/tiles', 'Create Tiles');
 ?>
-<div class="tiles-create">
+<div class="tiles-create content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

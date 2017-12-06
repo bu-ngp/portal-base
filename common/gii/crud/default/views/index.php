@@ -23,7 +23,7 @@ use <?= $generator->indexWidgetType === 'grid' ? "common\\widgets\\GridView\\Gri
 
 $this->title = <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>;
 ?>
-<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-index">
+<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-index content-container">
 
     <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
 

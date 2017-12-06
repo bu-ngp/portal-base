@@ -17,7 +17,7 @@ use yii\helpers\Url;
 
 $this->title = Yii::t('common/person', $modelUserFormUpdate->person_fullname);
 ?>
-<div class="user-update">
+<div class="user-update content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

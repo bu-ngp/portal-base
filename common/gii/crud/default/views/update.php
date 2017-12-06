@@ -21,7 +21,7 @@ $this->title = Yii::t('<?= $generator->messageCategory ?>', 'Update "{modelClass
     'modelClass' => $modelForm-><?= $generator->getNameAttribute() ?>,
 ]);
 ?>
-<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-update">
+<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-update content-container">
 
     <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
 

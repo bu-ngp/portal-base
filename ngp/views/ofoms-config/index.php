@@ -10,7 +10,7 @@ use common\widgets\Html\Html;
 
 $this->title = Yii::t('ngp/config-ofoms', 'Update Ofoms Settings');
 ?>
-<div class="config-ofoms-update">
+<div class="config-ofoms-update content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

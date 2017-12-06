@@ -14,7 +14,7 @@ use common\widgets\GridView\GridView;
 Breadcrumbs::root();
 $this->title = Yii::t('ngp/tiles', 'Tiles');
 ?>
-<div class="tiles-index">
+<div class="tiles-index content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

@@ -8,7 +8,7 @@ use common\widgets\Html\Html;
 
 $this->title = $modelForm->dolzh_name;
 ?>
-<div class="dolzh-update">
+<div class="dolzh-update content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

@@ -11,7 +11,7 @@ use common\widgets\ActiveForm\ActiveForm;
 
 $this->title = $modelForm->fam . ' ' . $modelForm->im . ' ' . $modelForm->ot;
 ?>
-<div class="ofoms-attach">
+<div class="ofoms-attach content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

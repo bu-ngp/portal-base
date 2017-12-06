@@ -14,7 +14,7 @@ use yii\bootstrap\Modal;
 
 $this->title = Yii::t('ngp/tiles', 'Update Tiles');
 ?>
-<div class="tiles-update">
+<div class="tiles-update content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

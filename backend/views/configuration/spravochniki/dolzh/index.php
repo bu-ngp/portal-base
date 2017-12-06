@@ -13,7 +13,7 @@ use yii\helpers\Html;
 
 $this->title = Yii::t('common/dolzh', 'Dolzhs');
 ?>
-<div class="dolzh-index">
+<div class="dolzh-index content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

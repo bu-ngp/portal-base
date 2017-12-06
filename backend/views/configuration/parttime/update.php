@@ -13,7 +13,7 @@ use rmrevin\yii\fontawesome\FA;
 
 $this->title = \domain\models\base\Parttime::findOne(Yii::$app->request->get('id'))->dolzh->dolzh_name;
 ?>
-<div class="parttime-update">
+<div class="parttime-update content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

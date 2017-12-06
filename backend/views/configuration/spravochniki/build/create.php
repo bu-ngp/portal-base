@@ -8,7 +8,7 @@ use common\widgets\Html\Html;
 
 $this->title = Yii::t('common/build', 'Create Build');
 ?>
-<div class="build-create">
+<div class="build-create content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

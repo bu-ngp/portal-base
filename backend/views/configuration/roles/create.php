@@ -11,7 +11,7 @@ use common\widgets\Html\Html;
 
 $this->title = Yii::t('common/roles', 'Create Auth Item');
 ?>
-<div class="auth-item-create">
+<div class="auth-item-create content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

@@ -13,7 +13,7 @@ use rmrevin\yii\fontawesome\FA;
 
 $this->title = Yii::t('common/employee', 'Create Parttime');
 ?>
-<div class="parttime-create">
+<div class="parttime-create content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

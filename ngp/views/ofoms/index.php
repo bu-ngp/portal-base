@@ -16,7 +16,7 @@ use yii\bootstrap\Modal;
 Breadcrumbs::root();
 $this->title = Yii::t('ngp/ofoms', 'Ofoms search');
 ?>
-    <div class="ofoms-index">
+    <div class="ofoms-index content-container">
 
         <h1><?= Html::encode($this->title) ?></h1>
 

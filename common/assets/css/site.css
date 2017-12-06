@@ -766,12 +766,12 @@ ul.breadcrumb li:not(:last-child):active::after {
 
 /* ------- Forms ------- */
 
-div.wrap > div:not(.wkbc-breadcrumb):not(div .wk-widget-container) {
+.content-container {
     background-color: rgba(255, 255, 255, 0.3);
     padding: 10px;
 }
 
-div.wrap > div:not(.wkbc-breadcrumb) > h1 {
+.content-container > h1 {
     color: #726ba0;
     background-color: rgba(255, 255, 255, 0.3);
     box-shadow: 1px 2px 1px rgba(0, 0, 0, 0.1);
@@ -779,10 +779,17 @@ div.wrap > div:not(.wkbc-breadcrumb) > h1 {
     padding: 20px 10px;
 }
 
-div.wrap > div:not(.wkbc-breadcrumb) > div:not(.wk-widget-container):not(.modal-dialog) {
+.content-container .panel {
+    background-color: transparent;
+}
+
+.content-container .panel-body {
     background-color: rgba(255, 255, 255, 0.3);
-    box-shadow: 1px 2px 1px rgba(0, 0, 0, 0.1);
-    padding: 20px 10px;
+}
+
+.content-container .panel-heading {
+    color: #cfd6fd;
+    background-color: #726ba0;
 }
 
 .pmd-textfield .input-group .form-control {
@@ -803,21 +810,7 @@ div.wrap > div:not(.wkbc-breadcrumb) > div:not(.wk-widget-container):not(.modal-
 
 .pmd-textfield label {
     color: #a6acc5;
-    font-family: 'Roboto Light', sans-serif;
     letter-spacing: 0.01em;
-}
-
-div.wrap > div:not(.wkbc-breadcrumb) .panel {
-    background-color: transparent;
-}
-
-div.wrap > div:not(.wkbc-breadcrumb) .panel-body {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-div.wrap > div:not(.wkbc-breadcrumb) .panel-heading {
-    color: #cfd6fd;
-    background-color: #726ba0;
 }
 
 .panel {
@@ -828,6 +821,7 @@ div.wrap > div:not(.wkbc-breadcrumb) .panel-heading {
 .toolbox-form-group {
     background-color: rgba(255, 255, 255, 0.3);
     padding: 10px 20px;
+    box-shadow: 1px 2px 1px rgba(0, 0, 0, 0.1);
 }
 
 /* ------- Forms ------- */

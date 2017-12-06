@@ -12,7 +12,7 @@ use common\widgets\ActiveForm\ActiveForm;
 
 $this->title = Yii::t('common/config-ldap', 'Update Ldap Settings');
 ?>
-<div class="config-ldap-update">
+<div class="config-ldap-update content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

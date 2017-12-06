@@ -15,7 +15,7 @@ use common\widgets\Tabs\Tabs;
 
 $this->title = Yii::t('common/person', 'Create User');
 ?>
-<div class="user-create">
+<div class="user-create content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

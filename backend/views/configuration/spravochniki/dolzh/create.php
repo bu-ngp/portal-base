@@ -8,7 +8,7 @@ use common\widgets\Html\Html;
 
 $this->title = Yii::t('common/dolzh', 'Create Dolzh');
 ?>
-<div class="dolzh-create">
+<div class="dolzh-create content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

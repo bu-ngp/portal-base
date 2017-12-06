@@ -13,7 +13,7 @@ use yii\helpers\Html;
 
 $this->title = Yii::t('common/roles', 'Roles');
 ?>
-<div class="auth-item-index">
+<div class="auth-item-index content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

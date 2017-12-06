@@ -17,7 +17,7 @@ use common\widgets\ActiveForm\ActiveForm;
 
 $this->title = <?= $generator->generateString('Create ' . Inflector::camel2words(StringHelper::basename($generator->modelClass))) ?>;
 ?>
-<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-create">
+<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-create content-container">
 
     <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
 

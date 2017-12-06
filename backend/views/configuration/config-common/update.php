@@ -11,7 +11,7 @@ use common\widgets\Html\Html;
 
 $this->title = Yii::t('common/config-common', 'Common Settings');
 ?>
-<div class="config-common-update">
+<div class="config-common-update content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

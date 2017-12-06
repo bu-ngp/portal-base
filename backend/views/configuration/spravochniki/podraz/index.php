@@ -12,7 +12,7 @@ use common\widgets\GridView\GridView;
 
 $this->title = Yii::t('common/podraz', 'Podrazs');
 ?>
-<div class="podraz-index">
+<div class="podraz-index content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

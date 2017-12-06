@@ -16,7 +16,7 @@ use yii\helpers\Url;
 $this->title = Yii::t('doh', 'Handlers');
 $handler_statuses = Handler::itemsValues('handler_status');
 ?>
-    <div class="handler-index">
+    <div class="handler-index content-container">
 
         <h1><?= Html::encode($this->title) ?></h1>
 

@@ -9,7 +9,7 @@ use common\widgets\ActiveForm\ActiveForm;
 
 $this->title = Yii::t('ngp/ofoms', 'Attach with list');
 ?>
-    <div class="ofoms-attach-list-update">
+    <div class="ofoms-attach-list-update content-container">
 
         <h1><?= Html::encode($this->title) ?></h1>
 

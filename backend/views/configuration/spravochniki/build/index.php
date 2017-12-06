@@ -12,7 +12,7 @@ use common\widgets\GridView\GridView;
 
 $this->title = Yii::t('common/build', 'Builds');
 ?>
-<div class="build-index">
+<div class="build-index content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
