@@ -792,6 +792,34 @@ ul.breadcrumb li:not(:last-child):active::after {
     background-color: #726ba0;
 }
 
+.content-container .tab-content {
+    padding: 0 10px 5px 10px;
+}
+
+.content-container .pmd-card {
+    margin-bottom: 10px;
+}
+
+.pmd-tabs {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.pmd-tabs .pmd-tab-active-bar {
+    background: #726ba0;
+}
+
+.pmd-tabs .nav-tabs > li.active {
+    color: #726ba0;
+}
+
+.pmd-radio > span.pmd-radio-label:before {
+    border: 2px solid #726ba0;
+}
+
+.pmd-radio > span.pmd-radio-label:after {
+    background: #726ba0;
+}
+
 .pmd-textfield .input-group .form-control {
     padding: 5px 10px;
     background-color: rgba(255, 255, 255, 0.3);
@@ -824,6 +852,225 @@ ul.breadcrumb li:not(:last-child):active::after {
     box-shadow: 1px 2px 1px rgba(0, 0, 0, 0.1);
 }
 
+.select2.select2-container {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+label.wk-label-with-icon {
+    padding-left: 55px;
+}
+
+.wk-widget-select2-choose-from-grid, .wk-widget-select2-choose-from-grid:active {
+    background-color: #726ba0;
+    transition: background-color 0.5s;
+}
+
+.wk-widget-select2-choose-from-grid:hover {
+    background-color: #5d51ad;
+}
+
+.wk-widget-select2-choose-from-grid > i {
+    color: #d5d6fd;
+}
+
+.select2-dropdown {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+}
+
 /* ------- Forms ------- */
+
+/* ------- Gridview ------- */
+
+.grid-view, .kv-panel-before, .kv-panel-after, .panel-footer {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.table-striped > tbody > tr:nth-of-type(even) {
+    background-color: #eceef9;
+}
+
+.kv-grid-table > thead {
+    background-color: #726ba0;
+    color: #ccd2fa;
+}
+
+.table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+    border: 1px solid #a0a4bb;
+}
+
+.kv-grid-table > thead > tr > th > a {
+    color: #ccd2fa;
+}
+
+.kv-grid-table > thead > tr > th > a:hover {
+    color: #ccd2fa;
+}
+
+.kv-grid-table > tbody {
+    color: #342c66;
+}
+
+.grid-view .filters input:focus, .grid-view .filters select:focus {
+    border-color: #5b5a61;
+}
+
+.wk-custom-buttons > span > button, .wk-custom-buttons > span > button:active {
+    background-color: #726ba0;
+    transition: background-color 0.5s;
+}
+
+.wk-custom-buttons > span > button:hover {
+    background-color: #5d51ad;
+}
+
+.wk-custom-buttons button[data-toggle="dropdown"] > i {
+    color: #d5d6fd;
+}
+
+/* ------- Gridview / VisibleColumns ------- */
+
+.modal-header {
+    color: #342c66;
+}
+
+.modal-content {
+    background-color: #eff1ff;
+}
+
+.modal-content > .pmd-modal-action {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+input.form-control.wk-per-page {
+    padding: 5px 10px;
+    background-color: rgb(255, 255, 255);
+    color: #726ba0;
+    box-shadow: inset 1px 2px 1px rgba(0, 0, 0, 0.1);
+}
+
+.pmd-list .list-group-item {
+    margin-bottom: 6px;
+    color: #eff1ff;
+}
+
+ul.wk-visible-columns, ul.wk-hidden-columns {
+    padding: 8px 4px;
+    background-color: #dcdff9;
+}
+
+ul.wk-visible-columns > a.list-group-item, ul.wk-hidden-columns > a.list-group-item {
+    background-color: #726ba0;
+    color: #eff1ff;
+    transition: background-color 0.5s, color 0.5s;
+}
+
+ul.wk-visible-columns > a.list-group-item:hover,
+ul.wk-visible-columns > a.list-group-item:focus,
+ul.wk-hidden-columns > a.list-group-item:hover,
+ul.wk-hidden-columns > a.list-group-item:focus {
+    background-color: #342c66;
+    color: #eff1ff;
+}
+
+a.ui-sortable-placeholder {
+    border: #726ba0 dashed 2px !important;
+    background-color: #a29ad2 !important;
+    visibility: inherit !important;
+}
+
+.wk-customizeDialog-content {
+    background-color: rgba(255, 255, 255, 0.3);
+    margin: 16px 10px;
+}
+
+i.wk-customize-dialog-columns-exchange-icon {
+    left: 428px;
+}
+
+i.wk-customize-dialog-columns-exchange-icon2 {
+    left: 430px;
+}
+
+/* ------- Gridview / VisibleColumns ------- */
+
+/* ------- Gridview / Filter ------- */
+
+.wk-filter-search-input.form-control {
+    background-color: rgb(255, 255, 255);
+    color: #726ba0;
+    box-shadow: inset 1px 2px 1px rgba(0, 0, 0, 0.1);
+    padding-left: 10px;
+}
+
+.wk-filter-search-panel-field label.control-label {
+    padding-left: 10px;
+}
+
+.wk-filterDialog-content .panel {
+    background-color: transparent;
+}
+
+.wk-filterDialog-content .panel-body {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.wk-filterDialog-content .panel-heading {
+    color: #cfd6fd;
+    background-color: #726ba0;
+}
+
+.wk-filterDialog-content .tab-content {
+    padding: 0 10px 5px 10px;
+}
+
+.wk-filterDialog-content .pmd-card {
+    margin-bottom: 10px;
+}
+
+.wk-filterDialog-content .filter-marked label {
+    color: #726ba0;
+}
+
+.wk-filterDialog-content .filter-marked .pmd-checkbox [type="checkbox"]:checked + .pmd-checkbox-label:before {
+    background-color: rgb(114, 107, 160);
+}
+
+.wk-filterDialog-content .filter-marked .pmd-checkbox [type="checkbox"]:not(:checked) + .pmd-checkbox-label:before, .wk-filterDialog-content .filter-marked .pmd-checkbox [type="checkbox"]:checked + .pmd-checkbox-label:before {
+    border-color: rgb(114, 107, 160);
+}
+
+div.form-group.filter-marked {
+    background: transparent;
+    padding: 0;
+}
+
+/* ------- Gridview / Filter ------- */
+
+/* ------- Gridview ------- */
+
+.pmd-btn-flat.btn-success:hover,
+.pmd-btn-flat.btn-danger:hover,
+.pmd-btn-flat.btn-warning:hover,
+.pmd-btn-flat.btn-info:hover,
+.pmd-btn-flat.btn-default:hover,
+.pmd-btn-flat.btn-primary:hover {
+    background-color: #e5e9f7;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #e5e9f7;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background-color: #e5e9f7;
+}
+
+::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: #726ba0;
+}
 
 /* Style /\ */

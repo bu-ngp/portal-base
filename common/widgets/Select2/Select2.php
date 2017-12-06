@@ -137,7 +137,7 @@ class Select2 extends \kartik\select2\Select2
             /** Добавить кнопку выбора из грида */
             if ($this->selectionGridUrl) {
                 $url = is_array($this->selectionGridUrl) ? Url::to($this->selectionGridUrl) : $this->selectionGridUrl;
-                $this->addon['append']['content'] = '<div class="input-group-addon wk-block-select2-choose-from-grid"><a class="btn btn-sm btn-success wk-widget-select2-choose-from-grid pmd-ripple-effect pmd-btn-fab" href="' . $url . '"><i class="fa fa-2x fa-ellipsis-h pmd-sm"></i></a></div>' . ArrayHelper::getValue($this->addon, 'append.content', '');
+                $this->addon['append']['content'] = '<div class="input-group-addon wk-block-select2-choose-from-grid"><a class="btn btn-sm wk-widget-select2-choose-from-grid pmd-ripple-effect pmd-btn-fab" href="' . $url . '"><i class="fa fa-2x fa-ellipsis-h pmd-sm"></i></a></div>' . ArrayHelper::getValue($this->addon, 'append.content', '');
                 $this->addon['append']['asButton'] = true;
 
                 /** Проинициализировать выбранное значение из грида */

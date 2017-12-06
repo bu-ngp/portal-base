@@ -16,8 +16,8 @@ use rmrevin\yii\fontawesome\FA;
         <div class="col-xs-6">
             <?= $profileForm->field($modelProfileForm, 'profile_pol')
                 ->radioList([
-                    Profile::MALE => '<i style="color: #555" class="fa fa-2x fa-' . FA::_MALE . '"></i>',
-                    Profile::FEMALE => '<i style="color: #555" class="fa fa-2x fa-' . FA::_FEMALE . '"></i>'
+                    Profile::MALE => '<i style="color: #726ba0" class="fa fa-2x fa-' . FA::_MALE . '"></i>',
+                    Profile::FEMALE => '<i style="color: #726ba0" class="fa fa-2x fa-' . FA::_FEMALE . '"></i>'
                 ], [
                     'wkkeep' => true,
                     'encode' => false,

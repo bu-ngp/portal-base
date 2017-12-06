@@ -417,7 +417,7 @@ EOT;
 
             $this->panelBeforeTemplate = strtr($this->panelBeforeTemplate, ['{customButtons}' => <<<EOT
                 <span class="dropdown pmd-dropdown">
-                    <button class="btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-primary" type="button" data-toggle="dropdown" aria-expanded="true"><i class="glyphicon glyphicon-option-vertical"></i></button>
+                    <button class="btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect" type="button" data-toggle="dropdown" aria-expanded="true"><i class="glyphicon glyphicon-option-vertical"></i></button>
                     <ul role="menu" class="dropdown-menu dropdown-menu-right">
                          $buttons
                     </ul>

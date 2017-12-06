@@ -34,7 +34,7 @@
             '<div class="modal-body">' +
             '<div class="row">' +
             '<div class="col-xs-12 wk-filter-search-panel-field">' +
-            '<div class="form-group pmd-textfield pmd-textfield-floating-label form-group-lg">' +
+            '<div class="form-group pmd-textfield form-group-lg">' +
             '<label class="control-label">' + $pjax.data('wkfilter').settings.searchMessage + '</label>' +
             '<input type="text" class="form-control input-group-lg wk-filter-search-input">' +
             '</div>' +
