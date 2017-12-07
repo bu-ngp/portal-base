@@ -37,11 +37,18 @@ $this->title = Yii::t('ngp/tiles', 'Tiles');
                     }
                 }
             ],
-            'tiles_name',
-            'tiles_description',
+            [
+                'attribute' => 'tiles_name',
+                'noWrap' => false,
+            ],
+            [
+                'attribute' => 'tiles_description',
+                'noWrap' => false,
+            ],
             [
                 'attribute' => 'tiles_link',
                 'format' => 'raw',
+                'noWrap' => false,
                 'value' => function ($model) {
                     $link = preg_match('/^(https:\/\/)|(http:\/\/)/', $model->tiles_link) ? $model->tiles_link : ('http://' . $model->tiles_link);
                     return Html::a($model->tiles_link, $link, ['target' => '_blank', 'data-pjax' => '0']);

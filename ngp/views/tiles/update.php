@@ -27,14 +27,14 @@ $this->title = Yii::t('ngp/tiles', 'Update Tiles');
                 [
                     'label' => Yii::t('ngp/tiles', 'Picture'),
                     'content' => Panel::widget([
-                        'label' => 'Config',
+                        'label' => Yii::t('ngp/tiles', 'Preview'),
                         'content' => $this->render('_picture', ['form' => $form, 'modelForm' => $modelForm]),
                     ]),
                 ],
                 [
                     'label' => Yii::t('ngp/tiles', 'Icon'),
                     'content' => Panel::widget([
-                        'label' => 'Config',
+                        'label' => Yii::t('ngp/tiles', 'Preview'),
                         'content' => $this->render('_icon', ['form' => $form, 'modelForm' => $modelForm]),
                     ]),
                 ],

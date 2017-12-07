@@ -7,7 +7,7 @@
  */
 
 
-use ngp\assets\OfomsAsset;
+use ngp\assets\TilesAsset;
 use rmrevin\yii\fontawesome\FA;
 use yii\bootstrap\Html;
 use yii\helpers\Url;
@@ -21,13 +21,15 @@ $this->title = Yii::t('ngp/tiles', 'Choose Icon');
 
         <h1><?= Html::encode($this->title) ?></h1>
 
-        <div class="row wk-ofoms-icons">
-            <?php
-            foreach ($icons as $icon) {
-                echo '<div class="col-md-1"><a href="' . Url::to(['tiles/' . $redirectTo, 'icon' => $icon]) . '">' . FA::icon($icon) . '</a></div>';
-            }
-            ?>
+        <div class="row">
+            <div class="col-md-12 wk-tiles-icons">
+                <?php
+                foreach ($icons as $icon) {
+                    echo '<div class="col-md-1"><a href="' . Url::to(['tiles/' . $redirectTo, 'icon' => $icon]) . '">' . FA::icon($icon) . '</a></div>';
+                }
+                ?>
+            </div>
         </div>
     </div>
 
-<?php OfomsAsset::register($this) ?>
+<?php TilesAsset::register($this) ?>

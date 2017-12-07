@@ -17,8 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Choose Icon' => '',
-    'Tiles Icon Color' => '',
+    'Choose Icon' => 'Выберите иконку превью',
+    'Tiles Icon Color' => 'Стиль превью',
     'Update "{modelClass}": ' => '',
     'Close' => 'Закрыть',
     'Create Tiles' => 'Добавить плитку на главной странице',
@@ -26,6 +26,7 @@ return [
     'Cropper dialog' => 'Обрезать картинку',
     'Icon' => 'Иконка',
     'Picture' => 'Картинка',
+    'Preview' => 'Превью',
     'Tiles' => 'Плитки на главной странице',
     'Tiles Description' => 'Описание',
     'Tiles Icon' => 'Иконка',

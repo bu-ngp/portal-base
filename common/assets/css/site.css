@@ -16,6 +16,24 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
+@media (min-width: 1600px) {
+    .container {
+        width: 1300px;
+    }
+}
+
+@media (min-width: 1900px) {
+    .container {
+        width: 1600px;
+    }
+}
+
+@media (min-width: 2000px) {
+    .container {
+        width: 1700px;
+    }
+}
+
 .wrapper {
     display: table-row;
     height: 100%;
@@ -93,7 +111,7 @@ a.desc:after {
 }
 
 .grid-view td {
-    white-space: nowrap;
+    /*white-space: nowrap;*/
 }
 
 .grid-view .filters input,
@@ -218,6 +236,7 @@ body {
     background: -moz-linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%); /* FF3.6-15 */
     background: -webkit-linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%); /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    background-image: url("../img/bg.jpg");
 }
 
 /* ------- NavBar ------- */
@@ -283,7 +302,8 @@ body {
 /* ------- NavBar ------- */
 
 .container > .wrap {
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(190, 185, 220, 0.52);
+    box-shadow: 0 0 15px 3px rgba(0, 0, 0, 0.15);
 }
 
 /* ------- Footer ------- */
@@ -747,7 +767,7 @@ ul.breadcrumb li:not(:last-child):active::after {
 
 .content-container > h1 {
     color: #726ba0;
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.7);
     box-shadow: 1px 2px 1px rgba(0, 0, 0, 0.1);
     font-size: 20px;
     padding: 20px 10px;
@@ -794,7 +814,7 @@ ul.breadcrumb li:not(:last-child):active::after {
     background: #726ba0;
 }
 
-.pmd-textfield .input-group .form-control {
+.pmd-textfield .form-control {
     padding: 5px 10px;
     background-color: rgba(255, 255, 255, 0.3);
     color: #726ba0;
@@ -811,6 +831,7 @@ ul.breadcrumb li:not(:last-child):active::after {
 }
 
 .pmd-textfield label {
+    padding-left: 10px;
     color: #a6acc5;
     letter-spacing: 0.01em;
 }
@@ -821,7 +842,7 @@ ul.breadcrumb li:not(:last-child):active::after {
 }
 
 .toolbox-form-group {
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.7);
     padding: 10px 20px;
     box-shadow: 1px 2px 1px rgba(0, 0, 0, 0.1);
 }
@@ -850,6 +871,10 @@ label.wk-label-with-icon {
 .select2-dropdown {
     background-color: rgba(255, 255, 255, 0.8);
     border: none;
+}
+
+.select2-container--bootstrap .select2-selection--single .select2-selection__rendered {
+    padding-left: 10px;
 }
 
 /* ------- Forms ------- */

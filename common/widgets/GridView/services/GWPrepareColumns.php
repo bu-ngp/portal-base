@@ -103,26 +103,28 @@ class GWPrepareColumns
 
     protected function addTooltip(&$column)
     {
-        if (is_callable($column['contentOptions'])) {
-            $func = $column['contentOptions'];
+        if ($column['noWrap']) {
+            if (is_callable($column['contentOptions'])) {
+                $func = $column['contentOptions'];
 
-            $column['contentOptions'] = function ($model, $key, $index, $column) use ($func) {
-                $return = $func($model, $key, $index, $column);
-                $return['class'] .= ' wk-nowrap';
-                $return['data-toggle'] = 'tooltip';
-                return $return;
-            };
-        } else {
-            $column['contentOptions'] = function () use ($column) {
-                if (is_array($column['contentOptions'])) {
-                    $column['contentOptions']['data-toggle'] = 'tooltip';
-                    $column['contentOptions']['class'] = trim(ArrayHelper::getValue($column, 'contentOptions.class') . ' wk-nowrap');
+                $column['contentOptions'] = function ($model, $key, $index, $column) use ($func) {
+                    $return = $func($model, $key, $index, $column);
+                    $return['class'] .= ' wk-nowrap';
+                    $return['data-toggle'] = 'tooltip';
+                    return $return;
+                };
+            } else {
+                $column['contentOptions'] = function () use ($column) {
+                    if (is_array($column['contentOptions'])) {
+                        $column['contentOptions']['data-toggle'] = 'tooltip';
+                        $column['contentOptions']['class'] = trim(ArrayHelper::getValue($column, 'contentOptions.class') . ' wk-nowrap');
 
-                    return $column['contentOptions'];
-                }
+                        return $column['contentOptions'];
+                    }
 
-                return ['data-toggle' => 'tooltip', 'class' => 'wk-nowrap'];
-            };
+                    return ['data-toggle' => 'tooltip', 'class' => 'wk-nowrap'];
+                };
+            }
         }
     }
 
@@ -150,7 +152,7 @@ class GWPrepareColumns
     {
         if (is_array($column)) {
             $column['class'] = '\kartik\grid\DataColumn';
-            $column['noWrap'] = true;
+            $column['noWrap'] = ArrayHelper::getValue($column, 'noWrap', true);
             $column['contentOptions'] = function () {
                 return ['data-toggle' => 'tooltip', 'class' => 'wk-nowrap'];
             };
@@ -183,13 +185,8 @@ class GWPrepareColumns
 
     private function addRequiredProperties(&$column)
     {
-        if (empty($column['class'])) {
-            $column['class'] = '\kartik\grid\DataColumn';
-        }
-
-        if (empty($column['noWrap'])) {
-            $column['noWrap'] = true;
-        }
+        $column['class'] = ArrayHelper::getValue($column, 'class', '\kartik\grid\DataColumn');
+        $column['noWrap'] = ArrayHelper::getValue($column, 'noWrap', true);
     }
 
     protected function addFilterProperties(&$column)

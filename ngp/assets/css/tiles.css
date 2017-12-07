@@ -1,7 +1,7 @@
 .wk-tiles-preview {
     max-width: 100%;
-    width: 290px;
-    height: 170px;
+    width: 330px;
+    height: 190px;
     background-color: #b9b7b8;
     background-repeat: no-repeat;
     overflow: hidden;
@@ -10,9 +10,9 @@
 
 .wk-tiles-preview-icon {
     max-width: 100%;
-    width: 290px;
-    height: 170px;
-    background-color: #b9b7b8;
+    width: 330px;
+    height: 190px;
+    background-color: transparent;
 }
 
 .wk-tiles-upload-input {
@@ -28,7 +28,7 @@ button > i.fa, a > i.fa {
 }
 
 .wk-tiles-image-container > div:first-child, .wk-tiles-icon-container > div:first-child {
-    width: 320px;
+    width: 360px;
 }
 
 .wk-tiles-image-container > div:last-child, .wk-tiles-icon-container > div:last-child {
@@ -46,35 +46,27 @@ button > i.fa, a > i.fa {
 
 .wk-tiles-preview-icon > div {
     text-align: center;
-    background-color: #d6d6d6;
-    border: solid rgba(255, 255, 255, 0.40) 5px;
-    border-radius: 20px;
+    background-color: transparent;
 }
 
-div.wk-tiles-preview-grid.wk-grey-style:after {
+div.wk-tiles-preview-grid.wk-grey-style:after, .wk-tiles-preview-icon > div.wk-grey-style:after {
     background-color: #d6d6d6;
 }
 
-div.wk-tiles-preview-grid.wk-red-style:after {
+div.wk-tiles-preview-grid.wk-red-style:after, .wk-tiles-preview-icon > div.wk-red-style:after {
     background-color: #ffb2b2;
 }
 
-div.wk-tiles-preview-grid.wk-blue-style:after {
+div.wk-tiles-preview-grid.wk-blue-style:after, .wk-tiles-preview-icon > div.wk-blue-style:after {
     background-color: #b2d5ff;
 }
 
-div.wk-tiles-preview-grid.wk-green-style:after {
+div.wk-tiles-preview-grid.wk-green-style:after, .wk-tiles-preview-icon > div.wk-green-style:after {
     background-color: #bbecae;
 }
 
-div.wk-tiles-preview-grid.wk-yellow-style:after {
+div.wk-tiles-preview-grid.wk-yellow-style:after, .wk-tiles-preview-icon > div.wk-yellow-style:after {
     background-color: #fff59e;
-}
-
-.wk-tiles-preview-icon > div > i {
-    font-size: 160px;
-    color: rgba(255, 255, 255, 0.5);
-    margin: 10px;
 }
 
 .wk-tiles-preview-grid {
@@ -85,7 +77,15 @@ div.wk-tiles-preview-grid.wk-yellow-style:after {
     position: relative;
 }
 
-.wk-tiles-preview-grid:after {
+.wk-tiles-preview-icon {
+    background-color: rgba(231, 233, 245, 0.5);
+    height: 190px;
+    width: 330px;
+    text-align: center;
+    position: relative;
+}
+
+.wk-tiles-preview-grid:after, .wk-tiles-preview-icon > div:after {
     content: "";
     position: absolute;
     height: 3px;
@@ -99,4 +99,44 @@ div.wk-tiles-preview-grid.wk-yellow-style:after {
     text-shadow: rgba(0, 0, 0, 0.02) 3px 6px 3px;
     color: rgba(255, 255, 255, 0.6);
     margin-top: 10px;
+}
+
+.wk-tiles-preview-icon > div > i {
+    font-size: 160px;
+    color: rgba(255, 255, 255, 0.71);
+    text-shadow: rgba(0, 0, 0, 0.02) 5px 7px 11px;
+    margin: 10px;
+}
+
+.wk-tiles-preview-icon > div {
+    height: 100%;
+}
+
+div.wk-tiles-icons {
+    /*padding: 15px 10px;*/
+    /*background-color: rgba(255, 255, 255, 0.3);*/
+}
+
+div.wk-tiles-icons > div > a {
+    width: 70px;
+    height: 70px;
+    font-size: 45px;
+    display: inline-block;
+    text-align: center;
+    border: solid #d2d2fd 1px;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+div.wk-tiles-icons > div {
+    padding-bottom: 15px;
+}
+
+div.wk-tiles-preview-bg {
+    text-align: center;
+}
+
+div.wk-tiles-preview-bg > i {
+    font-size: 160px;
+    color: #d2d2d2;
+    padding-top: 15px;
 }
