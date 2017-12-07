@@ -429,32 +429,6 @@ div.pmd-card-media.wk-red-style, div.pmd-card-media > img.wk-red-style {
     border-bottom: solid rgba(255, 107, 115, 0.4) 5px;
 }
 
-/*div.pmd-card-media.wk-red-style:before {*/
-/*position: absolute;*/
-/*bottom: 0;*/
-/*left: 0;*/
-/*right: 0;*/
-/*height: 5px;*/
-/*content: '';*/
-/*background-image: radial-gradient(rgba(255, 107, 115, 0.4) 0%, rgba(255, 107, 115, 0.4) 70%, rgba(255, 107, 115, 0.4) 100%);*/
-/*}*/
-
-/*div.pmd-card-media.wk-red-style:after {*/
-/*position: absolute;*/
-/*bottom: 0;*/
-/*left: 0;*/
-/*right: 0;*/
-/*height: 5px;*/
-/*content: '';*/
-/*background-image: radial-gradient(rgba(255, 0, 14, 0.79) 0%, rgba(192, 192, 192, 0.71) 100%);*/
-/*transition: opacity 0.3s;*/
-/*opacity: 0;*/
-/*}*/
-
-/*.wk-widget-card > .pmd-card:active div.pmd-card-media.wk-red-style:after {*/
-/*opacity: 1;*/
-/*}*/
-
 div.pmd-card-media.wk-yellow-style, div.pmd-card-media > img.wk-yellow-style {
     background-color: transparent;
     border-bottom: solid rgba(249, 250, 147, 0.4) 5px;

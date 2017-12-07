@@ -31,3 +31,18 @@ div.wk-ofoms-icons > div > a {
 div.wk-ofoms-icons > div {
     padding-bottom: 15px;
 }
+
+/* ------- Style ------- */
+
+.search-ofoms-group > label {
+    padding-left: 10px;
+}
+
+.search-ofoms-group > input.form-control {
+    padding: 5px 10px;
+    background-color: rgba(255, 255, 255, 0.3);
+    color: #726ba0;
+    box-shadow: inset 1px 2px 1px rgba(0, 0, 0, 0.1);
+}
+
+/* ------- Style ------- */

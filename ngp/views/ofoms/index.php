@@ -14,13 +14,13 @@ use yii\bootstrap\Modal;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 Breadcrumbs::root();
-$this->title = Yii::t('ngp/ofoms', 'Ofoms search');
+$this->title = Yii::t('ngp/ofoms', 'Ofoms Portal');
 ?>
     <div class="ofoms-index content-container">
 
         <h1><?= Html::encode($this->title) ?></h1>
 
-        <div class="form-group pmd-textfield pmd-textfield-floating-label">
+        <div class="form-group pmd-textfield pmd-textfield-floating-label search-ofoms-group">
             <?= Html::label(Yii::t('ngp/ofoms', 'Search'), 'ofoms_search') ?>
             <?= Html::input('text', 'OfomsSearch[search_string]', $searchModel->search_string, ['id' => 'ofoms_search', 'class' => 'form-control']) ?>
             <p class="help-block"><?= Yii::t('ngp/ofoms', 'Type to search input and press Enter button') ?></p>

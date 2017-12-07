@@ -51,23 +51,23 @@ button > i.fa, a > i.fa {
     border-radius: 20px;
 }
 
-div.wk-grey-style {
+div.wk-tiles-preview-grid.wk-grey-style:after {
     background-color: #d6d6d6;
 }
 
-div.wk-red-style {
+div.wk-tiles-preview-grid.wk-red-style:after {
     background-color: #ffb2b2;
 }
 
-div.wk-blue-style {
+div.wk-tiles-preview-grid.wk-blue-style:after {
     background-color: #b2d5ff;
 }
 
-div.wk-green-style {
+div.wk-tiles-preview-grid.wk-green-style:after {
     background-color: #bbecae;
 }
 
-div.wk-yellow-style {
+div.wk-tiles-preview-grid.wk-yellow-style:after {
     background-color: #fff59e;
 }
 
@@ -78,15 +78,25 @@ div.wk-yellow-style {
 }
 
 .wk-tiles-preview-grid {
-    height: 85px;
-    width: 145px;
+    background-color: rgba(210, 219, 255, 0.5);
+    height: 95px;
+    width: 165px;
     text-align: center;
-    border: solid rgba(255, 255, 255, 0.40) 2px;
-    border-radius: 15px;
+    position: relative;
+}
+
+.wk-tiles-preview-grid:after {
+    content: "";
+    position: absolute;
+    height: 3px;
+    width: 100%;
+    left: 0;
+    bottom: 0;
 }
 
 .wk-tiles-preview-grid > i {
     font-size: 70px;
-    color: rgba(255, 255, 255, 0.5);
-    margin: 5px;
+    text-shadow: rgba(0, 0, 0, 0.02) 3px 6px 3px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 10px;
 }

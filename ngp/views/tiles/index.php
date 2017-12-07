@@ -27,12 +27,12 @@ $this->title = Yii::t('ngp/tiles', 'Tiles');
                 'format' => 'html',
                 'filter' => false,
                 'value' => function ($model) {
+                    $color = $model->tiles_icon_color ?: CardList::GREY_STYLE;
                     if ($model->tiles_thumbnail) {
                         preg_match('/(.*)-\d+x\d+(\.\w+)$/', $model->tiles_thumbnail, $thumb);
-                        return Html::img($thumb[1] . '-165x95' . $thumb[2]);
+                        return Html::tag('div', Html::img($thumb[1] . '-165x95' . $thumb[2]), ['class' => "wk-tiles-preview-grid $color"]);
                     } else {
                         $icon = '<i class="' . $model->tiles_icon . '"></i>' ?: FA::icon(FA::_WINDOW_MAXIMIZE);
-                        $color = $model->tiles_icon_color ?: CardList::GREY_STYLE;
                         return Html::tag('div', $icon, ['class' => "wk-tiles-preview-grid $color"]);
                     }
                 }
