@@ -95,7 +95,10 @@ $this->title = Yii::t('ngp/ofoms', 'Ofoms Portal');
                     'attribute' => 'rstop',
                     'visible' => false,
                 ],
-                'ter_st',
+                [
+                    'attribute' => 'ter_st',
+                    'noWrap' => false,
+                ],
             ],
             'customActionButtons' => array_merge(
                 Yii::$app->getUser()->can(RbacHelper::OFOMS_PRIK) ? ['prik' => function ($url, $model) {

@@ -580,10 +580,11 @@
                 }
 
                 var settings = $.extend({}, defaults, options || {});
+
                 if ((typeof(settings.url) == "undefined" || settings.url == '')
                     && (typeof(settings.items) == "undefined" || settings.items.length == 0)
                 ) {
-                    $.error('Settings url or items must be passed');
+                    return;
                 }
 
                 $widget.data('wkcardlist', {

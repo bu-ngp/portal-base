@@ -104,9 +104,9 @@ class Tiles extends \yii\db\ActiveRecord
     {
         return [
             'tiles_icon_color' => [
+                CardList::BLUE_STYLE => 'Синий',
                 CardList::GREY_STYLE => 'Серый',
                 CardList::RED_STYLE => 'Красный',
-                CardList::BLUE_STYLE => 'Синий',
                 CardList::GREEN_STYLE => 'Зеленый',
                 CardList::YELLOW_STYLE => 'Желтый',
             ],

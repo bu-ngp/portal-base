@@ -44,7 +44,7 @@ class TilesForm extends Model
             $this->tiles_icon = $tiles->tiles_icon;
             $this->tiles_icon_color = $tiles->tiles_icon_color;
         } else {
-            $this->tiles_icon_color = CardList::GREY_STYLE;
+            $this->tiles_icon_color = CardList::BLUE_STYLE;
         }
 
         parent::__construct($config);

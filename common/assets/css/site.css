@@ -34,6 +34,10 @@ body {
     }
 }
 
+.container {
+    height: 100%;
+}
+
 .wrapper {
     display: table-row;
     height: 100%;
@@ -41,7 +45,8 @@ body {
 
 .container > .wrap {
     padding: 70px 15px 20px;
-    min-height: 700px;
+    /*min-height: 700px;*/
+    height: 100%;
 }
 
 .footer {
@@ -117,6 +122,7 @@ a.desc:after {
 .grid-view .filters input,
 .grid-view .filters select {
     min-width: 50px;
+    background-color: #eceef9;
 }
 
 .grid-view .filters input:focus,
@@ -212,7 +218,7 @@ div.wk-widget-input-prepend-icon > span {
 }
 
 [class="help-block"] {
-    color: #bdbdbd;
+    color: #8b97b9;
 }
 
 [class="help-block"]:empty {
@@ -443,7 +449,7 @@ div.pmd-card-media > img {
 
 div.pmd-card-media.wk-blue-style, div.pmd-card-media > img.wk-blue-style {
     background-color: transparent;
-    border-bottom: solid rgba(122, 169, 255, 0.4) 5px;
+    border-bottom: solid rgba(122, 129, 255, 0.4) 5px;
 }
 
 div.pmd-card-media.wk-red-style, div.pmd-card-media > img.wk-red-style {
@@ -519,7 +525,7 @@ label.pmd-input-group-label.wk-input-with-icon {
     text-shadow: rgba(0, 0, 0, 0.02) 17px 11px 13px;
 }
 
-.wk-widget-card > .pmd-card {
+.wk-widget-card > .pmd-card, footer {
     cursor: pointer;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -575,7 +581,7 @@ label.pmd-input-group-label.wk-input-with-icon {
 
 .wk-login-button > button {
     background-color: rgba(255, 255, 255, 0.3);
-    color: #bebed9;
+    color: #9089b7;
     height: 80px;
     -webkit-transition: background-color 0.5s, color 0.5s;
     -moz-transition: background-color 0.5s, color 0.5s;
@@ -599,12 +605,12 @@ label.pmd-input-group-label.wk-input-with-icon {
 }
 
 .pmd-switch label input[type="checkbox"]:checked + .pmd-switch-label, .togglebutton-default label input[type="checkbox"]:checked + .pmd-switch-label {
-    background-color: rgb(195, 208, 232);
+    background-color: #b5c1ec;
 }
 
 .pmd-switch label input[type="checkbox"]:checked + .pmd-switch-label::after, .togglebutton-default label input[type="checkbox"]:checked + .pmd-switch-label::after {
     background-color: #726ba0;
-    box-shadow: 0 1px 1px 0px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.4);
 }
 
 .field-loginform-rememberme .control-label {
@@ -772,7 +778,7 @@ ul.breadcrumb li:not(:last-child):active::after {
 }
 
 .content-container > h1 {
-    color: #726ba0;
+    color: #a7a1d0;
     background-color: rgba(255, 255, 255, 0.7);
     box-shadow: 1px 2px 1px rgba(0, 0, 0, 0.1);
     font-size: 20px;
@@ -838,7 +844,12 @@ ul.breadcrumb li:not(:last-child):active::after {
 
 .pmd-textfield label {
     padding-left: 10px;
-    color: #a6acc5;
+    color: #7584af;
+    letter-spacing: 0.01em;
+}
+
+.pmd-textfield-select2 label {
+    color: #7584af;
     letter-spacing: 0.01em;
 }
 
@@ -867,7 +878,7 @@ label.wk-label-with-icon {
 }
 
 .wk-widget-select2-choose-from-grid:hover {
-    background-color: #5d51ad;
+    background-color: #342c66;
 }
 
 .wk-widget-select2-choose-from-grid > i {
@@ -875,7 +886,7 @@ label.wk-label-with-icon {
 }
 
 .select2-dropdown {
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: #f4f5ff;
     border: none;
 }
 
@@ -926,7 +937,7 @@ label.wk-label-with-icon {
 }
 
 .wk-custom-buttons > span > button:hover {
-    background-color: #5d51ad;
+    background-color: #342c66;
 }
 
 .wk-custom-buttons button[data-toggle="dropdown"] > i {
@@ -962,6 +973,26 @@ input.form-control.wk-per-page {
 ul.wk-visible-columns, ul.wk-hidden-columns {
     padding: 8px 4px;
     background-color: #dcdff9;
+}
+
+ul.wk-visible-columns:before {
+    font-family: 'fontawesome';
+    content: '\f06e';
+    position: absolute;
+    font-size: 200px;
+    color: #ebedff;
+    top: 0;
+    left: 120px;
+}
+
+ul.wk-hidden-columns:before {
+    font-family: 'fontawesome';
+    content: '\f070';
+    position: absolute;
+    font-size: 200px;
+    color: #ebedff;
+    top: 0;
+    left: 120px;
 }
 
 ul.wk-visible-columns > a.list-group-item, ul.wk-hidden-columns > a.list-group-item {
@@ -1060,7 +1091,41 @@ div.form-group.filter-marked {
 .pmd-btn-flat.btn-info:hover,
 .pmd-btn-flat.btn-default:hover,
 .pmd-btn-flat.btn-primary:hover {
-    background-color: #e5e9f7;
+    background-color: #f0f2fb;
+}
+
+.pmd-btn-flat.btn-success:focus,
+.pmd-btn-flat.btn-danger:focus,
+.pmd-btn-flat.btn-warning:focus,
+.pmd-btn-flat.btn-info:focus,
+.pmd-btn-flat.btn-default:focus,
+.pmd-btn-flat.btn-primary:focus {
+    background-color: transparent;
+}
+
+.wkdoc-pills .list-group-item.active, .wkdoc-pills .list-group-item.active:focus {
+    background-color: #5d5498;
+    border-color: #5d5498;
+    transition: background-color 0.5s, border-color 0.5s;
+}
+
+.wkdoc-pills .list-group-item.active:hover {
+    background-color: #342c66;
+    border-color: #342c66;
+}
+
+.pmd-list .list-group-item.wkdoc-pill-link:not(.active) {
+    color: #342c66;
+    background-color: transparent;
+    transition: background-color 0.5s;
+}
+
+.pmd-list .list-group-item.wkdoc-pill-link.active {
+    color: #eff1ff;
+}
+
+.pmd-list .list-group-item.wkdoc-pill-link:not(.active):hover {
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 ::-webkit-scrollbar-track {
@@ -1076,6 +1141,10 @@ div.form-group.filter-marked {
 ::-webkit-scrollbar-thumb {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
     background-color: #726ba0;
+}
+
+.wk-report-loader-content h4 {
+    color: #535063;
 }
 
 /* Style /\ */

@@ -38,7 +38,7 @@ use common\assets\AppCommonAsset;
     <div class="container">
         <?php
         NavBar::begin([
-            'brandLabel' => '',
+            'brandLabel' => $this->render(Yii::$app->params['brandLabelView']),
             'brandUrl' => Yii::$app->homeUrl,
             'options' => [
                 'class' => 'navbar navbar-inverse navbar-fixed-top pmd-navbar pmd-z-depth',

@@ -3,6 +3,7 @@
     width: 330px;
     height: 190px;
     background-color: #b9b7b8;
+    background-color: transparent;
     background-repeat: no-repeat;
     overflow: hidden;
     clip-path: url(#c3);
@@ -29,6 +30,10 @@ button > i.fa, a > i.fa {
 
 .wk-tiles-image-container > div:first-child, .wk-tiles-icon-container > div:first-child {
     width: 360px;
+}
+
+.wk-tiles-image-container > div:first-child {
+    background-color: #b9b7b8;
 }
 
 .wk-tiles-image-container > div:last-child, .wk-tiles-icon-container > div:last-child {
@@ -129,6 +134,16 @@ div.wk-tiles-icons > div > a {
 
 div.wk-tiles-icons > div {
     padding-bottom: 15px;
+}
+
+.wk-tiles-image-container > div:first-child:before {
+    font-family: 'fontawesome';
+    position: absolute;
+    content: '\f03e';
+    font-size: 160px;
+    color: #d2d2d2;
+    top: -20px;
+    left: 95px;
 }
 
 div.wk-tiles-preview-bg {

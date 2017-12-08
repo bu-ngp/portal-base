@@ -119,6 +119,11 @@ return [
                     'basePath' => '@common/messages',
                     'sourceLanguage' => 'en-US',
                 ],
+                'noty' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@vendor/loveorigami/yii2-notification-wrapper/src/messages',
+                    'sourceLanguage' => 'en-US',
+                ],
                 '*' => [
                     'class' => 'yii\i18n\PhpMessageSource',
                     'basePath' => '@common/messages',

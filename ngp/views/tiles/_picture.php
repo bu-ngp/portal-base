@@ -10,7 +10,7 @@ use yii\bootstrap\Html;
 <div class="row wk-tiles-image-container">
     <div class="col-md-4">
         <div class="wk-tiles-preview">
-            <div class="wk-tiles-preview-bg"><i class="fa fa-picture-o"></i></div>
+            <div class="wk-tiles-preview-bg"></div>
             <svg width="100%" height="100%">
                 <use xlink:href="#fullHex"/>
             </svg>

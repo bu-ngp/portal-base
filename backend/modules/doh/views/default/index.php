@@ -23,6 +23,7 @@ $handler_statuses = Handler::itemsValues('handler_status');
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
+            'minHeight' => 450,
             'columns' => [
                 [
                     'attribute' => 'handler_at',
@@ -42,7 +43,11 @@ $handler_statuses = Handler::itemsValues('handler_status');
                         return '<span key="' . $value . '" class="label label-' . $model->labelStatus($value) . '">' . (isset($value) ? Html::encode($handler_statuses[$value]) : '') . '</span>';
                     },
                 ],
-                'handler_description',
+                [
+                    'attribute' => 'handler_description',
+                    'noWrap' => false,
+                ],
+
                 [
                     'attribute' => 'handler_percent',
                     'filter' => false,
@@ -125,9 +130,9 @@ $handler_statuses = Handler::itemsValues('handler_status');
                 'icon' => FA::icon(FA::_LIST_ALT),
                 'title' => Yii::t('doh', 'Handlers'),
             ],
-            'leftBottomToolbar' => Html::button('test', ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary', 'id' => 'test1'])
-                . Html::button('test error', ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger', 'id' => 'test_error'])
-                . Html::button('test with files', ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-info', 'id' => 'test_with_files'])
+//            'leftBottomToolbar' => Html::button('test', ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary', 'id' => 'test1'])
+//                . Html::button('test error', ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger', 'id' => 'test_error'])
+//                . Html::button('test with files', ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-info', 'id' => 'test_with_files'])
         ]) ?>
 
     </div>
