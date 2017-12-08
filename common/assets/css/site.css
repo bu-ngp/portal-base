@@ -24,7 +24,7 @@ body {
 
 @media (min-width: 1900px) {
     .container {
-        width: 1600px;
+        width: 1530px;
     }
 }
 
@@ -303,7 +303,7 @@ body {
 
 .container > .wrap {
     background-color: rgba(190, 185, 220, 0.52);
-    box-shadow: 0 0 15px 3px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 7px 2px rgba(0, 0, 0, 0.15);
 }
 
 /* ------- Footer ------- */
@@ -354,7 +354,7 @@ body {
 
 h2.pmd-card-title-text {
     font-family: 'Roboto', sans-serif;
-    color: #9eb0d5;
+    color: #859ac7;;
     font-size: 2rem;
     /*transition: color 0.5s;*/
 }
@@ -374,6 +374,7 @@ div.pmd-card {
 
 .wk-widget-masonry-container {
     box-shadow: none;
+    margin-top: 15px;
 }
 
 .pmd-card-actions {
@@ -383,7 +384,8 @@ div.pmd-card {
 .pmd-card-actions .btn.pmd-btn-flat {
     margin: 0;
     font-family: 'Roboto Light', sans-serif;
-    background-color: rgba(210, 219, 255, 0.5);
+    /*background-color: rgba(210, 219, 255, 0.5);*/
+    background-color: rgba(66, 54, 142, 0.65);
     font-size: 1.2em;
     color: rgb(184, 190, 225);
     letter-spacing: 0.1em;
@@ -423,7 +425,7 @@ div.pmd-card-media > i {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -55%);
+    transform: translate(-55%, -55%);
 }
 
 div.pmd-card-media > img {
@@ -470,23 +472,23 @@ div.pmd-card-media.wk-grey-style, div.pmd-card-media > img.wk-grey-style {
 }
 
 .wk-widget-search-panel {
-    box-shadow: 0px 2px 7px 0px #00000014;
+    box-shadow: 0 2px 7px 0 #00000014;
     background-color: rgba(255, 255, 255, 0.4);
 }
 
 .wk-widget-search-panel-field > div > label {
-    color: #9eb0d5;
+    color: #7468bf;
     font-size: 2rem;
     padding-left: 10px;
     font-family: 'Roboto Light', sans-serif;
 }
 
 .wk-widget-search-panel-field > div > input.form-control {
-    color: #bebed9;
+    color: #9e9ed6;
     background-color: rgba(255, 255, 255, 0.4);
     font-family: 'Roboto', sans-serif;
     padding-left: 10px;
-    box-shadow: inset 0px 2px 4px 0 rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
 }
 
 .wk-widget-search-panel-field > div > input.form-control::selection {
@@ -501,6 +503,10 @@ div.pmd-card-media.wk-grey-style, div.pmd-card-media > img.wk-grey-style {
     color: #726ba0;
     font-family: 'Roboto Light', sans-serif;
     letter-spacing: 0.01em;
+}
+
+label.pmd-input-group-label.wk-input-with-icon {
+    padding-left: 60px;
 }
 
 .wk-widget-card > .pmd-card .wk-style {
@@ -635,7 +641,7 @@ ul.breadcrumb li {
     height: 40px; /* total height */
     list-style-type: none;
     padding: 0 5px 0 30px; /* padding around text, last should include arrow width */
-    border-right: 6px solid #d3d6fd; /* width: gap between arrows, color: background of document */
+    border-right: 6px solid #b4aaeb; /* width: gap between arrows, color: background of document */
     position: relative;
     margin-top: 5px;
     text-align: center;
@@ -655,7 +661,7 @@ ul.breadcrumb li:nth-child(n+2)::before {
     top: 0;
     left: 0;
     display: block;
-    border-left: 25px solid #ddd5fd; /* width: arrow width, color: background of document */
+    border-left: 25px solid #b4aaeb; /* width: arrow width, color: background of document */
     border-top: 20px solid transparent; /* width: half height */
     border-bottom: 20px solid transparent; /* width: half height */
     width: 0;

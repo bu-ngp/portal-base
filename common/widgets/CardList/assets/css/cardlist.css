@@ -41,6 +41,10 @@ div.pmd-card-media.wk-grey-style {
     background-color: #d6d6d6;
 }
 
+.wk-widget-card {
+    width: 360px;
+}
+
 .wk-widget-card.wk-widget-show {
     opacity: 1;
     /*height: 460px;*/
@@ -77,7 +81,6 @@ div.pmd-card-media.wk-grey-style {
 }
 
 .pmd-card-actions {
-    max-width: 335px;
     max-height: 51px;
     overflow: hidden;
 }
@@ -86,7 +89,6 @@ div.pmd-card-media.wk-grey-style {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 335px;
 }
 
 .wk-widget-search-panel {

@@ -622,6 +622,16 @@
                     });
                 });
 
+                $widget.on('click', '.pmd-card', function (e) {
+                    $(this).find(".pmd-card-actions > a").first().trigger("click");
+                });
+
+                $widget.on('click', '.pmd-card-actions > a', function (e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    window.open($(this).attr("href"), $(this).attr("target") === "_blank" ? "_blank" : "_self")
+                });
+
                 if (settings.search === true) {
                     makeSearchPanel($widget);
                 }
