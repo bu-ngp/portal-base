@@ -3,5 +3,5 @@ return [
     'adminEmail' => 'admin@example.com',
     'supportEmail' => 'support@example.com',
     'user.passwordResetTokenExpire' => 3600,
-    'brandLabelView' => __DIR__ . '/../views/_brandLabel.php',
+    'brandLabelView' => '@common/views/_brandLabel',
 ];
