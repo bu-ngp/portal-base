@@ -29,6 +29,7 @@ return [
         ],
         'cache' => [
             'class' => 'yii\caching\MemCache',
+            'useMemcached' => true,
         ],
         'assetsAutoCompress' =>
             [
@@ -73,7 +74,7 @@ return [
             'errorAction' => 'site/error',
         ],
         'urlManagerAdmin' => [
-            'class' => 'yii\web\urlManager',
+            'class' => 'yii\web\UrlManager',
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
