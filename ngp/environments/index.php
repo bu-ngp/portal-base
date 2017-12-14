@@ -32,38 +32,23 @@ return [
     'Development' => [
         'path' => 'dev',
         'setWritable' => [
-            'backend/runtime',
-            'backend/web/assets',
-            'backend/tests/_output',
-            'backend/tests/_support',
-            'common/ftpimport/reports',
-            'common/tests/_output',
-            'common/tests/_support',
-            'common/tmpfiles',
-            'console/runtime',
-        ],
-        'setExecutable' => [
-            'yii',
-            'yii_test',
-        ],
-        'setCookieValidationKey' => [
-            'common/config/main-local.php',
+            'runtime',
+            'web/assets',
+            'web/thumbs',
+            'web/thumbs/tmp',
+            'tests/_output',
+            'tests/_support',
+            'reports_attach-list',
         ],
     ],
     'Production' => [
         'path' => 'prod',
         'setWritable' => [
-            'backend/runtime',
-            'backend/web/assets',
-            'common/ftpimport/reports',
-            'common/tmpfiles',
-            'console/runtime',
-        ],
-        'setExecutable' => [
-            'yii',
-        ],
-        'setCookieValidationKey' => [
-            'common/config/main-local.php',
+            'runtime',
+            'web/assets',
+            'web/thumbs',
+            'web/thumbs/tmp',
+            'reports_attach-list',
         ],
     ],
 ];
