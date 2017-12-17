@@ -121,6 +121,7 @@ HTML;
     <div class="clearfix"></div>
 HTML;
     public $customButtons = [];
+    public $customButtonsInternal = [];
     public $customActionButtons = [];
     public $gridExcludeIdsFunc;
     public $gridInject;
@@ -405,6 +406,8 @@ EOT;
 
     protected function makeCustomButtons()
     {
+        $this->customButtons = array_merge($this->customButtonsInternal, $this->customButtons);
+
         if ($this->customButtons) {
             $buttons = '';
             array_map(function ($liContent) use (&$buttons) {

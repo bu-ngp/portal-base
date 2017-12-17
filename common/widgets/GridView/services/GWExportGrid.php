@@ -84,8 +84,8 @@ class GWExportGrid
 
     protected function makeButtonOnToolbar()
     {
-        if (count($this->gridView->customButtons) > 0) {
-            $this->gridView->customButtons[] = '{divider}';
+        if (count($this->gridView->customButtonsInternal) > 0) {
+            $this->gridView->customButtonsInternal[] = '{divider}';
         }
 
         foreach ($this->gridView->exportGrid->getFormat() as $format) {
@@ -101,7 +101,7 @@ class GWExportGrid
                     'role' => 'menuitem',
                 ]);
 
-            $this->gridView->customButtons[] = $button;
+            $this->gridView->customButtonsInternal[] = $button;
         }
     }
 

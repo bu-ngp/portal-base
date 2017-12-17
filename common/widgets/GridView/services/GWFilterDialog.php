@@ -80,7 +80,7 @@ class GWFilterDialog
                 'role' => 'menuitem',
             ]);
 
-        $this->gridView->customButtons[] = $button;
+        $this->gridView->customButtonsInternal[] = $button;
     }
 
     protected function getOutputString(Model $filterModel)

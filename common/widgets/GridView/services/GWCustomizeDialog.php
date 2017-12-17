@@ -117,7 +117,7 @@ EOT;
                 'tabindex' => '-1',
             ]);
 
-        $this->gridView->customButtons[] = $button;
+        $this->gridView->customButtonsInternal[] = $button;
     }
 
     protected function prepareColumns()
