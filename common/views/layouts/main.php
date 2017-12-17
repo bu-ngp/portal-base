@@ -123,6 +123,17 @@ use common\assets\AppCommonAsset;
         <p> <?= Yii::$app->get('config')->config_common_footer_addition ?: 'Author Portal' ?></p>
     </div>
 </footer>
+<?php $dbName = preg_replace('/(.*)dbname=(\w+);?/', '$2', Yii::$app->db->dsn) ?>
+<div class="wk-test-db"
+     db="<?= isset(Yii::$app->params['productionDatabase']) && Yii::$app->params['productionDatabase'] !== $dbName ? 'dev' : 'prod' ?>">
+    <div>
+        <p>Тестовая</p>
+        <p>База</p>
+    </div>
+    <div>
+        <i class="fa fa-4x fa-warning"></i>
+    </div>
+</div>
 <?= ReportLoader::widget(['id' => 'wk-Report-Loader']) ?>
 <?= Wrapper::widget([
     'layerClass' => 'lo\modules\noty\layers\Toastr',

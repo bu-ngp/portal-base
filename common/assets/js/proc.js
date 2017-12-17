@@ -34,8 +34,8 @@ $(function () {
         }
 
         var zIndex = Math.max.apply(null, Array.prototype.map.call(document.querySelectorAll('*'), function (el) {
-                return +el.style.zIndex;
-            })) + 10;
+            return +el.style.zIndex;
+        })) + 10;
 
         $(this).css('z-index', zIndex);
         setTimeout(function () {
@@ -67,4 +67,9 @@ $(function () {
         e.preventDefault();
     });
 
+    if ($(".wk-test-db").attr("db") === "dev") {
+        setTimeout(function () {
+            $(".wk-test-db").addClass("show");
+        }, 1500);
+    }
 });

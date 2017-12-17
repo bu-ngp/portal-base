@@ -78,8 +78,10 @@
                 linkNewWindow: props.linkNewWindow
             });
 
-            var $cardInside = $media.add($title).add($actions);
+            var $container = $("<div></div>");
+            $container.append($media.add($title));
 
+            var $cardInside = $container.add($actions);
             $cardInside.appendTo($card.children('div'));
 
             return $card;

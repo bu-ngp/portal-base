@@ -18,7 +18,7 @@ div.pmd-card-media > img {
 
 div.pmd-card {
     border-radius: 20px;
-    padding: 0;
+    padding: 10px 0 0 0;
 }
 
 div.pmd-card-media.wk-red-style {
@@ -39,6 +39,11 @@ div.pmd-card-media.wk-yellow-style {
 
 div.pmd-card-media.wk-grey-style {
     background-color: #d6d6d6;
+}
+
+div.pmd-card > div:first-child {
+    margin: 0 10px 10px 10px;
+    border: 1px outset rgba(255, 255, 255, 0.40);
 }
 
 .wk-widget-card {
