@@ -1,3 +1,15 @@
+:root {
+--dark-background: #342c66;
+--neutral-background: #726ba0;
+--light-background: rgba(255, 255, 255, 0.7);
+
+--dark-color: #726ba0;
+--neutral-color: #cfd6fd;
+--light-color: #d1caf3;
+
+--substrate-background: rgba(255, 255, 255, 0.3);
+}
+
 @font-face {
     font-family: 'Roboto';
     src: url('../fonts/Roboto/Roboto-Regular.ttf') format('truetype');
