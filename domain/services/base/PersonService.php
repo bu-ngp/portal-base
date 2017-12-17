@@ -9,6 +9,7 @@
 
 namespace domain\services\base;
 
+use domain\forms\base\ChangeUserPasswordForm;
 use domain\helpers\BinaryHelper;
 use domain\models\base\Person;
 use domain\forms\base\ProfileForm;
@@ -61,6 +62,10 @@ class PersonService extends Service
         return $this->profiles->has($uuid) ? $this->profiles->find($uuid) : false;
     }
 
+    public function getCurrentUser()
+    {
+        return $this->persons->find(Yii::$app->getUser()->getId());
+    }
 
     /**
      * @param $inn
@@ -142,6 +147,18 @@ class PersonService extends Service
         $uuid = Uuid::str2uuid($id);
         $person = $this->persons->find($uuid);
         $this->persons->delete($person);
+    }
+
+    public function changePassword($uuid, ChangeUserPasswordForm $form)
+    {
+        $person = $this->persons->find($uuid);
+        $person->changePassword($form);
+
+        if (!$this->validateModels($person, $form)) {
+            throw new \DomainException();
+        }
+
+        $this->persons->save($person);
     }
 
     public function guardPasswordLength(UserForm $userForm)

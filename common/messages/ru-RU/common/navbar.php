@@ -17,8 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Create' => 'Создать',
-    'Delete' => 'Удалить',
-    'Record is saved.' => 'Запись сохранена',
-    'Update' => 'Обновить',
+    'Change Password' => 'Сменить пароль',
+    'Handlers' => 'Обработчики',
+    'Requested reports' => 'Затребованные отчеты',
+    'Updates' => 'Обновления',
 ];

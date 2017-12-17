@@ -17,7 +17,6 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Build' => 'Здание',
     'Builds' => 'Здания',
     'Create Build' => 'Добавить здание',
 ];

@@ -22,7 +22,9 @@ class UserRules
                 [['person_username'], LoginValidator::className()],
                 [['person_username', 'person_fullname'], 'string', 'min' => 3],
                 [['person_fullname', 'person_username', 'person_email'], 'string', 'max' => 255],
-                [['person_fullname'], FIOValidator::className()],
+                [['person_fullname'], FIOValidator::className(), 'when' => function ($model) {
+                    return $model->person_code !== 1;
+                }],
                 [['person_email'], 'email'],
             ];
     }

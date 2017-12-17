@@ -12,6 +12,7 @@ namespace backend\controllers\configuration;
 use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\GridView\services\AjaxResponse;
 use console\helpers\RbacHelper;
+use domain\forms\base\ChangeUserPasswordForm;
 use domain\forms\base\ProfileForm;
 use domain\forms\base\UserForm;
 use domain\forms\base\UserFormUpdate;
@@ -58,6 +59,11 @@ class UsersController extends Controller
                         'actions' => ['create', 'update', 'delete'],
                         'roles' => [RbacHelper::USER_EDIT],
                     ],
+                    [
+                        'allow' => true,
+                        'actions' => ['change-password'],
+                        'roles' => ['@'],
+                    ]
                 ],
             ],
             [
@@ -163,5 +169,22 @@ class UsersController extends Controller
         }
 
         return AjaxResponse::init(AjaxResponse::SUCCESS);
+    }
+
+    public function actionChangePassword()
+    {
+        $user = $this->service->getCurrentUser();
+        $changeUserPasswordForm = new ChangeUserPasswordForm($user);
+
+        if ($changeUserPasswordForm->load(Yii::$app->request->post())
+            && $this->service->changePassword($user->primaryKey, $changeUserPasswordForm)
+        ) {
+            Yii::$app->session->setFlash('success', Yii::t('common', 'Record is saved.'));
+            return $this->redirect(Breadcrumbs::previousUrl());
+        }
+
+        return $this->render('change_password', [
+            'modelChangeUserPasswordForm' => $changeUserPasswordForm,
+        ]);
     }
 }

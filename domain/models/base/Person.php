@@ -5,6 +5,7 @@ namespace domain\models\base;
 use domain\behaviors\BlameableBehavior;
 use domain\auth\Ldap;
 use domain\auth\LdapModelInterface;
+use domain\forms\base\ChangeUserPasswordForm;
 use domain\validators\WKDateValidator;
 use domain\forms\base\UserForm;
 use domain\forms\base\UserFormUpdate;
@@ -125,6 +126,11 @@ class Person extends \yii\db\ActiveRecord implements LdapModelInterface
         $this->person_email = $userFormUpdate->person_email;
         $this->person_fired = $userFormUpdate->person_fired;
     }
+
+    public function changePassword(ChangeUserPasswordForm $changeUserPasswordForm)
+    {
+        $this->person_password_hash = Yii::$app->security->generatePasswordHash($changeUserPasswordForm->person_password);
+        }
 
     /**
      * @return \yii\db\ActiveQuery

@@ -54,27 +54,39 @@ use common\assets\AppCommonAsset;
                     'data-sidebar' => 'true',
                 ],
                 'options' => ['class' => 'dropdown pmd-dropdown'],
-                'items' => [
+                'items' => \yii\helpers\ArrayHelper::merge(
                     [
-                        'label' => 'Затребованные отчеты',
-                        'url' => '#',
-                        'linkOptions' => [
-                            'class' => 'btn btn-sm pmd-btn-flat pmd-ripple-effect btn-default wk-widget-reports-loader',
-                            'data-target' => '#wk-Report-Loader',
-                            'data-toggle' => 'modal',
+                        [
+                            'label' => Yii::t('common/navbar', 'Requested reports'),
+                            'url' => '#',
+                            'linkOptions' => [
+                                'class' => 'btn btn-sm pmd-btn-flat pmd-ripple-effect btn-default wk-widget-reports-loader',
+                                'data-target' => '#wk-Report-Loader',
+                                'data-toggle' => 'modal',
+                            ],
                         ],
-                    ],
+                        [
+                            'label' => Yii::t('common/navbar', 'Handlers'),
+                            'url' => Yii::$app->urlManagerAdmin->createUrl(['doh']),
+                            'linkOptions' => ['class' => 'btn btn-sm pmd-btn-flat pmd-ripple-effect btn-default pmd-ripple-effect'],
+                        ],
+                        [
+                            'label' => Yii::t('common/navbar', 'Updates'),
+                            'url' => Yii::$app->urlManagerAdmin->createUrl(['updates']),
+                            'linkOptions' => ['class' => 'btn btn-sm pmd-btn-flat pmd-ripple-effect btn-default pmd-ripple-effect'],
+                        ],
+
+                    ], Yii::$app->user->isGuest ? [] : [
+                    '<li class="divider"></li>',
                     [
-                        'label' => 'Обработчики',
-                        'url' => Yii::$app->urlManagerAdmin->createUrl(['doh']),
+                        'label' => Yii::t('common/navbar', 'Change Password'),
+                        'url' => Yii::$app->urlManagerAdmin->createUrl(['configuration/users/change-password']),
                         'linkOptions' => ['class' => 'btn btn-sm pmd-btn-flat pmd-ripple-effect btn-default pmd-ripple-effect'],
                     ],
-                    [
-                        'label' => 'Обновления',
-                        'url' => Yii::$app->urlManagerAdmin->createUrl(['updates']),
-                        'linkOptions' => ['class' => 'btn btn-sm pmd-btn-flat pmd-ripple-effect btn-default pmd-ripple-effect'],
-                    ],
-                ],
+                ]
+                ),
+
+
             ],
 
         ];

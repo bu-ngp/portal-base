@@ -29,7 +29,7 @@ return [
         ],
         'cache' => [
             'class' => 'yii\caching\MemCache',
-            'useMemcached' => true,
+           // 'useMemcached' => true,
         ],
         'assetsAutoCompress' =>
             [

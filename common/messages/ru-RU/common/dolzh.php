@@ -17,7 +17,6 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Dolzh' => 'Должность',
     'Create Dolzh' => 'Добавить должность',
     'Dolzhs' => 'Должности',
 ];
