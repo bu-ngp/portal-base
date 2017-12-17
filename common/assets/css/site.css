@@ -1,13 +1,13 @@
 :root {
---dark-background: #342c66;
---neutral-background: #726ba0;
---light-background: rgba(255, 255, 255, 0.7);
+    --dark-background: #342c66;
+    --neutral-background: #726ba0;
+    --light-background: rgba(255, 255, 255, 0.7);
 
---dark-color: #726ba0;
---neutral-color: #cfd6fd;
---light-color: #d1caf3;
+    --dark-color: #726ba0;
+    --neutral-color: #cfd6fd;
+    --light-color: #d1caf3;
 
---substrate-background: rgba(255, 255, 255, 0.3);
+    --substrate-background: rgba(255, 255, 255, 0.3);
 }
 
 @font-face {
@@ -254,7 +254,7 @@ body {
     background: -moz-linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%); /* FF3.6-15 */
     background: -webkit-linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%); /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    background-image: url("../img/bg.jpg");
+    /*background-image: url("../img/bg.jpg");*/
 }
 
 /* ------- NavBar ------- */
@@ -321,7 +321,7 @@ body {
 
 .container > .wrap {
     background-color: rgba(190, 185, 220, 0.52);
-    box-shadow: 0 0 7px 2px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.15);
 }
 
 /* ------- Footer ------- */
@@ -388,6 +388,7 @@ h2.pmd-card-title-text {
 
 div.pmd-card {
     border-radius: 0;
+    box-shadow: 3px 6px 2px 2px rgba(0, 0, 0, 0.03);
 }
 
 .wk-widget-masonry-container {
@@ -399,7 +400,7 @@ div.pmd-card {
     padding: 0;
 }
 
-.pmd-card-actions .btn.pmd-btn-flat {
+.pmd-card-actions .btn.pmd-btn-flat, .pmd-card-actions .btn.pmd-btn-flat:focus {
     margin: 0;
     font-family: 'Roboto Light', sans-serif;
     /*background-color: rgba(210, 219, 255, 0.5);*/
@@ -659,7 +660,7 @@ ul.breadcrumb li {
     height: 40px; /* total height */
     list-style-type: none;
     padding: 0 5px 0 30px; /* padding around text, last should include arrow width */
-    border-right: 6px solid #b4aaeb; /* width: gap between arrows, color: background of document */
+    border-right: 6px solid #c3bdeb; /* width: gap between arrows, color: background of document */
     position: relative;
     margin-top: 5px;
     text-align: center;
@@ -679,7 +680,7 @@ ul.breadcrumb li:nth-child(n+2)::before {
     top: 0;
     left: 0;
     display: block;
-    border-left: 25px solid #b4aaeb; /* width: arrow width, color: background of document */
+    border-left: 25px solid #c3bdeb; /* width: arrow width, color: background of document */
     border-top: 20px solid transparent; /* width: half height */
     border-bottom: 20px solid transparent; /* width: half height */
     width: 0;
@@ -799,6 +800,7 @@ ul.breadcrumb li:not(:last-child):active::after {
 
 .content-container .panel {
     background-color: transparent;
+    border: 1px solid #726ba0;
 }
 
 .content-container .panel-body {
@@ -1158,5 +1160,37 @@ div.form-group.filter-marked {
 .wk-report-loader-content h4 {
     color: #535063;
 }
+
+/* ------- Toast Alert ------- */
+
+#toast-container > div {
+    font-family: 'Roboto', sans-serif;
+    opacity: 1;
+    box-shadow: none;
+}
+
+.toast-error {
+    background-color: #d5615b;
+    transition: background-color 0.5s;
+}
+
+.toast-error:hover {
+    background-color: #ca4a43;
+}
+
+.toast-success {
+    background-color: #7fc27f;
+    transition: background-color 0.5s;
+}
+
+.toast-success:hover {
+    background-color: #5ab05a;
+}
+
+#toast-container > div:hover {
+    box-shadow: none;
+}
+
+/* ------- Toast Alert ------- */
 
 /* Style /\ */
