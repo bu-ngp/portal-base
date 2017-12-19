@@ -12,7 +12,7 @@ namespace doh\controllers;
 use console\helpers\RbacHelper;
 use doh\services\classes\DoH;
 use doh\services\models\DohFiles;
-use doh\services\models\search\handlerSearch;
+use doh\services\models\search\HandlerSearch;
 use doh\services\TestPL;
 use doh\services\TestPLError;
 use doh\services\TestWithFiles;
