@@ -139,7 +139,11 @@ EOT;
 
         foreach ($columns as $column) {
             /** @var $column Column */
-            array_push(ArrayHelper::getValue($column, 'options.wk-widget', false) ? $visible : $process, $column);
+            if (ArrayHelper::getValue($column, 'options.wk-widget', false)) {
+                $visible[] = $column;
+            } else {
+                $process[] = $column;
+            }
         }
 
         if ($_COOKIE[$this->gridView->id]) {
