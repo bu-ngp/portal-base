@@ -15,6 +15,7 @@ use yii\base\Model;
 use yii\bootstrap\Html;
 use yii\grid\Column;
 use yii\grid\DataColumn;
+use yii\helpers\ArrayHelper;
 
 class GWCustomizeDialog
 {
@@ -138,7 +139,7 @@ EOT;
 
         foreach ($columns as $column) {
             /** @var $column Column */
-            array_push(isset($column['options']['wk-widget']) ? $visible : $process, $column);
+            array_push(ArrayHelper::getValue($column, 'options.wk-widget', false) ? $visible : $process, $column);
         }
 
         if ($_COOKIE[$this->gridView->id]) {
