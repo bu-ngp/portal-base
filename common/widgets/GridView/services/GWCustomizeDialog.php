@@ -174,10 +174,14 @@ EOT;
             }
         }
 
-        array_map(function ($column) use (&$visible, &$hidden) {
+        foreach ($process as $column) {
             /** @var $column Column */
-            array_push($column['visible'] ? $visible : $hidden, $column);
-        }, $process);
+            if (ArrayHelper::getValue($column, 'visible', false)) {
+                $visible[] = $column;
+            } else {
+                $process[] = $column;
+            }
+        }
 
         return (object)[
             'visible' => $visible,
