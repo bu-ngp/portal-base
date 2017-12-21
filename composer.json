@@ -41,6 +41,7 @@
     "mpdf/mpdf": "^6.1",
     "kartik-v/yii2-date-range": "^1.6",
     "wemersonjanuario/wkhtmltopdf-windows": "~0.12",
+    "rvanlaak/wkhtmltopdf-amd64-centos7": "~0.12",
     "loveorigami/yii2-notification-wrapper": "*",
     "bower-asset/toastr": "^2.1",
     "knplabs/knp-snappy": "^0.4.3",
