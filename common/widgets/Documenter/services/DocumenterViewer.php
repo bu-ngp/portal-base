@@ -27,7 +27,11 @@ class DocumenterViewer
         $this->_filePath = $filePath;
         $path = DIRECTORY_SEPARATOR === '/' ? $path : mb_convert_encoding($path, 'UTF-8', 'Windows-1251');
 
-        if (!preg_match('/^\\\\((\d+)_)?(\w+)(\[([\w\d_-|]+)?\])?\\\\(\d+|[\w\d-_\(\)]+)\.md$/u', $path, $matches)) {
+        $pattern = DIRECTORY_SEPARATOR === '/'
+            ? '/^\/((\d+)_)?(\w+)(\[([\w\d_-|]+)?\])?\/(\d+|[\w\d-_\(\)]+)\.md$/u'
+            : '/^\\\\((\d+)_)?(\w+)(\[([\w\d_-|]+)?\])?\\\\(\d+|[\w\d-_\(\)]+)\.md$/u';
+
+        if (!preg_match($pattern, $path, $matches)) {
             throw new InvalidConfigException("Invalid parse path '$path'");
         }
 
