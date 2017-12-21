@@ -136,10 +136,10 @@ EOT;
 
         $process = [];
 
-        array_map(function ($column) use (&$visible, &$process) {
+        foreach ($columns as $column) {
             /** @var $column Column */
             array_push(isset($column['options']['wk-widget']) ? $visible : $process, $column);
-        }, $columns);
+        }
 
         if ($_COOKIE[$this->gridView->id]) {
             $cookieOptions = json_decode($_COOKIE[$this->gridView->id]);
