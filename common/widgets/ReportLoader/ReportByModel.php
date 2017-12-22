@@ -186,7 +186,7 @@ class ReportByModel
     {
         switch (DIRECTORY_SEPARATOR) {
             case '/':
-                return 'wkhtmltopdf-amd64'/*Yii::getAlias('@vendor') . '/bin/wkhtmltopdf-amd64'*/;
+                return '/usr/local/bin/wkhtmltopdf-amd64'/*Yii::getAlias('@vendor') . '/bin/wkhtmltopdf-amd64'*/;
             case '\\':
                 return Yii::getAlias('@vendor') . '/bin/wkhtmltopdf.exe.bat';
         }
