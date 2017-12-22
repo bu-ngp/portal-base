@@ -179,7 +179,7 @@ EOT;
             if (ArrayHelper::getValue($column, 'visible', false)) {
                 $visible[] = $column;
             } else {
-                $process[] = $column;
+                $hidden[] = $column;
             }
         }
 
