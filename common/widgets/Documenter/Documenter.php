@@ -20,6 +20,17 @@ use yii\base\Widget;
 use yii\bootstrap\Html;
 use yii\helpers\FileHelper;
 
+/**
+ * Class Documenter
+ * @package common\widgets\Documenter
+ *
+ * update_docs\
+ *      1_Общие\
+ *          2017-10-25.md
+ *              <img src="{absoluteWebRoot}/static/pic.png" style="display: block; margin: auto;" width="250">
+ *      Дополнительные\
+ *          2017-10-26.md
+ */
 class Documenter extends Widget
 {
     public $directories = [];
