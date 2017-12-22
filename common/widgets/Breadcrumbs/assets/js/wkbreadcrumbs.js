@@ -244,13 +244,13 @@
                 $(".pmd-textfield [wkkeep].form-control").next(".pmd-textfield-focused").remove();
                 $(".pmd-textfield [wkkeep].form-control").after('<span class="pmd-textfield-focused"></span>');
                 // floating label
-                $('.pmd-textfield input[wkkeep].form-control').each(function () {
+                $('.pmd-textfield input[wkkeep].form-control, .pmd-textfield textarea[wkkeep].form-control').each(function () {
                     if ($(this).val() !== "") {
                         $(this).closest('.pmd-textfield').addClass("pmd-textfield-floating-label-completed");
                     }
                 });
                 // floating change label
-                $(".pmd-textfield input[wkkeep].form-control").on('change', function () {
+                $(".pmd-textfield input[wkkeep].form-control, .pmd-textfield textarea[wkkeep].form-control").on('change', function () {
                     if ($(this).val() !== "") {
                         $(this).closest('.pmd-textfield').addClass("pmd-textfield-floating-label-completed");
                     }
