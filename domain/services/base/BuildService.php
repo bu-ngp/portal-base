@@ -49,7 +49,7 @@ class BuildService extends Service
 
     public function delete($id)
     {
-        $build = $this->builds->find($id);
+        $build = $this->find($id);
         $this->builds->delete($build);
     }
 }

@@ -1149,7 +1149,7 @@ div.form-group.filter-marked {
 
 ::-webkit-scrollbar {
     width: 6px;
-    height: 6px;
+    height: 12px;
     background-color: #e5e9f7;
 }
 

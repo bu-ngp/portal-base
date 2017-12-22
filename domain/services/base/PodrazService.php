@@ -59,7 +59,7 @@ class PodrazService extends Service
 
     public function delete($id)
     {
-        $podraz = $this->podrazs->find($id);
+        $podraz = $this->find($id);
         $this->podrazs->delete($podraz);
     }
 }

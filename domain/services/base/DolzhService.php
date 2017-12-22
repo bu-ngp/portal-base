@@ -59,7 +59,7 @@ class DolzhService extends Service
 
     public function delete($id)
     {
-        $dolzh = $this->dolzhs->find($id);
+        $dolzh = $this->find($id);
         $this->dolzhs->delete($dolzh);
     }
 }
