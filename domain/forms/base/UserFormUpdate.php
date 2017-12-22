@@ -17,6 +17,7 @@ use yii\base\Model;
 
 class UserFormUpdate extends Model
 {
+    public $person_code;
     public $person_fullname;
     public $person_username;
     public $person_email;
@@ -27,6 +28,7 @@ class UserFormUpdate extends Model
 
     public function __construct(Person $person, $config = [])
     {
+        $this->person_code = $person->person_code;
         $this->person_fullname = $person->person_fullname;
         $this->person_username = $person->person_username;
         $this->person_email = $person->person_email;
