@@ -29,7 +29,7 @@ return [
         ],
         'cache' => [
             'class' => 'yii\caching\MemCache',
-           // 'useMemcached' => true,
+            // 'useMemcached' => true,
         ],
         'assetsAutoCompress' =>
             [
@@ -93,7 +93,7 @@ return [
             'class' => 'domain\auth\WKUser',
             'identityClass' => 'domain\models\base\Person',
             'enableAutoLogin' => true,
-            'identityCookie' => ['name' => '_identity-wk-portal', 'httpOnly' => true],
+            'identityCookie' => ['name' => '_identity-wk-portal_' . YII_ENV, 'httpOnly' => true],
         ],
         'session' => [
             'class' => 'yii\web\DbSession',

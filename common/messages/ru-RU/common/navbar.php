@@ -21,4 +21,5 @@ return [
     'Handlers' => 'Обработчики',
     'Requested reports' => 'Затребованные отчеты',
     'Updates' => 'Обновления',
+    'Administration Menu' => 'Закрытая часть',
 ];

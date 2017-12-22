@@ -13,12 +13,6 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use common\assets\AppCommonAsset;
 
-/*if (file_exists(Yii::getAlias('@app') . '/views/layouts/assets.php')) {
-    $this->beginContent('@app/views/layouts/assets.php');
-    $this->endContent();
-} else {
-    AppCommonAsset::register($this);
-}*/
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -27,7 +21,7 @@ use common\assets\AppCommonAsset;
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode($this->title) ?></title>
+    <title><?= Yii::$app->name ?></title>
     <link rel="shortcut icon" href="<?= Yii::$app->request->baseUrl ?>/favicon.ico" type="image/x-icon"/>
     <base href="<?= Yii::$app->request->getBaseUrl() . '/' ?>">
     <?php $this->head() ?>
@@ -75,15 +69,22 @@ use common\assets\AppCommonAsset;
                             'url' => Yii::$app->urlManagerAdmin->createUrl(['updates']),
                             'linkOptions' => ['class' => 'btn btn-sm pmd-btn-flat pmd-ripple-effect btn-default pmd-ripple-effect'],
                         ],
-
-                    ], Yii::$app->user->isGuest ? [] : [
-                    '<li class="divider"></li>',
-                    [
-                        'label' => Yii::t('common/navbar', 'Change Password'),
-                        'url' => Yii::$app->urlManagerAdmin->createUrl(['configuration/users/change-password']),
-                        'linkOptions' => ['class' => 'btn btn-sm pmd-btn-flat pmd-ripple-effect btn-default pmd-ripple-effect'],
                     ],
-                ]
+                    Yii::$app->user->isGuest ? [] : [
+                        [
+                            'label' => Yii::t('common/navbar', 'Administration Menu'),
+                            'url' => Yii::$app->urlManagerAdmin->createUrl(['/']),
+                            'linkOptions' => ['class' => 'btn btn-sm pmd-btn-flat pmd-ripple-effect btn-default pmd-ripple-effect'],
+                        ],
+                    ],
+                    Yii::$app->user->isGuest ? [] : [
+                        '<li class="divider"></li>',
+                        [
+                            'label' => Yii::t('common/navbar', 'Change Password'),
+                            'url' => Yii::$app->urlManagerAdmin->createUrl(['configuration/users/change-password']),
+                            'linkOptions' => ['class' => 'btn btn-sm pmd-btn-flat pmd-ripple-effect btn-default pmd-ripple-effect'],
+                        ],
+                    ]
                 ),
 
 
