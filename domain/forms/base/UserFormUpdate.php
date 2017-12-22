@@ -9,6 +9,7 @@
 namespace domain\forms\base;
 
 
+use domain\validators\FIOValidator;
 use domain\validators\WKDateValidator;
 use domain\models\base\Person;
 use domain\models\base\EmployeeHistory;
@@ -42,6 +43,9 @@ class UserFormUpdate extends Model
     public function rules()
     {
         return array_merge(UserRules::client(), [
+            [['person_fullname'], FIOValidator::className(), 'when' => function ($model) {
+                return $model->person_code !== 1;
+            }],
             [['!person_hired', 'person_fired'], WKDateValidator::className()],
         ]);
     }

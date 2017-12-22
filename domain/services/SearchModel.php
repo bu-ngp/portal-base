@@ -201,7 +201,7 @@ class SearchModel extends Model
                 $this->getQuery()->andFilterWhere([$this->digitZnak($this->$attribute), $this->getSQLAttribute($attribute), $this->digitValue($this->$attribute)]);
                 break;
             case SearchModel::DATE:
-                $this->getQuery()->andFilterWhere($this->convertDateValueToCondition($attribute, $this->$attribute));
+                $this->getQuery()->andFilterWhere($this->convertDateValueToCondition($attribute, $this[$attribute]));
                 break;
             case SearchModel::DATETIME:
                 $this->getQuery()->andFilterWhere($this->convertDateValueToCondition($attribute, $this->$attribute));
@@ -254,10 +254,10 @@ class SearchModel extends Model
 
     private function convertDateValueToCondition($attribute, $value)
     {
-        $WKDateValidators = array_filter($this->activeRecord->getActiveValidators($attribute), function ($value) {
+        $WKDateValidators = array_filter($this->getActiveValidatorsEx($this->activeRecord, $attribute), function ($value) {
             return $value instanceof WKDateValidator;
         });
-        $NumberValidators = array_filter($this->activeRecord->getActiveValidators($attribute), function ($value) {
+        $NumberValidators = array_filter($this->getActiveValidatorsEx($this->activeRecord, $attribute), function ($value) {
             return $value instanceof NumberValidator;
         });
 
@@ -270,6 +270,22 @@ class SearchModel extends Model
         }
 
         return [];
+    }
+
+    private function getActiveValidatorsEx(ActiveRecord $parentModel, $attribute)
+    {
+        $models = explode('.', $attribute);
+
+        if (count($models) > 1) {
+            $attribute = array_pop($models);
+
+            foreach ($models as $model) {
+                $relatedClass = $parentModel->getRelation($model)->modelClass;
+                $parentModel = new $relatedClass;
+            }
+        }
+
+        return $parentModel->getActiveValidators($attribute);
     }
 
     public function __get($name)
