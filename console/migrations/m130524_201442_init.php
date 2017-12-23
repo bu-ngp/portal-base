@@ -58,7 +58,7 @@ class m130524_201442_init extends Migration
         $this->addForeignKey('person_profile', '{{%profile}}', 'profile_id', '{{%person}}', 'person_id', 'CASCADE', 'CASCADE');
 
         $this->createOnlyAutoIncrement('person_code', '{{%person}}', 'person_id');
-        
+
         $this->createTable($authManager->ruleTable, [
             'name' => $this->string(64)->notNull(),
             'data' => $this->blob(),
@@ -108,7 +108,7 @@ class m130524_201442_init extends Migration
             'person_fullname' => 'Администратор',
             'person_username' => 'admin',
             'person_auth_key' => Yii::$app->security->generateRandomString(),
-            'person_password_hash' => Yii::$app->security->generatePasswordHash('admin'),
+            'person_password_hash' => Yii::$app->security->generatePasswordHash('administrator'),
             'person_email' => 'admin@mm.ru',
             'person_hired' => null,
             'person_fired' => null,

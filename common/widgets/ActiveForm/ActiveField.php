@@ -59,7 +59,9 @@ class ActiveField extends \yii\bootstrap\ActiveField
     public function textInput($options = [])
     {
         $this->initWKIcon($options);
-        $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield pmd-textfield-floating-label' : 'form-group pmd-textfield pmd-textfield-floating-label';
+        $noFloat = ArrayHelper::getValue($options, 'noFloat', false);
+        $floatLabel = $noFloat ? '' : ' pmd-textfield-floating-label';
+        $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield' . $floatLabel : "form-group pmd-textfield$floatLabel";
 
         PropellerAsset::setWidget('input');
 
@@ -69,7 +71,9 @@ class ActiveField extends \yii\bootstrap\ActiveField
     public function passwordInput($options = [])
     {
         $this->initWKIcon($options);
-        $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield pmd-textfield-floating-label' : 'form-group pmd-textfield pmd-textfield-floating-label';
+        $noFloat = ArrayHelper::getValue($options, 'noFloat', false);
+        $floatLabel = $noFloat ? '' : ' pmd-textfield-floating-label';
+        $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield' . $floatLabel : "form-group pmd-textfield$floatLabel";
 
         PropellerAsset::setWidget('input');
 

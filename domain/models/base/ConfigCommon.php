@@ -14,6 +14,7 @@ use Yii;
  * @property string $config_common_mail_administrators
  * @property string config_common_footer_company
  * @property string config_common_footer_addition
+ * @property string config_common_christmas
  */
 class ConfigCommon extends \yii\db\ActiveRecord
 {
@@ -44,6 +45,7 @@ class ConfigCommon extends \yii\db\ActiveRecord
             'config_common_mail_administrators' => Yii::t('domain/config-common', 'Config Common Mail Administrators'),
             'config_common_footer_company' => Yii::t('domain/config-common', 'Config Common Footer Company'),
             'config_common_footer_addition' => Yii::t('domain/config-common', 'Config Common Footer Addition'),
+            'config_common_christmas' => Yii::t('domain/config-common', 'Config Common Christmas'),
         ];
     }
 
@@ -53,5 +55,6 @@ class ConfigCommon extends \yii\db\ActiveRecord
         $this->config_common_mail_administrators = $form->config_common_mail_administrators;
         $this->config_common_footer_company = $form->config_common_footer_company;
         $this->config_common_footer_addition = $form->config_common_footer_addition;
+        $this->config_common_christmas = $form->config_common_christmas;
     }
 }

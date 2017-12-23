@@ -12,32 +12,36 @@ use yii\bootstrap\Html;
 $this->title = Yii::t('common/login', 'Login Page');
 ?>
 <div class="site-login">
-    <div class="row">
-        <div class="col-lg-3"></div>
-        <div class="col-lg-6 wk-login-container-logo">
-            <i class="fa fa-lock"></i>
-            <p><?= Yii::t('common/login', 'Enter to close part of Portal') ?></p>
-        </div>
-        <div class="col-lg-3"></div>
-    </div>
-    <div class="row">
-        <div class="col-lg-3"></div>
-        <div class="col-lg-6 wk-login-container">
-
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
-
-            <?= $form->field($model, 'username', ['options' => ['class' => 'form-group pmd-textfield form-group-lg']])->textInput(['autofocus' => true, 'class' => 'form-control input-group-lg']) ?>
-
-            <?= $form->field($model, 'password', ['options' => ['class' => 'form-group pmd-textfield form-group-lg']])->passwordInput(['class' => 'form-control input-group-lg']) ?>
-
-            <?= $form->field($model, 'rememberMe')->toggleSwitch() ?>
-
-            <div class="form-group wk-login-button">
-                <?= Html::submitButton(Yii::t('common/login', 'Login'), ['class' => 'btn btn-block btn-lg', 'name' => 'login-button']) ?>
+    <div class="wk-login-container content-container">
+        <div>
+            <div class="wk-login-container-logo">
+                <i class="fa fa-lock"></i>
+                <p><?= Yii::t('common/login', 'Enter to close part of Portal') ?></p>
             </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
 
-            <?php ActiveForm::end(); ?>
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+                    <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+
+                    <?= $form->field($model, 'username', ['options' => ['class' => 'form-group pmd-textfield form-group-lg']])->textInput(['noFloat' => true, 'autofocus' => true, 'class' => 'form-control input-group-lg']) ?>
+
+                    <?= $form->field($model, 'password', ['options' => ['class' => 'form-group pmd-textfield form-group-lg']])->passwordInput(['noFloat' => true, 'class' => 'form-control input-group-lg']) ?>
+
+                    <?= $form->field($model, 'rememberMe')->toggleSwitch() ?>
+
+                    <div class="form-group wk-login-button">
+                        <?= Html::submitButton(Yii::t('common/login', 'Login'), ['class' => 'btn btn-block btn-lg', 'name' => 'login-button']) ?>
+                    </div>
+
+                    <?php ActiveForm::end(); ?>
+
+                </div>
+            </div>
         </div>
-        <div class="col-lg-3"></div>
     </div>
 </div>

@@ -551,13 +551,48 @@ label.pmd-input-group-label.wk-input-with-icon {
 
 /* ------- LoginForm ------- */
 
+.site-login {
+    position: relative;
+    width: 100%;
+    min-height: 750px;
+}
+
 .site-login > div.row:nth-child(:first-child) {
     margin-top: 100px;
 }
 
 .wk-login-container {
     background-color: rgba(255, 255, 255, 0.3);
+    padding: 0 10px;
+    width: 600px;
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -20%);
+    box-shadow: 0 2px 2px 2px rgba(52, 44, 102, 0.1);
+}
+
+.wk-login-container > div {
+    padding: 15px;
+    border-left: 1px outset rgba(255, 255, 255, 0.40);
+    border-right: 1px outset rgba(255, 255, 255, 0.40);
+}
+
+.wk-login-container > div > .panel {
+    margin-left: 75px;
+}
+
+.wk-login-container > div > .panel > .panel-body {
     padding: 0;
+}
+
+.wk-login-container > div > .panel > .panel-body > form{
+    margin-top: 15px;
+}
+
+.wk-login-container input.form-control {
+    box-shadow: inset 0 0 3px 1px #342c660f;
 }
 
 .wk-login-container-logo {
@@ -593,7 +628,7 @@ label.pmd-input-group-label.wk-input-with-icon {
     margin: 0;
 }
 
-.wk-login-button > button {
+.wk-login-button > button, .wk-login-button > button:focus {
     background-color: rgba(255, 255, 255, 0.3);
     color: #9089b7;
     height: 80px;
@@ -634,6 +669,10 @@ label.pmd-input-group-label.wk-input-with-icon {
 
 .wk-login-container div.form-group.pmd-textfield.required > label.control-label:after {
     content: '';
+}
+
+.wk-login-container > div > .panel {
+    width: 400px;
 }
 
 /* ------- LoginForm ------- */
@@ -786,7 +825,7 @@ ul.breadcrumb li:not(:last-child):active::after {
 
 /* ------- Forms ------- */
 
-.content-container {
+.content-container:not(.wk-login-container) {
     background-color: rgba(255, 255, 255, 0.3);
     padding: 10px;
 }
@@ -797,6 +836,10 @@ ul.breadcrumb li:not(:last-child):active::after {
     box-shadow: 1px 2px 1px rgba(0, 0, 0, 0.1);
     font-size: 20px;
     padding: 20px 10px;
+}
+
+.content-container > h1 > i {
+    margin-right: 10px;
 }
 
 .content-container .panel {
@@ -811,6 +854,7 @@ ul.breadcrumb li:not(:last-child):active::after {
 .content-container .panel-heading {
     color: #cfd6fd;
     background-color: #726ba0;
+    min-height: 38px;
 }
 
 .content-container .tab-content {
@@ -1235,6 +1279,22 @@ div.form-group.filter-marked {
 
 /* Style /\ */
 
-.bootstrap-datetimepicker-widget {
-    z-index: 9999;
+.cristmas {
+    position: fixed;
+    z-index: -100;
+    bottom: 0;
+    width: 250px;
+    height: 530px;
+    right: 0;
+    background-image: url("../img/cristmas.png");
+}
+
+.cristmas2 {
+    position: fixed;
+    z-index: -100;
+    left: 0;
+    width: 200px;
+    height: 560px;
+    top: 0;
+    background-image: url("../img/cristmas2.png");
 }

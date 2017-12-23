@@ -22,4 +22,5 @@ return [
     'Config Common ID' => '',
     'Config Common Mail Administrators' => 'Электронные адреса администраторов',
     'Config Common Portal Mail' => 'Электронный адрес портала',
+    'Config Common Christmas' => 'Активировать новогоднюю тему',
 ];

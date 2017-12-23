@@ -55,7 +55,7 @@ class LoginForm extends Model
             $user = $this->getUser();
 
             if (!$user) {
-                $this->addError($attribute, 'Incorrect username or password');
+                $this->addError($attribute, Yii::t('common/login', 'Incorrect username or password'));
             }
         }
     }

@@ -23,4 +23,5 @@ return [
     'Password' => 'Пароль',
     'Remember Me' => 'Запомнить',
     'Username' => 'Пользователь',
+    'Incorrect username or password' => 'Неверный логин или пароль',
 ];

@@ -130,7 +130,7 @@ class Person extends \yii\db\ActiveRecord implements LdapModelInterface
     public function changePassword(ChangeUserPasswordForm $changeUserPasswordForm)
     {
         $this->person_password_hash = Yii::$app->security->generatePasswordHash($changeUserPasswordForm->person_password);
-        }
+    }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -270,14 +270,12 @@ class Person extends \yii\db\ActiveRecord implements LdapModelInterface
 
         if (ConfigLdap::isLdapActive()) {
             try {
-                $user = Ldap::userConnect($username, $password)->findByUser($username);
+                if ($user = Ldap::userConnect($username, $password)->findByUser($username)) {
+                    return $user;
+                };
             } catch (Exception $e) {
                 return null;
             }
-        }
-
-        if ($user) {
-            return $user;
         }
 
         return null;

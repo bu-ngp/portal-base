@@ -119,6 +119,10 @@ use common\assets\AppCommonAsset;
         </div>
     </div>
 </div>
+<?php if (\domain\models\base\ConfigCommon::findOne(1)->config_common_christmas): ?>
+    <div class="cristmas"></div>
+    <div class="cristmas2"></div>
+<?php endif; ?>
 <footer class="footer">
     <div class="container-footer">
         <p>
