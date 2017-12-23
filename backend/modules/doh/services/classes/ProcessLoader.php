@@ -80,7 +80,7 @@ abstract class ProcessLoader extends Component implements JobInterface
         }
 
         $this->end();
-        $this->trigger(self::EVENT_PROCCESS_ERROR, Yii::createObject([
+        $this->trigger(self::EVENT_PROCCESS_COMPLETE, Yii::createObject([
             'class' => ProccessCompleteEvent::className(),
             'handlerAt' => $this->_handler->handler_at,
             'handlerDescription' => $this->_handler->handler_description,
