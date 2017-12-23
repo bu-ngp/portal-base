@@ -5,6 +5,8 @@
 /* @var $content string */
 
 use common\widgets\Breadcrumbs\Breadcrumbs;
+use common\widgets\FixButtonBackward\FixButtonBackward;
+use common\widgets\FixButtonOnTop\FixButtonOnTop;
 use common\widgets\PropellerAssets\PropellerAsset;
 use common\widgets\ReportLoader\ReportLoader;
 use lo\modules\noty\Wrapper;
@@ -139,7 +141,8 @@ use common\assets\AppCommonAsset;
 <?= Wrapper::widget([
     'layerClass' => 'lo\modules\noty\layers\Toastr',
 ]) ?>
-
+<?= FixButtonBackward::widget() ?>
+<?= FixButtonOnTop::widget() ?>
 <?php
 PropellerAsset::setWidget('yii\bootstrap\NavBar');
 PropellerAsset::register($this);

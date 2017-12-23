@@ -1,0 +1,30 @@
+.wk-fix-button-backward {
+    box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    position: fixed;
+    height: 100px;
+    width: 100px;
+    background: #342c66;
+    left: 40px;
+    bottom: 100px;
+    border: 5px solid #cbc4ee;
+    color: #cbc4ee;
+    padding-left: 20px;
+    font-size: 20px;
+    opacity: 0;
+    transition: all 0.5s;
+}
+
+.wk-fix-button-backward > i {
+    margin-top: -10px;
+}
+
+.wk-fix-button-backward:hover {
+    color: #342c66;
+    background: #cbc4ee;
+}
+
+.wk-fix-button-backward:active {
+    color: #7267b8;
+    background: #a097ca;
+}
