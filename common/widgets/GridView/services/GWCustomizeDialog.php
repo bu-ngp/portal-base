@@ -10,9 +10,12 @@ namespace common\widgets\GridView\services;
 
 
 use common\widgets\GridView\GridView;
+use domain\services\SearchModel;
 use Yii;
 use yii\base\Model;
 use yii\bootstrap\Html;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 use yii\grid\Column;
 use yii\grid\DataColumn;
 use yii\helpers\ArrayHelper;
@@ -50,8 +53,9 @@ class GWCustomizeDialog
 
             if ($this->gridView->filterModel instanceof Model) {
                 $attributeLabel = $this->gridView->filterModel->getAttributeLabel($column['attribute']);
-            } elseif (isset($this->gridView->dataProvider->query)) {
-                $attributeLabel = $this->gridView->dataProvider->query->getAttributeLabel($column['attribute']);
+            } elseif (isset($this->gridView->dataProvider->query) && $this->gridView->dataProvider->query instanceof ActiveQuery) {
+                $model = $this->gridView->dataProvider->query->modelClass;
+                $attributeLabel = (new $model)->getAttributeLabel($column['attribute']);
             }
 
             /** @var $column DataColumn */

@@ -134,6 +134,9 @@ class ActiveField extends \yii\bootstrap\ActiveField
             'locale' => 'ru',
             'format' => $format,
             'useCurrent' => false,
+            'widgetPositioning' => [ // Календарь заходит под грид на табе
+                'vertical' => 'top',
+            ],
             // 'extraFormats' => ['DD.MM.YYYY'],
         ]);
 

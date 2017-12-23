@@ -1234,3 +1234,7 @@ div.form-group.filter-marked {
 /* ------- Test DataBase Alert ------- */
 
 /* Style /\ */
+
+.bootstrap-datetimepicker-widget {
+    z-index: 9999;
+}

@@ -61,6 +61,9 @@ class SearchModel extends Model
         parent::__construct($config);
     }
 
+    /**
+     * @return ActiveRecord|null
+     */
     public static function activeRecord()
     {
         return null;
@@ -235,6 +238,12 @@ class SearchModel extends Model
     private function initAttributeLabels()
     {
         return $this->activeRecord->attributeLabels();
+    }
+
+    public function getAttributeLabel($attribute)
+    {
+        $labels = $this->attributeLabels();
+        return isset($labels[$attribute]) ? $labels[$attribute] : $this->activeRecord()->getAttributeLabel($attribute);
     }
 
     private function initSortAttributes()
