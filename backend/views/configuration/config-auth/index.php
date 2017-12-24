@@ -11,7 +11,6 @@ $this->title = Yii::t('common/config', 'Authorization');
     <?= CardList::widget([
         'items' => [
             [
-                'styleClass' => CardList::RED_STYLE,
                 'icon' => 'fa fa-list-alt',
                 'title' => Yii::t('common/roles', 'Roles'),
                 'description' => 'Создание и редактирование ролей в системе',
@@ -19,14 +18,12 @@ $this->title = Yii::t('common/config', 'Authorization');
                 'roles' => RbacHelper::ROLE_EDIT,
             ],
             [
-                'styleClass' => CardList::RED_STYLE,
                 'icon' => 'fa fa-map-o',
                 'title' => Yii::t('common/config-ldap', 'LDAP settings'),
                 'link' => Yii::$app->urlManager->createUrl(['configuration/config-ldap/update']),
                 'roles' => RbacHelper::ROLE_EDIT,
             ],
             [
-                'styleClass' => CardList::GREEN_STYLE,
                 'icon' => 'fa fa-user',
                 'title' => Yii::t('common/config-ldap', 'Users of system'),
                 'description' => 'Пользователи системы',

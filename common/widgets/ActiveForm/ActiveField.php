@@ -17,6 +17,7 @@ use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\validators\DateValidator;
+use yii\validators\StringValidator;
 use yii\web\JsExpression;
 use yii\widgets\MaskedInput;
 
@@ -196,6 +197,17 @@ class ActiveField extends \yii\bootstrap\ActiveField
         $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield pmd-textfield-floating-label' : 'form-group pmd-textfield pmd-textfield-floating-label';
 
         PropellerAsset::setWidget('input');
+
+        $stringValidator = array_values(array_filter($this->model->getActiveValidators($this->attribute), function ($validator) {
+            if ($validator instanceof StringValidator) {
+                return isset($validator->max);
+            }
+            return false;
+        }));
+
+        if ($stringValidator) {
+            $this->template = "{label}\n<div class=\"wk-textarea-container\">{input}<div wk-chars-max=\"{$stringValidator[0]->max}\" class=\"wk-chars-counter\">50/100</div></div>\n{hint}\n{error}";
+        }
 
         return parent::textarea($options);
     }

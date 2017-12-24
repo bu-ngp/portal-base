@@ -72,4 +72,12 @@ $(function () {
             $(".wk-test-db").addClass("show");
         }, 1500);
     }
+
+    $(".wk-chars-counter").each(function () {
+        $(this).text("0/" + $(this).attr("wk-chars-max"));
+    });
+
+    $(".wk-textarea-container").find("textarea").keyup(function () {
+        $(this).next("span").next(".wk-chars-counter").text($(this).val().length + "/" + $(this).next("span").next(".wk-chars-counter").attr("wk-chars-max"))
+    });
 });

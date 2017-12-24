@@ -587,7 +587,7 @@ label.pmd-input-group-label.wk-input-with-icon {
     padding: 0;
 }
 
-.wk-login-container > div > .panel > .panel-body > form{
+.wk-login-container > div > .panel > .panel-body > form {
     margin-top: 15px;
 }
 
@@ -951,6 +951,18 @@ label.wk-label-with-icon {
 
 .select2-container--bootstrap .select2-selection--single .select2-selection__rendered {
     padding-left: 10px;
+}
+
+.wk-textarea-container {
+    position: relative;
+}
+
+.wk-chars-counter {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    color: #726ba0;
+    font-size: 12px;
 }
 
 /* ------- Forms ------- */

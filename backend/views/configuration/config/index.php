@@ -13,14 +13,12 @@ $this->title = Yii::t('common/config', 'Portal configuration');
     <?= CardList::widget([
         'items' => [
             [
-                'styleClass' => CardList::RED_STYLE,
                 'icon' => 'fa fa-unlock-alt',
                 'title' => Yii::t('common/config', 'Authorization'),
                 'link' => Yii::$app->urlManager->createUrl(['configuration/config-auth']),
                 'roles' => [RbacHelper::ROLE_EDIT, RbacHelper::USER_EDIT],
             ],
             [
-                'styleClass' => CardList::RED_STYLE,
                 'icon' => 'fa fa-sitemap',
                 'title' => Yii::t('common/config', 'Common'),
                 'link' => Yii::$app->urlManager->createUrl(['configuration/config-common']),

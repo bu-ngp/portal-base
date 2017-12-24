@@ -92,14 +92,14 @@
 
     var makeMedia = function (contentObj) {
         var preview = '';
-        var styleWidgetMedia = contentObj.styleClass;
+        var styleWidgetMedia = typeof contentObj.styleClass == "undefined" ? " wk-blue-style" : " " + contentObj.styleClass;
         if (("preview" in contentObj) && typeof contentObj.preview === "string" && contentObj.preview !== '') {
             preview = '<img class="img-responsive" src="' + contentObj.preview + '">';
         } else {
             preview = '<i class="' + contentObj.icon + ' wk-style"></i>';
         }
 
-        return $('<div class="pmd-card-media ' + styleWidgetMedia + '">' +
+        return $('<div class="pmd-card-media' + styleWidgetMedia + '">' +
             preview +
             '</div>');
     };
