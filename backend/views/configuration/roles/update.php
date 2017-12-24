@@ -13,7 +13,7 @@ use common\widgets\ActiveForm\ActiveForm;
 
 $this->title = $modelForm->description;
 ?>
-<div class="auth-item-update">
+<div class="auth-item-update content-container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

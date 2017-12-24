@@ -1,6 +1,7 @@
 <?php
 
 use common\widgets\GridView\GridView;
+use console\helpers\RbacHelper;
 use domain\models\base\AuthItem;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
@@ -22,23 +23,21 @@ $this->title = Yii::t('common/roles', 'Roles');
         'filterModel' => $searchModel,
         'filterDialog' => [
             'filterModel' => $filterModel,
-            //    'filterView' => '_filter_old',
         ],
         'exportGrid' => [
             'idReportLoader' => 'wk-Report-Loader',
         ],
-        //'customizeDialog' => false,
         'minHeight' => 450,
         'columns' => [
             'description',
-            'name',
             [
-                'attribute' => 'type',
-                'visible' => true,
+                'attribute' => 'name',
+                'visible' => false,
             ],
             [
                 'attribute' => 'updated_at',
                 'format' => 'date',
+                'visible' => false,
             ],
         ],
         'crudSettings' => [
@@ -48,7 +47,7 @@ $this->title = Yii::t('common/roles', 'Roles');
                 'url' => 'configuration/roles/delete',
                 'beforeRender' => function ($model) {
                     /** @var AuthItem $model */
-                    return !($model->view || $model->name === 'Administrator');
+                    return !($model->view || $model->name === RbacHelper::ADMINISTRATOR);
                 },
             ],
         ],
