@@ -529,6 +529,10 @@ label.pmd-input-group-label.wk-input-with-icon {
     padding-left: 60px;
 }
 
+.wk-form-group-with-icon > p.help-block {
+    padding-left: 60px;
+}
+
 .wk-widget-card > .pmd-card .wk-style {
     font-size: 160px;
     transition: font-size 0.3s, text-shadow 0.3s;

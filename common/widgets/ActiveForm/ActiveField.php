@@ -217,6 +217,7 @@ class ActiveField extends \yii\bootstrap\ActiveField
         if (isset($options['wkicon'])) {
             $this->template = preg_replace('/(.*)\{input\}(.*)/', '$1<div class="input-group"><div style="min-width: 50px;" class="input-group-addon"><i class="fa fa-2x fa-' . $options['wkicon'] . ' pmd-sm"></i></div>{input}</div>$2', $this->template);
             $this->labelOptions['class'] .= ' pmd-input-group-label wk-input-with-icon';
+            $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' wk-form-group-with-icon' : 'wk-form-group-with-icon';
             unset($options['wkicon']);
         }
     }

@@ -14,25 +14,27 @@
 
     var hideButton = function ($widget) {
         $widget.animate({opacity: 0}, 500, "swing", function () {
+            setTimeout(function () {
+                $widget.hide();
+            }, 500);
             doAnim = true;
         });
     };
 
     var showButton = function ($widget) {
+        $widget.show();
         $widget.animate({opacity: 1}, 500, "swing", function () {
             doAnim = true;
         });
     };
 
     var eventsApply = function ($widget) {
-
-        $(window).scroll(function () {
+        $(document).scroll(function () {
             if (doAnim) {
                 if ($(this).scrollTop() > 100) {
                     if ($widget.css("opacity") === "0") {
                         doAnim = false;
                         showButton($widget);
-
                     }
                 } else {
                     if ($widget.css("opacity") === "1") {
