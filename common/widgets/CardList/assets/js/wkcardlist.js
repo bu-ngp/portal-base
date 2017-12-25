@@ -594,7 +594,7 @@
                     settings: settings
                 });
 
-                //   console.debug(settings);
+                   console.debug(settings);
 
                 $widget.addClass('wk-widget-container container-fluid');
                 makeID($widget);

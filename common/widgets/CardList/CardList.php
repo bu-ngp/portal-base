@@ -68,6 +68,7 @@ class CardList extends Widget
         $view = $this->getView();
         $this->getItemsFromDB();
         $this->filterByRoles();
+        $this->items = $this->items ? array_values($this->items) : $this->items;
 
         $options = [
             'url' => $this->url,

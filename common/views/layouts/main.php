@@ -79,19 +79,16 @@ use common\assets\AppCommonAsset;
                             'linkOptions' => ['class' => 'btn btn-sm pmd-btn-flat pmd-ripple-effect btn-default pmd-ripple-effect'],
                         ],
                     ],
-                    Yii::$app->user->isGuest ? [] : [
+                    !Yii::$app->user->isGuest && Yii::$app->user->identity->isLocal() ? [
                         '<li class="divider"></li>',
                         [
                             'label' => Yii::t('common/navbar', 'Change Password'),
                             'url' => Yii::$app->urlManagerAdmin->createUrl(['configuration/users/change-password']),
                             'linkOptions' => ['class' => 'btn btn-sm pmd-btn-flat pmd-ripple-effect btn-default pmd-ripple-effect'],
                         ],
-                    ]
+                    ] : []
                 ),
-
-
             ],
-
         ];
         if (Yii::$app->user->isGuest) {
             $menuItems[] = ['label' => 'Войти', 'url' => Yii::$app->urlManagerAdmin->createUrl('login'), 'linkOptions' => ['class' => 'pmd-ripple-effect']];

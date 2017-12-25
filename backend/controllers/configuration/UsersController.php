@@ -18,8 +18,8 @@ use domain\forms\base\UserForm;
 use domain\forms\base\UserFormUpdate;
 use domain\models\base\filter\UsersFilter;
 use domain\models\base\search\AllEmployeeSearch;
+use domain\models\base\search\AuthItemPersonSearch;
 use domain\models\base\search\AuthItemSearch;
-use domain\models\base\search\AuthItemUpdateSearch;
 use domain\models\base\search\UsersSearch;
 use domain\services\AjaxFilter;
 use domain\services\base\PersonService;
@@ -135,7 +135,7 @@ class UsersController extends Controller
 
         $searchModelEmployee = new AllEmployeeSearch();
         $dataProviderEmployee = $searchModelEmployee->search(Yii::$app->request->queryParams);
-        $searchModelAuthItem = new AuthItemUpdateSearch();
+        $searchModelAuthItem = new AuthItemPersonSearch();
         $dataProviderAuthItem = $searchModelAuthItem->search(Yii::$app->request->queryParams);
 
         $gridInjectCallBack = $this->service->gridInjectCallBack();
