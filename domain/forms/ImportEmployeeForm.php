@@ -34,6 +34,7 @@ class ImportEmployeeForm extends Model
     public function rules()
     {
         return [
+            [['fio', 'pol', 'snils', 'inn', 'dolzh', 'status', 'podraz', 'address'], 'trim'],
             [['dr', 'dateBegin', 'dateEnd'], DRValidator::className()],
             [['pol'], 'filter', 'filter' => function ($value) {
                 switch ($value) {
