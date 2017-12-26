@@ -18,9 +18,4 @@
  */
 return [
     'Contacts' => 'Контакты',
-    'Administration Menu' => 'Закрытая часть',
-    'Change Password' => 'Сменить пароль',
-    'Handlers' => 'Обработчики',
-    'Requested reports' => 'Затребованные отчеты',
-    'Updates' => 'Обновления',
 ];

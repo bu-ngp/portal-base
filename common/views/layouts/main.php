@@ -71,6 +71,11 @@ use common\assets\AppCommonAsset;
                             'url' => Yii::$app->urlManagerAdmin->createUrl(['updates']),
                             'linkOptions' => ['class' => 'btn btn-sm pmd-btn-flat pmd-ripple-effect btn-default pmd-ripple-effect'],
                         ],
+                        [
+                            'label' => Yii::t('common/navbar', 'Contacts'),
+                            'url' => Yii::$app->urlManagerAdmin->createUrl(['contacts']),
+                            'linkOptions' => ['class' => 'btn btn-sm pmd-btn-flat pmd-ripple-effect btn-default pmd-ripple-effect'],
+                        ],
                     ],
                     Yii::$app->user->isGuest ? [] : [
                         [
