@@ -45,7 +45,7 @@ class ContactsSearch extends SearchModel
 
     public function defaultSortOrder()
     {
-        return ['person_fullname' => SORT_ASC];
+        return ['employee.podraz.podraz_name' => SORT_ASC, 'person_fullname' => SORT_ASC];
     }
 
     public function beforeLoad(ActiveQuery $query, ActiveDataProvider $dataProvider, $params)
