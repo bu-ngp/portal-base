@@ -89,6 +89,15 @@ $this->title = Yii::t('common/person', 'Users');
                 'visible' => false,
             ],
             [
+                'attribute' => 'profile.profile_phone',
+                'value' => function ($model) {
+                    return preg_match('/\d(\d{4})(\d{2})(\d{2})(\d{2})/', $model->profile->profile_phone, $matches)
+                        ? "8-({$matches[1]})-{$matches[2]}-{$matches[3]}-{$matches[4]}"
+                        : $model->profile->profile_phone;
+                }
+            ],
+            'profile.profile_internal_phone',
+            [
                 'attribute' => 'created_at',
                 'format' => 'datetime',
                 'visible' => false,

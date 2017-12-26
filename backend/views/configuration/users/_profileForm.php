@@ -47,3 +47,14 @@ use rmrevin\yii\fontawesome\FA;
         </div>
     </div>
 </div>
+
+<div class="form-group">
+    <div class="row">
+        <div class="col-xs-6">
+            <?= $profileForm->field($modelProfileForm, 'profile_phone', ['enableClientValidation' => false])->maskedInput(['mask' => '8-(9999)-99-99-99', 'wkkeep' => true, 'wkicon' => FA::_PHONE]) ?>
+        </div>
+        <div class="col-xs-6">
+            <?= $profileForm->field($modelProfileForm, 'profile_internal_phone')->maskedInput(['mask' => '9{1,10}', 'wkkeep' => true, 'wkicon' => FA::_PHONE_SQUARE]) ?>
+        </div>
+    </div>
+</div>

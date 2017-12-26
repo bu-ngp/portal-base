@@ -18,6 +18,8 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $profile_pol
  * @property string $profile_snils
  * @property string $profile_address
+ * @property string $profile_phone
+ * @property string $profile_internal_phone
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $created_by
@@ -63,6 +65,8 @@ class Profile extends \yii\db\ActiveRecord
             'profile_pol' => Yii::t('domain/profile', 'Profile Pol'),
             'profile_snils' => Yii::t('domain/profile', 'Profile Snils'),
             'profile_address' => Yii::t('domain/profile', 'Profile Address'),
+            'profile_phone' => Yii::t('domain/profile', 'Profile Phone'),
+            'profile_internal_phone' => Yii::t('domain/profile', 'Profile Internal Phone'),
             'created_at' => Yii::t('domain/base', 'Created At'),
             'updated_at' => Yii::t('domain/base', 'Updated At'),
             'created_by' => Yii::t('domain/base', 'Created By'),
@@ -87,6 +91,8 @@ class Profile extends \yii\db\ActiveRecord
             'profile_pol' => $profileForm->profile_pol,
             'profile_snils' => $profileForm->profile_snils,
             'profile_address' => $profileForm->profile_address,
+            'profile_phone' => $profileForm->profile_phone,
+            'profile_internal_phone' => $profileForm->profile_internal_phone,
         ]);
     }
 
@@ -97,6 +103,8 @@ class Profile extends \yii\db\ActiveRecord
         $this->profile_pol = $profileForm->profile_pol;
         $this->profile_snils = $profileForm->profile_snils;
         $this->profile_address = $profileForm->profile_address;
+        $this->profile_phone = $profileForm->profile_phone;
+        $this->profile_internal_phone = $profileForm->profile_internal_phone;
     }
 
     public function isNotEmpty()
@@ -105,7 +113,9 @@ class Profile extends \yii\db\ActiveRecord
             || $this->profile_dr
             || $this->profile_pol
             || $this->profile_snils
-            || $this->profile_address;
+            || $this->profile_address
+            || $this->profile_phone
+            || $this->profile_internal_phone;
     }
 
     /**

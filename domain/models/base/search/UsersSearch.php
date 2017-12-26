@@ -41,6 +41,8 @@ class UsersSearch extends SearchModel
             'profile.profile_inn',
             'profile.profile_snils',
             'profile.profile_address',
+            'profile.profile_phone',
+            'profile.profile_internal_phone',
         ];
     }
 
@@ -54,6 +56,8 @@ class UsersSearch extends SearchModel
             'profile.profile_inn' => Yii::t('domain/profile', 'Profile Inn'),
             'profile.profile_snils' => Yii::t('domain/profile', 'Profile Snils'),
             'profile.profile_address' => Yii::t('domain/profile', 'Profile Address'),
+            'profile.profile_phone' => Yii::t('domain/profile', 'Profile Phone'),
+            'profile.profile_internal_phone' => Yii::t('domain/profile', 'Profile Internal Phone'),
         ];
     }
 
@@ -75,7 +79,7 @@ class UsersSearch extends SearchModel
     {
         return [
             ['person_code', SearchModel::DIGIT],
-            [['person_fullname', 'person_username', 'person_email', 'employee.dolzh.dolzh_name', 'employee.podraz.podraz_name', 'profile.profile_address'], SearchModel::CONTAIN],
+            [['person_fullname', 'person_username', 'person_email', 'employee.dolzh.dolzh_name', 'employee.podraz.podraz_name', 'profile.profile_address', 'profile.profile_phone', 'profile.profile_internal_phone'], SearchModel::CONTAIN],
             [['person_hired', 'person_fired', 'profile.profile_dr'], SearchModel::DATE],
             [['created_at', 'updated_at', 'created_by', 'updated_by'], SearchModel::DATETIME],
             [['profile.profile_pol', 'profile.profile_inn', 'profile.profile_snils',], SearchModel::STRICT],

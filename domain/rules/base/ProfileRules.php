@@ -25,6 +25,13 @@ class ProfileRules
                 [['profile_inn'], 'match', 'pattern' => '/\d{12}/', 'message' => Yii::t('domain/profile', 'INN required 12 digits')],
                 [['profile_snils'], SnilsValidator::className()],
                 [['profile_address'], 'string', 'max' => 400],
+                [['profile_phone'], 'filter', 'filter' => function ($value) {
+                    return preg_replace('/[-\(\)_]/', '', $value);
+                }],
+                [['profile_internal_phone'], 'string', 'max' => 10],
+                [['profile_internal_phone'], 'integer'],
+                [['profile_phone'], 'string', 'min' => 11, 'max' => 11],
+                [['profile_phone'], 'match', 'pattern' => '/^\d{11}$/'],
             ];
     }
 }

@@ -13,6 +13,8 @@ class ProfileForm extends Model
     public $profile_pol;
     public $profile_snils;
     public $profile_address;
+    public $profile_phone;
+    public $profile_internal_phone;
 
     public function __construct(Profile $profile = null, $config = [])
     {
@@ -22,6 +24,8 @@ class ProfileForm extends Model
             $this->profile_pol = $profile->profile_pol;
             $this->profile_snils = $profile->profile_snils;
             $this->profile_address = $profile->profile_address;
+            $this->profile_phone = $profile->profile_phone;
+            $this->profile_internal_phone = $profile->profile_internal_phone;
         }
 
         parent::__construct($config);
