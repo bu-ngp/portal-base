@@ -19,6 +19,8 @@ class ContactsController extends Controller
     {
         $searchModel = new ContactsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->pagination->pageSizeLimit = 100;
+        $dataProvider->pagination->pageSize = 100;
 
         return $this->render('index', [
             'searchModel' => $searchModel,
