@@ -49,6 +49,10 @@ $this->title = Yii::t('common/contacts', 'Contacts');
                 'attribute' => 'employee.podraz.podraz_name',
                 'label' => Yii::t('domain/employee', 'Podraz ID'),
                 'noWrap' => false,
+                'group'=>true,  // enable grouping,
+                'groupedRow'=>true,                    // move grouped column to a single grouped row
+                'groupOddCssClass'=>'kv-grouped-row',  // configure odd group cell css class
+                'groupEvenCssClass'=>'kv-grouped-row', // configure even group cell css class
             ],
         ],
         'panelHeading' => [
