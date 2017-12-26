@@ -43,11 +43,12 @@ $this->title = Yii::t('common/contacts', 'Contacts');
             [
                 'attribute' => 'employee.dolzh.dolzh_name',
                 'label' => Yii::t('domain/employee', 'Dolzh ID'),
+                'noWrap' => false,
             ],
             [
                 'attribute' => 'employee.podraz.podraz_name',
                 'label' => Yii::t('domain/employee', 'Podraz ID'),
-
+                'noWrap' => false,
             ],
         ],
         'panelHeading' => [
