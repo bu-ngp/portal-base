@@ -1,6 +1,7 @@
 <?php
 
 use common\widgets\ActiveForm\ActiveForm;
+use common\widgets\HeaderPanel\HeaderPanel;
 use common\widgets\Html\Html;
 
 /* @var $this yii\web\View */
@@ -9,8 +10,7 @@ use common\widgets\Html\Html;
 $this->title = $modelForm->podraz_name;
 ?>
 <div class="podraz-update content-container">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+    <?= HeaderPanel::widget(['title' => Html::encode($this->title)]) ?>
 
     <div class="podraz-form">
 

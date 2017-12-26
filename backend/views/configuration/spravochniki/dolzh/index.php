@@ -1,6 +1,7 @@
 <?php
 
 use common\widgets\GridView\GridView;
+use common\widgets\HeaderPanel\HeaderPanel;
 use console\helpers\RbacHelper;
 use rmrevin\yii\fontawesome\FA;
 use wartron\yii2uuid\helpers\Uuid;
@@ -14,8 +15,7 @@ use yii\helpers\Html;
 $this->title = Yii::t('common/dolzh', 'Dolzhs');
 ?>
 <div class="dolzh-index content-container">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+    <?= HeaderPanel::widget(['icon' => FA::_USER_CIRCLE_O, 'title' => Html::encode($this->title)]) ?>
 
     <?=
     GridView::widget([
@@ -46,10 +46,6 @@ $this->title = Yii::t('common/dolzh', 'Dolzhs');
                     return Yii::$app->user->can(RbacHelper::DOLZH_EDIT);
                 },
             ],
-        ],
-        'panelHeading' => [
-            'icon' => FA::icon(FA::_USER_CIRCLE_O),
-            'title' => Yii::t('common/dolzh', 'Dolzhs'),
         ],
         'gridExcludeIdsFunc' => function (ActiveQuery $activeQuery, array $ids) {
             $activeQuery->andWhere(['not in', 'dolzh_id', $ids]);

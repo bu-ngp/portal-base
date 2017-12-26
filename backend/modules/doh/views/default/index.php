@@ -1,5 +1,6 @@
 <?php
 
+use common\widgets\HeaderPanel\HeaderPanel;
 use console\helpers\RbacHelper;
 use doh\assets\DoHAsset;
 use doh\assets\ProgressbarAsset;
@@ -7,7 +8,6 @@ use doh\services\models\Handler;
 use yii\bootstrap\Html;
 use rmrevin\yii\fontawesome\FA;
 use common\widgets\GridView\GridView;
-use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel doh\services\models\search\HandlerSearch */
@@ -17,8 +17,7 @@ $this->title = Yii::t('doh', 'Handlers');
 $handler_statuses = Handler::itemsValues('handler_status');
 ?>
     <div class="handler-index content-container">
-
-        <h1><?= Html::encode($this->title) ?></h1>
+        <?= HeaderPanel::widget(['icon' => FA::_LIST_ALT, 'title' => Html::encode($this->title)]) ?>
 
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
@@ -126,10 +125,6 @@ $handler_statuses = Handler::itemsValues('handler_status');
             'toolbar' => array_merge(Yii::$app->getUser()->can(RbacHelper::ADMINISTRATOR) ? [
                 Html::a(Yii::t('doh', 'Clear handlers'), Yii::$app->get('urlManagerAdmin')->createUrl(['doh/clear']), ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger wk-doh-clear', 'data-pjax' => '0'])
             ] : []),
-            'panelHeading' => [
-                'icon' => FA::icon(FA::_LIST_ALT),
-                'title' => Yii::t('doh', 'Handlers'),
-            ],
 //            'leftBottomToolbar' => Html::button('test', ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary', 'id' => 'test1'])
 //                . Html::button('test error', ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger', 'id' => 'test_error'])
 //                . Html::button('test with files', ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-info', 'id' => 'test_with_files'])

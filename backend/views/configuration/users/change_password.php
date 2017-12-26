@@ -1,6 +1,7 @@
 <?php
 
 use common\widgets\ActiveForm\ActiveForm;
+use common\widgets\HeaderPanel\HeaderPanel;
 use common\widgets\Html\Html;
 use common\widgets\Panel\Panel;
 use common\widgets\Tabs\Tabs;
@@ -12,8 +13,7 @@ use yii\helpers\Url;
 $this->title = Yii::t('common/person', $modelChangeUserPasswordForm->person_fullname);
 ?>
 <div class="user-change-password content-container">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+    <?= HeaderPanel::widget(['title' => Html::encode($this->title)]) ?>
 
     <div class="change-password-form">
         <?php $changeUserPasswordForm = ActiveForm::begin(['id' => $modelChangeUserPasswordForm->formName()]); ?>

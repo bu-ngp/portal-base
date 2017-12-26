@@ -1,5 +1,6 @@
 <?php
 
+use common\widgets\HeaderPanel\HeaderPanel;
 use console\helpers\RbacHelper;
 use yii\db\ActiveQuery;
 use yii\helpers\Html;
@@ -13,8 +14,7 @@ use common\widgets\GridView\GridView;
 $this->title = Yii::t('common/build', 'Builds');
 ?>
 <div class="build-index content-container">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+    <?= HeaderPanel::widget(['icon' => FA::_HOME, 'title' => Html::encode($this->title)]) ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -44,10 +44,6 @@ $this->title = Yii::t('common/build', 'Builds');
                     return Yii::$app->user->can(RbacHelper::BUILD_EDIT);
                 },
             ],
-        ],
-        'panelHeading' => [
-            'icon' => FA::icon(FA::_HOME),
-            'title' => Yii::t('common/build', 'Builds'),
         ],
         'gridExcludeIdsFunc' => function (ActiveQuery $activeQuery, array $ids) {
             $activeQuery->andWhere(['not in', 'build_id', $ids]);

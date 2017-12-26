@@ -1,5 +1,6 @@
 <?php
 
+use common\widgets\HeaderPanel\HeaderPanel;
 use common\widgets\Html\Html;
 use domain\forms\base\RoleUpdateForm;
 use rmrevin\yii\fontawesome\FA;
@@ -13,8 +14,7 @@ use common\widgets\ActiveForm\ActiveForm;
 $this->title = Yii::t('common/config-ldap', 'Update Ldap Settings');
 ?>
 <div class="config-ldap-update content-container">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+    <?= HeaderPanel::widget(['title' => Html::encode($this->title)]) ?>
 
     <div class="config-ldap-form">
         <?php $form = ActiveForm::begin(); ?>

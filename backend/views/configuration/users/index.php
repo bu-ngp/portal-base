@@ -6,6 +6,7 @@
  * Time: 20:56
  */
 
+use common\widgets\HeaderPanel\HeaderPanel;
 use domain\models\base\Person;
 use common\widgets\GridView\GridView;
 use console\helpers\RbacHelper;
@@ -21,8 +22,7 @@ use yii\helpers\Html;
 $this->title = Yii::t('common/person', 'Users');
 ?>
 <div class="users-index content-container">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+    <?= HeaderPanel::widget(['icon' => FA::_USER, 'title' => Html::encode($this->title)]) ?>
 
     <?=
     GridView::widget([
@@ -136,9 +136,6 @@ $this->title = Yii::t('common/person', 'Users');
                     return !($model->person_username === 'admin') && Yii::$app->user->can(RbacHelper::USER_EDIT);
                 },
             ],
-        ],
-        'panelHeading' => ['icon' => FA::icon(FA::_USER),
-            'title' => Yii::t('common/person', 'Users'),
         ],
     ]);
     ?>

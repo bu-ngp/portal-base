@@ -308,6 +308,8 @@ HTML;
             $icon = ArrayHelper::getValue($this->panelHeading, 'icon', '');
             $title = ArrayHelper::getValue($this->panelHeading, 'title', '');
             $this->panel['heading'] = ArrayHelper::getValue($this->panel, 'heading', '<h3 class="panel-title">' . $icon . ' ' . $title . '</h3>');
+        } else {
+            $this->panel['heading'] = '';
         }
     }
 

@@ -2,6 +2,7 @@
 
 
 use common\widgets\ActiveForm\ActiveForm;
+use common\widgets\HeaderPanel\HeaderPanel;
 use common\widgets\Html\Html;
 
 /* @var $this yii\web\View */
@@ -12,8 +13,7 @@ use common\widgets\Html\Html;
 $this->title = Yii::t('common/roles', 'Create Auth Item');
 ?>
 <div class="auth-item-create content-container">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+    <?= HeaderPanel::widget(['title' => Html::encode($this->title)]) ?>
 
     <div class="auth-item-form">
 

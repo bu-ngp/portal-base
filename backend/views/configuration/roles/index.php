@@ -1,6 +1,7 @@
 <?php
 
 use common\widgets\GridView\GridView;
+use common\widgets\HeaderPanel\HeaderPanel;
 use console\helpers\RbacHelper;
 use domain\models\base\AuthItem;
 use rmrevin\yii\fontawesome\FA;
@@ -15,8 +16,7 @@ use yii\helpers\Html;
 $this->title = Yii::t('common/roles', 'Roles');
 ?>
 <div class="auth-item-index content-container">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+    <?= HeaderPanel::widget(['icon' => FA::_LIST_ALT, 'title' => Html::encode($this->title)]) ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -50,9 +50,6 @@ $this->title = Yii::t('common/roles', 'Roles');
                     return !($model->view || $model->name === RbacHelper::ADMINISTRATOR);
                 },
             ],
-        ],
-        'panelHeading' => ['icon' => FA::icon(FA::_LIST_ALT),
-            'title' => Yii::t('common/roles', 'Roles'),
         ],
 //        'rightBottomToolbar' => Html::a('Отчет', 'roles/report',
 //            [

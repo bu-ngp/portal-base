@@ -2,6 +2,7 @@
 
 use common\widgets\ActiveForm\ActiveForm;
 use common\widgets\GridView\GridView;
+use common\widgets\HeaderPanel\HeaderPanel;
 use common\widgets\Html\Html;
 use common\widgets\Panel\Panel;
 use rmrevin\yii\fontawesome\FA;
@@ -14,8 +15,7 @@ use rmrevin\yii\fontawesome\FA;
 $this->title = \domain\models\base\Parttime::findOne(Yii::$app->request->get('id'))->dolzh->dolzh_name;
 ?>
 <div class="parttime-update content-container">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+    <?= HeaderPanel::widget(['title' => Html::encode($this->title)]) ?>
 
     <div class="parttime-form">
         <?php $form = ActiveForm::begin(['id' => $modelForm->formName()]); ?>

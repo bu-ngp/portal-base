@@ -1,5 +1,6 @@
 <?php
 
+use common\widgets\HeaderPanel\HeaderPanel;
 use common\widgets\Html\Html;
 use common\widgets\Panel\Panel;
 use domain\models\base\Build;
@@ -10,8 +11,7 @@ use domain\models\base\Build;
 $this->title = Build::findOne($modelForm->build_id)->build_name;
 ?>
 <div class="parttime-build-update content-container">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+    <?= HeaderPanel::widget(['title' => Html::encode($this->title)]) ?>
 
     <div class="parttime-build-form">
 

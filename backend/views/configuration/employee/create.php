@@ -2,6 +2,7 @@
 
 use common\widgets\ActiveForm\ActiveForm;
 use common\widgets\GridView\GridView;
+use common\widgets\HeaderPanel\HeaderPanel;
 use common\widgets\Html\Html;
 use common\widgets\Panel\Panel;
 use rmrevin\yii\fontawesome\FA;
@@ -14,8 +15,7 @@ use rmrevin\yii\fontawesome\FA;
 $this->title = Yii::t('common/employee', 'Create Employee');
 ?>
 <div class="user-create content-container">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+    <?= HeaderPanel::widget(['title' => Html::encode($this->title)]) ?>
 
     <div class="user-form">
         <?php $form = ActiveForm::begin(['id' => $modelForm->formName()]); ?>

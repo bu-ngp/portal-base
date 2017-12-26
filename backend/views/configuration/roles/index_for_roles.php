@@ -1,6 +1,7 @@
 <?php
 
 use common\widgets\GridView\GridView;
+use common\widgets\HeaderPanel\HeaderPanel;
 use rmrevin\yii\fontawesome\FA;
 use yii\bootstrap\Html;
 
@@ -13,8 +14,7 @@ use yii\bootstrap\Html;
 $this->title = Yii::t('common/roles', 'Roles');
 ?>
 <div class="auth-item-index content-container">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+    <?= HeaderPanel::widget(['icon' => FA::_LIST_ALT, 'title' => Html::encode($this->title)]) ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -35,9 +35,6 @@ $this->title = Yii::t('common/roles', 'Roles');
             ],
         ],
         'gridExcludeIdsFunc' => $gridExcludeIdsFunc,
-        'panelHeading' => ['icon' => FA::icon(FA::_LIST_ALT),
-            'title' => Yii::t('common/roles', 'Roles'),
-        ],
     ]);
     ?>
 </div>

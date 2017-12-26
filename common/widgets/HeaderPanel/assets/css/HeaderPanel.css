@@ -1,0 +1,32 @@
+.wk-header-panel {
+    color: #a7a1d0;
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 1px 2px 1px rgba(0, 0, 0, 0.1);
+    font-size: 20px;
+    padding: 20px 10px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.wk-header-panel-icon {
+    display: inline-block;
+    position: relative;
+    width: 65px;
+    height: 22px;
+}
+
+.wk-header-panel i {
+    position: absolute;
+    margin-top: -12px;
+    font-size: 50px;
+}
+
+.wk-header-panel > h1 {
+    font-size: 20px;
+    display: inline-block;
+    margin: 0;
+}

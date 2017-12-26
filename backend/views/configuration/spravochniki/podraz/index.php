@@ -1,5 +1,6 @@
 <?php
 
+use common\widgets\HeaderPanel\HeaderPanel;
 use console\helpers\RbacHelper;
 use yii\db\ActiveQuery;
 use yii\helpers\Html;
@@ -13,8 +14,7 @@ use common\widgets\GridView\GridView;
 $this->title = Yii::t('common/podraz', 'Podrazs');
 ?>
 <div class="podraz-index content-container">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+    <?= HeaderPanel::widget(['icon' => FA::_WINDOW_RESTORE, 'title' => Html::encode($this->title)]) ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -44,10 +44,6 @@ $this->title = Yii::t('common/podraz', 'Podrazs');
                     return Yii::$app->user->can(RbacHelper::PODRAZ_EDIT);
                 },
             ],
-        ],
-        'panelHeading' => [
-            'icon' => FA::icon(FA::_WINDOW_RESTORE),
-            'title' => Yii::t('common/podraz', 'Podrazs'),
         ],
         'gridExcludeIdsFunc' => function (ActiveQuery $activeQuery, array $ids) {
             $activeQuery->andWhere(['not in', 'podraz_id', $ids]);

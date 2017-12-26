@@ -1,5 +1,6 @@
 <?php
 
+use common\widgets\HeaderPanel\HeaderPanel;
 use common\widgets\Html\Html;
 use domain\forms\base\RoleUpdateForm;
 use domain\models\base\AuthItem;
@@ -14,8 +15,7 @@ use common\widgets\ActiveForm\ActiveForm;
 $this->title = $modelForm->description;
 ?>
 <div class="auth-item-update content-container">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+    <?= HeaderPanel::widget(['title' => Html::encode($this->title)]) ?>
 
     <div class="auth-item-form">
 
