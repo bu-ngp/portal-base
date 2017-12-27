@@ -18,4 +18,5 @@ class ProccessErrorEvent extends Event
     public $handlerPercent;
     /** @var \Exception */
     public $exception;
+    public $eventData;
 }

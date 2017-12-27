@@ -32,7 +32,7 @@ class EmployeeProccessErrorListener
             'from' => $this->service->getPortalMail(),
             'to' => $this->service->getAdministratorMails(),
             'subject' => 'Ошибка при импорте сотрудников на портал',
-            'html' => "При импорте сотрудников на портал произошка ошибка: " . $event->exception->getMessage(),
+            'html' => "<b>При импорте сотрудников на портал произошка ошибка: </b><br>" . $event->exception->getMessage(),
         ]);
 
         $query->push($job);

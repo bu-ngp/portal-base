@@ -19,4 +19,5 @@ class ProccessSuccessEvent extends Event
     public $handlerUsedMemory;
     public $handlerShortReport;
     public $handlerFiles;
+    public $eventData;
 }

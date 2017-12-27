@@ -29,6 +29,8 @@ abstract class ProcessLoader extends Component implements JobInterface
     public $description = 'Process Loader';
     public $handler_id;
 
+    protected $data = [];
+
     /** @var  Handler */
     private $_handler;
 
@@ -54,6 +56,7 @@ abstract class ProcessLoader extends Component implements JobInterface
                     /** @var $dohFile DohFiles */
                     return $dohFile->file_path;
                 }, $this->_handler->dohFiles),
+                'eventData' => $this->data,
             ]));
         } catch (\Exception $e) {
             if ($e instanceof CancelException) {
@@ -65,6 +68,7 @@ abstract class ProcessLoader extends Component implements JobInterface
                     'handlerDoneTime' => $this->_handler->handler_done_time,
                     'handlerUsedMemory' => $this->_handler->handler_used_memory,
                     'handlerPercent' => $this->_handler->handler_percent,
+                    'eventData' => $this->data,
                 ]));
                 return;
             }
@@ -75,6 +79,7 @@ abstract class ProcessLoader extends Component implements JobInterface
                 'handlerDescription' => $this->_handler->handler_description,
                 'handlerPercent' => $this->_handler->handler_percent,
                 'exception' => $e,
+                'eventData' => $this->data,
             ]));
             return;
         }
@@ -92,6 +97,7 @@ abstract class ProcessLoader extends Component implements JobInterface
                 /** @var $dohFile DohFiles */
                 return $dohFile->file_path;
             }, $this->_handler->dohFiles),
+            'eventData' => $this->data,
         ]));
     }
 

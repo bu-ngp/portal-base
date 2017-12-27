@@ -21,4 +21,5 @@ class ProccessCompleteEvent extends Event
     public $handlerPercent;
     public $handlerShortReport;
     public $handlerFiles;
+    public $eventData;
 }

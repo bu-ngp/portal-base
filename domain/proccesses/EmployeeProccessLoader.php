@@ -106,11 +106,10 @@ class EmployeeProccessLoader extends ProcessLoader
         /** @var \PHPExcel_Reader_Excel2007|\PHPExcel_Reader_Excel5 $objReader */
         $objReader = \PHPExcel_IOFactory::createReaderForFile($this->importFilePath);
         $this->highestRow = $this->getHighestRow();
-
+        throw new \Exception("niggas");
         $chunkFilter = new ChunkReadFilter();
         $objReader->setReadFilter($chunkFilter);
         $objReader->setReadDataOnly(true);
-
         while ($this->executing) {
             $chunkFilter->setRows($this->startRow, self::CHUNK_SIZE);
             $objPHPExcel = $objReader->load($this->importFilePath);
@@ -494,6 +493,16 @@ class EmployeeProccessLoader extends ProcessLoader
         $changedPercent = round($this->changed * 100 / $this->rows, 1);
         $errorPercent = round($this->error * 100 / $this->rows, 1);
         $this->addShortReport("Итоги обработки:\n- Всего записей: {$this->rows};\n- Добавлено ($addedPercent%): {$this->added};\n- Изменено ($changedPercent%): {$this->changed};\n- Ошибок ($errorPercent%): {$this->error};");
+        $this->data['result'] = [
+            'rows' => $this->rows,
+            'added' => $this->added,
+            'changed' => $this->changed,
+            'error' => $this->error,
+            'addedPercent' => $addedPercent,
+            'changedPercent' => $changedPercent,
+            'errorPercent' => $errorPercent,
+            'reportPath' => $this->reportPath,
+        ];
     }
 
     protected function createByService(ProxyService $service, array $params)

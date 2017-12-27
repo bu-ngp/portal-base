@@ -18,4 +18,5 @@ class ProccessCancelEvent extends Event
     public $handlerDoneTime;
     public $handlerUsedMemory;
     public $handlerPercent;
+    public $eventData;
 }

@@ -102,9 +102,5 @@ class SiteController extends Controller
 
     public function actionTest()
     {
-        $doh = new DoH(new EmployeeProccessLoader(Yii::getAlias('@common/ftpimport/Upload_Kamin_SotrInfo.xlsx')));
-        $doh->execute();
-
-        echo "finish\n";
     }
 }

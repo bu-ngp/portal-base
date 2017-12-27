@@ -31,5 +31,10 @@ class BaseDomainBootstrap implements BootstrapInterface
             $listener = Yii::createObject(['class' => 'domain\proccesses\listeners\EmployeeProccessErrorListener']);
             $listener->handle($event);
         });
+
+        yii\base\Event::on(EmployeeProccessLoader::className(), ProcessLoader::EVENT_PROCCESS_SUCCESS, function ($event) {
+            $listener = Yii::createObject(['class' => 'domain\proccesses\listeners\EmployeeProccessSuccessListener']);
+            $listener->handle($event);
+        });
     }
 }
