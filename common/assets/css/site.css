@@ -967,6 +967,10 @@ label.wk-label-with-icon {
     right: 5px;
     color: #726ba0;
     font-size: 12px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 /* ------- Forms ------- */

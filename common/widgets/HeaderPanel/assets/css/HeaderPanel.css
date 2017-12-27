@@ -3,9 +3,11 @@
     background-color: rgba(255, 255, 255, 0.7);
     box-shadow: 1px 2px 1px rgba(0, 0, 0, 0.1);
     font-size: 20px;
-    padding: 20px 10px;
+    padding: 0 10px;
     margin-top: 20px;
     margin-bottom: 10px;
+    position: relative;
+    height: 62px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -15,18 +17,27 @@
 .wk-header-panel-icon {
     display: inline-block;
     position: relative;
-    width: 65px;
-    height: 22px;
+    float: left;
+    margin-right: 15px;
+    vertical-align: middle;
+    height: 100%;
+    line-height: 62px;
 }
 
 .wk-header-panel i {
-    position: absolute;
-    margin-top: -12px;
-    font-size: 50px;
+    font-size: 45px;
+    vertical-align: middle;
+    height: 100%;
+    line-height: 62px;
 }
 
 .wk-header-panel > h1 {
     font-size: 20px;
     display: inline-block;
     margin: 0;
+    position: relative;
+    float: left;
+    vertical-align: middle;
+    height: 100%;
+    line-height: 62px;
 }
