@@ -169,7 +169,6 @@ return [
         ],
         'report-loader' => [
             'class' => '\common\widgets\ReportLoader\Module',
-
         ],
         'markdown' => [
             'class' => 'kartik\markdown\Module',

@@ -106,7 +106,6 @@ class EmployeeProccessLoader extends ProcessLoader
         /** @var \PHPExcel_Reader_Excel2007|\PHPExcel_Reader_Excel5 $objReader */
         $objReader = \PHPExcel_IOFactory::createReaderForFile($this->importFilePath);
         $this->highestRow = $this->getHighestRow();
-        throw new \Exception("niggas");
         $chunkFilter = new ChunkReadFilter();
         $objReader->setReadFilter($chunkFilter);
         $objReader->setReadDataOnly(true);
