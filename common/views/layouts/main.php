@@ -35,13 +35,13 @@ use common\assets\AppCommonAsset;
         <?php
         NavBar::begin([
             'brandLabel' => $this->render(Yii::$app->params['brandLabelView']),
-            'brandUrl' => Yii::$app->homeUrl,
+            'brandUrl' => Yii::$app->get('FrontendUrlManager')->createUrl(['/']),
             'options' => [
                 'class' => 'navbar navbar-inverse navbar-fixed-top pmd-navbar pmd-z-depth',
             ],
         ]);
         $menuItems = [
-            ['label' => 'Главная', 'url' => Yii::$app->urlManager->createUrl(['/']), 'linkOptions' => ['class' => 'pmd-ripple-effect']],
+            ['label' => 'Главная', 'url' => Yii::$app->get('FrontendUrlManager')->createUrl(['/']), 'linkOptions' => ['class' => 'pmd-ripple-effect']],
             [
                 'label' => 'Система',
                 'url' => '#',
@@ -116,7 +116,9 @@ use common\assets\AppCommonAsset;
 
         <div class="wrap">
             <?php $this->context->id === "site" && $this->context->action->id === "login" ? Breadcrumbs::hide() : null ?>
-            <?= Breadcrumbs::widget() ?>
+            <?= Breadcrumbs::widget([
+                'urlManagerName' => Yii::$app->getUser()->isGuest ? 'FrontendUrlManager' : 'urlManagerAdmin',
+            ]) ?>
             <?= $content ?>
         </div>
     </div>

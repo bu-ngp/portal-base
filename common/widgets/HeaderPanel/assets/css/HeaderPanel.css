@@ -18,7 +18,6 @@
     display: inline-block;
     position: relative;
     float: left;
-    margin-right: 15px;
     vertical-align: middle;
     height: 100%;
     line-height: 62px;
@@ -29,6 +28,9 @@
     vertical-align: middle;
     height: 100%;
     line-height: 62px;
+    min-width: 50px;
+    text-align: center;
+    padding-right: 15px;
 }
 
 .wk-header-panel > h1 {

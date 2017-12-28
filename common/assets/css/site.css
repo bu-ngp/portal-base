@@ -286,7 +286,12 @@ body {
 }
 
 .navbar .ink {
-    background: #9cb3e5;
+    background: #4473df;
+}
+
+/*.navbar */
+.pmd-btn-flat.btn-default .ink {
+    background: #bab2e6;
 }
 
 .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {

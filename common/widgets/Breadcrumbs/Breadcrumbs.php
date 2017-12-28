@@ -23,6 +23,7 @@ class Breadcrumbs extends Widget
     /** @var bool Устанавливает хлебную крошку в начало пути */
     public static $root = false;
     public $id;
+    public $urlManagerName;
 
     public function init()
     {
@@ -36,7 +37,7 @@ class Breadcrumbs extends Widget
     {
         echo Html::tag('div', '', [
             'id' => $this->id,
-            'home-crumb-url' => Yii::$app->getHomeUrl(),
+            'home-crumb-url' => $this->urlManagerName ? Yii::$app->get($this->urlManagerName)->createUrl(['/']) : Yii::$app->getHomeUrl(),
             'current-crumb-id' => $this->getCurrentCrumbId(),
             'current-crumb-title' => $this->getView()->title,
             'remove-last-crumb' => $this->getRemoveLastCrumb() ? '1' : '0',
