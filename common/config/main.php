@@ -143,10 +143,12 @@ return [
             'class' => \yii\queue\db\Queue::className(),
             'commandClass' => \console\classes\queue\Command::className(),
             'mutex' => \yii\mutex\MysqlMutex::className(),
+            'channel' => 'handler',
         ],
         'queueExecutor' => [
             'class' => \yii\queue\db\Queue::className(),
             'mutex' => \yii\mutex\MysqlMutex::className(),
+            'channel' => 'executor',
         ],
         'config' => [
             'class' => \domain\services\ConfigComponent::className(),

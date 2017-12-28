@@ -46,7 +46,7 @@ class DolzhTest extends Unit
 
         $service->create($form);
         $this->assertEmpty($form->getErrors());
-        $this->tester->seeInDatabase('dolzh', ['dolzh_name' => mb_strtoupper($form->dolzh_name, 'UTF-8')]);
+        $this->tester->seeInDatabase('{{%dolzh}}', ['dolzh_name' => mb_strtoupper($form->dolzh_name, 'UTF-8')]);
     }
 
     public function testEmpty()
@@ -61,7 +61,7 @@ class DolzhTest extends Unit
         });
 
         $this->assertTrue($form->getErrors()['dolzh_name'][0] === $errorMessage);
-        $this->tester->seeNumRecords(0, 'dolzh');
+        $this->tester->seeNumRecords(0, '{{%dolzh}}');
     }
 
     public function testCreateUnique()
@@ -78,8 +78,8 @@ class DolzhTest extends Unit
         });
 
         $this->assertTrue($form->getErrors()['dolzh_name'][0] === $errorMessage);
-        $this->tester->seeInDatabase('dolzh', ['dolzh_name' => mb_strtoupper($form->dolzh_name, 'UTF-8')]);
-        $this->tester->seeNumRecords(1, 'dolzh', ['dolzh_name' => $form->dolzh_name]);
+        $this->tester->seeInDatabase('{{%dolzh}}', ['dolzh_name' => mb_strtoupper($form->dolzh_name, 'UTF-8')]);
+        $this->tester->seeNumRecords(1, '{{%dolzh}}', ['dolzh_name' => $form->dolzh_name]);
     }
 
     public function testUpdate()
@@ -97,7 +97,7 @@ class DolzhTest extends Unit
 
         $service->update($dolzh_id, $form);
         $this->assertEmpty($form->getErrors());
-        $this->tester->seeInDatabase('dolzh', ['dolzh_name' => mb_strtoupper($form->dolzh_name, 'UTF-8')]);
+        $this->tester->seeInDatabase('{{%dolzh}}', ['dolzh_name' => mb_strtoupper($form->dolzh_name, 'UTF-8')]);
     }
 
     public function testDelete()
@@ -111,6 +111,6 @@ class DolzhTest extends Unit
         $dolzh_id = $this->tester->grabFixture('dolzh', 0);
 
         $service->delete($dolzh_id);
-        $this->tester->seeNumRecords(0, 'dolzh');
+        $this->tester->seeNumRecords(0, '{{%dolzh}}');
     }
 }
