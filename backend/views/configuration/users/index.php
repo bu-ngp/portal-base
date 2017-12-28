@@ -118,7 +118,7 @@ $this->title = Yii::t('common/person', 'Users');
         ],
         'crudSettings' => [
             'create' => [
-                'url' => 'configuration/users/create',
+                'urlGrid' => 'configuration/users/create',
                 'beforeRender' => function () {
                     return Yii::$app->user->can(RbacHelper::USER_EDIT);
                 },

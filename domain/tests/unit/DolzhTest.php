@@ -1,4 +1,5 @@
 <?php
+
 namespace domain\tests;
 
 
@@ -8,6 +9,7 @@ use domain\models\base\Dolzh;
 use domain\repositories\base\DolzhRepository;
 use domain\services\base\DolzhService;
 use domain\tests\fixtures\DolzhFixture;
+use Yii;
 use yii\codeception\DbTestCase;
 
 class DolzhTest extends Unit
@@ -38,8 +40,8 @@ class DolzhTest extends Unit
 
     public function testCreate()
     {
-        $service = new DolzhService(new DolzhRepository());
-        $form = new DolzhForm();
+        $service = Yii::createObject('domain\services\base\DolzhService');
+        $form = Yii::createObject('domain\forms\base\DolzhForm');
         $form->dolzh_name = 'Программист';
 
         $service->create($form);
@@ -49,12 +51,12 @@ class DolzhTest extends Unit
 
     public function testEmpty()
     {
-        $service = new DolzhService(new DolzhRepository());
-        $form = new DolzhForm();
+        $service = Yii::createObject('domain\services\base\DolzhService');
+        $form = Yii::createObject('domain\forms\base\DolzhForm');
         $form->dolzh_name = '';
         $errorMessage = "Необходимо заполнить «{$form->getAttributeLabel('dolzh_name')}».";
 
-        $this->tester->expectException(new \DomainException($errorMessage), function() use ($service, $form) {
+        $this->tester->expectException(new \DomainException, function () use ($service, $form) {
             $service->create($form);
         });
 
@@ -65,13 +67,13 @@ class DolzhTest extends Unit
     public function testCreateUnique()
     {
         $this->tester->haveFixtures([DolzhFixture::className()]);
-        $service = new DolzhService(new DolzhRepository());
-        $form = new DolzhForm();
+        $service = Yii::createObject('domain\services\base\DolzhService');
+        $form = Yii::createObject('domain\forms\base\DolzhForm');
         $form->dolzh_name = 'Программист';
         $valueResult = mb_strtoupper($form->dolzh_name, 'UTF-8');
         $errorMessage = "Значение «" . $valueResult . "» для «{$form->getAttributeLabel('dolzh_name')}» уже занято.";
 
-        $this->tester->expectException(new \DomainException($errorMessage), function() use ($service, $form) {
+        $this->tester->expectException(new \DomainException, function () use ($service, $form) {
             $service->create($form);
         });
 
@@ -87,10 +89,10 @@ class DolzhTest extends Unit
                 'class' => DolzhFixture::className(),
             ],
         ]);
-        $service = new DolzhService(new DolzhRepository());
+        $service = Yii::createObject('domain\services\base\DolzhService');
         $dolzh_id = $this->tester->grabFixture('dolzh', 0);
         $dolzh = Dolzh::findOne($dolzh_id);
-        $form = new DolzhForm($dolzh);
+        $form = Yii::createObject('domain\forms\base\DolzhForm', [$dolzh]);
         $form->dolzh_name = 'Системный администратор';
 
         $service->update($dolzh_id, $form);
@@ -105,7 +107,7 @@ class DolzhTest extends Unit
                 'class' => DolzhFixture::className(),
             ],
         ]);
-        $service = new DolzhService(new DolzhRepository());
+        $service = Yii::createObject('domain\services\base\DolzhService');
         $dolzh_id = $this->tester->grabFixture('dolzh', 0);
 
         $service->delete($dolzh_id);

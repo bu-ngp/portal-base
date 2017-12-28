@@ -27,7 +27,7 @@ $this->title = Yii::t('common/podraz', 'Podrazs');
         ],
         'crudSettings' => [
             'create' => [
-                'url' => 'configuration/spravochniki/podraz/create',
+                'urlGrid' => 'configuration/spravochniki/podraz/create',
                 'beforeRender' => function () {
                     return Yii::$app->user->can(RbacHelper::PODRAZ_EDIT);
                 },

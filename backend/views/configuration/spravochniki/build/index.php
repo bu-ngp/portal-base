@@ -27,7 +27,7 @@ $this->title = Yii::t('common/build', 'Builds');
         ],
         'crudSettings' => [
             'create' => [
-                'url' => 'configuration/spravochniki/build/create',
+                'urlGrid' => 'configuration/spravochniki/build/create',
                 'beforeRender' => function () {
                     return Yii::$app->user->can(RbacHelper::BUILD_EDIT);
                 },

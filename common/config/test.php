@@ -8,7 +8,7 @@ return [
     'sourceLanguage' => 'en-US',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
     ],
     'bootstrap' => [
         'assetsAutoCompress',
@@ -21,7 +21,8 @@ return [
             'linkAssets' => true,
         ],
         'cache' => [
-            'class' => 'yii\caching\MemCache',
+            'class' => 'yii\caching\FileCache',
+            //  'class' => 'yii\caching\MemCache',
         ],
         'assetsAutoCompress' =>
             [

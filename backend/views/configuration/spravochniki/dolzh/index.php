@@ -29,7 +29,7 @@ $this->title = Yii::t('common/dolzh', 'Dolzhs');
         ],
         'crudSettings' => [
             'create' => [
-                'url' => 'configuration/spravochniki/dolzh/create',
+                'urlGrid' => 'configuration/spravochniki/dolzh/create',
                 'beforeRender' => function () {
                     return Yii::$app->user->can(RbacHelper::DOLZH_EDIT);
                 },
