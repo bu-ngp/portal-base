@@ -73,18 +73,18 @@ class ActionButtonCreate
             $this->addCrudCreateSelectedToQuery();
         } else {
             if (is_string($this->crudProp)) {
-                $this->crudProp = ['url' => [$this->crudProp]];
+                $this->crudProp = ['urlGrid' => [$this->crudProp]];
             }
 
-            if (is_array($this->crudProp) && !isset($this->crudProp['url'])) {
-                $this->crudProp['url'] = $this->crudProp;
+            if (is_array($this->crudProp) && !isset($this->crudProp['urlGrid'])) {
+                $this->crudProp['urlGrid'] = $this->crudProp;
             }
 
-            if (is_string($this->crudProp['url'])) {
-                $this->crudProp['url'] = [$this->crudProp['url']];
+            if (is_string($this->crudProp['urlGrid'])) {
+                $this->crudProp['urlGrid'] = [$this->crudProp['urlGrid']];
             }
 
-            $crudUrl = Url::to($this->crudProp['url']);
+            $crudUrl = Url::to($this->crudProp['urlGrid']);
 
         }
 
@@ -113,13 +113,12 @@ class ActionButtonCreate
             if (!empty($condition)) {
                 $this->grid->dataProvider->query->andWhere($condition);
             }
-
         }
     }
 
     protected function beforeRender()
     {
-        if (!empty($this->crudProp['url']) && $this->crudProp['beforeRender'] instanceof \Closure) {
+        if (!empty($this->crudProp['urlGrid']) && $this->crudProp['beforeRender'] instanceof \Closure) {
             return $this->crudProp['beforeRender']();
         }
 

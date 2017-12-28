@@ -2,6 +2,7 @@
 
 use common\widgets\HeaderPanel\HeaderPanel;
 use common\widgets\Html\Html;
+use console\helpers\RbacHelper;
 use domain\forms\base\RoleUpdateForm;
 use domain\models\base\AuthItem;
 use domain\models\base\AuthItemChild;
@@ -35,6 +36,15 @@ $this->title = $modelForm->description;
                 'crudSettings' => [
                     'create' => [
                         'urlGrid' => 'configuration/roles/index-for-roles',
+                        'beforeRender' => function () {
+                            if ($id = Yii::$app->request->get('id', false)) {
+                                return AuthItem::find()
+                                    ->andWhere(['name' => $id, 'view' => 0])
+                                    ->andWhere(['not', ['name' => RbacHelper::ADMINISTRATOR]])
+                                    ->exists();
+                            }
+                            return false;
+                        }
                     ],
                     'delete' => [
                         'url' => 'configuration/roles/delete-role',
@@ -42,14 +52,14 @@ $this->title = $modelForm->description;
                             /** @var AuthItem $model */
 
                             return $_GET['id'] && AuthItemChild::find()
-                                ->joinWith(['parent0'])
-                                ->andWhere([
-                                    'child' => $model->name,
-                                    'Parent0.name' => $_GET['id'],
-                                    'Parent0.view' => 0,
-                                ])
-                                ->andWhere(['not', ['parent' => 'Administrator']])
-                                ->one();
+                                    ->joinWith(['parent0'])
+                                    ->andWhere([
+                                        'child' => $model->name,
+                                        'Parent0.name' => $_GET['id'],
+                                        'Parent0.view' => 0,
+                                    ])
+                                    ->andWhere(['not', ['parent' => RbacHelper::ADMINISTRATOR]])
+                                    ->one();
                         },
                     ],
                 ],
