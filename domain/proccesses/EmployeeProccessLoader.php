@@ -657,9 +657,9 @@ class EmployeeProccessLoader extends ProcessLoader
     protected function updateCurrentEmployee(EmployeeHistory $employee, $person_id, $dolzh_id, $podraz_id)
     {
         $employeeForm = $employee->attributes;
-     /*   $employeeForm['person_id'] = Uuid::str2uuid($person_id);
+        $employeeForm['person_id'] = Uuid::str2uuid($person_id);
         $employeeForm['dolzh_id'] = Uuid::str2uuid($dolzh_id);
-        $employeeForm['podraz_id'] = Uuid::str2uuid($podraz_id);*/
+        $employeeForm['podraz_id'] = Uuid::str2uuid($podraz_id);
 
         $diff = array_diff_assoc($employeeForm, $employee->attributes);
         $diffWas = array_diff_assoc($employee->attributes, $employeeForm);
