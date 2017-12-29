@@ -6,6 +6,7 @@ use domain\behaviors\BlameableBehavior;
 use domain\auth\Ldap;
 use domain\auth\LdapModelInterface;
 use domain\forms\base\ChangeUserPasswordForm;
+use domain\validators\FIOValidator;
 use domain\validators\WKDateValidator;
 use domain\forms\base\UserForm;
 use domain\forms\base\UserFormUpdate;
@@ -64,8 +65,11 @@ class Person extends \yii\db\ActiveRecord implements LdapModelInterface
     public function rules()
     {
         return ArrayHelper::merge(UserRules::client(), [
+            [['person_fullname'], FIOValidator::className(), 'when' => function ($model) {
+                return $model->person_code != 1;
+            }],
             [['person_auth_key', 'person_password_hash'], 'required'],
-            [['person_code', 'created_at', 'updated_at'], 'integer'],
+            [['person_code'], 'integer'],
             [['person_hired', 'person_fired'], WKDateValidator::className()],
             [['person_password_hash'], 'string', 'max' => 255],
             [['person_auth_key'], 'string', 'max' => 32],

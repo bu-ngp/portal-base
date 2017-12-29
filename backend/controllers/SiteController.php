@@ -3,9 +3,12 @@
 namespace backend\controllers;
 
 use doh\services\classes\DoH;
+use domain\forms\base\ProfileForm;
+use domain\forms\base\UserForm;
 use domain\models\base\search\AuthItemSearch;
 use domain\proccesses\EmployeeProccessLoader;
 use Yii;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -102,5 +105,24 @@ class SiteController extends Controller
 
     public function actionTest()
     {
+//        $service = Yii::createObject('domain\services\base\PersonService');
+//        $profileForm = new ProfileForm();
+//        $userForm = new UserForm([
+//            'person_fullname' => '',
+//            'person_username' => '',
+//            'person_password' => '111111',
+//            'person_password_repeat' => '2',
+//            'assignRoles' => '[]',
+//        ]);
+//
+//        try {
+//            $service->create($userForm, $profileForm);
+//        } catch (\Exception $e) {
+//
+//        }
+//
+//        return VarDumper::dumpAsString($userForm->getErrors(), 10, true);
+
+
     }
 }
