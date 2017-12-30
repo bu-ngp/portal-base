@@ -23,7 +23,7 @@ class PodrazTest extends Unit
 
         $service->create($form);
         $this->assertEmpty($form->getErrors());
-        $this->tester->seeInDatabase('{{%podraz}}', ['podraz_name' => mb_strtoupper($form->podraz_name, 'UTF-8')]);
+        $this->tester->seeInDatabase('podraz', ['podraz_name' => mb_strtoupper($form->podraz_name, 'UTF-8')]);
     }
 
     public function testEmpty()
@@ -38,7 +38,7 @@ class PodrazTest extends Unit
         });
 
         $this->assertTrue($form->getErrors()['podraz_name'][0] === $errorMessage);
-        $this->tester->seeNumRecords(0, '{{%podraz}}');
+        $this->tester->seeNumRecords(0, 'podraz');
     }
 
     public function testCreateUnique()
@@ -55,8 +55,8 @@ class PodrazTest extends Unit
         });
 
         $this->assertTrue($form->getErrors()['podraz_name'][0] === $errorMessage);
-        $this->tester->seeInDatabase('{{%podraz}}', ['podraz_name' => mb_strtoupper($form->podraz_name, 'UTF-8')]);
-        $this->tester->seeNumRecords(1, '{{%podraz}}', ['podraz_name' => $form->podraz_name]);
+        $this->tester->seeInDatabase('podraz', ['podraz_name' => mb_strtoupper($form->podraz_name, 'UTF-8')]);
+        $this->tester->seeNumRecords(1, 'podraz', ['podraz_name' => $form->podraz_name]);
     }
 
     public function testUpdate()
@@ -74,7 +74,7 @@ class PodrazTest extends Unit
 
         $service->update($podraz_id, $form);
         $this->assertEmpty($form->getErrors());
-        $this->tester->seeInDatabase('{{%podraz}}', ['podraz_name' => mb_strtoupper($form->podraz_name, 'UTF-8')]);
+        $this->tester->seeInDatabase('podraz', ['podraz_name' => mb_strtoupper($form->podraz_name, 'UTF-8')]);
     }
 
     public function testDelete()
@@ -88,6 +88,6 @@ class PodrazTest extends Unit
         $podraz_id = $this->tester->grabFixture('podraz', 0);
 
         $service->delete($podraz_id);
-        $this->tester->seeNumRecords(0, '{{%podraz}}');
+        $this->tester->seeNumRecords(0, 'podraz');
     }
 }

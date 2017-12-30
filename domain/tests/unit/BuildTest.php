@@ -21,7 +21,7 @@ class BuildTest extends \Codeception\Test\Unit
 
         $service->create($form);
         $this->assertEmpty($form->getErrors());
-        $this->tester->seeInDatabase('{{%build}}', ['build_name' => mb_strtoupper($form->build_name, 'UTF-8')]);
+        $this->tester->seeInDatabase('build', ['build_name' => mb_strtoupper($form->build_name, 'UTF-8')]);
     }
 
     public function testEmpty()
@@ -36,7 +36,7 @@ class BuildTest extends \Codeception\Test\Unit
         });
 
         $this->assertTrue($form->getErrors()['build_name'][0] === $errorMessage);
-        $this->tester->seeNumRecords(0, '{{%build}}');
+        $this->tester->seeNumRecords(0, 'build');
     }
 
     public function testCreateUnique()
@@ -53,8 +53,8 @@ class BuildTest extends \Codeception\Test\Unit
         });
 
         $this->assertTrue($form->getErrors()['build_name'][0] === $errorMessage);
-        $this->tester->seeInDatabase('{{%build}}', ['build_name' => mb_strtoupper($form->build_name, 'UTF-8')]);
-        $this->tester->seeNumRecords(1, '{{%build}}', ['build_name' => $form->build_name]);
+        $this->tester->seeInDatabase('build', ['build_name' => mb_strtoupper($form->build_name, 'UTF-8')]);
+        $this->tester->seeNumRecords(1, 'build', ['build_name' => $form->build_name]);
     }
 
     public function testUpdate()
@@ -72,7 +72,7 @@ class BuildTest extends \Codeception\Test\Unit
 
         $service->update($build_id, $form);
         $this->assertEmpty($form->getErrors());
-        $this->tester->seeInDatabase('{{%build}}', ['build_name' => mb_strtoupper($form->build_name, 'UTF-8')]);
+        $this->tester->seeInDatabase('build', ['build_name' => mb_strtoupper($form->build_name, 'UTF-8')]);
     }
 
     public function testDelete()
@@ -86,6 +86,6 @@ class BuildTest extends \Codeception\Test\Unit
         $build_id = $this->tester->grabFixture('build', 0);
 
         $service->delete($build_id);
-        $this->tester->seeNumRecords(0, '{{%build}}');
+        $this->tester->seeNumRecords(0, 'build');
     }
 }
