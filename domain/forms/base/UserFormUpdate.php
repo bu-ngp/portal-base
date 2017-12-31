@@ -25,7 +25,7 @@ class UserFormUpdate extends Model
     public $person_hired;
     public $person_fired;
 
-    public $hasActiveEmployee;
+    private $hasActiveEmployee;
 
     public function __construct(Person $person, $config = [])
     {
@@ -53,5 +53,10 @@ class UserFormUpdate extends Model
     public function attributeLabels()
     {
         return (new Person())->attributeLabels();
+    }
+
+    public function isHaveActiveEmployee()
+    {
+        return $this->hasActiveEmployee;
     }
 }

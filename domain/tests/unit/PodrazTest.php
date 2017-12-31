@@ -67,12 +67,12 @@ class PodrazTest extends Unit
             ],
         ]);
         $service = Yii::createObject('domain\services\base\PodrazService');
-        $podraz_id = $this->tester->grabFixture('podraz', 0);
-        $podraz = Podraz::findOne($podraz_id);
+        /** @var Podraz $podraz */
+        $podraz = $this->tester->grabFixture('podraz', 0);
         $form = Yii::createObject('domain\forms\base\PodrazForm', [$podraz]);
         $form->podraz_name = 'Терапевтическое отделение №2';
 
-        $service->update($podraz_id, $form);
+        $service->update($podraz->primaryKey, $form);
         $this->assertEmpty($form->getErrors());
         $this->tester->seeInDatabase('podraz', ['podraz_name' => mb_strtoupper($form->podraz_name, 'UTF-8')]);
     }
@@ -85,9 +85,10 @@ class PodrazTest extends Unit
             ],
         ]);
         $service = Yii::createObject('domain\services\base\PodrazService');
-        $podraz_id = $this->tester->grabFixture('podraz', 0);
+        /** @var Podraz $podraz */
+        $podraz = $this->tester->grabFixture('podraz', 0);
 
-        $service->delete($podraz_id);
+        $service->delete($podraz->primaryKey);
         $this->tester->seeNumRecords(0, 'podraz');
     }
 }

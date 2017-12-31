@@ -90,12 +90,12 @@ class DolzhTest extends Unit
             ],
         ]);
         $service = Yii::createObject('domain\services\base\DolzhService');
-        $dolzh_id = $this->tester->grabFixture('dolzh', 0);
-        $dolzh = Dolzh::findOne($dolzh_id);
+        /** @var Dolzh $dolzh */
+        $dolzh = $this->tester->grabFixture('dolzh', 0);
         $form = Yii::createObject('domain\forms\base\DolzhForm', [$dolzh]);
         $form->dolzh_name = 'Системный администратор';
 
-        $service->update($dolzh_id, $form);
+        $service->update($dolzh->primaryKey, $form);
         $this->assertEmpty($form->getErrors());
         $this->tester->seeInDatabase('dolzh', ['dolzh_name' => mb_strtoupper($form->dolzh_name, 'UTF-8')]);
     }
@@ -108,9 +108,10 @@ class DolzhTest extends Unit
             ],
         ]);
         $service = Yii::createObject('domain\services\base\DolzhService');
-        $dolzh_id = $this->tester->grabFixture('dolzh', 0);
+        /** @var Dolzh $dolzh */
+        $dolzh = $this->tester->grabFixture('dolzh', 0);
 
-        $service->delete($dolzh_id);
+        $service->delete($dolzh->primaryKey);
         $this->tester->seeNumRecords(0, 'dolzh');
     }
 }

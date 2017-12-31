@@ -65,12 +65,12 @@ class BuildTest extends \Codeception\Test\Unit
             ],
         ]);
         $service = Yii::createObject('domain\services\base\BuildService');
-        $build_id = $this->tester->grabFixture('build', 0);
-        $build = Build::findOne($build_id);
+        /** @var Build $build */
+        $build = $this->tester->grabFixture('build', 0);
         $form = Yii::createObject('domain\forms\base\BuildForm', [$build]);
         $form->build_name = 'Взрослая поликлиника №2';
 
-        $service->update($build_id, $form);
+        $service->update($build->primaryKey, $form);
         $this->assertEmpty($form->getErrors());
         $this->tester->seeInDatabase('build', ['build_name' => mb_strtoupper($form->build_name, 'UTF-8')]);
     }
@@ -83,9 +83,10 @@ class BuildTest extends \Codeception\Test\Unit
             ],
         ]);
         $service = Yii::createObject('domain\services\base\BuildService');
-        $build_id = $this->tester->grabFixture('build', 0);
+        /** @var Build $build */
+        $build = $this->tester->grabFixture('build', 0);
 
-        $service->delete($build_id);
+        $service->delete($build->primaryKey);
         $this->tester->seeNumRecords(0, 'build');
     }
 }

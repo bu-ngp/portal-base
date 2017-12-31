@@ -5,9 +5,12 @@ namespace backend\controllers;
 use doh\services\classes\DoH;
 use domain\forms\base\ProfileForm;
 use domain\forms\base\UserForm;
+use domain\models\base\Dolzh;
+use domain\models\base\Podraz;
 use domain\models\base\search\AuthItemSearch;
 use domain\proccesses\EmployeeProccessLoader;
 use Yii;
+use yii\base\DynamicModel;
 use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -36,6 +39,11 @@ class SiteController extends Controller
                         'actions' => ['logout', 'index'],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['acceptance-test'],
+                        'allow' => true,
+                        'ips' => ['127.0.0.1', 'localhost', '::1', '192.168.0.100'],
                     ],
                 ],
             ],
@@ -103,25 +111,41 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
+    public function actionAcceptanceTest()
+    {
+        $dolzhModel = new Dolzh();
+        $dolzhModelMultiple = new Dolzh();
+
+        $podrazModel = Podraz::find()->all();
+
+        return $this->render('test', [
+            'dolzhModel' => $dolzhModel,
+            'podrazModel' => $podrazModel,
+            'dolzhModelMultiple' => $dolzhModelMultiple,
+        ]);
+    }
+
     public function actionTest()
     {
-//        $service = Yii::createObject('domain\services\base\PersonService');
-//        $profileForm = new ProfileForm();
-//        $userForm = new UserForm([
-//            'person_fullname' => '',
-//            'person_username' => '',
-//            'person_password' => '111111',
-//            'person_password_repeat' => '2',
-//            'assignRoles' => '[]',
-//        ]);
-//
-//        try {
-//            $service->create($userForm, $profileForm);
-//        } catch (\Exception $e) {
-//
-//        }
-//
-//        return VarDumper::dumpAsString($userForm->getErrors(), 10, true);
+        $service = Yii::createObject('domain\services\base\PersonService');
+
+        $userForm = new UserForm([
+            'person_fullname' => 'Иванов Иван Иванович',
+            'person_username' => 'IvanovII3',
+            'person_password' => '111111',
+            'person_email' => 'mail@mail.ru',
+            'assignRoles' => '["baseDolzhEdited"]',
+            //'assignRoles' => '["baseDolzhEdit","basePodrazEdit"]',
+        ]);
+        $profileForm = new ProfileForm();
+
+        try {
+            $service->create($userForm, $profileForm);
+        } catch (\Exception $e) {
+            echo VarDumper::dumpAsString($e->getMessage(), 10, true);
+        }
+
+        echo VarDumper::dumpAsString($userForm->getErrors(), 10, true);
 
 
     }
