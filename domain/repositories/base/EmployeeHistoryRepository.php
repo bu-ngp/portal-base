@@ -4,6 +4,7 @@ namespace domain\repositories\base;
 
 use domain\models\base\EmployeeHistory;
 use RuntimeException;
+use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\db\ActiveRecord;
 

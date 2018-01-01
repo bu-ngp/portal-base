@@ -3,6 +3,9 @@
 namespace domain\models\base;
 
 use domain\behaviors\BlameableBehavior;
+use domain\forms\base\EmployeeHistoryUpdateForm;
+use domain\helpers\BinaryHelper;
+use domain\validators\Str2UUIDValidator;
 use domain\validators\WKDateValidator;
 use domain\forms\base\EmployeeHistoryForm;
 use domain\helpers\DateHelper;
@@ -49,15 +52,11 @@ class EmployeeHistory extends \yii\db\ActiveRecord
     public function rules()
     {
         return array_merge(EmployeeHistoryRules::client(), [
-            [['employee_history_begin'], WKDateValidator::className()],
+            [['person_id'], 'required'],
             [['dolzh_id'], 'exist', 'skipOnError' => true, 'targetClass' => Dolzh::className(), 'targetAttribute' => ['dolzh_id' => 'dolzh_id']],
             [['person_id'], 'exist', 'skipOnError' => true, 'targetClass' => Person::className(), 'targetAttribute' => ['person_id' => 'person_id']],
             [['podraz_id'], 'exist', 'skipOnError' => true, 'targetClass' => Podraz::className(), 'targetAttribute' => ['podraz_id' => 'podraz_id']],
-            [['employee_history_begin'], 'unique', 'targetAttribute' => ['person_id', 'employee_history_begin'], 'message' => Yii::t('domain/employee', 'Unique Error By Values [{person_id}, {person_fullname}, {employee_history_begin}]', [
-                'person_id' => Uuid::uuid2str($this->person_id),
-                'person_fullname' => $this->person->person_fullname,
-                'employee_history_begin' => $this->employee_history_begin,
-            ])],
+            [['employee_history_begin'], 'unique', 'targetAttribute' => ['person_id', 'employee_history_begin'], 'message' => Yii::t('domain/employee', 'Fail Unique Speciality By Date Begin')],
         ]);
     }
 
@@ -71,7 +70,6 @@ class EmployeeHistory extends \yii\db\ActiveRecord
             'person_id' => Yii::t('domain/employee', 'Person ID'),
             'dolzh_id' => Yii::t('domain/employee', 'Dolzh ID'),
             'podraz_id' => Yii::t('domain/employee', 'Podraz ID'),
-            'build_id' => Yii::t('domain/employee', 'Build ID'),
             'employee_history_begin' => Yii::t('domain/employee', 'Employee History Begin'),
             'created_at' => Yii::t('domain/base', 'Created At'),
             'updated_at' => Yii::t('domain/base', 'Updated At'),
@@ -109,7 +107,7 @@ class EmployeeHistory extends \yii\db\ActiveRecord
         ], empty($form->assignBuilds) ? [] : ['builds' => $form->assignBuilds]));
     }
 
-    public function edit(EmployeeHistoryForm $form)
+    public function edit(EmployeeHistoryUpdateForm $form)
     {
         $this->dolzh_id = $form->dolzh_id;
         $this->podraz_id = $form->podraz_id;

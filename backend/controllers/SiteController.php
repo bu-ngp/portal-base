@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use doh\services\classes\DoH;
+use domain\forms\AcceptanceTestForm;
 use domain\forms\base\ProfileForm;
 use domain\forms\base\UserForm;
 use domain\models\base\Dolzh;
@@ -113,15 +114,10 @@ class SiteController extends Controller
 
     public function actionAcceptanceTest()
     {
-        $dolzhModel = new Dolzh();
-        $dolzhModelMultiple = new Dolzh();
-
-        $podrazModel = Podraz::find()->all();
+        $testForm = new AcceptanceTestForm();
 
         return $this->render('test', [
-            'dolzhModel' => $dolzhModel,
-            'podrazModel' => $podrazModel,
-            'dolzhModelMultiple' => $dolzhModelMultiple,
+            'testForm' => $testForm,
         ]);
     }
 

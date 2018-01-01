@@ -2,8 +2,10 @@
 
 namespace domain\services\base;
 
+use domain\forms\base\EmployeeHistoryUpdateForm;
 use domain\helpers\BinaryHelper;
 use domain\forms\base\EmployeeHistoryForm;
+use domain\models\base\Build;
 use domain\models\base\Employee;
 use domain\models\base\EmployeeHistory;
 use domain\repositories\base\EmployeeHistoryRepository;
@@ -55,23 +57,19 @@ class EmployeeHistoryService extends Service
 
     public function create(EmployeeHistoryForm $form)
     {
-        $this->guardPersonExists($form);
         $this->guardAssignBuilds($form);
-        $this->filterEmployeeUUIDCreate($form);
         $employeeHistory = EmployeeHistory::create($form);
 
         if (!$this->validateModels($employeeHistory, $form)) {
             throw new \DomainException();
         }
 
+        /** Если текущая дата специальности меньше дата приема на работу или это первая специальность,
+         * то изменить дату приема на работу */
         $person = $this->changePersonHired($employeeHistory->person_id, $employeeHistory->employee_history_begin);
 
-        /** @var Employee $employee */
-        if ($employee = $this->employees->findByPerson($employeeHistory->person_id)) {
-            $employee->edit($form);
-        } else {
-            $employee = Employee::create($form);
-        }
+        /** Изменить текущую специальность или добавить, если ее не было */
+        $employee = $this->currentEmployee($employeeHistory);
 
         $this->transactionManager->execute(function () use ($employeeHistory, $employee, $person) {
             if ($person) {
@@ -83,24 +81,27 @@ class EmployeeHistoryService extends Service
         });
     }
 
-    public function update($id, EmployeeHistoryForm $form)
+    public function update($id, EmployeeHistoryUpdateForm $form)
     {
-        $employee = $this->employeeHistories->find($id);
-        $this->filterEmployeeUUIDUpdate($form);
-        $employee->edit($form);
+        $employeeHistory = $this->employeeHistories->find($id);
+        $employeeHistory->edit($form);
 
-        if (!$this->validateModels($employee, $form)) {
+        if (!$this->validateModels($employeeHistory, $form)) {
             throw new \DomainException();
         }
 
-        $person = $this->changePersonHired($employee->person_id, $employee->employee_history_begin);
+        $person = $this->changePersonHired($employeeHistory->person_id, $employeeHistory->employee_history_begin);
 
-        $this->transactionManager->execute(function () use ($employee, $person) {
+        /** Изменить текущую специальность или добавить, если ее не было */
+        $employee = $this->currentEmployee($employeeHistory);
+
+        $this->transactionManager->execute(function () use ($employeeHistory, $employee, $person) {
             if ($person) {
                 $this->persons->save($person);
             }
 
-            $this->employeeHistories->save($employee);
+            $this->employeeHistories->save($employeeHistory);
+            $this->employees->save($employee);
         });
     }
 
@@ -110,65 +111,57 @@ class EmployeeHistoryService extends Service
         $this->guardParttimesExists($employeeHistory);
         $person = $this->updatePersonForDelete($employeeHistory);
 
-        $this->transactionManager->execute(function () use ($employeeHistory, $person) {
+        /** Изменить текущую специальность */
+        $employee = $this->currentEmployeeForDelete($employeeHistory);
+
+        $this->transactionManager->execute(function () use ($employeeHistory, $employee, $person) {
             if ($person) {
                 $this->persons->save($person);
             }
 
             $this->employeeHistories->delete($employeeHistory);
+            $this->employees->save($employee);
         });
-    }
-
-    protected function guardPersonExists(EmployeeHistoryForm $form)
-    {
-        if (!$form->person_id) {
-            throw new \DomainException(Yii::t('domain/employee', 'URL parameter "person" is missed.'));
-        }
-    }
-
-    protected function filterEmployeeUUIDCreate(EmployeeHistoryForm $form)
-    {
-        if (BinaryHelper::isBinaryValidString($form->person_id)
-            && BinaryHelper::isBinaryValidString($form->dolzh_id)
-            && BinaryHelper::isBinaryValidString($form->podraz_id)
-        ) {
-            $form->person_id = Uuid::str2uuid($form->person_id);
-            $form->dolzh_id = Uuid::str2uuid($form->dolzh_id);
-            $form->podraz_id = Uuid::str2uuid($form->podraz_id);
-        } else {
-            throw new \RuntimeException(Yii::t('domain/employee', 'Invalid UUID Parameters.'));
-        }
-
-        $form->assignBuilds = array_map(function ($buildId) {
-            return BinaryHelper::isBinaryValidString($buildId) ? Uuid::str2uuid($buildId) : $buildId;
-        }, $form->assignBuilds);
-    }
-
-    protected function filterEmployeeUUIDUpdate(EmployeeHistoryForm $form)
-    {
-        if (BinaryHelper::isBinaryValidString($form->dolzh_id)
-            && BinaryHelper::isBinaryValidString($form->podraz_id)
-        ) {
-            $form->dolzh_id = Uuid::str2uuid($form->dolzh_id);
-            $form->podraz_id = Uuid::str2uuid($form->podraz_id);
-        } else {
-            throw new \RuntimeException(Yii::t('domain/employee', 'Invalid UUID Parameters.'));
-        }
     }
 
     protected function changePersonHired($person_id, $date)
     {
         $person = $this->persons->find($person_id);
+        /** Если текущая дата специальности меньше дата приема на работу или это первая специальность,
+         * то изменить дату приема на работу */
         if (strtotime($date) < strtotime($person->person_hired) || $person->person_hired === null) {
-            $before = $person->getAttributes();
             $person->person_hired = $date;
-            $after = $person->getAttributes();
-            $diff = array_diff_assoc($after, $before);
-            if (isset($diff['person_hired'])) {
-                return $person;
-            }
+            return $person;
         }
         return false;
+    }
+
+    protected function currentEmployee(EmployeeHistory $employeeHistory)
+    {
+        /** @var Employee $employee */
+        /** Изменить текущую специальность или добавить, если ее не было */
+        if ($employee = $this->employees->findByPerson($employeeHistory->person_id)) {
+            if ($employee->employee_begin <= $employeeHistory->employee_history_begin) {
+                $employee->edit($employeeHistory);
+            }
+        } else {
+            $employee = Employee::create($employeeHistory);
+        }
+
+        return $employee;
+    }
+
+    protected function currentEmployeeForDelete(EmployeeHistory $employeeHistory)
+    {
+        /** @var Employee $employee */
+        /** Изменить текущую специальность */
+        $employee = $this->employees->findByPerson($employeeHistory->person_id);
+        if ($employee->employee_begin === $employeeHistory->employee_history_begin) {
+            $previousEmployee = $this->employeeHistories->previousBy($employeeHistory->employee_history_id, $employeeHistory->person_id);
+            $employee->edit($previousEmployee);
+        }
+
+        return $employee;
     }
 
     protected function updatePersonForDelete(EmployeeHistory $employee)
@@ -199,5 +192,13 @@ class EmployeeHistoryService extends Service
         if (!is_string($form->assignBuilds) || ($form->assignBuilds = json_decode($form->assignBuilds)) === null) {
             throw new \DomainException(Yii::t('domain/base', 'Error when recognizing selected items'));
         }
+
+        $form->assignBuilds = array_filter(array_map(function ($build_id) {
+            $build_id = BinaryHelper::isBinaryValidString($build_id) ? Uuid::str2uuid($build_id) : $build_id;
+            if (Build::findOne($build_id)) {
+                return $build_id;
+            }
+            return false;
+        }, $form->assignBuilds));
     }
 }

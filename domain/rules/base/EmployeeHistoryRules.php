@@ -16,7 +16,7 @@ class EmployeeHistoryRules
     public static function client()
     {
         return [
-            [['!person_id', 'dolzh_id', 'podraz_id', 'employee_history_begin'], 'required'],
+            [['dolzh_id', 'podraz_id', 'employee_history_begin'], 'required'],
             [['employee_history_begin'], WKDateValidator::className()],
         ];
     }

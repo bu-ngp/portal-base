@@ -34,6 +34,7 @@ class EmployeeHistoryBuild extends \yii\db\ActiveRecord
         return array_merge(EmployeeHistoryBuildRules::client(), [
             [['build_id'], 'exist', 'skipOnError' => true, 'targetClass' => Build::className(), 'targetAttribute' => ['build_id' => 'build_id']],
             [['employee_history_id'], 'exist', 'skipOnError' => true, 'targetClass' => EmployeeHistory::className(), 'targetAttribute' => ['employee_history_id' => 'employee_history_id']],
+            [['build_id'], 'unique', 'targetAttribute' => ['employee_history_id', 'build_id'], 'message' => Yii::t('domain/employee-history-build', 'Fail Unique By Employee History ID and Build ID')],
         ]);
     }
 

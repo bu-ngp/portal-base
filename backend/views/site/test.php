@@ -9,9 +9,7 @@ use domain\models\base\AuthItemChild;
 use common\widgets\ActiveForm\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $dolzhModel \domain\models\base\Dolzh */
-/* @var $dolzhModelMultiple \domain\models\base\Dolzh */
-/* @var $podrazModel \domain\models\base\Podraz */
+/* @var $testForm \domain\forms\AcceptanceTestForm */
 /* @var $searchModel domain\models\base\search\AuthItemSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
@@ -22,9 +20,7 @@ $this->title = 'Приемочные тесты';
     <?= \common\widgets\Panel\Panel::widget([
         'label' => 'Select2',
         'content' => $this->render('_select2', [
-            'dolzhModel' => $dolzhModel,
-            'podrazModel' => $podrazModel,
-            'dolzhModelMultiple' => $dolzhModelMultiple,
+            'testForm' => $testForm,
         ])])
     ?>
 </div>

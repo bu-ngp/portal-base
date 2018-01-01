@@ -4,6 +4,7 @@ namespace domain\models\base;
 
 use domain\behaviors\BlameableBehavior;
 use domain\forms\base\EmployeeHistoryForm;
+use domain\validators\WKDateValidator;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -44,11 +45,13 @@ class Employee extends \yii\db\ActiveRecord
     {
         return [
             [['person_id', 'dolzh_id', 'podraz_id', 'employee_begin'], 'required'],
-            [['employee_begin'], 'date', 'format' => 'yyyy-MM-dd'],
-            //    [['person_id', 'dolzh_id', 'podraz_id'], 'string', 'max' => 16],
+            [['employee_begin'], WKDateValidator::className()],
             [['dolzh_id'], 'exist', 'skipOnError' => true, 'targetClass' => Dolzh::className(), 'targetAttribute' => ['dolzh_id' => 'dolzh_id']],
             [['person_id'], 'exist', 'skipOnError' => true, 'targetClass' => Person::className(), 'targetAttribute' => ['person_id' => 'person_id']],
             [['podraz_id'], 'exist', 'skipOnError' => true, 'targetClass' => Podraz::className(), 'targetAttribute' => ['podraz_id' => 'podraz_id']],
+            [['person_id'], 'unique', 'when' => function ($model) {
+                return $model->isNewRecord;
+            }],
         ];
     }
 
@@ -78,22 +81,22 @@ class Employee extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function create(EmployeeHistoryForm $form)
+    public static function create(EmployeeHistory $employeeHistory)
     {
         return new self([
-            'person_id' => $form->person_id,
-            'dolzh_id' => $form->dolzh_id,
-            'podraz_id' => $form->podraz_id,
-            'employee_begin' => $form->employee_history_begin,
+            'person_id' => $employeeHistory->person_id,
+            'dolzh_id' => $employeeHistory->dolzh_id,
+            'podraz_id' => $employeeHistory->podraz_id,
+            'employee_begin' => $employeeHistory->employee_history_begin,
         ]);
     }
 
-    public function edit(EmployeeHistoryForm $form)
+    public function edit(EmployeeHistory $employeeHistory)
     {
-        $this->person_id = $form->person_id;
-        $this->dolzh_id = $form->dolzh_id;
-        $this->podraz_id = $form->podraz_id;
-        $this->employee_begin = $form->employee_history_begin;
+        $this->person_id = $employeeHistory->person_id;
+        $this->dolzh_id = $employeeHistory->dolzh_id;
+        $this->podraz_id = $employeeHistory->podraz_id;
+        $this->employee_begin = $employeeHistory->employee_history_begin;
     }
 
     /**
