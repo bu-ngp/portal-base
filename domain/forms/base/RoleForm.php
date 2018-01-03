@@ -15,10 +15,8 @@ use yii\helpers\ArrayHelper;
 
 class RoleForm extends Model
 {
-    public $name;
     public $description;
     public $ldap_group;
-    public $type;
     public $assignRoles;
 
     /**
@@ -26,7 +24,6 @@ class RoleForm extends Model
      */
     public function rules()
     {
-       // return [];
         return ArrayHelper::merge(RoleRules::client(), [
             [['assignRoles'], 'required'],
         ]);

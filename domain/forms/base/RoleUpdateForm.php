@@ -19,7 +19,7 @@ class RoleUpdateForm extends Model
 
     private $authItem;
 
-    public function __construct(AuthItem $authItem = null, $config = [])
+    public function __construct(AuthItem $authItem, $config = [])
     {
         $this->authItem = $authItem;
         $this->description = $authItem->description;

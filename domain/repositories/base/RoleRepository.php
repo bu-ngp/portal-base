@@ -10,6 +10,7 @@ namespace domain\repositories\base;
 
 use domain\models\base\AuthItem;
 use Yii;
+use yii\db\ActiveRecord;
 
 class RoleRepository
 {
@@ -30,7 +31,7 @@ class RoleRepository
      * Поиск только пользовательской роли
      *
      * @param $id
-     * @return AuthItem
+     * @return AuthItem|ActiveRecord
      */
     public function findByUser($id)
     {
@@ -46,6 +47,15 @@ class RoleRepository
         }
 
         return $authitem;
+    }
+
+    public function has($id) {
+        return AuthItem::find()
+            ->where([
+                'name' => $id,
+                'type' => 1
+            ])
+            ->exists();
     }
 
     /**

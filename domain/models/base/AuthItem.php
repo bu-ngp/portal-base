@@ -87,7 +87,6 @@ class AuthItem extends \yii\db\ActiveRecord
     public static function create(RoleForm $form)
     {
         return new self([
-            'name' => $form->name,
             'description' => $form->description,
             'ldap_group' => $form->ldap_group,
             'type' => Item::TYPE_ROLE,

@@ -36,7 +36,8 @@ class RoleService extends Service
         $this->transactionManager = $transactionManager;
     }
 
-    public function get($id) {
+    public function get($id)
+    {
         return $this->roles->find($id);
     }
 
@@ -44,7 +45,6 @@ class RoleService extends Service
      * Добавление новой пользовательской роли с выбранными подчиненными ролями
      *
      * @param RoleForm $form
-     * @return bool
      * @throws \Exception
      */
     public function create(RoleForm $form)
@@ -58,7 +58,7 @@ class RoleService extends Service
 
         $authItemChild = AuthItemChild::create($authItem, $assignedKeys);
 
-        return $this->transactionManager->execute(function () use ($authItem, $authItemChild) {
+        $this->transactionManager->execute(function () use ($authItem, $authItemChild) {
             $this->roles->add($authItem);
 
             foreach ($authItemChild as $item) {
@@ -124,6 +124,11 @@ class RoleService extends Service
         if (!is_string($form->assignRoles) || ($assignedKeys = json_decode($form->assignRoles)) === null) {
             throw new \DomainException(Yii::t('domain/base', 'Error when recognizing selected items'));
         }
+
+        $roles = $this->roles;
+        $assignedKeys = array_filter($assignedKeys, function ($roleName) use ($roles) {
+            return $roles->has($roleName);
+        });
 
         if (!$assignedKeys) {
             throw new \DomainException(Yii::t('common/roles', 'Need add roles'));
