@@ -12,19 +12,20 @@ namespace domain\forms\base;
 use domain\models\base\ParttimeBuild;
 use domain\rules\base\ParttimeBuildRules;
 use domain\validators\Str2UUIDValidator;
-use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
 
-class ParttimeBuildForm extends Model
+class ParttimeBuildUpdateForm extends Model
 {
-    public $parttime_id;
+    private $parttime_id;
     public $build_id;
     public $parttime_build_deactive;
 
-    public function __construct($config = [])
+    public function __construct(ParttimeBuild $parttimeBuild, $config = [])
     {
-        $this->parttime_id = Yii::$app->request->get('employee');
+        $this->parttime_id = $parttimeBuild->parttime_id;
+        $this->build_id = $parttimeBuild->build_id;
+        $this->parttime_build_deactive = $parttimeBuild->parttime_build_deactive;
 
         parent::__construct($config);
     }
@@ -40,5 +41,10 @@ class ParttimeBuildForm extends Model
     public function attributeLabels()
     {
         return (new ParttimeBuild())->attributeLabels();
+    }
+
+    public function getParttime_id()
+    {
+        return $this->parttime_id;
     }
 }

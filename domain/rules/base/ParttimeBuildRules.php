@@ -16,7 +16,7 @@ class ParttimeBuildRules
     public static function client()
     {
         return [
-            [['!parttime_id', 'build_id'], 'required'],
+            [['build_id'], 'required'],
             [['parttime_id'], 'integer'],
             [['parttime_build_deactive'], WKDateValidator::className()],
         ];

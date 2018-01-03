@@ -1,0 +1,16 @@
+<?php
+return [
+    [
+        'pb' => 1,
+        'parttime_id' => 1,
+        'build_id' => \wartron\yii2uuid\helpers\Uuid::str2uuid('1C1B22ACEDE411E79AE500FF1E4274A2'),
+        'parttime_build_deactive' => null,
+    ],
+    [
+        'pb' => 2,
+        'parttime_id' => 1,
+        'build_id' => \wartron\yii2uuid\helpers\Uuid::str2uuid('2C1B22ACEDE411E79AE500FF1E4274A2'),
+        'parttime_build_deactive' => date('Y-m-d'),
+    ],
+];
+

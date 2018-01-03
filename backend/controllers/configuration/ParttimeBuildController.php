@@ -5,6 +5,7 @@ namespace backend\controllers\configuration;
 use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\GridView\services\AjaxResponse;
 use domain\forms\base\ParttimeBuildForm;
+use domain\forms\base\ParttimeBuildUpdateForm;
 use domain\services\base\ParttimeBuildService;
 use domain\services\ProxyService;
 use Yii;
@@ -43,7 +44,7 @@ class ParttimeBuildController extends Controller
     public function actionUpdate($id)
     {
         $parttime = $this->service->get($id);
-        $form = new ParttimeBuildForm($parttime);
+        $form = new ParttimeBuildUpdateForm($parttime);
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()

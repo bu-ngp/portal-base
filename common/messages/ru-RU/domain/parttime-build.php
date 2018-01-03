@@ -19,8 +19,9 @@
 return [
     'Build ID' => 'Здание',
     'Invalid UUID Parameters.' => '',
-    'Parttime ID' => '',
+    'Parttime ID' => 'Совмещение',
     'Pb' => '',
     'URL parameter "employee" is missed.' => '',
     'Parttime Build Deactive' => 'Дата с которой здание неактивно',
+    'Fail Unique By Parttime ID and Build ID' => 'У текущего совмещения уже имеется данное здание',
 ];

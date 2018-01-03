@@ -3,6 +3,7 @@
 namespace domain\models\base;
 
 use domain\forms\base\ParttimeBuildForm;
+use domain\forms\base\ParttimeBuildUpdateForm;
 use domain\rules\base\ParttimeBuildRules;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
@@ -34,9 +35,10 @@ class ParttimeBuild extends \yii\db\ActiveRecord
     public function rules()
     {
         return array_merge(ParttimeBuildRules::client(), [
-            [['parttime_id', 'build_id'], 'unique', 'targetAttribute' => ['parttime_id', 'build_id'], 'message' => 'The combination of Parttime ID and Build ID has already been taken.'],
+            [['parttime_id'], 'required'],
             [['build_id'], 'exist', 'skipOnError' => true, 'targetClass' => Build::className(), 'targetAttribute' => ['build_id' => 'build_id']],
             [['parttime_id'], 'exist', 'skipOnError' => true, 'targetClass' => Parttime::className(), 'targetAttribute' => ['parttime_id' => 'parttime_id']],
+            [['build_id'], 'unique', 'targetAttribute' => ['parttime_id', 'build_id'], 'message' => Yii::t('domain/parttime-build', 'Fail Unique By Parttime ID and Build ID')],
         ]);
     }
 
@@ -63,9 +65,8 @@ class ParttimeBuild extends \yii\db\ActiveRecord
         ]);
     }
 
-    public function edit(ParttimeBuildForm $form)
+    public function edit(ParttimeBuildUpdateForm $form)
     {
-        $this->parttime_id = $form->parttime_id;
         $this->build_id = $form->build_id;
         $this->parttime_build_deactive = $form->parttime_build_deactive;
     }
