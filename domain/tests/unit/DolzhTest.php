@@ -18,25 +18,6 @@ class DolzhTest extends Unit
      * @var \domain\tests\UnitTester
      */
     protected $tester;
-//
-//    public function fixtures() {
-//        return [
-//            'dolzhs' => DolzhFixture::className(),
-//        ];
-//    }
-
-    protected function _before()
-    {
-    }
-
-    protected function _after()
-    {
-    }
-
-//    public static function tearDownAfterClass()
-//    {
-//
-//    }
 
     public function testCreate()
     {
@@ -60,7 +41,7 @@ class DolzhTest extends Unit
             $service->create($form);
         });
 
-        $this->assertFalse($form->getErrors()['dolzh_name'][0] === $errorMessage);
+        $this->assertTrue($form->getErrors()['dolzh_name'][0] === $errorMessage);
         $this->tester->seeNumRecords(0, 'dolzh');
     }
 
@@ -93,7 +74,7 @@ class DolzhTest extends Unit
         /** @var Dolzh $dolzh */
         $dolzh = $this->tester->grabFixture('dolzh', 0);
         $form = Yii::createObject('domain\forms\base\DolzhForm', [$dolzh]);
-        $form->dolzh_name = 'Системный администратор';
+        $form->dolzh_name = 'Техник';
 
         $service->update($dolzh->primaryKey, $form);
         $this->assertEmpty($form->getErrors());
@@ -112,6 +93,6 @@ class DolzhTest extends Unit
         $dolzh = $this->tester->grabFixture('dolzh', 0);
 
         $service->delete($dolzh->primaryKey);
-        $this->tester->seeNumRecords(0, 'dolzh');
+        $this->tester->seeNumRecords(2, 'dolzh');
     }
 }

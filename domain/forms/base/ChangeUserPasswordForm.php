@@ -15,16 +15,16 @@ use yii\base\Model;
 
 class ChangeUserPasswordForm extends Model
 {
-    public $person_username;
-    public $person_fullname;
+    protected $person_fullname;
+    protected $person_username;
 
     public $person_password;
     public $person_password_repeat;
 
     public function __construct(Person $person, $config = [])
     {
-        $this->person_username = $person->person_username;
         $this->person_fullname = $person->person_fullname;
+        $this->person_username = $person->person_username;
 
         parent::__construct($config);
     }
@@ -45,5 +45,15 @@ class ChangeUserPasswordForm extends Model
                 'person_password' => Yii::t('domain/person', 'Person Password'),
                 'person_password_repeat' => Yii::t('domain/person', 'Person Password Repeat'),
             ]);
+    }
+
+    public function getPerson_fullname()
+    {
+        return $this->person_fullname;
+    }
+
+    public function getPerson_username()
+    {
+        return $this->person_username;
     }
 }

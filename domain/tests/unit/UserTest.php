@@ -3,15 +3,13 @@
 namespace domain\tests;
 
 
+use domain\forms\base\ChangeUserPasswordForm;
 use domain\forms\base\ProfileForm;
 use domain\forms\base\UserForm;
 use domain\forms\base\UserFormUpdate;
 use domain\models\base\Person;
 use domain\models\base\Profile;
-use domain\repositories\base\PersonRepository;
-use domain\repositories\base\ProfileRepository;
 use domain\services\base\PersonService;
-use domain\services\TransactionManager;
 use domain\tests\fixtures\PersonFixture;
 use domain\tests\fixtures\ProfileFixture;
 use wartron\yii2uuid\helpers\Uuid;
@@ -370,5 +368,57 @@ class UserTest extends DbTestCase
         $this->assertTrue($this->tester->grabFromDatabase('profile', 'profile_address', ['profile_id' => $profile->primaryKey]) === 'Address 2');
         $this->assertTrue($this->tester->grabFromDatabase('profile', 'profile_phone', ['profile_id' => $profile->primaryKey]) === '89225555555');
         $this->assertTrue($this->tester->grabFromDatabase('profile', 'profile_internal_phone', ['profile_id' => $profile->primaryKey]) === '200');
+    }
+
+    public function testChangePassword()
+    {
+        /** @var PersonService $service */
+        $service = Yii::createObject('domain\services\base\PersonService');
+        $this->tester->haveFixtures([
+            'person' => [
+                'class' => PersonFixture::className(),
+            ],
+            'profile' => [
+                'class' => ProfileFixture::className(),
+            ],
+        ]);
+        /** @var Person $person */
+        $person = $this->tester->grabFixture('person', 'user1');
+
+        $changeUserPasswordForm = new ChangeUserPasswordForm($person, [
+            'person_password' => '',
+            'person_password_repeat' => '',
+        ]);
+        $changeUserPasswordForm->validate();
+        $this->assertTrue($changeUserPasswordForm->getFirstError('person_password') === 'Необходимо заполнить «Пароль».');
+        $this->assertTrue($changeUserPasswordForm->getFirstError('person_password_repeat') === 'Необходимо заполнить «Повторите ввод пароля».');
+
+        $changeUserPasswordForm = new ChangeUserPasswordForm($person, [
+            'person_password' => '123',
+            'person_password_repeat' => '123',
+        ]);
+        $changeUserPasswordForm->validate();
+        $this->assertTrue($changeUserPasswordForm->getFirstError('person_password') === 'Значение «Пароль» должно содержать минимум 6 символов.');
+        $this->assertTrue($changeUserPasswordForm->getFirstError('person_password_repeat') === null);
+
+        $changeUserPasswordForm = new ChangeUserPasswordForm($person, [
+            'person_password' => '123456',
+            'person_password_repeat' => '654321',
+        ]);
+        $changeUserPasswordForm->validate();
+        $this->assertTrue($changeUserPasswordForm->getFirstError('person_password') === null);
+        $this->assertTrue($changeUserPasswordForm->getFirstError('person_password_repeat') === 'Значение «Повторите ввод пароля» должно быть равно «Пароль».');
+
+        $changeUserPasswordForm = new ChangeUserPasswordForm($person, [
+            'person_password' => '222222',
+            'person_password_repeat' => '222222',
+        ]);
+        $changeUserPasswordForm->validate();
+        $this->assertTrue($changeUserPasswordForm->getFirstError('person_password') === null);
+        $this->assertTrue($changeUserPasswordForm->getFirstError('person_password_repeat') === null);
+
+        $service->changePassword($person->primaryKey, $changeUserPasswordForm);
+
+        $this->assertTrue(Yii::$app->security->validatePassword('222222', $this->tester->grabFromDatabase('person', 'person_password_hash', ['person_code' => 2])));
     }
 }

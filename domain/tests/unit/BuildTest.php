@@ -68,7 +68,7 @@ class BuildTest extends \Codeception\Test\Unit
         /** @var Build $build */
         $build = $this->tester->grabFixture('build', 0);
         $form = Yii::createObject('domain\forms\base\BuildForm', [$build]);
-        $form->build_name = 'Взрослая поликлиника №2';
+        $form->build_name = 'Взрослая поликлиника №3';
 
         $service->update($build->primaryKey, $form);
         $this->assertEmpty($form->getErrors());
@@ -87,6 +87,6 @@ class BuildTest extends \Codeception\Test\Unit
         $build = $this->tester->grabFixture('build', 0);
 
         $service->delete($build->primaryKey);
-        $this->tester->seeNumRecords(0, 'build');
+        $this->tester->seeNumRecords(1, 'build');
     }
 }
