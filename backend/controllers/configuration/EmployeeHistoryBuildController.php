@@ -6,6 +6,7 @@ use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\GridView\services\AjaxResponse;
 use console\helpers\RbacHelper;
 use domain\forms\base\EmployeeBuildForm;
+use domain\forms\base\EmployeeBuildUpdateForm;
 use domain\services\AjaxFilter;
 use domain\services\base\EmployeeBuildService;
 use domain\services\ProxyService;
@@ -75,7 +76,7 @@ class EmployeeHistoryBuildController extends Controller
     public function actionUpdate($id)
     {
         $employee = $this->service->get($id);
-        $form = new EmployeeBuildForm($employee);
+        $form = new EmployeeBuildUpdateForm($employee);
 
         if ($form->load(Yii::$app->request->post())
             && $form->validate()

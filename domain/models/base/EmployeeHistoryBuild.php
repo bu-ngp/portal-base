@@ -3,6 +3,7 @@
 namespace domain\models\base;
 
 use domain\forms\base\EmployeeBuildForm;
+use domain\forms\base\EmployeeBuildUpdateForm;
 use domain\rules\base\EmployeeHistoryBuildRules;
 use Yii;
 
@@ -32,6 +33,7 @@ class EmployeeHistoryBuild extends \yii\db\ActiveRecord
     public function rules()
     {
         return array_merge(EmployeeHistoryBuildRules::client(), [
+            [['employee_history_id'], 'required'],
             [['build_id'], 'exist', 'skipOnError' => true, 'targetClass' => Build::className(), 'targetAttribute' => ['build_id' => 'build_id']],
             [['employee_history_id'], 'exist', 'skipOnError' => true, 'targetClass' => EmployeeHistory::className(), 'targetAttribute' => ['employee_history_id' => 'employee_history_id']],
             [['build_id'], 'unique', 'targetAttribute' => ['employee_history_id', 'build_id'], 'message' => Yii::t('domain/employee-history-build', 'Fail Unique By Employee History ID and Build ID')],
@@ -59,7 +61,7 @@ class EmployeeHistoryBuild extends \yii\db\ActiveRecord
         ]);
     }
 
-    public function edit(EmployeeBuildForm $form)
+    public function edit(EmployeeBuildUpdateForm $form)
     {
         $this->build_id = $form->build_id;
         $this->employee_history_build_deactive = $form->employee_history_build_deactive;

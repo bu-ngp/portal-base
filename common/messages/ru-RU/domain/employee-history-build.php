@@ -19,5 +19,6 @@
 return [
     'Build ID' => 'Здание',
     'Employee History Build Deactive' => 'Дата с которой здание неактивно',
-    'Employee History ID' => '',
+    'Employee History ID' => 'Специальность',
+    'Fail Unique By Employee History ID and Build ID' => 'У текущей специальности уже имеется данное здание',
 ];

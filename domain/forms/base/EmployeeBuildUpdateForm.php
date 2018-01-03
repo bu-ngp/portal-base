@@ -12,19 +12,21 @@ namespace domain\forms\base;
 use domain\models\base\EmployeeHistoryBuild;
 use domain\rules\base\EmployeeHistoryBuildRules;
 use domain\validators\Str2UUIDValidator;
-use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
 
-class EmployeeBuildForm extends Model
+class EmployeeBuildUpdateForm extends Model
 {
-    public $employee_history_id;
+    private $employee_history_id;
     public $build_id;
     public $employee_history_build_deactive;
 
-    public function __construct($config = [])
+    public function __construct(EmployeeHistoryBuild $employeeHB, $config = [])
     {
-        $this->employee_history_id = Yii::$app->request->get('employee');
+        $this->employee_history_id = $employeeHB->employee_history_id;
+        $this->build_id = $employeeHB->build_id;
+        $this->employee_history_build_deactive = $employeeHB->employee_history_build_deactive;
+
         parent::__construct($config);
     }
 
@@ -39,5 +41,10 @@ class EmployeeBuildForm extends Model
     public function attributeLabels()
     {
         return (new EmployeeHistoryBuild())->attributeLabels();
+    }
+
+    public function getEmployee_history_id()
+    {
+        return $this->employee_history_id;
     }
 }
