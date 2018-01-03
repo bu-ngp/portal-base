@@ -24,7 +24,7 @@ return [
     'Person ID' => 'Пользователь',
     'URL parameter "employee" is missed.' => '',
     'URL parameter "person" is missed.' => '',
-    'Unique Error By Values [PersonID: {person_id}, DolzhID: {dolzh_id}, PodrazID: {podraz_id}, {person_fullname}, From: {parttime_begin}, To: {parttime_end}]' => 'Совмешение у пользователя "{person_fullname}" с {parttime_begin} по {parttime_end} уже существует. (ИД Пользователя: {person_id}, ИД Должности: {dolzh_id}, ИД Подразделения: {podraz_id})',
+    'Fail Unique Speciality By Dolzh, Podraz, Date Begin, Date End' => 'На данный период уже существует совмещение с такими должностью и подразделением',
     'Fail Unique Speciality By Date Begin' => 'Специальность у пользователя на эту дату уже существует.',
     'Dolzh ID' => 'Должность',
     'Dolzh Name' => 'Должность',

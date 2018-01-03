@@ -20,7 +20,7 @@ class EmployeeHistoryForm extends Model
 
     public function __construct($config = [])
     {
-        $this->person_id = Yii::$app->request->get('person', null);
+        $this->person_id = Yii::$app->request->get('person');
         $this->employee_history_begin = date('Y-m-d');
 
         parent::__construct($config);

@@ -4,6 +4,7 @@ namespace domain\models\base;
 
 use domain\behaviors\BlameableBehavior;
 use domain\forms\base\ParttimeForm;
+use domain\forms\base\ParttimeUpdateForm;
 use domain\helpers\DateHelper;
 use domain\rules\base\ParttimeRules;
 use domain\validators\ParttimeValidator;
@@ -49,18 +50,12 @@ class Parttime extends \yii\db\ActiveRecord
     public function rules()
     {
         return array_merge(ParttimeRules::client(), [
+            [['person_id'], 'required'],
             [['dolzh_id'], 'exist', 'skipOnError' => true, 'targetClass' => Dolzh::className(), 'targetAttribute' => ['dolzh_id' => 'dolzh_id']],
             [['person_id'], 'exist', 'skipOnError' => true, 'targetClass' => Person::className(), 'targetAttribute' => ['person_id' => 'person_id']],
             [['podraz_id'], 'exist', 'skipOnError' => true, 'targetClass' => Podraz::className(), 'targetAttribute' => ['podraz_id' => 'podraz_id']],
             [['parttime_begin', 'parttime_end'], ParttimeValidator::className()],
-            [['parttime_begin'], 'unique', 'targetAttribute' => ['person_id', 'dolzh_id', 'podraz_id', 'parttime_begin', 'parttime_end'], 'message' => Yii::t('domain/employee', 'Unique Error By Values [PersonID: {person_id}, DolzhID: {dolzh_id}, PodrazID: {podraz_id}, {person_fullname}, From: {parttime_begin}, To: {parttime_end}]', [
-                'person_id' => Uuid::uuid2str($this->person_id),
-                'dolzh_id' => Uuid::uuid2str($this->dolzh_id),
-                'podraz_id' => Uuid::uuid2str($this->podraz_id),
-                'person_fullname' => $this->person->person_fullname,
-                'parttime_begin' => $this->parttime_begin,
-                'parttime_end' => $this->parttime_end,
-            ])],
+            [['parttime_begin'], 'unique', 'targetAttribute' => ['person_id', 'dolzh_id', 'podraz_id', 'parttime_begin', 'parttime_end'], 'message' => Yii::t('domain/employee', 'Fail Unique Speciality By Dolzh, Podraz, Date Begin, Date End')],
         ]);
     }
 
@@ -74,7 +69,6 @@ class Parttime extends \yii\db\ActiveRecord
             'person_id' => Yii::t('domain/parttime', 'Person ID'),
             'dolzh_id' => Yii::t('domain/parttime', 'Dolzh ID'),
             'podraz_id' => Yii::t('domain/parttime', 'Podraz ID'),
-            'build_id' => Yii::t('domain/parttime', 'Build ID'),
             'parttime_begin' => Yii::t('domain/parttime', 'Parttime Begin'),
             'parttime_end' => Yii::t('domain/parttime', 'Parttime End'),
             'created_at' => Yii::t('domain/base', 'Created At'),
@@ -114,7 +108,7 @@ class Parttime extends \yii\db\ActiveRecord
         ], empty($form->assignBuilds) ? [] : ['builds' => $form->assignBuilds]));
     }
 
-    public function edit(ParttimeForm $form)
+    public function edit(ParttimeUpdateForm $form)
     {
         $this->dolzh_id = $form->dolzh_id;
         $this->podraz_id = $form->podraz_id;

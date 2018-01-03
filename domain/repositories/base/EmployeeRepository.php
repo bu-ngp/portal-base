@@ -37,6 +37,15 @@ class EmployeeRepository
     }
 
     /**
+     * @param $personUUID
+     * @return bool
+     */
+    public function hasByPerson($personUUID)
+    {
+        return Employee::find()->andWhere(['person_id' => $personUUID])->exists();
+    }
+
+    /**
      * @param Employee $employee
      */
     public function add(Employee $employee)

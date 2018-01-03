@@ -16,7 +16,7 @@ class ParttimeRules
     public static function client()
     {
         return [
-            [['!person_id', 'dolzh_id', 'podraz_id', 'parttime_begin'], 'required'],
+            [['dolzh_id', 'podraz_id', 'parttime_begin'], 'required'],
             [['parttime_begin', 'parttime_end'], WKDateValidator::className()],
             [['parttime_end'], 'compare', 'compareAttribute' => 'parttime_begin', 'operator' => '>=', 'enableClientValidation' => false],
         ];

@@ -13,6 +13,7 @@ use common\widgets\Breadcrumbs\Breadcrumbs;
 use common\widgets\GridView\services\AjaxResponse;
 use console\helpers\RbacHelper;
 use domain\forms\base\EmployeeHistoryForm;
+use domain\forms\base\EmployeeHistoryUpdateForm;
 use domain\models\base\search\BuildSearch;
 use domain\models\base\search\EmployeeHistoryBuildSearch;
 use domain\services\AjaxFilter;
@@ -89,7 +90,7 @@ class EmployeeController extends Controller
     public function actionUpdate($id)
     {
         $employee = $this->service->get($id);
-        $form = new EmployeeHistoryForm($employee);
+        $form = new EmployeeHistoryUpdateForm($employee);
 
         $searchModelEmployeeHB = new EmployeeHistoryBuildSearch();
         $dataProviderEmployeeHB = $searchModelEmployeeHB->search(Yii::$app->request->queryParams);

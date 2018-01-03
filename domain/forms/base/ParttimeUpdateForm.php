@@ -5,24 +5,24 @@ namespace domain\forms\base;
 use domain\models\base\Parttime;
 use domain\rules\base\ParttimeRules;
 use domain\validators\Str2UUIDValidator;
-use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
 
-class ParttimeForm extends Model
+class ParttimeUpdateForm extends Model
 {
-    public $person_id;
+    private $person_id;
     public $dolzh_id;
     public $podraz_id;
     public $parttime_begin;
     public $parttime_end;
 
-    public $assignBuilds;
-
-    public function __construct($config = [])
+    public function __construct(Parttime $parttime, $config = [])
     {
-        $this->person_id = Yii::$app->request->get('person');
-        $this->parttime_begin = date('Y-m-d');
+        $this->person_id = $parttime->person_id;
+        $this->dolzh_id = $parttime->dolzh_id;
+        $this->podraz_id = $parttime->podraz_id;
+        $this->parttime_begin = $parttime->parttime_begin;
+        $this->parttime_end = $parttime->parttime_end;
 
         parent::__construct($config);
     }
@@ -32,12 +32,16 @@ class ParttimeForm extends Model
         return ArrayHelper::merge(ParttimeRules::client(), [
             [['!person_id'], 'required'],
             [['!person_id', 'dolzh_id', 'podraz_id'], Str2UUIDValidator::className()],
-            [['assignBuilds'], 'safe'],
         ]);
     }
 
     public function attributeLabels()
     {
         return (new Parttime())->attributeLabels();
+    }
+
+    public function getPerson_id()
+    {
+        return $this->person_id;
     }
 }

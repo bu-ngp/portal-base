@@ -1,0 +1,33 @@
+<?php
+return [
+    'administrator' => [
+        'person_id' => \wartron\yii2uuid\helpers\Uuid::str2uuid('8C1B22ACEDE411E79AE500FF1E4274A2'),
+        'person_code' => '1',
+        'person_fullname' => 'Администратор',
+        'person_username' => 'admin',
+        'person_auth_key' => 'ATJsIOsOO9_xnpiE1O_Sg2t8R0Md2hOp',
+        'person_password_hash' => '$2y$13$8hoFqMvhqbF8cPeoLau1e.sNoPr4gOl/vYcjCCy/PiKDlSFoS4x0C',
+        'person_email' => 'admin@mm.ru',
+        'person_hired' => null,
+        'person_fired' => null,
+        'created_at' => '1514442285',
+        'updated_at' => '1514442285',
+        'created_by' => 'system',
+        'updated_by' => 'system',
+    ],
+    'user1' => [
+        'person_id' => \wartron\yii2uuid\helpers\Uuid::str2uuid('2BB8A51CEDE711E7B78500FF1E4274A2'),
+        'person_code' => '2',
+        'person_fullname' => 'ИВАНОВ ИВАН ИВАНОВИЧ',
+        'person_username' => 'ivanovii',
+        'person_auth_key' => 'wYxbm91AzdFU68TQPqAtnprLny2woLka',
+        'person_password_hash' => '$2y$13$FQ/7/yN82w.P8bujiAm10eIVcAzDpJdYe4KJjsx1MIx3urCngjDr6',
+        'person_email' => 'mail@mail.ru',
+        'person_hired' => '2016-01-01',
+        'person_fired' => date('Y-m-d', strtotime('+60 day')),
+        'created_at' => '1514696278',
+        'updated_at' => '1514696278',
+        'created_by' => 'Гость',
+        'updated_by' => 'Гость',
+    ],
+];

@@ -9,7 +9,7 @@ use rmrevin\yii\fontawesome\FA;
 
 /* @var $this yii\web\View */
 /* @var $form ActiveForm */
-/* @var $modelForm domain\forms\base\EmployeeHistoryForm */
+/* @var $modelForm domain\forms\base\EmployeeHistoryForm|domain\forms\base\EmployeeHistoryUpdateForm */
 ?>
 
 <?= $form->field($modelForm, 'dolzh_id')->select2([

@@ -8,7 +8,7 @@ use common\widgets\Panel\Panel;
 use rmrevin\yii\fontawesome\FA;
 
 /* @var $this yii\web\View */
-/* @var $modelForm domain\forms\base\EmployeeHistoryForm */
+/* @var $modelForm domain\forms\base\EmployeeHistoryUpdateForm */
 /* @var $searchModelEmployeeHB domain\models\base\search\EmployeeHistoryBuildSearch */
 /* @var $dataProviderEmployeeHB yii\data\ActiveDataProvider */
 

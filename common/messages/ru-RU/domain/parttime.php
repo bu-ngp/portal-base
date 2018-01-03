@@ -17,11 +17,11 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Build ID' => '',
     'Dolzh ID' => 'Должность',
     'Parttime Begin' => 'Дата начала',
     'Parttime End' => 'Дата окончания',
     'Parttime ID' => '',
-    'Person ID' => '',
+    'Person ID' => 'Пользователь',
     'Podraz ID' => 'Подразделение',
+    'Person don\'t have speciality' => 'Пользователь не имеет основной специальности',
 ];
