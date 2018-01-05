@@ -59,6 +59,7 @@ abstract class ProcessLoader extends Component implements JobInterface
                 'eventData' => $this->data,
             ]));
         } catch (\Exception $e) {
+          //  throw $e;
             if ($e instanceof CancelException) {
                 $this->cancel();
                 $this->trigger(self::EVENT_PROCCESS_CANCEL, Yii::createObject([

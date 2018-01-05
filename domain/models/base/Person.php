@@ -36,6 +36,7 @@ use yii\web\IdentityInterface;
  * @property integer $updated_at
  * @property string $created_by
  * @property string $updated_by
+ * @property string $for_import
  *
  * @property AuthAssignment[] $authAssignments
  * @property AuthItem[] $itemNames
@@ -69,7 +70,7 @@ class Person extends \yii\db\ActiveRecord implements LdapModelInterface
                 return $model->person_code != 1;
             }],
             [['person_auth_key', 'person_password_hash'], 'required'],
-            [['person_code'], 'integer'],
+            [['person_code', 'for_import'], 'integer'],
             [['person_hired', 'person_fired'], WKDateValidator::className()],
             [['person_password_hash'], 'string', 'max' => 255],
             [['person_auth_key'], 'string', 'max' => 32],

@@ -2,6 +2,7 @@
 
 namespace domain\repositories\base;
 
+use domain\models\base\Employee;
 use domain\models\base\EmployeeHistory;
 use RuntimeException;
 use wartron\yii2uuid\helpers\Uuid;
@@ -93,5 +94,26 @@ class EmployeeHistoryRepository
             ->andWhere(['not in', 'employee_history_id', $exceptId])
             ->andWhere(['person_id' => $currentPersonId])
             ->exists();
+    }
+
+    /**
+     * @param $person_id
+     * @return null|ActiveRecord|EmployeeHistory
+     */
+    public function findCurrentByPerson($person_id)
+    {
+        $employee = Employee::findOne(['person_id' => $person_id]);
+        if ($employee) {
+            return EmployeeHistory::find()
+                ->andWhere([
+                    'person_id' => $employee->person_id,
+                    'dolzh_id' => $employee->dolzh_id,
+                    'podraz_id' => $employee->podraz_id,
+                    'employee_history_begin' => $employee->employee_begin,
+                ])
+                ->one();
+        }
+
+        return null;
     }
 }

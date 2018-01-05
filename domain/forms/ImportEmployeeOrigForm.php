@@ -32,7 +32,7 @@ class ImportEmployeeOrigForm extends Model
             [['period', 'dr', 'dateBegin', 'dateEnd'], 'filter', 'filter' => function ($value) {
                 return preg_match('/\d{5}(\.\d{9})?/', $value) ? date('d.m.Y', PHPExcel_Shared_Date::ExcelToPHP($value)) : $value;
             }],
-            [['period', 'fio', 'dr', 'pol', 'snils', 'inn', 'dolzh', 'status', 'podraz', 'dateBegin', 'dateEnd', 'address'], 'safe'],
+            [['fio', 'pol', 'snils', 'inn', 'dolzh', 'status', 'podraz', 'address'], 'safe'],
         ];
     }
 

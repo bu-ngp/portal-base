@@ -14,6 +14,7 @@ return [
         'updated_at' => '1514442285',
         'created_by' => 'system',
         'updated_by' => 'system',
+        'for_import' => null,
     ],
     'user1' => [
         'person_id' => \wartron\yii2uuid\helpers\Uuid::str2uuid('2BB8A51CEDE711E7B78500FF1E4274A2'),
@@ -29,5 +30,6 @@ return [
         'updated_at' => '1514696278',
         'created_by' => 'Гость',
         'updated_by' => 'Гость',
+        'for_import' => null,
     ],
 ];

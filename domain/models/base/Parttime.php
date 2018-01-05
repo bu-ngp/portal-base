@@ -27,6 +27,7 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $updated_at
  * @property string $created_by
  * @property string $updated_by
+ * @property string $for_import
  *
  * @property Dolzh $dolzh
  * @property Person $person
@@ -56,6 +57,7 @@ class Parttime extends \yii\db\ActiveRecord
             [['podraz_id'], 'exist', 'skipOnError' => true, 'targetClass' => Podraz::className(), 'targetAttribute' => ['podraz_id' => 'podraz_id']],
             [['parttime_begin', 'parttime_end'], ParttimeValidator::className()],
             [['parttime_begin'], 'unique', 'targetAttribute' => ['person_id', 'dolzh_id', 'podraz_id', 'parttime_begin', 'parttime_end'], 'message' => Yii::t('domain/employee', 'Fail Unique Speciality By Dolzh, Podraz, Date Begin, Date End')],
+            [['for_import'], 'integer'],
         ]);
     }
 

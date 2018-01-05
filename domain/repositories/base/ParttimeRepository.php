@@ -3,6 +3,8 @@
 namespace domain\repositories\base;
 
 use domain\models\base\Parttime;
+use domain\models\base\Person;
+use domain\models\base\Podraz;
 use Yii;
 use yii\db\ActiveRecord;
 
@@ -32,7 +34,27 @@ class ParttimeRepository
     }
 
     /**
+     * @param $person_id
+     * @param $dolzh_id
+     * @param $podraz_id
+     * @param $dateBegin
+     * @return Parttime|false|ActiveRecord
+     */
+    public function findByAttributes($person_id, $dolzh_id, $podraz_id, $dateBegin)
+    {
+        $parttime = Parttime::findOne([
+            'person_id' => $person_id,
+            'dolzh_id' => $dolzh_id,
+            'podraz_id' => $podraz_id,
+            'parttime_begin' => $dateBegin,
+        ]);
+
+        return $parttime ?: false;
+    }
+
+    /**
      * @param Parttime $parttime
+     * @return mixed
      */
     public function add(Parttime $parttime)
     {
@@ -42,6 +64,7 @@ class ParttimeRepository
         if (!$parttime->insert(false)) {
             throw new \DomainException(Yii::t('domain/base', 'Saving error.'));
         }
+        return $parttime->primaryKey;
     }
 
     /**

@@ -5,13 +5,16 @@ namespace domain\proccesses;
 use doh\services\classes\ProcessLoader;
 use domain\forms\base\DolzhForm;
 use domain\forms\base\EmployeeHistoryForm;
+use domain\forms\base\EmployeeHistoryUpdateForm;
 use domain\forms\base\ParttimeForm;
+use domain\forms\base\ParttimeUpdateForm;
 use domain\forms\base\PodrazForm;
 use domain\forms\base\ProfileForm;
 use domain\forms\base\UserForm;
 use domain\forms\base\UserFormUpdate;
 use domain\forms\ImportEmployeeForm;
 use domain\forms\ImportEmployeeOrigForm;
+use domain\models\base\Dolzh;
 use domain\models\base\EmployeeHistory;
 use domain\models\base\Parttime;
 use domain\models\base\Person;
@@ -24,7 +27,6 @@ use domain\services\ProxyService;
 use domain\services\TransactionManager;
 use ngp\services\classes\ChunkReadFilter;
 use PHPExcel;
-use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\base\Model;
 
@@ -192,7 +194,13 @@ class EmployeeProccessLoader extends ProcessLoader
             $this->startRow += self::CHUNK_SIZE;
         }
 
-        if ($this->error || $this->changed || $this->added) {
+        $notFounded = false;
+        if ($this->fireNotFoundPersons() | $this->closeNotFoundParttimes()) {
+            $notFounded = true;
+            $this->resetForImportFields();
+        }
+
+        if ($notFounded || $this->error || $this->changed || $this->added) {
             $this->finishFormatReport();
             $this->saveReport();
             $this->addFile($this->reportPath, 'Результат импорта.xlsx');
@@ -210,12 +218,12 @@ class EmployeeProccessLoader extends ProcessLoader
         $this->reportRow++;
     }
 
-    protected function addReportRow($status, $message)
+    protected function addReportRow($status, $message, $customSourceString = null)
     {
-        $this->sheetReport->setCellValueByColumnAndRow(0, $this->reportRow, $this->currentRow);
+        $this->sheetReport->setCellValueByColumnAndRow(0, $this->reportRow, $customSourceString ? 0 : $this->currentRow);
         $this->sheetReport->setCellValueByColumnAndRow(1, $this->reportRow, $status);
         $this->sheetReport->setCellValueByColumnAndRow(2, $this->reportRow, $message);
-        $this->sheetReport->setCellValueByColumnAndRow(3, $this->reportRow, implode('; ', [
+        $this->sheetReport->setCellValueByColumnAndRow(3, $this->reportRow, $customSourceString ?: implode('; ', [
             $this->formOrigData->period,
             $this->formOrigData->fio,
             $this->formOrigData->dr,
@@ -364,8 +372,9 @@ class EmployeeProccessLoader extends ProcessLoader
                 return false;
             }
         }
+        $this->markPerson($person_id);
 
-        return Uuid::uuid2str($person_id);
+        return $person_id;
     }
 
     protected function createPerson(ImportEmployeeForm $form)
@@ -433,7 +442,7 @@ class EmployeeProccessLoader extends ProcessLoader
             }
         }
 
-        return Uuid::uuid2str($dolzh_id);
+        return $dolzh_id;
     }
 
     protected function createDolzh(ImportEmployeeForm $form)
@@ -456,7 +465,7 @@ class EmployeeProccessLoader extends ProcessLoader
             }
         }
 
-        return Uuid::uuid2str($podraz_id);
+        return $podraz_id;
     }
 
     protected function createPodraz(ImportEmployeeForm $form)
@@ -473,16 +482,175 @@ class EmployeeProccessLoader extends ProcessLoader
 
     protected function makeEmployee(ImportEmployeeForm $form, $person_id, $dolzh_id, $podraz_id)
     {
-        return ($employee = $this->employeeService->getEmployeeByDate(Uuid::str2uuid($person_id), $form->dateBegin))
-            ? $this->updateEmployee($employee, $form, $person_id, $dolzh_id, $podraz_id)
-            : $this->createEmployee($form, $person_id, $dolzh_id, $podraz_id);
+        $result = true;
+        if ($employee = $this->employeeExist($person_id)) {
+            if ($this->isEmployeesNotEqual([$employee->dolzh_id, $employee->podraz_id], [$dolzh_id, $podraz_id])) {
+                $result = $this->isActualImportEmployee($form->period, $employee->employee_history_begin)
+                    ? $this->addEmployee($person_id, $dolzh_id, $podraz_id, $form->period)
+                    : $this->editEmployee($employee, $person_id, $dolzh_id, $podraz_id, $form->period);
+            }
+        } else {
+            $result = $this->addEmployee($person_id, $dolzh_id, $podraz_id, $form->dateBegin);
+        }
+
+        if (!$result) {
+            return false;
+        }
+
+        if ($this->isEmployeeFiredNotEqual($person_id, $form->dateEnd)) {
+            return $this->changeEmployeeFireDate($person_id, $form->dateEnd);
+        }
+
+        return $result;
+    }
+
+    protected function employeeExist($person_id)
+    {
+        return $this->employeeService->getCurrentEmployeeByPerson($person_id);
+    }
+
+    protected function isEmployeesNotEqual(array $employeeCurrent, array $employeeImport)
+    {
+        return (bool)array_diff($employeeCurrent, $employeeImport);
+    }
+
+    protected function isActualImportEmployee($employeeImportDate, $employeeCurrentDate)
+    {
+        return (new \DateTime($employeeImportDate)) > (new \DateTime($employeeCurrentDate));
+    }
+
+    protected function addEmployee($person_id, $dolzh_id, $podraz_id, $employee_date)
+    {
+        $employeeHistoryForm = new EmployeeHistoryForm([
+            'person_id' => $person_id,
+            'dolzh_id' => $dolzh_id,
+            'podraz_id' => $podraz_id,
+            'employee_history_begin' => $employee_date,
+            'assignBuilds' => '[]',
+        ]);
+
+        if ($result = $this->createByService($this->employeeService, [$employeeHistoryForm])) {
+            $this->reportStatus = self::REPORT_STATUS_ADDED;
+            $dateBegin = Yii::$app->formatter->asDate($employee_date);
+            $dolzhName = Dolzh::findOne($dolzh_id)->dolzh_name;
+            $this->addReportRow(self::REPORT_STATUS_ADDED, "Добавлена основная специальность '$dolzhName' на дату '$dateBegin'");
+        }
+
+        return $result;
+    }
+
+    protected function editEmployee(EmployeeHistory $employeeHistory, $person_id, $dolzh_id, $podraz_id, $employee_date)
+    {
+        $employeeForm = $employeeHistory->attributes;
+        $employeeForm['person_id'] = $person_id;
+        $employeeForm['dolzh_id'] = $dolzh_id;
+        $employeeForm['podraz_id'] = $podraz_id;
+        $employeeForm['employee_history_begin'] = $employee_date;
+
+        $diff = array_diff_assoc($employeeForm, $employeeHistory->attributes);
+        $diffWas = array_diff_assoc($employeeHistory->attributes, $employeeForm);
+
+        if ($diff) {
+            $employeeHistoryForm = new EmployeeHistoryUpdateForm($employeeHistory, $diff);
+            $this->convertUUIDFields($diff);
+            $this->convertUUIDFields($diffWas);
+
+            if ($this->updateByService($this->employeeService, [$employeeHistory->primaryKey, $employeeHistoryForm], $diff, $diffWas) === false) {
+                return false;
+            };
+
+            $this->reportStatus = self::REPORT_STATUS_CHANGED;
+        }
+
+        return true;
+    }
+
+    protected function isEmployeeFiredNotEqual($person_id, $dateEnd)
+    {
+        $person = $this->personService->getUser($person_id);
+        return $person->person_fired !== $dateEnd;
+    }
+
+    protected function changeEmployeeFireDate($person_id, $dateEnd)
+    {
+        $person = $this->personService->getUser($person_id);
+        $diffWas = ['person_fired' => $person->person_fired];
+        $diff = ['person_fired' => $dateEnd];
+
+        $userFormUpdate = new UserFormUpdate($person, ['person_fired' => $dateEnd]);
+        $profile = $this->personService->getProfile($person->primaryKey);
+        $profileForm = new ProfileForm($profile, []);
+
+        return $this->updateByService($this->personService, [$person->primaryKey, $userFormUpdate, $profileForm], $diff, $diffWas);
     }
 
     protected function makeParttime(ImportEmployeeForm $form, $person_id, $dolzh_id, $podraz_id)
     {
-        return ($parttime = $this->parttimeService->getParttimeByDate(Uuid::str2uuid($person_id), $form->dateBegin))
-            ? $this->updateParttime($parttime, $form, $person_id, $dolzh_id, $podraz_id)
-            : $this->createParttime($form, $person_id, $dolzh_id, $podraz_id);
+        $result = true;
+        if ($parttime = $this->parttimeExist($person_id, $dolzh_id, $podraz_id, $form->dateBegin)) {
+            $parttime_id = $parttime->primaryKey;
+            if ($this->isParttimeDateEndNotEqual($parttime->parttime_end, $form->dateEnd)) {
+                $result = $this->changeParttimeDateEnd($parttime, $form->dateEnd);
+            }
+        } else {
+            $parttime_id = $this->addParttime($person_id, $dolzh_id, $podraz_id, $form->dateBegin, $form->dateEnd);
+            $result = $parttime_id;
+        }
+        $this->markParttime($parttime_id);
+
+        return $result;
+    }
+
+    protected function parttimeExist($person_id, $dolzh_id, $podraz_id, $dateBegin)
+    {
+        return $this->parttimeService->findByAttributes($person_id, $dolzh_id, $podraz_id, $dateBegin);
+    }
+
+    protected function isParttimeDateEndNotEqual($dateEndParttime, $dateEndImportFile)
+    {
+        return $dateEndParttime !== $dateEndImportFile;
+    }
+
+    protected function changeParttimeDateEnd(Parttime $parttime, $dateEnd)
+    {
+        $parttimeForm = $parttime->attributes;
+        $parttimeForm['parttime_end'] = $dateEnd;
+
+        $diff = array_diff_assoc($parttimeForm, $parttime->attributes);
+        $diffWas = array_diff_assoc($parttime->attributes, $parttimeForm);
+
+        if ($diff) {
+            $parttimeCurrentForm = new ParttimeUpdateForm($parttime, $diff);
+
+            if ($this->updateByService($this->parttimeService, [$parttime->primaryKey, $parttimeCurrentForm], $diff, $diffWas) === false) {
+                return false;
+            };
+
+            $this->reportStatus = self::REPORT_STATUS_CHANGED;
+        }
+
+        return true;
+    }
+
+    protected function addParttime($person_id, $dolzh_id, $podraz_id, $dateBegin, $dateEnd)
+    {
+        $parttimeForm = new ParttimeForm([
+            'person_id' => $person_id,
+            'dolzh_id' => $dolzh_id,
+            'podraz_id' => $podraz_id,
+            'parttime_begin' => $dateBegin,
+            'parttime_end' => $dateEnd,
+            'assignBuilds' => '[]',
+        ]);
+
+        if ($result = $this->createByService($this->parttimeService, [$parttimeForm])) {
+            $this->reportStatus = self::REPORT_STATUS_ADDED;
+            $dateBegin = Yii::$app->formatter->asDate($dateBegin);
+            $dolzhName = Dolzh::findOne($dolzh_id)->dolzh_name;
+            $this->addReportRow(self::REPORT_STATUS_ADDED, "Добавлено совместительство '$dolzhName' на дату '$dateBegin'");
+        }
+
+        return $result;
     }
 
     protected function addItog()
@@ -527,18 +695,18 @@ class EmployeeProccessLoader extends ProcessLoader
         }, $forms)))]));
     }
 
-    protected function updateByService(ProxyService $service, array $params, array $diff, array $diffWas)
+    protected function updateByService(ProxyService $service, array $params, array $diff, array $diffWas, $customSourceString = null)
     {
         $result = call_user_func_array([$service, 'update'], $params);
 
         if ($result) {
-            $this->addReportRow(self::REPORT_STATUS_CHANGED, $this->getMessageFromDiff($diff, $diffWas));
+            $this->addReportRow(self::REPORT_STATUS_CHANGED, $this->getMessageFromDiff($diff, $diffWas), $customSourceString);
             return $result;
         } else {
             $params = array_filter($params, function ($param) {
                 return $param instanceof Model;
             });
-            $this->addReportRow(self::REPORT_STATUS_ERROR, $this->getMessageFromServiceAndForms($service, $params));
+            $this->addReportRow(self::REPORT_STATUS_ERROR, $this->getMessageFromServiceAndForms($service, $params), $customSourceString);
             return false;
         }
     }
@@ -550,161 +718,108 @@ class EmployeeProccessLoader extends ProcessLoader
             }, array_keys($diff), $diff));
     }
 
-    protected function createEmployee(ImportEmployeeForm $form, $person_id, $dolzh_id, $podraz_id)
-    {
-        $employeeHistoryForm = new EmployeeHistoryForm(null, false, [
-            'person_id' => $person_id,
-            'dolzh_id' => $dolzh_id,
-            'podraz_id' => $podraz_id,
-            'employee_history_begin' => $form->dateBegin,
-            'assignBuilds' => '[]',
-        ]);
-
-        if ($result = $this->createByService($this->employeeService, [$employeeHistoryForm])) {
-            //$this->reportStatus = $this->reportStatus === self::REPORT_STATUS_UNCHANGED ? self::REPORT_STATUS_CHANGED : $this->reportStatus;
-            $this->reportStatus = self::REPORT_STATUS_ADDED;
-            $dateBegin = Yii::$app->formatter->asDate($form->dateBegin);
-            $this->addReportRow(self::REPORT_STATUS_ADDED, "Добавлена основная специальность '{$form->dolzh}' на дату '$dateBegin'");
-
-            if ($form->dateEnd) {
-                $result = $this->updatePersonDateEnd($form, $person_id);
-            }
-        }
-
-        return $result;
-    }
-
-    protected function createParttime(ImportEmployeeForm $form, $person_id, $dolzh_id, $podraz_id)
-    {
-        $parttimeForm = new ParttimeForm(null, false, [
-            'person_id' => $person_id,
-            'dolzh_id' => $dolzh_id,
-            'podraz_id' => $podraz_id,
-            'parttime_begin' => $form->dateBegin,
-            'parttime_end' => $form->dateEnd,
-            'assignBuilds' => '[]',
-        ]);
-
-        if ($result = $this->createByService($this->parttimeService, [$parttimeForm])) {
-            //   $this->reportStatus = $this->reportStatus === self::REPORT_STATUS_UNCHANGED ? self::REPORT_STATUS_CHANGED : $this->reportStatus;
-            $this->reportStatus = self::REPORT_STATUS_ADDED;
-            $dateBegin = Yii::$app->formatter->asDate($form->dateBegin);
-            $this->addReportRow(self::REPORT_STATUS_ADDED, "Добавлено совместительство '{$form->dolzh}' на дату '$dateBegin'");
-        }
-
-        return $result;
-    }
-
-    protected function updateEmployee(EmployeeHistory $employee, ImportEmployeeForm $form, $person_id, $dolzh_id, $podraz_id)
-    {
-        if ($this->employeeExist($employee, $person_id, $dolzh_id, $podraz_id)) {
-            if ($this->differenceEmployeeDateEnd($employee, $form->dateEnd)) {
-                return $this->updateEmployeeDateEnd($employee, $form->dateEnd);
-            }
-
-            return true;
-        } else {
-            return $this->updateCurrentEmployee($employee, $person_id, $dolzh_id, $podraz_id)
-                && $this->updateEmployeeDateEnd($employee, $form->dateEnd);
-        }
-    }
-
-    protected function updateParttime(Parttime $parttime, ImportEmployeeForm $form, $person_id, $dolzh_id, $podraz_id)
-    {
-        return $this->updateCurrentParttime($parttime, $person_id, $dolzh_id, $podraz_id, $form->dateEnd);
-    }
-
-    protected function employeeExist(EmployeeHistory $employee, $person_id, $dolzh_id, $podraz_id)
-    {
-        return $employee->person_id === Uuid::str2uuid($person_id)
-            && $employee->dolzh_id === Uuid::str2uuid($dolzh_id)
-            && $employee->podraz_id === Uuid::str2uuid($podraz_id);
-    }
-
-    protected function differenceEmployeeDateEnd(EmployeeHistory $employee, $dateEnd)
-    {
-        return $employee->person->person_fired != $dateEnd;
-    }
-
-    protected function updateEmployeeDateEnd(EmployeeHistory $employee, $dateEnd)
-    {
-        $diffWas = ['person_fired' => $employee->person->person_fired];
-        $diff = ['person_fired' => $dateEnd];
-        $userFormUpdate = new UserFormUpdate($employee->person, ['person_fired' => $dateEnd]);
-        $profile = $this->personService->getProfile($employee->person->primaryKey);
-        $profileForm = new ProfileForm($profile, []);
-
-        if ($result = $this->updateByService($this->personService, [$employee->person_id, $userFormUpdate, $profileForm], $diff, $diffWas)) {
-            $this->reportStatus = self::REPORT_STATUS_CHANGED;
-        }
-
-        return $result;
-    }
-
-    protected function updatePersonDateEnd(ImportEmployeeForm $form, $person_id)
-    {
-        $diffWas = ['person_fired' => ''];
-        $diff = ['person_fired' => $form->dateEnd];
-        $person = $this->personService->getUser(Uuid::str2uuid($person_id));
-
-        $userFormUpdate = new UserFormUpdate($person, ['person_fired' => $form->dateEnd]);
-        $profile = $this->personService->getProfile($person->primaryKey);
-        $profileForm = new ProfileForm($profile, []);
-
-        return $this->updateByService($this->personService, [$person->primaryKey, $userFormUpdate, $profileForm], $diff, $diffWas);
-    }
-
-    protected function updateCurrentEmployee(EmployeeHistory $employee, $person_id, $dolzh_id, $podraz_id)
-    {
-        $employeeForm = $employee->attributes;
-        $employeeForm['person_id'] = Uuid::str2uuid($person_id);
-        $employeeForm['dolzh_id'] = Uuid::str2uuid($dolzh_id);
-        $employeeForm['podraz_id'] = Uuid::str2uuid($podraz_id);
-
-        $diff = array_diff_assoc($employeeForm, $employee->attributes);
-        $diffWas = array_diff_assoc($employee->attributes, $employeeForm);
-
-        if ($diff) {
-            $employeeHistoryForm = new EmployeeHistoryForm($employee, false, $diff);
-
-            if ($this->updateByService($this->employeeService, [$employee->primaryKey, $employeeHistoryForm], $diff, $diffWas) === false) {
-                return false;
-            };
-
-            $this->reportStatus = self::REPORT_STATUS_CHANGED;
-        }
-
-        return true;
-    }
-
-    protected function updateCurrentParttime(Parttime $parttime, $person_id, $dolzh_id, $podraz_id, $dateEnd)
-    {
-        $parttimeForm = $parttime->attributes;
-        $parttimeForm['person_id'] = Uuid::str2uuid($person_id);
-        $parttimeForm['dolzh_id'] = Uuid::str2uuid($dolzh_id);
-        $parttimeForm['podraz_id'] = Uuid::str2uuid($podraz_id);
-        $parttimeForm['parttime_end'] = $dateEnd;
-
-        $diff = array_diff_assoc($parttimeForm, $parttime->attributes);
-        $diffWas = array_diff_assoc($parttime->attributes, $parttimeForm);
-
-        if ($diff) {
-            $parttimeCurrentForm = new ParttimeForm($parttime, false, $diff);
-
-            if ($this->updateByService($this->parttimeService, [$parttime->primaryKey, $parttimeCurrentForm], $diff, $diffWas) === false) {
-                return false;
-            };
-
-            $this->reportStatus = self::REPORT_STATUS_CHANGED;
-        }
-
-        return true;
-    }
-
     protected function finishFormatReport()
     {
         for ($i = 1; $i <= 4; $i++) {
             $this->objPHPExcelReport->getActiveSheet()->getColumnDimensionByColumn($i)->setAutoSize(true);
         }
+    }
+
+    protected function convertUUIDFields(&$diff)
+    {
+        foreach ($diff as $attribute => $value) {
+            switch ($attribute) {
+                case 'person_id':
+                    $diff[$attribute] = $this->personService->getUser($value)->person_fullname;
+                    break;
+                case 'dolzh_id':
+                    $diff[$attribute] = $this->dolzhService->find($value)->dolzh_name;
+                    break;
+                case 'podraz_id':
+                    $diff[$attribute] = $this->podrazService->find($value)->podraz_name;
+                    break;
+            }
+        }
+    }
+
+    protected function fireNotFoundPersons()
+    {
+        $persons = Person::find()
+            ->andWhere(['for_import' => null, 'person_fired' => null])
+            ->andWhere(['not', ['person_code' => 1]])
+            ->orderBy(['person_fullname' => SORT_ASC, 'person_code' => SORT_ASC])
+            ->all();
+
+        /** @var Person $person */
+        foreach ($persons as $person) {
+            $this->changeNotFoundPersonFireDate($person);
+        }
+
+        return (bool)$persons;
+    }
+
+    protected function changeNotFoundPersonFireDate(Person $person)
+    {
+        $diffWas = ['person_fired' => $person->person_fired];
+        $diff = ['person_fired' => date('Y-m-d')];
+
+        $userFormUpdate = new UserFormUpdate($person, ['person_fired' => date('Y-m-d')]);
+        $profile = $this->personService->getProfile($person->primaryKey);
+        $profileForm = new ProfileForm($profile, []);
+        $sourceString = "{$person->person_code}, {$person->person_fullname}";
+
+        return $this->updateByService($this->personService, [$person->primaryKey, $userFormUpdate, $profileForm], $diff, $diffWas, $sourceString);
+    }
+
+    protected function closeNotFoundParttimes()
+    {
+        $parttimes = Parttime::find()
+            ->andWhere(['for_import' => null, 'parttime_end' => null])
+            ->all();
+
+        /** @var Parttime $parttime */
+        foreach ($parttimes as $parttime) {
+            $this->changeNotFoundParttimeDateEnd($parttime);
+        }
+
+        return (bool)$parttimes;
+    }
+
+    protected function changeNotFoundParttimeDateEnd(Parttime $parttime)
+    {
+        $parttimeForm = $parttime->attributes;
+        $parttimeForm['parttime_end'] = date('Y-m-d');
+
+        $diff = array_diff_assoc($parttimeForm, $parttime->attributes);
+        $diffWas = array_diff_assoc($parttime->attributes, $parttimeForm);
+
+        if ($diff) {
+            $parttimeCurrentForm = new ParttimeUpdateForm($parttime, $diff);
+            $sourceMessage = "Совместительство '{$parttime->person->person_fullname}' от {$parttime->parttime_begin}";
+
+            if ($this->updateByService($this->parttimeService, [$parttime->primaryKey, $parttimeCurrentForm], $diff, $diffWas, $sourceMessage) === false) {
+                return false;
+            };
+
+            $this->reportStatus = self::REPORT_STATUS_CHANGED;
+        }
+
+        return true;
+    }
+
+    protected function resetForImportFields()
+    {
+        Person::updateAll(['for_import' => null], ['for_import' => 1]);
+        Parttime::updateAll(['for_import' => null], ['for_import' => 1]);
+    }
+
+    protected function markPerson($person_id)
+    {
+        Person::updateAll(['for_import' => 1], ['person_id' => $person_id]);
+    }
+
+    protected function markParttime($parttime_id)
+    {
+        Parttime::updateAll(['for_import' => 1], ['parttime_id' => $parttime_id]);
     }
 }

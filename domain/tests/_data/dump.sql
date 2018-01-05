@@ -572,6 +572,7 @@ CREATE TABLE `parttime` (
   `updated_at` int(11) NOT NULL,
   `created_by` varchar(255) NOT NULL,
   `updated_by` varchar(255) NOT NULL,
+  `for_import` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`parttime_id`),
   UNIQUE KEY `idx_parttime` (`person_id`,`dolzh_id`,`podraz_id`,`parttime_begin`,`parttime_end`),
   KEY `dolzh_id_parttime` (`dolzh_id`),
@@ -641,6 +642,7 @@ CREATE TABLE `person` (
   `updated_at` int(11) NOT NULL,
   `created_by` varchar(255) NOT NULL,
   `updated_by` varchar(255) NOT NULL,
+  `for_import` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`person_id`),
   UNIQUE KEY `person_username` (`person_username`),
   UNIQUE KEY `person_code` (`person_code`)
@@ -653,7 +655,7 @@ CREATE TABLE `person` (
 
 LOCK TABLES `person` WRITE;
 /*!40000 ALTER TABLE `person` DISABLE KEYS */;
-INSERT INTO `person` VALUES ('ˀ?��s�+4y�',1,'Администратор','admin','ATJsIOsOO9_xnpiE1O_Sg2t8R0Md2hOp','$2y$13$8hoFqMvhqbF8cPeoLau1e.sNoPr4gOl/vYcjCCy/PiKDlSFoS4x0C','admin@mm.ru',NULL,NULL,1514442285,1514442285,'system','system');
+INSERT INTO `person` VALUES ('ˀ?��s�+4y�',1,'Администратор','admin','ATJsIOsOO9_xnpiE1O_Sg2t8R0Md2hOp','$2y$13$8hoFqMvhqbF8cPeoLau1e.sNoPr4gOl/vYcjCCy/PiKDlSFoS4x0C','admin@mm.ru',NULL,NULL,1514442285,1514442285,'system','system',NULL);
 /*!40000 ALTER TABLE `person` ENABLE KEYS */;
 UNLOCK TABLES;
 

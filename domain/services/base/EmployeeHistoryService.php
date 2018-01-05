@@ -45,6 +45,11 @@ class EmployeeHistoryService extends Service
         return $this->employeeHistories->find($id);
     }
 
+    public function getCurrentEmployeeByPerson($person_id)
+    {
+        return $this->employeeHistories->findCurrentByPerson($person_id);
+    }
+
     public function getEmployeeByDate($person_id, $date)
     {
         $result = $this->employeeHistories->findByDate($person_id, $date);

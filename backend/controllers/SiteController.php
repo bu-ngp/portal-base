@@ -123,26 +123,7 @@ class SiteController extends Controller
 
     public function actionTest()
     {
-        $service = Yii::createObject('domain\services\base\PersonService');
-
-        $userForm = new UserForm([
-            'person_fullname' => 'Иванов Иван Иванович',
-            'person_username' => 'IvanovII3',
-            'person_password' => '111111',
-            'person_email' => 'mail@mail.ru',
-            'assignRoles' => '["baseDolzhEdited"]',
-            //'assignRoles' => '["baseDolzhEdit","basePodrazEdit"]',
-        ]);
-        $profileForm = new ProfileForm();
-
-        try {
-            $service->create($userForm, $profileForm);
-        } catch (\Exception $e) {
-            echo VarDumper::dumpAsString($e->getMessage(), 10, true);
-        }
-
-        echo VarDumper::dumpAsString($userForm->getErrors(), 10, true);
-
-
+//        $doh = new DoH(new EmployeeProccessLoader(Yii::getAlias('@common/ftpimport/Upload_Kamin_SotrInfo3.xlsx')));
+//        $doh->execute();
     }
 }

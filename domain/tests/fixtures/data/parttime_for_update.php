@@ -11,6 +11,7 @@ return [
         'updated_at' => time(),
         'created_by' => 'Гость',
         'updated_by' => 'Гость',
+        'for_import' => null,
     ],
     [
         'parttime_id' => 2,
@@ -23,5 +24,6 @@ return [
         'updated_at' => time(),
         'created_by' => 'Гость',
         'updated_by' => 'Гость',
+        'for_import' => null,
     ],
 ];

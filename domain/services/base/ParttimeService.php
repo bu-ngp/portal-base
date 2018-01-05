@@ -46,6 +46,11 @@ class ParttimeService extends Service
         return $result;
     }
 
+    public function findByAttributes($person_id, $dolzh_id, $podraz_id, $dateBegin)
+    {
+        return $this->parttimes->findByAttributes($person_id, $dolzh_id, $podraz_id, $dateBegin);
+    }
+
     public function create(ParttimeForm $form)
     {
         $this->guardAssignBuilds($form);
@@ -57,8 +62,8 @@ class ParttimeService extends Service
 
         $this->guardHasEmployee($form);
 
-        $this->transactionManager->execute(function () use ($parttime) {
-            $this->parttimes->add($parttime);
+       return $this->transactionManager->execute(function () use ($parttime) {
+           return $this->parttimes->add($parttime);
         });
     }
 

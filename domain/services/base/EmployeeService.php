@@ -16,7 +16,7 @@ class EmployeeService extends Service
     private $employeeRepository;
 
     public function __construct(
-        EmployeeHistoryRepository $employeeRepository
+        EmployeeRepository $employeeRepository
     )
     {
         $this->employeeRepository = $employeeRepository;

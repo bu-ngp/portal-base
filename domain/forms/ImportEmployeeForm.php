@@ -35,7 +35,7 @@ class ImportEmployeeForm extends Model
     {
         return [
             [['fio', 'pol', 'snils', 'inn', 'dolzh', 'status', 'podraz', 'address'], 'trim'],
-            [['dr', 'dateBegin', 'dateEnd'], DRValidator::className()],
+            [['period', 'dr', 'dateBegin', 'dateEnd'], DRValidator::className()],
             [['pol'], 'filter', 'filter' => function ($value) {
                 switch ($value) {
                     case self::MALE:
@@ -52,7 +52,6 @@ class ImportEmployeeForm extends Model
             [['fio'], 'filter', 'filter' => function ($value) {
                 return mb_strtoupper($value, 'UTF-8');
             }],
-            [['period', 'fio', 'dr', 'pol', 'snils', 'inn', 'dolzh', 'status', 'podraz', 'dateBegin', 'dateEnd', 'address'], 'safe'],
         ];
     }
 

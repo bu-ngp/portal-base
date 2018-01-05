@@ -8,6 +8,7 @@ use domain\validators\Str2UUIDValidator;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
+use yii\web\Request;
 
 class ParttimeForm extends Model
 {
@@ -21,7 +22,9 @@ class ParttimeForm extends Model
 
     public function __construct($config = [])
     {
-        $this->person_id = Yii::$app->request->get('person');
+        if (Yii::$app->request instanceof Request) {
+            $this->person_id = Yii::$app->request->get('person');
+        }
         $this->parttime_begin = date('Y-m-d');
 
         parent::__construct($config);
