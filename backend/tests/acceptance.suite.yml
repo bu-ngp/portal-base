@@ -1,0 +1,33 @@
+# Codeception Test Suite Configuration
+#
+# Suite for acceptance tests.
+# Perform tests in browser using the WebDriver or PhpBrowser.
+# If you need both WebDriver and PHPBrowser tests - create a separate suite.
+
+actor: AcceptanceTester
+modules:
+    enabled:
+        - WebDriver
+        - Yii2
+        - Db
+        - Filesystem
+        - Asserts
+    config:
+        WebDriver:
+            url: 'http://127.0.0.1:9000/ngp/manager/'
+            port: 4444
+            browser: chrome
+            window_size: 1280x1024
+            clear_cookies: false
+        Yii2:
+            part: init
+            configFile: 'config/test-local.php'
+            entryScript: index-test.php
+            cleanup: false
+        Db:
+            dsn: 'mysql:host=127.0.0.1;dbname=wkportal_test'
+            user: 'root'
+            password: '265463'
+            dump: /../domain/tests/_data/dump.sql
+            cleanup: false
+            populate: true

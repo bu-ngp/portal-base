@@ -20,6 +20,7 @@ use rmrevin\yii\fontawesome\FA;
 
                 <?= $form->field($testForm, 'dolzh_single_id')->select2([
                     'activeRecordClass' => \domain\models\base\Dolzh::className(),
+                    'activeRecordAttribute' => 'dolzh_id',
                     'queryCallback' => \domain\queries\DolzhQuery::select(),
                     'ajaxConfig' => [
                         'searchAjaxCallback' => \domain\queries\DolzhQuery::search(),
@@ -34,6 +35,7 @@ use rmrevin\yii\fontawesome\FA;
 
                 <?= $form->field($testForm, 'dolzh_multiple_id')->select2([
                     'activeRecordClass' => \domain\models\base\Dolzh::className(),
+                    'activeRecordAttribute' => 'dolzh_id',
                     'queryCallback' => \domain\queries\DolzhQuery::select(),
                     'ajaxConfig' => [
                         'searchAjaxCallback' => \domain\queries\DolzhQuery::search(),
@@ -54,6 +56,7 @@ use rmrevin\yii\fontawesome\FA;
 
                 <?= $form->field($testForm, 'podraz_single_id')->select2([
                     'activeRecordClass' => \domain\models\base\Podraz::className(),
+                    'activeRecordAttribute' => 'podraz_id',
                     'queryCallback' => \domain\queries\PodrazQuery::select(),
                     'ajaxConfig' => [
                         'searchAjaxCallback' => \domain\queries\PodrazQuery::search(),
@@ -68,6 +71,7 @@ use rmrevin\yii\fontawesome\FA;
 
                 <?= $form->field($testForm, 'podraz_multiple_id')->select2([
                     'activeRecordClass' => \domain\models\base\Podraz::className(),
+                    'activeRecordAttribute' => 'podraz_id',
                     'queryCallback' => \domain\queries\PodrazQuery::select(),
                     'ajaxConfig' => [
                         'searchAjaxCallback' => \domain\queries\PodrazQuery::search(),
