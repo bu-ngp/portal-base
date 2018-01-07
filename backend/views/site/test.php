@@ -17,11 +17,23 @@ $this->title = 'Приемочные тесты';
 ?>
 <div class="acceptance-test content-container">
     <?= HeaderPanel::widget(['title' => Html::encode($this->title)]) ?>
-    <?= \common\widgets\Panel\Panel::widget([
-        'label' => 'Select2',
-        'content' => $this->render('_select2', [
-            'testForm' => $testForm,
-        ])])
-    ?>
+
+    <?= \common\widgets\Tabs\Tabs::widget([
+        'items' => [
+            [
+                'label' => 'Элементы форм',
+                'content' => $this->render('_test_forms', ['testForm' => $testForm]),
+            ],
+            [
+                'label' => 'Грид выбранных значений',
+                'content' => $this->render('_test_choose_grid', ['testForm' => $testForm]),
+            ],
+            [
+                'label' => 'Грид с полным функционалом',
+                'content' => $this->render('_test_grid', ['testForm' => $testForm]),
+            ],
+        ],
+    ]) ?>
+
 </div>
 

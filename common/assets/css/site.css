@@ -962,6 +962,10 @@ label.wk-label-with-icon {
     padding-left: 10px;
 }
 
+.select2-container--bootstrap .select2-selection--multiple .select2-selection__rendered {
+    margin-left: 10px;
+}
+
 .wk-textarea-container {
     position: relative;
 }
