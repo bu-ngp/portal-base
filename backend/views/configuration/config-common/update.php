@@ -34,6 +34,11 @@ $this->title = Yii::t('common/config-common', 'Common Settings');
             'content' => $form->field($modelForm, 'config_common_christmas')->toggleSwitch(),
         ]) ?>
 
+        <?= Panel::widget([
+            'label' => Yii::t('common/config-common', 'Import Data Config'),
+            'content' => $form->field($modelForm, 'config_common_import_employee')->toggleSwitch(),
+        ]) ?>
+
         <div class="form-group toolbox-form-group">
             <?= Html::updateButton() ?>
         </div>

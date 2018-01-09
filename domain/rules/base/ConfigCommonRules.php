@@ -17,7 +17,7 @@ class ConfigCommonRules
             [
                 [['config_common_portal_mail'], 'email'],
                 [['config_common_mail_administrators', 'config_common_footer_company', 'config_common_footer_addition'], 'string', 'max' => 255],
-                [['config_common_christmas'], 'integer', 'min' => 0, 'max' => 1],
+                [['config_common_christmas', 'config_common_import_employee'], 'integer', 'min' => 0, 'max' => 1],
             ];
     }
 }

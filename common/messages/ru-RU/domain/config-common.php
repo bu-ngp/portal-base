@@ -23,4 +23,5 @@ return [
     'Config Common Mail Administrators' => 'Электронные адреса администраторов',
     'Config Common Portal Mail' => 'Электронный адрес портала',
     'Config Common Christmas' => 'Активировать новогоднюю тему',
+    'Config Common Import Employee' => 'Активировать импорт сотрудников',
 ];

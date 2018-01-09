@@ -21,4 +21,5 @@ return [
     'Common Settings' => 'Общие настройки портала',
     'Mail Config' => 'Настройка рассылки',
     'Theme Config' => 'Настройки оформления',
+    'Import Data Config' => 'Импорт данных',
 ];

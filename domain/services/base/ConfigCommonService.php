@@ -52,4 +52,10 @@ class ConfigCommonService extends Service
 
         return $mails ?: [];
     }
+
+    public function importEmployee()
+    {
+        $configCommon = $this->ConfigCommons->find();
+        return $configCommon->config_common_import_employee;
+    }
 }

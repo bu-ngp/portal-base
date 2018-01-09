@@ -19,6 +19,7 @@ class ConfigCommonUpdateForm extends Model
     public $config_common_footer_company;
     public $config_common_footer_addition;
     public $config_common_christmas;
+    public $config_common_import_employee;
 
     public function __construct(ConfigCommon $configCommon, $config = [])
     {
@@ -27,6 +28,7 @@ class ConfigCommonUpdateForm extends Model
         $this->config_common_footer_company = $configCommon->config_common_footer_company;
         $this->config_common_footer_addition = $configCommon->config_common_footer_addition;
         $this->config_common_christmas = $configCommon->config_common_christmas;
+        $this->config_common_import_employee = $configCommon->config_common_import_employee;
 
         parent::__construct($config);
     }
