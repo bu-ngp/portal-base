@@ -9,6 +9,7 @@ use common\widgets\FixButtonBackward\FixButtonBackward;
 use common\widgets\FixButtonOnTop\FixButtonOnTop;
 use common\widgets\PropellerAssets\PropellerAsset;
 use common\widgets\ReportLoader\ReportLoader;
+use common\widgets\SystemInfo\SystemInfo;
 use lo\modules\noty\Wrapper;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
@@ -131,7 +132,7 @@ use common\assets\AppCommonAsset;
     <div class="container-footer">
         <p>
             &copy; <?= Yii::$app->get('config')->config_common_footer_company ?: 'My Company' ?> <?= date('Y') ?></p>
-        <p> <?= Yii::$app->get('config')->config_common_footer_addition ?: 'Author Portal' ?></p>
+        <p> <?= Yii::$app->get('config')->config_common_footer_addition ?: 'Author Portal' ?> <?= SystemInfo::widget() ?> </p>
     </div>
 </footer>
 <?php $dbName = preg_replace('/(.*)dbname=(\w+);?/', '$2', Yii::$app->db->dsn) ?>

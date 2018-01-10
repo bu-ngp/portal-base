@@ -1,0 +1,13 @@
+.wk-system-info-button {
+    font-family: 'Roboto', sans-serif;
+    color: #767fbe;
+    font-size: 1em;
+    background: transparent;
+    border: none;
+    transition: color 0.3s;
+    outline: none;
+}
+
+.wk-system-info-button:hover {
+    color: #c1c5e6;
+}
