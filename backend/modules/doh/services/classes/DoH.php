@@ -160,8 +160,10 @@ class DoH
             ->column();
 
         $errors = self::deleteFiles($handler_ids);
-        Handler::deleteAll(['not',
-            ['handler_status' => [Handler::QUEUE, Handler::DURING]]
+        Handler::deleteAll([
+            'and',
+            ['identifier' => self::getCurrentIdentifierCondition()],
+            ['not', ['handler_status' => [Handler::QUEUE, Handler::DURING]]]
         ]);
 
         return $errors;

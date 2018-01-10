@@ -99,8 +99,8 @@ $handler_statuses = Handler::itemsValues('handler_status');
                     'visible' => false,
                 ],
             ],
-            'customActionButtons' => array_merge(
-                ['cancel' => function ($url, $model) {
+            'customActionButtons' => [
+                'cancel' => function ($url, $model) {
                     if (in_array($model->handler_status, [Handler::QUEUE, Handler::DURING])) {
                         return Html::a('<i class="fa fa-2x fa-close"></i>', Yii::$app->get('urlManagerAdmin')->createUrl(['doh/cancel', 'id' => $model->handler_id]), [
                             'title' => Yii::t('doh', 'Cancel'),
@@ -110,8 +110,8 @@ $handler_statuses = Handler::itemsValues('handler_status');
                     }
 
                     return '';
-                }],
-                Yii::$app->getUser()->can(RbacHelper::ADMINISTRATOR) ? ['delete' => function ($url, $model) {
+                },
+                'delete' => function ($url, $model) {
                     if (!in_array($model->handler_status, [Handler::QUEUE, Handler::DURING])) {
                         return Html::a('<i class="fa fa-2x fa-trash"></i>', Yii::$app->get('urlManagerAdmin')->createUrl(['doh/delete', 'id' => $model->handler_id]), [
                             'title' => Yii::t('doh', 'Delete'),
@@ -121,10 +121,12 @@ $handler_statuses = Handler::itemsValues('handler_status');
                     }
 
                     return '';
-                }] : []),
-            'toolbar' => array_merge(Yii::$app->getUser()->can(RbacHelper::ADMINISTRATOR) ? [
-                Html::a(Yii::t('doh', 'Clear handlers'), Yii::$app->get('urlManagerAdmin')->createUrl(['doh/clear']), ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger wk-doh-clear', 'data-pjax' => '0'])
-            ] : []),
+                }],
+            /*     'toolbar' => array_merge(Yii::$app->getUser()->can(RbacHelper::ADMINISTRATOR) ? [
+                     Html::a(Yii::t('doh', 'Clear handlers'), Yii::$app->get('urlManagerAdmin')->createUrl(['doh/clear']), ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger wk-doh-clear', 'data-pjax' => '0'])
+                 ] : []),*/
+            'toolbar' => Html::a(Yii::t('doh', 'Clear handlers'), Yii::$app->get('urlManagerAdmin')->createUrl(['doh/clear']), ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger wk-doh-clear', 'data-pjax' => '0'])
+            ,
 //            'leftBottomToolbar' => Html::button('test', ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-primary', 'id' => 'test1'])
 //                . Html::button('test error', ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-danger', 'id' => 'test_error'])
 //                . Html::button('test with files', ['class' => 'btn pmd-btn-flat pmd-ripple-effect btn-info', 'id' => 'test_with_files'])

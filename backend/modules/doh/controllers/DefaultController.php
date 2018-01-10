@@ -45,7 +45,7 @@ class DefaultController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete', 'clear'],
-                        'roles' => [RbacHelper::ADMINISTRATOR],
+                      //  'roles' => [RbacHelper::ADMINISTRATOR],
                     ],
                 ],
             ],
