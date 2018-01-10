@@ -19,7 +19,7 @@ class ConfigLdapRules
                 [['config_ldap_active'], 'default', 'value' => 0],
                 [['config_ldap_port', 'config_ldap_active'], 'required'],
                 [['config_ldap_port'], 'integer', 'min' => 0, 'max' => 65535],
-                [['config_ldap_active'], 'boolean'],
+                [['config_ldap_active', 'config_ldap_only_ldap_use'], 'boolean'],
                 [['config_ldap_host', 'config_ldap_admin_login', 'config_ldap_admin_password'], 'string', 'max' => 255],
                 [['config_ldap_host', 'config_ldap_port', 'config_ldap_admin_login', 'config_ldap_admin_password'], 'required', 'when' => function ($model) {
                     return $model->config_ldap_active;

@@ -19,6 +19,7 @@ class ConfigLdapUpdateForm extends Model
     public $config_ldap_admin_login;
     public $config_ldap_admin_password;
     public $config_ldap_active;
+    public $config_ldap_only_ldap_use;
 
     public function __construct(ConfigLdap $configLdap, $config = [])
     {
@@ -27,6 +28,7 @@ class ConfigLdapUpdateForm extends Model
         $this->config_ldap_admin_login = $configLdap->config_ldap_admin_login;
         $this->config_ldap_admin_password = $configLdap->config_ldap_admin_password;
         $this->config_ldap_active = $configLdap->config_ldap_active;
+        $this->config_ldap_only_ldap_use = $configLdap->config_ldap_only_ldap_use;
         parent::__construct($config);
     }
 

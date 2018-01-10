@@ -22,4 +22,5 @@ return [
     'Users of system' => 'Пользователи системы',
     'LDAP can\'t connect' => 'Не удалось подключиться к контроллеру домена',
     'Ldap config not correct' => 'Некорректные настройки LDAP',
+    'Will use access only local username administrator with code 1' => 'Будет доступна только локальная учетная запись администратора с кодом 1',
 ];

@@ -263,13 +263,18 @@ class Person extends \yii\db\ActiveRecord implements LdapModelInterface
      * Finds user by username
      *
      * @param string $username
+     * @param string $password
      * @return Person|null
      */
     public static function findByUsername($username, $password)
     {
         $user = static::findOne(['person_username' => $username]);
 
-        if ($user && Yii::$app->security->validatePassword($password, $user->person_password_hash)) {
+        if ($user
+            && (ConfigLdap::isLdapActive() && (!ConfigLdap::isOnlyLdapAuthenticate() || $user->person_code === 1)
+                || !ConfigLdap::isLdapActive())
+            && Yii::$app->security->validatePassword($password, $user->person_password_hash)
+        ) {
             return $user;
         }
 

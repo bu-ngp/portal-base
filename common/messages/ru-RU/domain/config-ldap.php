@@ -23,4 +23,5 @@ return [
     'Config Ldap Host' => 'Имя хоста/IP адрес контроллера домена',
     'Config Ldap ID' => 'ИД',
     'Config Ldap Port' => 'Порт подключения к контроллеру домена',
+    'Config Ldap Only Ldap Use' => 'Использовать только LDAP авторизацию',
 ];

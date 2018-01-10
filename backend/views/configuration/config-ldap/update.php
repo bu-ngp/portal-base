@@ -29,6 +29,8 @@ $this->title = Yii::t('common/config-ldap', 'Update Ldap Settings');
 
         <?= $form->field($modelForm, 'config_ldap_active')->toggleSwitch(['wkkeep' => true]) ?>
 
+        <?= $form->field($modelForm, 'config_ldap_only_ldap_use')->toggleSwitch(['wkkeep' => true])->hint(Yii::t('common/config-ldap', 'Will use access only local username administrator with code 1')) ?>
+
         <div class="form-group toolbox-form-group">
             <?= Html::updateButton() ?>
         </div>
