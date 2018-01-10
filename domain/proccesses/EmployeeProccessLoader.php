@@ -14,6 +14,7 @@ use domain\forms\base\UserForm;
 use domain\forms\base\UserFormUpdate;
 use domain\forms\ImportEmployeeForm;
 use domain\forms\ImportEmployeeOrigForm;
+use domain\helpers\BinaryHelper;
 use domain\models\base\Dolzh;
 use domain\models\base\EmployeeHistory;
 use domain\models\base\Parttime;
@@ -27,6 +28,7 @@ use domain\services\ProxyService;
 use domain\services\TransactionManager;
 use ngp\services\classes\ChunkReadFilter;
 use PHPExcel;
+use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\base\Model;
 
@@ -195,7 +197,7 @@ class EmployeeProccessLoader extends ProcessLoader
         }
 
         $notFounded = false;
-        if ($this->fireNotFoundPersons() | $this->closeNotFoundParttimes()) {
+        if (!YII_DEBUG && $this->fireNotFoundPersons() | $this->closeNotFoundParttimes()) {
             $notFounded = true;
             $this->resetForImportFields();
         }
@@ -396,6 +398,7 @@ class EmployeeProccessLoader extends ProcessLoader
         ]);
 
         if ($result = $this->createByService($this->personService, [$userForm, $profileForm])) {
+            $result = BinaryHelper::isBinaryValidString($result) ? Uuid::str2uuid($result) : $result;
             $this->reportStatus = self::REPORT_STATUS_ADDED;
             $this->addReportRow(self::REPORT_STATUS_ADDED, "Добавлен сотрудник '{$userForm->person_fullname}'");
         }

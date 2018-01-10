@@ -98,7 +98,7 @@ class EmployeeHistoryRepository
 
     /**
      * @param $person_id
-     * @return null|ActiveRecord|EmployeeHistory
+     * @return bool|ActiveRecord|EmployeeHistory
      */
     public function findCurrentByPerson($person_id)
     {
@@ -114,6 +114,6 @@ class EmployeeHistoryRepository
                 ->one();
         }
 
-        return null;
+        return false;
     }
 }
