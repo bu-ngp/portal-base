@@ -10,8 +10,11 @@ use common\widgets\ActiveForm\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $testForm \domain\forms\AcceptanceTestForm */
-/* @var $searchModel domain\models\base\search\AuthItemSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $searchModelChooseBuild \domain\models\base\search\BuildSearch */
+/* @var $dataProviderChooseBuild yii\data\ActiveDataProvider */
+/* @var $searchModelAuthitem \domain\models\base\search\AuthItemSearch */
+/* @var $dataProviderAuthitem yii\data\ActiveDataProvider */
+/* @var $filterModelAuthitem \domain\models\base\filter\AuthItemTestFilter */
 
 $this->title = 'Приемочные тесты';
 ?>
@@ -26,11 +29,20 @@ $this->title = 'Приемочные тесты';
             ],
             [
                 'label' => 'Грид выбранных значений',
-                'content' => $this->render('_test_choose_grid', ['testForm' => $testForm]),
+                'content' => $this->render('_test_choose_grid', [
+                    'testForm' => $testForm,
+                    'searchModelChooseBuild' => $searchModelChooseBuild,
+                    'dataProviderChooseBuild' => $dataProviderChooseBuild,
+                ]),
             ],
             [
                 'label' => 'Грид с полным функционалом',
-                'content' => $this->render('_test_grid', ['testForm' => $testForm]),
+                'content' => $this->render('_test_grid', [
+                    'testForm' => $testForm,
+                    'searchModelAuthitem' => $searchModelAuthitem,
+                    'dataProviderAuthitem' => $dataProviderAuthitem,
+                    'filterModelAuthitem' => $filterModelAuthitem,
+                ]),
             ],
         ],
     ]) ?>

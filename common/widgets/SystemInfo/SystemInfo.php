@@ -57,7 +57,8 @@ class SystemInfo extends Widget
                 {$this->currentUser()}
                 {$this->authentication()}
                 {$this->composerDateUpdate()}
-                {$this->yiiVersion()}
+                {$this->phpVersion()}
+                {$this->yiiVersion()}                
                 {$this->diskSpace()}
                 {$this->isLdapActive()}
                 {$this->onlyLdapUse()}
@@ -137,5 +138,10 @@ EOT;
     {
         $importEmployeeActive = Yii::$app->db->createCommand("select IF(config_common_import_employee = 1, 'Активно', 'Неактивно') from {$this->tableConfigCommon}")->queryScalar();
         return "<tr><td>" . Yii::t('wk-system-info', 'Import Employee is Active') . "</td><td>" . $importEmployeeActive . "</td></tr>";
+    }
+
+    protected function phpVersion()
+    {
+        return "<tr><td>" . Yii::t('wk-system-info', 'PHP Version') . "</td><td>" . phpversion() . "</td></tr>";
     }
 }

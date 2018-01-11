@@ -63,7 +63,7 @@ class ActionButtonDelete
 
             $this->actionButtons['delete'] = function ($url, $model) use ($options) {
                 $options = array_merge($options, [
-                    'wk-id' => $model->primaryKey,
+                    'wk-id' => BinaryHelper::isBinary($model->primaryKey) ? Uuid::uuid2str($model->primaryKey) : $model->primaryKey,
                 ]);
 
                 return $this->beforeRender($model) ? Html::a('<i class="fa fa-2x fa-trash-o"></i>', '#', $options) : '';

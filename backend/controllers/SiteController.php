@@ -7,8 +7,11 @@ use domain\forms\AcceptanceTestForm;
 use domain\forms\base\ProfileForm;
 use domain\forms\base\UserForm;
 use domain\models\base\Dolzh;
+use domain\models\base\filter\AuthItemTestFilter;
 use domain\models\base\Podraz;
 use domain\models\base\search\AuthItemSearch;
+use domain\models\base\search\AuthItemTestSearch;
+use domain\models\base\search\BuildSearch;
 use domain\proccesses\EmployeeProccessLoader;
 use Yii;
 use yii\base\DynamicModel;
@@ -44,7 +47,7 @@ class SiteController extends Controller
                     [
                         'actions' => ['acceptance-test'],
                         'allow' => true,
-                        'ips' => ['127.0.0.1', 'localhost', '::1', '192.168.0.100'],
+                        'ips' => ['127.0.0.1', 'localhost', '::1', '192.168.0.100', '172.19.17.81'],
                     ],
                 ],
             ],
@@ -116,8 +119,20 @@ class SiteController extends Controller
     {
         $testForm = new AcceptanceTestForm();
 
+        $searchModelChooseBuild = new BuildSearch();
+        $dataProviderChooseBuild = $searchModelChooseBuild->search(Yii::$app->request->queryParams);
+
+        $searchModelAuthitem = new AuthItemTestSearch();
+        $filterModelAuthitem = new AuthItemTestFilter();
+        $dataProviderAuthitem = $searchModelAuthitem->search(Yii::$app->request->queryParams);
+
         return $this->render('test', [
             'testForm' => $testForm,
+            'searchModelChooseBuild' => $searchModelChooseBuild,
+            'dataProviderChooseBuild' => $dataProviderChooseBuild,
+            'searchModelAuthitem' => $searchModelAuthitem,
+            'dataProviderAuthitem' => $dataProviderAuthitem,
+            'filterModelAuthitem' => $filterModelAuthitem,
         ]);
     }
 

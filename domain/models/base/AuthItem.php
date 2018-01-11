@@ -7,6 +7,7 @@ use domain\behaviors\UserRoleBehavior;
 use domain\forms\base\RoleForm;
 use domain\forms\base\RoleUpdateForm;
 use domain\rules\base\RoleRules;
+use domain\validators\WKDateValidator;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\Query;
@@ -52,7 +53,7 @@ class AuthItem extends \yii\db\ActiveRecord
     {
         return ArrayHelper::merge(RoleRules::client(), [
             [['name', 'type'], 'required'],
-            [['type', 'view'], 'integer'],
+            [['created_at', 'updated_at', 'type', 'view'], 'integer'], // 'created_at', 'updated_at': для работы фильтра грида
             [['data'], 'string'],
             [['name', 'rule_name'], 'string', 'max' => 64],
             [['name', 'description'], 'unique'],
@@ -181,6 +182,10 @@ class AuthItem extends \yii\db\ActiveRecord
             'type' => [
                 Item::TYPE_ROLE => 'Роль',
                 Item::TYPE_PERMISSION => 'Разрешение',
+            ],
+            'view' => [
+                0 => 'Пользовательская',
+                1 => 'Системная',
             ],
         ];
     }

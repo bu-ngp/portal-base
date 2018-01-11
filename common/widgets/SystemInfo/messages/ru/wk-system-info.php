@@ -24,6 +24,7 @@ return [
     'LDAP' => 'Доменная',
     'Local' => 'Локальная',
     'Unknown' => 'Неизвестная',
+    'PHP Version' => 'Версия PHP',
     'Yii Version' => 'Версия Yii',
     'Total {total}, Free {free} ({precent}%)' => 'Всего {total}, Свободно {free} ({precent}%)',
     'Disk Space' => 'Дисковое пространство на сервере',
