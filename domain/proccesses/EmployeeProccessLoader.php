@@ -170,7 +170,7 @@ class EmployeeProccessLoader extends ProcessLoader
                             default:
                                 $this->error++;
                                 $transaction->rollBack();
-                                $this->addReportRow(self::REPORT_STATUS_ERROR, 'Не определен статус сутрудника');
+                                $this->addReportRow(self::REPORT_STATUS_ERROR, 'Не определен статус сотрудника');
                                 continue 2;
                         }
 

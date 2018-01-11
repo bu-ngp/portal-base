@@ -11,3 +11,30 @@
 .wk-system-info-button:hover {
     color: #c1c5e6;
 }
+
+.wk-system-info-table {
+    font-size: 12px;
+}
+
+.wk-system-info-table > tbody > tr > td {
+    padding: 5px 5px;
+    color: #d1caf3;
+    background-color: #473f80;
+}
+
+.wk-system-info-table > tbody > tr:nth-child(even) > td {
+    background-color: #5d5596;
+}
+
+.wk-system-info-modal .modal-content {
+    background-color: #342c66;
+    cursor: default;
+}
+
+.wk-system-info-modal .close {
+    color: white;
+}
+
+.wk-system-info-modal .modal-header {
+    cursor: pointer;
+}

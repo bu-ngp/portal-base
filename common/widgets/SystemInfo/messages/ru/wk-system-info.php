@@ -18,9 +18,16 @@
  */
 return [
     'Composer Update Date' => 'Последняя дата обновления пакетов проекта',
-    'Authentication Type' => 'Тип авторизации',
+    'Current User' => 'Текущий пользователь',
+    'Authentication Type' => 'Тип авторизации текущего пользователя',
     'Guest' => 'Гость',
     'LDAP' => 'Доменная',
     'Local' => 'Локальная',
     'Unknown' => 'Неизвестная',
+    'Yii Version' => 'Версия Yii',
+    'Total {total}, Free {free} ({precent}%)' => 'Всего {total}, Свободно {free} ({precent}%)',
+    'Disk Space' => 'Дисковое пространство на сервере',
+    'Ldap Authentication is Active' => 'LDAP авторизация',
+    'Use Only Ldap Authentication' => 'Использование авторизации только по LDAP',
+    'Import Employee is Active' => 'Автоматический импорт сотрудников',
 ];
