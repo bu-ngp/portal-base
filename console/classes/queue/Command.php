@@ -35,7 +35,7 @@ class Command extends \yii\queue\db\Command
     protected function handleMessage($id, $message, $ttr, $attempt)
     {
         // Executes child process
-        $cmd = strtr('{php} -d memory_limit={memory} {yii} {queue}/exec "{id}" "{ttr}" "{attempt}"', [
+        $cmd = strtr('{php} -d memory_limit={memory} {yii} {queue}/exec "{id}" "{ttr}" "{attempt}" "{pid}"', [
             '{php}' => PHP_BINARY,
             '{memory}' => $this->memory,
             '{yii}' => $_SERVER['SCRIPT_FILENAME'],
@@ -43,20 +43,21 @@ class Command extends \yii\queue\db\Command
             '{id}' => $id,
             '{ttr}' => $ttr,
             '{attempt}' => $attempt,
+            '{pid}' => $this->queue->getWorkerPid(),            
         ]);
 
         foreach ($this->getPassedOptions() as $name) {
-            if (in_array($name, $this->options('exec'))) {
+            if (in_array($name, $this->options('exec'), true)) {
                 $cmd .= ' --' . $name . '=' . $this->$name;
             }
         }
-        if (!in_array('color', $this->getPassedOptions())) {
+        if (!in_array('color', $this->getPassedOptions(), true)) {
             $cmd .= ' --color=' . $this->isColorEnabled();
         }
 
         $process = new Process($cmd, null, null, $message, $ttr);
         try {
-            $exitCode = $process->setTimeout($this->timeoutProcess)->run(function ($type, $buffer) {
+            $process->run(function ($type, $buffer) {
                 if ($type === Process::ERR) {
                     $this->stderr($buffer);
                 } else {
@@ -68,7 +69,6 @@ class Command extends \yii\queue\db\Command
             return $this->queue->handleError($id, $job, $ttr, $attempt, $error);
         }
 
-        return $exitCode == ExitCode::OK;
+        return $process->isSuccessful();
     }
-
 }
