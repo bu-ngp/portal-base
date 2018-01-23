@@ -104,7 +104,7 @@ class EmployeeHistoryRepository
     {
         $employee = Employee::findOne(['person_id' => $person_id]);
         if ($employee) {
-            return EmployeeHistory::find()
+            $employeeHistory = EmployeeHistory::find()
                 ->andWhere([
                     'person_id' => $employee->person_id,
                     'dolzh_id' => $employee->dolzh_id,
@@ -112,6 +112,8 @@ class EmployeeHistoryRepository
                     'employee_history_begin' => $employee->employee_begin,
                 ])
                 ->one();
+
+            return $employeeHistory ?: false;
         }
 
         return false;
