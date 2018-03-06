@@ -82,7 +82,7 @@ $this->title = Yii::t('common/person', $modelUserFormUpdate->person_fullname);
                         'gridConfig' => [
                             'crudSettings' => [
                                 'create' => 'configuration/roles/index-for-users',
-                                'delete' => 'configuration/roles/delete',
+                                'delete' => 'configuration/users/unassign-role',
                             ],
                             'gridInject' => [
                                 'mainField' => 'user_id',

@@ -36,4 +36,5 @@ return [
     'Person not found.' => 'Пользователь не найден',
     'Roles Exist' => 'Имеются роли',
     'Roles Not Exist' => 'Отсутствуют роли',
+    'Revoke Role Failed.' => 'Роль отсоеденить не удалось.',
 ];

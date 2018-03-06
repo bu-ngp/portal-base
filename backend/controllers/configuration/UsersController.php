@@ -56,7 +56,7 @@ class UsersController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['create', 'update', 'delete'],
+                        'actions' => ['create', 'update', 'delete', 'unassign-role'],
                         'roles' => [RbacHelper::USER_EDIT],
                     ],
                     [
@@ -68,11 +68,11 @@ class UsersController extends Controller
             ],
             [
                 'class' => AjaxFilter::className(),
-                'actions' => ['delete'],
+                'actions' => ['delete', 'unassign-role'],
             ],
             [
                 'class' => ContentNegotiator::className(),
-                'only' => ['delete'],
+                'only' => ['delete', 'unassign-role'],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                 ],
@@ -186,5 +186,20 @@ class UsersController extends Controller
         return $this->render('change_password', [
             'modelChangeUserPasswordForm' => $changeUserPasswordForm,
         ]);
+    }
+
+    /** отсоеденить роль у пользователя
+     * @param $mainId string ID пользователя
+     * @param $id string ID отсоеденямой роли
+     * @return AjaxResponse
+     */
+    public function actionUnassignRole($mainId, $id) {
+        try {
+            $this->service->unassignRoleByUser($mainId, $id);
+        } catch (\Exception $e) {
+            return AjaxResponse::init(AjaxResponse::ERROR, $e->getMessage());
+        }
+
+        return AjaxResponse::init(AjaxResponse::SUCCESS);
     }
 }

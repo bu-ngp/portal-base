@@ -22,6 +22,7 @@ use domain\repositories\base\AuthAssignmentRepository;
 use domain\repositories\base\ParttimeRepository;
 use domain\repositories\base\PersonRepository;
 use domain\repositories\base\ProfileRepository;
+use domain\repositories\base\RoleRepository;
 use domain\services\TransactionManager;
 use domain\services\Service;
 use wartron\yii2uuid\helpers\Uuid;
@@ -31,6 +32,7 @@ class PersonService extends Service
 {
     private $transactionManager;
     private $persons;
+    private $roles;
     private $profiles;
     private $authAssignments;
     private $parttimes;
@@ -38,6 +40,7 @@ class PersonService extends Service
     public function __construct(
         TransactionManager $transactionManager,
         PersonRepository $persons,
+        RoleRepository $roles,
         ProfileRepository $profiles,
         AuthAssignmentRepository $authAssignments,
         ParttimeRepository $parttimes
@@ -45,6 +48,7 @@ class PersonService extends Service
     {
         $this->transactionManager = $transactionManager;
         $this->persons = $persons;
+        $this->roles = $roles;
         $this->profiles = $profiles;
         $this->authAssignments = $authAssignments;
         $this->parttimes = $parttimes;
@@ -159,6 +163,15 @@ class PersonService extends Service
         }
 
         $this->persons->save($person);
+    }
+
+    public function unassignRoleByUser($person_id, $role_id)
+    {
+        $uuid = Uuid::str2uuid($person_id);
+        $person = $this->persons->find($uuid);
+        $role = $this->roles->find($role_id);
+
+        $this->persons->unassignRole($person, $role);
     }
 
     public function guardPasswordLength(UserForm $userForm)

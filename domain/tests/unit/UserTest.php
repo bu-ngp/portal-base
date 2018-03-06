@@ -7,9 +7,11 @@ use domain\forms\base\ChangeUserPasswordForm;
 use domain\forms\base\ProfileForm;
 use domain\forms\base\UserForm;
 use domain\forms\base\UserFormUpdate;
+use domain\models\base\AuthAssignment;
 use domain\models\base\Person;
 use domain\models\base\Profile;
 use domain\services\base\PersonService;
+use domain\tests\fixtures\AuthAssignmentFixture;
 use domain\tests\fixtures\PersonFixture;
 use domain\tests\fixtures\ProfileFixture;
 use wartron\yii2uuid\helpers\Uuid;
@@ -420,5 +422,22 @@ class UserTest extends DbTestCase
         $service->changePassword($person->primaryKey, $changeUserPasswordForm);
 
         $this->assertTrue(Yii::$app->security->validatePassword('222222', $this->tester->grabFromDatabase('person', 'person_password_hash', ['person_code' => 2])));
+    }
+
+    public function testUnassignRole()
+    {
+        /** @var PersonService $service */
+        $service = Yii::createObject('domain\services\base\PersonService');
+        $this->tester->haveFixtures([
+            'auth-assignment' => [
+                'class' => AuthAssignmentFixture::className(),
+            ],
+        ]);
+        /** @var AuthAssignment $authAssignment */
+        $authAssignment = $this->tester->grabFixture('auth-assignment', 'user1Assignment');
+
+        $this->tester->canSeeInDatabase('auth_assignment', ['item_name' => 'Administrator']);
+        $service->unassignRoleByUser(\wartron\yii2uuid\helpers\Uuid::uuid2str($authAssignment->user_id), $authAssignment->item_name);
+        $this->tester->cantSeeInDatabase('auth_assignment', ['item_name' => 'Administrator']);
     }
 }

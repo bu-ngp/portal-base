@@ -21,7 +21,7 @@
     "yiisoft/yii2-swiftmailer": "~2.0.0",
     "skeeks/yii2-assets-auto-compress": "*",
     "phpoffice/phpexcel": "~1.8.0",
-    "npm-asset/propellerkit": "^1.1",
+    "npm-asset/propellerkit": "1.1.*",
     "npm-asset/masonry-layout": "*",
     "npm-asset/imagesloaded": "*",
     "npm-asset/jquery-sortable": "*",

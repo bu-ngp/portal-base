@@ -8,6 +8,7 @@
 
 namespace domain\repositories\base;
 
+use domain\models\base\AuthItem;
 use domain\models\base\Person;
 use Yii;
 use yii\db\ActiveRecord;
@@ -69,5 +70,16 @@ class PersonRepository
         if (!$person->delete()) {
             throw new \DomainException(Yii::t('domain/base', 'Deleting error.'));
         }
+    }
+
+    public function unassignRole(Person $person, AuthItem $role)
+    {
+        if (!($role = Yii::$app->authManager->getRole($role->name))) {
+            throw new \DomainException('Role not exists.');
+        }
+
+       if (!Yii::$app->authManager->revoke($role, $person->primaryKey)) {
+           throw new \DomainException(Yii::t('domain/person', 'Revoke Role Failed.'));
+       }
     }
 }
