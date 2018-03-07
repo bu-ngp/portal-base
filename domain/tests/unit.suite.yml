@@ -13,7 +13,7 @@ modules:
             entryScript: index-test.php
             cleanup: false
         - Db:
-            dsn: 'mysql:host=127.0.0.1;dbname=wkportal_test'
+            dsn: 'mysql:host=127.0.0.1;dbname=wkportal_test;charset=utf8'
             user: 'root'
             password: '265463'
             cleanup: true
