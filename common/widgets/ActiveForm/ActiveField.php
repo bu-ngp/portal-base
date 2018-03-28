@@ -21,12 +21,39 @@ use yii\validators\StringValidator;
 use yii\web\JsExpression;
 use yii\widgets\MaskedInput;
 
+/**
+ * Класс полей `ActiveForm` на базе класса [\yii\bootstrap\ActiveField](https://www.yiiframework.com/doc-2.0/yii-bootstrap-activefield.html)
+ */
 class ActiveField extends \yii\bootstrap\ActiveField
 {
+    /** @var string Шаблон поля CheckBox */
     public $checkboxTemplate = "<div class=\"checkbox pmd-default-theme\">\n{beginLabel}\n{input}\n{labelTitle}\n{endLabel}\n{error}\n{hint}\n</div>";
+    /** @var string Шаблон поля RadioList */
     public $inlineRadioListTemplate = "{label}\n{beginWrapper}\n{input}\n{error}\n{endWrapper}\n{hint}";
 
-
+    /**
+     * Метод добавления элемента CheckBox.
+     * Выполнен на базе [\yii\bootstrap\ActiveField::checkbox()](https://www.yiiframework.com/doc-2.0/yii-bootstrap-activefield.html#checkbox()-detail)
+     * Дополнительные опции:
+     *
+     * Ключ массива | Тип значения | Описание
+     * ------------ | ------------ | ------------
+     * `wkkeep`     | bool         | Сохранять состояние элемента при обновлении страницы
+     *
+     * ```php
+     *     <?php $form = ActiveForm::begin(); ?>
+     *
+     *     <?= $form->field($modelForm, 'post_active')->checkbox([
+     *              'wkkeep' => true,
+     *          ]) ?>
+     *
+     *     <?php ActiveForm::end(); ?>
+     * ```
+     *
+     * @param array $options
+     * @param bool $enclosedByLabel
+     * @return \yii\bootstrap\ActiveField
+     */
     public function checkbox($options = [], $enclosedByLabel = true)
     {
         $model = $this->model;
@@ -42,6 +69,30 @@ class ActiveField extends \yii\bootstrap\ActiveField
         return parent::checkbox($options, $enclosedByLabel);
     }
 
+    /**
+     * Метод добавления элемента ToggleSwitch.
+     * Выполнен на базе [\yii\bootstrap\ActiveField::checkbox()](https://www.yiiframework.com/doc-2.0/yii-bootstrap-activefield.html#checkbox()-detail)
+     *
+     * Дополнительные опции:
+     *
+     * Ключ массива | Тип значения | Описание
+     * ------------ | ------------ | ------------
+     * `wkkeep`     | bool         | Сохранять состояние элемента при обновлении страницы
+     *
+     * ```php
+     *     <?php $form = ActiveForm::begin(); ?>
+     *
+     *     <?= $form->field($modelForm, 'post_active')->toggleSwitch([
+     *              'wkkeep' => true,
+     *          ]) ?>
+     *
+     *     <?php ActiveForm::end(); ?>
+     * ```
+     *
+     * @param array $options
+     * @param bool $enclosedByLabel
+     * @return \yii\bootstrap\ActiveField
+     */
     public function toggleSwitch($options = [], $enclosedByLabel = true)
     {
         $model = $this->model;
@@ -57,6 +108,33 @@ class ActiveField extends \yii\bootstrap\ActiveField
         return parent::checkbox($options, $enclosedByLabel);
     }
 
+    /**
+     * Метод добавления элемента TextInput.
+     * Выполнен на базе [\yii\widgets\ActiveField::textInput()](https://www.yiiframework.com/doc/api/2.0/yii-widgets-activefield#textInput()-detail)
+     *
+     * Дополнительные опции:
+     *
+     * Ключ массива | Тип значения | Описание
+     * ------------ | ------------ | ------------
+     * `wkkeep`     | bool         | Сохранять состояние элемента при обновлении страницы
+     * `wkicon`     | string       | Класс иконки `FontAwesome`, которая отобразится слева от элемента
+     * `noFloat`    | bool         | Отключить плавающую подпись элемента TextInput, по умолчанию `false`
+     *
+     * ```php
+     *     <?php $form = ActiveForm::begin(); ?>
+     *
+     *     <?= $form->field($modelForm, 'post_name')->textInput([
+     *              'wkkeep' => true,
+     *              'wkicon' => FA::_SQUARE,
+     *              'noFloat' => true,
+     *          ]) ?>
+     *
+     *     <?php ActiveForm::end(); ?>
+     * ```
+     *
+     * @param array $options
+     * @return \yii\bootstrap\ActiveField
+     */
     public function textInput($options = [])
     {
         $this->initWKIcon($options);
@@ -69,6 +147,31 @@ class ActiveField extends \yii\bootstrap\ActiveField
         return parent::textInput($options);
     }
 
+    /**
+     * Метод добавления элемента PasswordInput.
+     * Выполнен на базе [\yii\widgets\ActiveField::passwordInput()](https://www.yiiframework.com/doc/api/2.0/yii-widgets-activefield#passwordInput()-detail)
+     *
+     * Дополнительные опции:
+     *
+     * Ключ массива | Тип значения | Описание
+     * ------------ | ------------ | ------------
+     * `wkicon`     | string       | Класс иконки `FontAwesome`, которая отобразится слева от элемента
+     * `noFloat`    | bool         | Отключить плавающую подпись элемента TextInput, по умолчанию `false`
+     *
+     * ```php
+     *     <?php $form = ActiveForm::begin(); ?>
+     *
+     *     <?= $form->field($modelForm, 'user_password')->passwordInput([
+     *              'wkicon' => FA::_LOCK,
+     *              'noFloat' => true,
+     *          ]) ?>
+     *
+     *     <?php ActiveForm::end(); ?>
+     * ```
+     *
+     * @param array $options
+     * @return \yii\bootstrap\ActiveField
+     */
     public function passwordInput($options = [])
     {
         $this->initWKIcon($options);
@@ -81,6 +184,38 @@ class ActiveField extends \yii\bootstrap\ActiveField
         return parent::passwordInput($options);
     }
 
+    /**
+     * Метод добавления элемента radioList.
+     * Выполнен на базе [\yii\bootstrap\ActiveField::radioList()](https://www.yiiframework.com/doc-2.0/yii-bootstrap-activefield.html#radioList()-detail)
+     *
+     * Дополнительные опции:
+     *
+     * Ключ массива | Тип значения | Описание
+     * ------------ | ------------ | ------------
+     * `wkkeep`     | bool         | Сохранять состояние элемента при обновлении страницы
+     * `titles`     | array        | Список наименований для ключей значений radioList (например, если значения иконки)
+     *
+     * ```php
+     *     <?php $form = ActiveForm::begin(); ?>
+     *
+     *     <?= $form->field($modelForm, 'user_sex')->radioList([
+     *               1 => '<i class="fa fa-2x fa-male"></i>',
+     *               2 => '<i class="fa fa-2x fa-female"></i>',
+     *          ], [
+     *              'wkkeep' => true,
+     *              'titles' => [
+     *                  1 => 'Мужской',
+     *                  2 => 'Женский',
+     *              ],
+     *          ]) ?>
+     *
+     *     <?php ActiveForm::end(); ?>
+     * ```
+     *
+     * @param array $items
+     * @param array $options
+     * @return \yii\bootstrap\ActiveField
+     */
     public function radioList($items, $options = [])
     {
         $options['itemOptions'] = [
@@ -112,6 +247,32 @@ class ActiveField extends \yii\bootstrap\ActiveField
         return $this;
     }
 
+    /**
+     * Метод добавления элемента Datetime, для выбора значения даты.
+     * Выполнен на базе [\yii\widgets\ActiveField::textInput()](https://www.yiiframework.com/doc/api/2.0/yii-widgets-activefield#textInput()-detail) с использованием jquery плагина `bootstrap-datetimepicker.js`
+     * Метод проверяет атрибут на существование валидатора [\yii\validators\DateValidator](https://www.yiiframework.com/doc/api/2.0/yii-validators-datevalidator). Если имеется, то дата преобразуется в русский формат.
+     *
+     * Дополнительные опции:
+     *
+     * Ключ массива | Тип значения | Описание
+     * ------------ | ------------ | ------------
+     * `wkkeep`     | bool         | Сохранять состояние элемента при обновлении страницы
+     * `wkicon`     | string       | Класс иконки `FontAwesome`, которая отобразится слева от элемента
+     *
+     * ```php
+     *     <?php $form = ActiveForm::begin(); ?>
+     *
+     *     <?= $form->field($modelForm, 'post_date')->datetime([
+     *              'wkkeep' => true,
+     *              'wkicon' => FA::_CALENDAR_TIMES_O,
+     *          ]) ?>
+     *
+     *     <?php ActiveForm::end(); ?>
+     * ```
+     *
+     * @param array $options
+     * @return \yii\bootstrap\ActiveField
+     */
     public function datetime($options = [])
     {
         $idInput = strtolower($this->model->formName()) . '-' . $this->attribute;
@@ -152,6 +313,32 @@ class ActiveField extends \yii\bootstrap\ActiveField
         return $this->textInput($options);
     }
 
+    /**
+     * Метод добавления элемента maskedInput, для ввода значения в текстовое поле по маске.
+     * Выполнен на базе [\yii\widgets\MaskedInput](https://www.yiiframework.com/doc/api/2.0/yii-widgets-maskedinput)
+     *
+     * Дополнительные опции:
+     *
+     * Ключ массива | Тип значения | Описание
+     * ------------ | ------------ | ------------
+     * `wkkeep`     | bool         | Сохранять состояние элемента при обновлении страницы
+     * `wkicon`     | string       | Класс иконки `FontAwesome`, которая отобразится слева от элемента
+     *
+     * ```php
+     *     <?php $form = ActiveForm::begin(); ?>
+     *
+     *     <?= $form->field($modelForm, 'user_phone')->maskedInput([
+     *              'mask' => '8-(9999)-99-99-99',
+     *              'wkkeep' => true,
+     *              'wkicon' => FA::_PHONE,
+     *          ]) ?>
+     *
+     *     <?php ActiveForm::end(); ?>
+     * ```
+     *
+     * @param array $options
+     * @return \yii\bootstrap\ActiveField
+     */
     public function maskedInput($options = [])
     {
         $this->initWKIcon($options);
@@ -172,6 +359,31 @@ class ActiveField extends \yii\bootstrap\ActiveField
         return $this->widget(MaskedInput::className(), $options);
     }
 
+    /**
+     * Метод добавления элемента snilsInput, для ввода значения СНИЛСа в текстовое поле.
+     * Выполнен на базе [\yii\widgets\MaskedInput](https://www.yiiframework.com/doc/api/2.0/yii-widgets-maskedinput)
+     *
+     * Дополнительные опции:
+     *
+     * Ключ массива | Тип значения | Описание
+     * ------------ | ------------ | ------------
+     * `wkkeep`     | bool         | Сохранять состояние элемента при обновлении страницы
+     * `wkicon`     | string       | Класс иконки `FontAwesome`, которая отобразится слева от элемента
+     *
+     * ```php
+     *     <?php $form = ActiveForm::begin(); ?>
+     *
+     *     <?= $form->field($modelForm, 'user_snils')->snilsInput([
+     *              'wkkeep' => true,
+     *              'wkicon' => FA::_COPYRIGHT,
+     *          ]) ?>
+     *
+     *     <?php ActiveForm::end(); ?>
+     * ```
+     *
+     * @param array $options
+     * @return \yii\bootstrap\ActiveField
+     */
     public function snilsInput($options = [])
     {
         $options['mask'] = '999-999-999 99';
@@ -179,6 +391,34 @@ class ActiveField extends \yii\bootstrap\ActiveField
         return $this->maskedInput($options);
     }
 
+
+    /**
+     * Метод добавления элемента select2, для выбора из списка, с помощью jquery плагина `Select2`.
+     * Выполнен на базе [[\common\widgets\Select2\Select2]]
+     *
+     * Дополнительные опции:
+     *
+     * Ключ массива | Тип значения | Описание
+     * ------------ | ------------ | ------------
+     * `wkkeep`     | bool         | Сохранять состояние элемента при обновлении страницы
+     * `wkicon`     | string       | Класс иконки `FontAwesome`, которая отобразится слева от элемента
+     *
+     * ```php
+     *     <?php $form = ActiveForm::begin(); ?>
+     *
+     *     <?= $form->field($modelForm, 'user_id')->select2([
+     *              'activeRecordClass' => User::className(),
+     *              'queryCallback' => UserQuery::select(),
+     *              'wkkeep' => true,
+     *              'wkicon' => FA::_USER,
+     *         ]); ?>
+     *
+     *     <?php ActiveForm::end(); ?>
+     * ```
+     *
+     * @param array $options
+     * @return \yii\bootstrap\ActiveField
+     */
     public function select2($options = [])
     {
         $this->options['class'] = isset($this->options['class']) ? $this->options['class'] . ' pmd-textfield-select2 pmd-textfield-select2-floating-label' : 'form-group pmd-textfield-select2 pmd-textfield-select2-floating-label';
@@ -191,6 +431,34 @@ class ActiveField extends \yii\bootstrap\ActiveField
         return $this->widget(Select2::className(), $options);
     }
 
+
+    /**
+     * Метод добавления элемента Textarea, для ввода текста.
+     * Выполнен на базе [\yii\widgets\ActiveField](https://www.yiiframework.com/doc/api/2.0/yii-widgets-activefield#textarea()-detail).
+     *
+     * Проверяет на наличие валидотора [\yii\validators\StringValidator](https://www.yiiframework.com/doc/api/2.0/yii-validators-stringvalidator) атрибута модели, и отображает снизу количество оставшихся символов, в случае заданного свойства `max` у валидатора.
+     *
+     * Дополнительные опции:
+     *
+     * Ключ массива | Тип значения | Описание
+     * ------------ | ------------ | ------------
+     * `wkkeep`     | bool         | Сохранять состояние элемента при обновлении страницы
+     * `wkicon`     | string       | Класс иконки `FontAwesome`, которая отобразится слева от элемента
+     *
+     * ```php
+     *     <?php $form = ActiveForm::begin(); ?>
+     *
+     *     <?= $form->field($modelForm, 'user_description')->textarea([
+     *              'wkkeep' => true,
+     *              'wkicon' => FA::_USER,
+     *          ]) ?>
+     *
+     *     <?php ActiveForm::end(); ?>
+     * ```
+     *
+     * @param array $options
+     * @return \yii\bootstrap\ActiveField
+     */
     public function textarea($options = [])
     {
         $this->initWKIcon($options);

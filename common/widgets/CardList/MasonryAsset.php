@@ -6,21 +6,24 @@
  * Time: 20:00
  */
 
-namespace common\widgets\CardList\assets;
-
+namespace common\widgets\CardList;
 
 use yii\web\AssetBundle;
 
-class MasonryAssets extends AssetBundle
+/**
+ * Пакет jquery плагина masonry для [[CardList]]
+ */
+class MasonryAsset extends AssetBundle
 {
+    /**
+     * @var string
+     */
     public $sourcePath = '@npm';
-    public $css = [
-
-    ];
+    /**
+     * @var array
+     */
     public $js = [
         'masonry-layout/dist/masonry.pkgd.min.js',
         'imagesloaded/imagesloaded.pkgd.min.js',
-    ];
-    public $depends = [
     ];
 }
