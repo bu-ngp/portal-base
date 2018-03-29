@@ -16,11 +16,11 @@ use yii\web\AssetBundle;
 class MasonryAsset extends AssetBundle
 {
     /**
-     * @var string
+     * @var string Источник ресурсов
      */
     public $sourcePath = '@npm';
     /**
-     * @var array
+     * @var array Набор js скриптов
      */
     public $js = [
         'masonry-layout/dist/masonry.pkgd.min.js',

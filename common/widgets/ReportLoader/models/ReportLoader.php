@@ -9,7 +9,7 @@ use yii\db\ActiveRecord;
 use yii\db\Expression;
 
 /**
- * This is the model class for table "{{%report_loader}}".
+ * Класс модели для таблицы БД "{{%report_loader}}".
  *
  * @property string $rl_id
  * @property string $rl_process_id
@@ -24,8 +24,17 @@ use yii\db\Expression;
  */
 class ReportLoader extends \yii\db\ActiveRecord
 {
+    /** Обработка отчета в процессе */
+    const PROGRESS = 1;
+    /** Обработка отчета выполнена */
+    const COMPLETE = 2;
+    /** Обработка отчета отменена пользователем */
+    const CANCEL = 3;
+
     /**
-     * @inheritdoc
+     * Возвращает имя таблицы в БД
+     *
+     * @return string
      */
     public static function tableName()
     {
@@ -33,7 +42,9 @@ class ReportLoader extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * Возвращает правила фильтрации и валидации атрибутов модели.
+     *
+     * @return array
      */
     public function rules()
     {
@@ -48,6 +59,30 @@ class ReportLoader extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * Возвращает набор поведений подключенных к модели.
+     *
+     * ```php
+     *     return [
+     *             [
+     *                 'class' => TimestampBehavior::className(),
+     *                 'createdAtAttribute' => 'rl_start',
+     *                 'updatedAtAttribute' => false,
+     *                 'value' => new Expression('NOW()'),
+     *             ],
+     *             [
+     *                 'class' => BlameableBehavior::className(),
+     *                 'createdByAttribute' => 'rl_process_id',
+     *                 'updatedByAttribute' => false,
+     *                 'attributes' => [
+     *                     ActiveRecord::EVENT_BEFORE_VALIDATE => ['rl_process_id'],
+     *                 ],
+     *             ],
+     *         ];
+     * ```
+     *
+     * @return array
+     */
     public function behaviors()
     {
         return [
@@ -62,12 +97,17 @@ class ReportLoader extends \yii\db\ActiveRecord
                 'createdByAttribute' => 'rl_process_id',
                 'updatedByAttribute' => false,
                 'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_VALIDATE => ['rl_process_id']
+                    ActiveRecord::EVENT_BEFORE_VALIDATE => ['rl_process_id'],
                 ],
             ],
         ];
     }
 
+    /**
+     * Возвращает расширение файла в зависимости от типа отчета.
+     *
+     * @return bool|string
+     */
     public function getExtension()
     {
         switch ($this->rl_report_type) {

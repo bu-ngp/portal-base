@@ -1,19 +1,25 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: sysadmin
+ * Date: 09.10.2017
+ * Time: 13:54
+ */
 
-namespace common\widgets\Breadcrumbs;
+namespace common\widgets\Select2;
 
 use yii\web\AssetBundle;
 
 /**
- * Пакет стилей и скриптов для виджета [[Breadcrumbs]]
+ * Пакет стилей и скриптов для виджета [[Select2]]
  */
-class BreadcrumbsAsset extends AssetBundle
+class Select2Asset extends AssetBundle
 {
     /**
      * @var array Набор js скриптов
      */
     public $js = [
-        'js/wkbreadcrumbs.js',
+        'js/wkselect2.js',
     ];
     /**
      * @var array Зависимости

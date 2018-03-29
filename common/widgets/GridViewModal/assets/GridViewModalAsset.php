@@ -20,7 +20,7 @@ class GridViewModalAsset extends AssetBundle
         ];
 
         $this->depends = [
-            'common\widgets\GridView\assets\GridViewAsset',
+            'common\widgets\GridView\GridViewAsset',
             'common\widgets\GridSelected2TextInput\GridSelected2TextInputAsset',
         ];
 

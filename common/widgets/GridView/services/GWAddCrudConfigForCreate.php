@@ -8,12 +8,37 @@
 
 namespace common\widgets\GridView\services;
 
-
+/**
+ * Класс конфигурации добавления новой записи в грид при создании новой записи.
+ *
+ * Класс используется в классе [[ActionButtonCreate]], в случае обработки кнопки `CRUD` с ключем `create`.
+ *
+ * ```php
+ *      <?= GridView::widget([
+ *          ...
+ *          'crudSettings' => [
+ *              ...
+ *              'create' => [
+ *                  'urlGrid' => 'build/index',
+ *                  'inputName' => 'ModelForm[assignBuilds]',
+ *              ],
+ *              ...
+ *          ],
+ *          ...
+ *      ]) ?>
+ * ```
+ */
 class GWAddCrudConfigForCreate
 {
     protected $urlGrid;
     protected $inputName;
 
+    /**
+     * Конструктор класса
+     *
+     * @param array $config Концигурация Yii2
+     * @throws \Exception
+     */
     public function __construct($config = [])
     {
         if (!is_string($config['urlGrid']) && !is_array($config['urlGrid'])) {
@@ -37,6 +62,8 @@ class GWAddCrudConfigForCreate
     }
 
     /**
+     * Возвращает ссылку на грид, с которого добавляется запись.
+     *
      * @return array|string
      */
     public function getUrlGrid()
@@ -45,6 +72,8 @@ class GWAddCrudConfigForCreate
     }
 
     /**
+     * Возвращает имя атрибута `name` HTML `input` элемента, хранящего первичные ключи выбранных записей.
+     *
      * @return string
      */
     public function getInputName()

@@ -8,7 +8,6 @@
 
 namespace common\widgets\GridView\services;
 
-
 use common\widgets\GridView\GridView;
 use common\widgets\ReportLoader\ReportByModel;
 use kartik\grid\DataColumn;
@@ -17,6 +16,23 @@ use yii\base\Model;
 use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
 
+/**
+ * Класс формирует контент для экспорта данных грида в `Excel` или `PDF`. Также осуществляет сам экспорт.
+ *
+ * Экспорт данных грида использует Обработчник отчетов [[\common\widgets\ReportLoader\ReportLoader]].
+ *
+ * ```php
+ *     <?= GridView::widget([
+ *         ...
+ *         'exportGrid' => [
+ *             'enable' => true,
+ *             'format' => [GridView::EXCEL, GridView::PDF],
+ *             'idReportLoader' => 'wk-report-loader',
+ *         ],
+ *         ...
+ *     ]) ?>
+ * ```
+ */
 class GWExportGrid
 {
     /** @var GridView */
@@ -24,6 +40,13 @@ class GWExportGrid
     private $formName;
     private $additionFilterString = '';
 
+    /**
+     * Метод создает экземпляр текущего класса
+     *
+     * @param GridView $gridView Грид [[\common\widgets\GridView\GridView]]
+     * @return $this
+     * @throws \Exception
+     */
     public static function lets(GridView $gridView)
     {
         if (!($gridView->exportGrid instanceof GWExportGridConfiguration)) {
@@ -45,12 +68,23 @@ class GWExportGrid
         return new self($gridView);
     }
 
+    /**
+     * Конструктор класса.
+     *
+     * @param GridView $gridView Грид [[\common\widgets\GridView\GridView]]
+     */
     public function __construct(GridView $gridView)
     {
         $this->gridView = $gridView;
         $this->formName = $gridView->filterModel->formName();
     }
 
+    /**
+     * Подготовка конфигурации и контента для экспорта грида.
+     *
+     * @param string $additionFilterString Строка дополнительного фильтра, которая добавляется ниже заголовка отчета.
+     * @return $this
+     */
     public function prepareConfig($additionFilterString = '')
     {
         $this->prepareJS();
@@ -60,6 +94,9 @@ class GWExportGrid
         return $this;
     }
 
+    /**
+     * Метод экспорта грида
+     */
     public function export()
     {
         if (Yii::$app->request->isAjax && Yii::$app->request->post('_report', false)) {

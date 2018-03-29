@@ -17,6 +17,9 @@ use yii\bootstrap\Html;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Url;
 
+/**
+ * Класс кнопки грида "Создать" запись
+ */
 class ActionButtonCreate
 {
     protected $createButton;
@@ -24,6 +27,15 @@ class ActionButtonCreate
     protected $key;
     protected $crudProp;
 
+    /**
+     * Создать экземпляр класса
+     *
+     * @param string $createButton Контент с кнопкой "Создать"
+     * @param GridView $grid Грид [[\common\widgets\GridView\GridView]]
+     * @param string $key Ключ конфигурационного массива `CRUD`
+     * @param array $crudProp Значение конфигурационного массива `CRUD` с ключом $key
+     * @return bool|$this
+     */
     static public function init(&$createButton, GridView $grid, $key, $crudProp)
     {
         if ($key !== 'create') {

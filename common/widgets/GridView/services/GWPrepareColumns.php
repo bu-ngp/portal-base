@@ -8,30 +8,46 @@
 
 namespace common\widgets\GridView\services;
 
-
 use common\widgets\GridView\GridView;
 use domain\services\SearchModel;
 use yii\bootstrap\Html;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 
+/**
+ * Класс подготавливает конфигурационный массив колонок для [[\common\widgets\GridView\GridView]].
+ */
 class GWPrepareColumns
 {
     /** @var GridView */
     private $gridView;
     private $columns;
 
+    /**
+     * Метод создает экземпляр текущего класса
+     *
+     * @param GridView $gridView Грид [[\common\widgets\GridView\GridView]]
+     * @return $this
+     */
     public static function lets($gridView)
     {
         return new self($gridView);
     }
 
+    /**
+     * Конструктор класса.
+     *
+     * @param $gridView
+     */
     public function __construct($gridView)
     {
         $this->gridView = $gridView;
         $this->columns = [];
     }
 
+    /**
+     * Метод преобразования и подготовки конфигурационного массива колонок для дальнейшего использования в [[\common\widgets\GridView\GridView]].
+     */
     public function prepare()
     {
         $this->columns = [];

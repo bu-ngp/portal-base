@@ -8,33 +8,59 @@
 
 namespace common\widgets\GridView\services;
 
-
 use common\widgets\GridView\GridView;
-use domain\services\SearchModel;
 use Yii;
 use yii\base\Model;
 use yii\bootstrap\Html;
 use yii\db\ActiveQuery;
-use yii\db\ActiveRecord;
 use yii\grid\Column;
 use yii\grid\DataColumn;
 use yii\helpers\ArrayHelper;
 
+/**
+ * Класс формирующий диалог настройки грида.
+ *
+ * Создает модальное окно с возможностью изменения видимости и порядка колонок, вывод определенного количества записей на странице грида.
+ *
+ * ```php
+ *      <?= GridView::widget([
+ *          ...
+ *          'customizeDialog' => true,
+ *          ...
+ *      ]) ?>
+ * ```
+ */
 class GWCustomizeDialog
 {
     /** @var GridView */
     private $gridView;
 
+    /**
+     * Метод создает экземпляр текущего класса
+     *
+     * @param GridView $gridView Грид [[\common\widgets\GridView\GridView]]
+     * @return $this
+     */
     public static function lets($gridView)
     {
         return new self($gridView);
     }
 
+    /**
+     * Конструктор класса.
+     *
+     * @param $gridView
+     */
     public function __construct($gridView)
     {
         $this->gridView = $gridView;
     }
 
+    /**
+     * Метод подготавливает конфигурацию для создания контента диалога настройки грида.
+     *
+     * @return $this
+     */
     public function prepareConfig()
     {
         $this->prepareJS();
@@ -44,6 +70,9 @@ class GWCustomizeDialog
         return $this;
     }
 
+    /**
+     * Метод формирует контент для диалогового окна настроек грида.
+     */
     public function makeColumnsContent()
     {
         $visible = '';

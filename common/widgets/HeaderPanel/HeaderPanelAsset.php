@@ -17,13 +17,13 @@ use yii\web\AssetBundle;
 class HeaderPanelAsset extends AssetBundle
 {
     /**
-     * @var array
+     * @var array Набор css стилей
      */
     public $css = [
         'css/HeaderPanel.css',
     ];
     /**
-     * @var array
+     * @var array Зависимости
      */
     public $depends = [
         'yii\web\YiiAsset',

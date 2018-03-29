@@ -8,10 +8,8 @@
 
 namespace common\widgets\Select2;
 
-
 use domain\helpers\BinaryHelper;
 use common\widgets\PropellerAssets\PropellerAsset;
-use common\widgets\Select2\assets\Select2Asset;
 use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\db\ActiveQuery;
@@ -20,52 +18,123 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\JsExpression;
 
+/**
+ * Виджет выбора значений из списка с использованием jquery плагина `Select2`.
+ *
+ * Содержит следующие возможности:
+ * * Имеет возможность искать результаты, используя ajax запрос на страницу виджета;
+ * * Включение ajax поиска при превышении минимального количества значений в списке, заданных в конфигурации;
+ * * Возможность выбрать значение из грида [[\common\widgets\GridView\GridView]];
+ * * Мультивыбор значений;
+ * * Хранение значения, даже при обновлении страницы, при использовании виджета [[\common\widgets\Breadcrumbs\Breadcrumbs]];
+ * * Вывод нескольких полей запроса в результат поиска, перечисленных через запятую.
+ *
+ * ```php
+ * <?= $form->field($modelForm, 'build_id')->select2([
+ *     'activeRecordClass' => Build::className(),
+ *     'queryCallback' => function (ActiveQuery $query) {
+ *         return $query->select(['build_id', 'build_name']);
+ *     },
+ *     'ajaxConfig' => [
+ *         'enabled' => true,
+ *         'searchAjaxCallback' => function (ActiveQuery $query, $searchString) {
+ *             $query->andWhere(['like', 'build_name', $searchString]);
+ *         },
+ *         'minRecordsCountForUseAjax' => 50,
+ *     ],
+ *     'wkkeep' => true,
+ *     'wkicon' => 'home',
+ *     'selectionGridUrl' => ['build/index'],
+ *     'multiple' => true,
+ * ]); ?>
+ * ```
+ */
 class Select2 extends \kartik\select2\Select2
 {
+    /** @var string Переопределенная тема на `Bootstrap` базового виджета `\kartik\select2\Select2`. [\kartik\select2\Select2](https://github.com/kartik-v/yii2-widget-select2/blob/master/Select2.php) */
     public $theme = self::THEME_BOOTSTRAP;
-    /** @var \Closure анонимная функция с ActiveQuery поиска результатов
+    /**
+     * @var \Closure Анонимная функция для формирования строк результатов поиска `Select2`.
      *
-     *  Используйте метод select() для выбора полей, которые будут отображаться в результатах через запятую
+     *  Используйте метод select() [\yii\db\ActiveQuery](https://www.yiiframework.com/doc/api/2.0/yii-db-activequery) для выбора полей, которые будут отображаться в результатах через запятую.
      *
+     * ```php
      *  function(ActiveQuery $query) {
      *      $query->select(['id', 'code', 'description']);
      *  }
+     * ```
      */
     public $queryCallback;
-    /** @var string Полное имя класса ActiveRecord используемое для создания ActiveQuery */
+    /** @var string Полное имя класса `\yii\db\ActiveRecord`, используемое атрибутом формы. [\yii\db\ActiveRecord](https://www.yiiframework.com/doc/api/2.0/yii-db-activerecord) */
     public $activeRecordClass;
+    /**
+     * @var string Имя атрибута класса `\yii\db\ActiveRecord`, используемой атрибутом формы.
+     * [\yii\db\ActiveRecord](https://www.yiiframework.com/doc/api/2.0/yii-db-activerecord)
+     *
+     * Заполняется в случае, если имя утрибута формы, отличается от имени атрибута [[activeRecordClass]].
+     *
+     * По умолчанию `$this->attribute`
+     */
     public $activeRecordAttribute;
-    /** @var  bool Если true, хранить выбранные значения в хлебных крошках, для восстановления при обновлении страницы, по умолчанию false */
+    /** @var bool Если `true`, хранить выбранные значения в хлебных крошках, для восстановления при обновлении страницы, по умолчанию `false` */
     public $wkkeep = false;
-    /** @var  string Имя класса иконок FontAwesome, для добавления иконки слева от select2
-     *  [
-     *      ...
-     *      'wkicon' => FA::_ADDRESS_BOOK,
-     *      ...
-     *  ]
+    /** @var string Имя класса иконок FontAwesome, для добавления иконки слева относительно виджета.
+     *
+     * ```php
+     *     <?= $form->field($modelForm, 'build_id')->select2([
+     *             'activeRecordClass' => Build::className(),
+     *             'queryCallback' => BuildQuery::select(),
+     *             'wkicon' => 'home', // css класс иконки FontAwesome "fa fa-home"
+     *     ]); ?>
+     * ```
      */
     public $wkicon;
-    /** @var bool Если true, то разрешить мультивыбор значений, по умолчанию false */
+    /** @var bool Если `true`, то разрешить мультивыбор значений, по умолчанию `false` */
     public $multiple = false;
-    /** @var  string Url грида common\widgets\GridView\GridView для выбора значений */
+    /**
+     * @var string Url страницы с гридом [[\common\widgets\GridView\GridView]].
+     * В гриде добавляется кнопка выбора значения.
+     * При выборе значения происходит переход на страницу с виджетом [[Select2]] с уже выбранным значением из грида.
+     */
     public $selectionGridUrl;
-    /** @var bool Если true, исключить первичные ключи в результатах поиска, по умолчанию true */
+    /** @var bool Если `true`, исключить первичные ключи в результатах поиска, по умолчанию `true` */
     public $exceptPrimaryKeyFromResult = true;
+    /** @var array Массив имен атрибутов, которые следует искючить из результатов поиска */
     public $exceptAttributesFromResult = [];
-    /** @var array Конфигурация ajax поиска результатов
-     * 'enabled' (bool) Включить ajax поиск результатов, по умолчанию true, если сконфигурирован Callback 'searchAjaxCallback'
-     * 'searchAjaxCallback' => (\Closure) Анонимная функция ActiveQuery для задания условия поиска
+    /**
+     * @var array Конфигурация ajax поиска результатов.
      *
-     *      function(ActiveQuery $query, $searchString) {
-     *          $query->andWhere(['like', 'description', $searchString])
-     *                ->orWhere(['like', 'code', $searchString]);
-     *      }
+     * Содержит следующие опции ключей массива:
      *
-     * 'minRecordsCountForUseAjax' => 100 (int) Лимит количества записей результатов, при превышении которого включается Ajax поиск, по умолчанию 100
-     * 'onlyAjax' => false (bool) Использовать только Ajax поиск результатов
+     * Имя ключа массива           | Тип значения | Значение по умолчанию                                                   | Описание
+     * --------------------------- | ------------ | ----------------------------------------------------------------------- | -----------------------------------------------------------------------
+     * `enabled`                   | `bool`       | `true`, если сконфигурирована опция `searchAjaxCallback`, иначе `false` | Включить `ajax` поиск результатов
+     * `searchAjaxCallback`        | `\Closure`   | `null`                                                                  | Анонимная функция для задания условия поиска. Содержит следующие параметры: <br> `$query` - Класс [\yii\db\ActiveQuery](https://www.yiiframework.com/doc/api/2.0/yii-db-activequery), используемый для поиска результатов. <br> `$searchString` - Строка поиска, введенная пользователем.
+     * `minRecordsCountForUseAjax` | `int`        | `100`                                                                   | Лимит количества записей результатов, при превышении которого включается Ajax поиск
+     * `onlyAjax`                  | `bool`       | `false`                                                                 | Использовать только Ajax поиск результатов. В случае `true`, опция `minRecordsCountForUseAjax` игнорируется.
+     *
+     * **Пример:**
+     *
+     * ```php
+     * <?= $form->field($modelForm, 'build_id')->select2([
+     *     'activeRecordClass' => Build::className(),
+     *     'queryCallback' => BuildQuery::select(),
+     *     'ajaxConfig' => [
+     *         'enabled' => true,
+     *         'searchAjaxCallback' => function(ActiveQuery $query, $searchString) {
+     *             $query->andWhere(['like', 'build_name', $searchString])
+     *                 ->orWhere(['like', 'build_description', $searchString]);
+     *         },
+     *         'onlyAjax' => true,
+     *     ],
+     * ]); ?>
+     * ```
      */
     public $ajaxConfig;
 
+    /**
+     * Инициализация виджета.
+     */
     public function init()
     {
         $this->initConfig();
@@ -75,6 +144,9 @@ class Select2 extends \kartik\select2\Select2
         parent::init();
     }
 
+    /**
+     * Выполнение виджета
+     */
     public function run()
     {
         $this->options['placeholder'] = ArrayHelper::getValue($this->options, 'placeholder', '');

@@ -8,10 +8,8 @@
 
 namespace common\widgets\ReportLoader;
 
-
 use Knp\Snappy\Pdf;
 use PHPExcel;
-use PHPExcel_Style_Alignment;
 use PHPExcel_Worksheet_PageMargins;
 use PHPExcel_Worksheet_PageSetup;
 use Yii;
@@ -19,12 +17,36 @@ use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 
+/**
+ * Класс для обработки отчета по модели [\yii\db\ActiveRecord](https://www.yiiframework.com/doc/api/2.0/yii-db-activerecord).
+ *
+ * Пример использования:
+ *
+ * ```php
+ * protected function letsExport($format = 'pdf')
+ * {
+ *     $report = new ReportByModel($this->gridView->dataProvider, $format);
+ *     $report->setFilterString('foo > 12; foo < 20;');
+ *     $report->reportDisplayName = 'Файл отчета';
+ *     $report->reportid = 'FooReport';
+ *     return $report->report();
+ * }
+ * ```
+ */
 class ReportByModel
 {
+    /** Тип отчета Excel */
     const EXCEL = 'xls';
+    /** Тип отчета PDF */
     const PDF = 'pdf';
 
+    /**
+     * @var string Уникальное имя определенного вида отчетов
+     */
     public $reportid;
+    /**
+     * @var string Имя файла отчета
+     */
     public $reportDisplayName;
 
     /** @var ActiveDataProvider */
@@ -39,7 +61,7 @@ class ReportByModel
     private $filterString;
     private $columnsFromGrid;
     private $highestColumn = 0;
-    private $row = 3;
+    private $row           = 3;
 
     /** @var array Границы таблицы */
     private $borders = [
@@ -52,37 +74,51 @@ class ReportByModel
     /** @var array Жирный шрифт для шапки таблицы */
     private $fontCaption = [
         'font' => [
-            'bold' => true
+            'bold' => true,
         ],
         'alignment' => [
-            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER
-        ]
+            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+        ],
     ];
     /** @var array Шрифт заголовка отчета */
     private $title = [
         'font' => [
             'bold' => true,
-            'size' => 14
+            'size' => 14,
         ],
     ];
     /** @var array Шрифт вспомогательного заголовка отчета (Дата, фильтр) */
     private $subTitle = [
         'font' => [
-            'italic' => true
-        ]
+            'italic' => true,
+        ],
     ];
     /** @var array Шрифт данных таблицы */
     private $dataFont = [
         'font' => [
-            'size' => 8
+            'size' => 8,
         ],
     ];
 
+    /**
+     * Создать экземляр текущего класса
+     *
+     * @param ActiveDataProvider $dataProvider Провайдер данных, по которому будет формироваться отчет.
+     * @param string $type Тип отчета `PDF` или `EXCEL`.
+     * @return ReportByModel
+     */
     public static function execute(ActiveDataProvider $dataProvider, $type = ReportByModel::EXCEL)
     {
         return new self($dataProvider, $type);
     }
 
+    /**
+     * Конструктор класса обработчика отчета по модели.
+     *
+     * @param ActiveDataProvider $dataProvider Провайдер данных, по которому будет формироваться отчет.
+     * @param string $type Тип отчета `PDF` или `EXCEL`.
+     * @param array $columns Набор имен колонок, которые будут отражены в отчете. Если пусто, будут выведены все колонки.
+     */
     public function __construct(ActiveDataProvider $dataProvider, $type = ReportByModel::EXCEL, $columns = [])
     {
         $this->prepare($dataProvider, $this->convertType($type), $columns);
@@ -127,6 +163,11 @@ class ReportByModel
         throw new \Exception('convertType("' . $type . '") not access');
     }
 
+    /**
+     * Начать процесс обработки отчета.
+     *
+     * @return string ссылка на скачивание отчета.
+     */
     public function report()
     {
         $this->loader = ReportProcess::start($this->reportid, $this->reportDisplayName, $this->type);
@@ -186,7 +227,8 @@ class ReportByModel
     {
         switch (DIRECTORY_SEPARATOR) {
             case '/':
-                return '/usr/local/bin/wkhtmltopdf-amd64'/*Yii::getAlias('@vendor') . '/bin/wkhtmltopdf-amd64'*/;
+                return '/usr/local/bin/wkhtmltopdf-amd64'/*Yii::getAlias('@vendor') . '/bin/wkhtmltopdf-amd64'*/
+                    ;
             case '\\':
                 return Yii::getAlias('@vendor') . '/bin/wkhtmltopdf.exe.bat';
         }
@@ -228,6 +270,11 @@ class ReportByModel
         }
     }
 
+    /**
+     * Устанавливает строку с условиями дополнительного фильтра под заголовком отчета.
+     *
+     * @param null|string $filterString
+     */
     public function setFilterString($filterString = null)
     {
         if (is_string($filterString)) {

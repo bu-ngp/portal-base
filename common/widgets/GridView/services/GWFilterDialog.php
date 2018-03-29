@@ -8,7 +8,6 @@
 
 namespace common\widgets\GridView\services;
 
-
 use common\widgets\GridView\GridView;
 use Yii;
 use yii\base\Model;
@@ -16,6 +15,21 @@ use yii\bootstrap\Html;
 use yii\db\ActiveQuery;
 use yii\web\View;
 
+/**
+ * Класс формирует контент для дополнительного фильтра грида [[\common\widgets\GridView\GridView]].
+ *
+ * ```php
+ *     <?= GridView::widget([
+ *         ...
+ *         'filterDialog' => [
+ *             'enable' => true,
+ *             'filterModel' => $filterModel,
+ *             'filterView' => '_filter',
+ *         ],
+ *         ...
+ *     ]) ?>
+ * ```
+ */
 class GWFilterDialog
 {
     /** @var GridView */
@@ -23,6 +37,13 @@ class GWFilterDialog
     private $columns;
     private $additionalFilter = '';
 
+    /**
+     * Метод создает экземпляр текущего класса
+     *
+     * @param GridView $gridView Грид [[\common\widgets\GridView\GridView]]
+     * @return $this
+     * @throws \Exception
+     */
     public static function lets(GridView $gridView)
     {
         if (!($gridView->filterDialog instanceof GWFilterDialogConfiguration)) {
@@ -36,12 +57,22 @@ class GWFilterDialog
         return new self($gridView);
     }
 
+    /**
+     * Конструктор класса.
+     *
+     * @param GridView $gridView Грид [[\common\widgets\GridView\GridView]]
+     */
     public function __construct(GridView $gridView)
     {
         $this->gridView = $gridView;
         $this->columns = [];
     }
 
+    /**
+     * Подготовка конфигурации и контента для дополнительного фильтра грида.
+     *
+     * @return $this
+     */
     public function prepareConfig()
     {
         $this->prepareJS();
@@ -49,6 +80,11 @@ class GWFilterDialog
         return $this;
     }
 
+    /**
+     * Возвращает строку дополнительного фильтра.
+     *
+     * @return string
+     */
     public function getAdditionFilterString()
     {
         return $this->additionalFilter;
@@ -103,6 +139,11 @@ class GWFilterDialog
         return $output;
     }
 
+    /**
+     * Метод формирует контент для диалогового окна дополнительного фильтра грида.
+     *
+     * @return string
+     */
     public function makeFilter()
     {
         if (Yii::$app->request->isAjax) {

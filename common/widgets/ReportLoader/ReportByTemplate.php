@@ -11,36 +11,97 @@ namespace common\widgets\ReportLoader;
 
 use Knp\Snappy\Pdf;
 use PHPExcel;
-use PHPExcel_Settings;
 use ReflectionClass;
 use Yii;
 
+/**
+ * Абстрактный класс для формирования классов отчетов по шаблонам `Excel`.
+ *
+ * **Пример использования:**
+ *
+ * ```php
+ * // Класс отчета, наследованный от абстрактного класса ReportByTemplate
+ * class RolesReport extends ReportByTemplate
+ * {
+ *     // Имя отчета (имя файла отчета)
+ *     public $title = 'Роли';
+ *
+ *     // Тело выполнения отчета
+ *     public function body()
+ *     {
+ *         $PHPExcel = $this->PHPExcel;
+ *         $PHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 2, 'Дата: ' . date('d.m.Y'));
+ *
+ *         // Использование дополнительного параметра $this->params['view']
+ *         $roles = AuthItem::find()->andWhere(['view' => $this->params['view']])->all();
+ *
+ *         $row = 5;
+ *         // @var AuthItem $ar
+ *         foreach ($roles as $current => $ar) {
+ *             $PHPExcel->getActiveSheet()->insertNewRowBefore($row);
+ *             $PHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $ar->description);
+ *             $row++;
+ *             // Устанавливаем процент выполнения отчета для каждой 50-й записи
+ *             if ($current % 50 === 0) {
+ *                 $this->loader->set(round(95 * $current / count($roles)))
+ *             }
+ *         }
+ *     }
+ * }
+ *
+ * // Controller
+ * public function actionReport()
+ * {
+ *     return RolesReport::lets()
+ *         ->assignTemplate('rolesTemplate.xlsx')
+ *         ->params(['view' => 1])
+ *         ->type('pdf')
+ *         ->save();
+ * }
+ * ```
+ */
 abstract class ReportByTemplate
 {
+    /** Тип отчета Excel */
     const EXCEL = 'xls';
+    /** Тип отчета PDF */
     const PDF = 'pdf';
 
-    public $title = 'Report';
+    /** @var string Имя отчета (имя файла отчета) */
+    public  $title = 'Report';
     private $template;
-    private $type = 'Excel2007';
-    /** @var  PHPExcel */
+    private $type  = 'Excel2007';
+    /** @var PHPExcel объект `PHPExcel` */
     protected $PHPExcel;
-    /** @var ReportProcess */
+    /** @var ReportProcess объект [[ReportProcess]] */
     protected $loader;
+    /** @var array Дополнительные параметры отчета */
     protected $params;
 
+    /**
+     * Создать экземляр текущего класса
+     *
+     * @return static
+     */
     public static function lets()
     {
         return new static();
     }
 
-    public function __construct()
-    {
-
-    }
-
+    /**
+     * Тело процесса обработки отчета.
+     *
+     * @return mixed
+     */
     abstract public function body();
 
+    /**
+     * Подключить файл шаблон в формате `Excel`.
+     *
+     * @param string $template Имя файла шаблона.
+     * @return $this
+     * @throws \Exception
+     */
     public function assignTemplate($template)
     {
         if (!is_string($template)) {
@@ -60,6 +121,12 @@ abstract class ReportByTemplate
         return $this;
     }
 
+    /**
+     * Установить тип формируемого отчета. (`xls` или `pdf`).
+     *
+     * @param string $type Тип формируемого отчета. (`xls` или `pdf`).
+     * @return $this
+     */
     public function type($type)
     {
         if (in_array($type, [ReportByTemplate::EXCEL, ReportByTemplate::PDF])) {
@@ -69,6 +136,12 @@ abstract class ReportByTemplate
         return $this;
     }
 
+    /**
+     * Установить дополнительные параметры отчета.
+     *
+     * @param array $params Массив дополнительных параметров.
+     * @return $this
+     */
     public function params(array $params)
     {
         $this->params = $params;
@@ -76,6 +149,11 @@ abstract class ReportByTemplate
         return $this;
     }
 
+    /**
+     * Начать процесс обработки и формирования отчета.
+     *
+     * @return bool|string
+     */
     public function save()
     {
         $this->checkIntegrity();

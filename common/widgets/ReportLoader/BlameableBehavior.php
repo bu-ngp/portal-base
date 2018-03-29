@@ -7,28 +7,25 @@ use Yii;
 use yii\behaviors\AttributeBehavior;
 use yii\db\BaseActiveRecord;
 
+/**
+ * Поведение определяющее идентификатор пользователя. В случае отсутствия авторизованного пользователя берется идентификатор сессии пользователя.
+ *
+ * Поведение используется в модели обработчика отчетов [[\common\widgets\ReportLoader\models\ReportLoader]].
+ */
 class BlameableBehavior extends AttributeBehavior
 {
+
     /**
-     * @var string the attribute that will receive current user ID value
-     * Set this property to false if you do not want to record the creator ID.
+     * @var string Имя атрибута модели, получающего ИД пользователя или сессии при создании записи.
      */
     public $createdByAttribute = 'created_by';
     /**
-     * @var string the attribute that will receive current user ID value
-     * Set this property to false if you do not want to record the updater ID.
+     * @var string Имя атрибута модели, получающего ИД пользователя или сессии при обновлении записи.
      */
     public $updatedByAttribute = 'updated_by';
-    /**
-     * @inheritdoc
-     *
-     * In case, when the property is `null`, the value of `Yii::$app->user->id` will be used as the value.
-     */
-    public $value;
-
 
     /**
-     * @inheritdoc
+     * Инициализация поведения
      */
     public function init()
     {
@@ -42,11 +39,6 @@ class BlameableBehavior extends AttributeBehavior
         }
     }
 
-    /**
-     * @inheritdoc
-     *
-     * In case, when the [[value]] property is `null`, the value of `Yii::$app->user->id` will be used as the value.
-     */
     protected function getValue($event)
     {
         if ($this->value === null) {

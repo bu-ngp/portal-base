@@ -14,12 +14,22 @@ use wartron\yii2uuid\helpers\Uuid;
 use Yii;
 use yii\bootstrap\Html;
 
+/**
+ * Класс кнопки действия грида "Выбрать"
+ */
 class ActionButtonChoose
 {
     protected $actionButtons;
     protected $grid;
 
-    static public function init(&$actionButtons, GridView $grid)
+    /**
+     * Создать экземпляр класса
+     *
+     * @param array $actionButtons Конфигурационный массив кнопок `CRUD`
+     * @param GridView $grid Грид [[\common\widgets\GridView\GridView]]
+     * @return $this
+     */
+    static public function init(array &$actionButtons, GridView $grid)
     {
         return new self($actionButtons, $grid);
     }

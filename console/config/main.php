@@ -20,6 +20,7 @@ return [
             'class' => 'yii\console\controllers\MigrateController',
             'interactive' => false,
             'migrationPath' => [
+                '@common/widgets/ReportLoader/migrations',
                 '@console/migrations',
                 '@common/widgets/CardList/migrations',
                 '@backend/modules/doh/migrations',

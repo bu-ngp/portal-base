@@ -15,6 +15,9 @@ use Yii;
 use yii\bootstrap\Html;
 use yii\helpers\Url;
 
+/**
+ * Класс кнопки действия грида "Обновить" запись
+ */
 class ActionButtonUpdate
 {
     protected $actionButtons;
@@ -22,6 +25,13 @@ class ActionButtonUpdate
     protected $key;
     protected $crudProp;
 
+    /**
+     * @param array $actionButtons Конфигурационный массив кнопок `CRUD`
+     * @param GridView $grid Грид [[\common\widgets\GridView\GridView]]
+     * @param string $key Ключ конфигурационного массива `CRUD`
+     * @param array $crudProp Значение конфигурационного массива `CRUD` с ключом $key
+     * @return bool|$this
+     */
     static public function init(&$actionButtons, GridView $grid, $key, $crudProp)
     {
         if ($key !== 'update') {

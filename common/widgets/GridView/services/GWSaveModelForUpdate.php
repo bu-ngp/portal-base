@@ -10,7 +10,11 @@ namespace common\widgets\GridView\services;
 
 
 use Yii;
+use yii\db\ActiveRecord;
 
+/**
+ * Класс конфигурации и выполнения сохранения в БД выбранной записи в гриде [[\common\widgets\GridView\GridView]], при обновления текущей записи.
+ */
 class GWSaveModelForUpdate
 {
     private $mainField;
@@ -21,6 +25,12 @@ class GWSaveModelForUpdate
     private $mainId;
     private $foreignId;
 
+    /**
+     * Конструктор класса.
+     *
+     * @param array $config Конфигурация Yii2
+     * @throws \Exception
+     */
     public function __construct($config = [])
     {
         if (!class_exists($config['modelClassName'])) {
@@ -58,6 +68,11 @@ class GWSaveModelForUpdate
         $this->mainIdParameterName = $config['mainIdParameterName'];
     }
 
+    /**
+     * Метод сохранения выбранной записи в грид при обновлении записи.
+     *
+     * @return ActiveRecord
+     */
     public function save()
     {
         $func = $this->saveFunc;

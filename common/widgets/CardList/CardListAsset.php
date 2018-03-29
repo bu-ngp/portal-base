@@ -10,19 +10,19 @@ use yii\web\AssetBundle;
 class CardListAsset extends AssetBundle
 {
     /**
-     * @var array
+     * @var array Набор css стилей
      */
     public $css = [
         'css/cardlist.css',
     ];
     /**
-     * @var array
+     * @var array Набор js скриптов
      */
     public $js = [
         'js/wkcardlist.js',
     ];
     /**
-     * @var array
+     * @var array Зависимости
      */
     public $depends = [
         'yii\web\YiiAsset',

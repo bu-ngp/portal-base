@@ -23,7 +23,6 @@ class m170604_042824_reportLoader extends Migration
             'rl_percent' => $this->boolean()->unsigned()->defaultValue(0)->notNull(),
             'rl_start' => $this->dateTime()->notNull(),
         ], $tableOptions);
-
     }
 
     public function down()

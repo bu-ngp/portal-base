@@ -8,8 +8,38 @@
 
 namespace common\widgets\GridView\services;
 
+/**
+ * Трейт используется в моделях для преобразования ключей-значений в читабельные данные.
+ *
+ * ```php
+ *      class Profile extends \yii\db\ActiveRecord
+ *      {
+ *          use GWItemsTrait;
+ *
+ *          ...
+ *
+ *          // Метод items() с читабельными данными для атрибута profile_sex
+ *          public static function items()
+ *          {
+ *              return [
+ *                  'profile_sex' => [
+ *                      1 => 'Мужской',
+ *                      2 => 'Женский',
+ *                  ],
+ *              ];
+ *          }
+ *      }
+ * ```
+ */
 trait GWItemsTrait
 {
+    /**
+     * Метод возвращает читабельные значения для атрибута модели.
+     *
+     * @param string $attribute Атрибут
+     * @return array
+     * @throws \Exception
+     */
     public static function itemsValues($attribute)
     {
         $class = get_called_class();

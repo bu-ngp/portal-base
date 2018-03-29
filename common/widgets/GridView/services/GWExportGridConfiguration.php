@@ -8,15 +8,35 @@
 
 namespace common\widgets\GridView\services;
 
-
 use common\widgets\GridView\GridView;
 
+/**
+ * Класс конфигурирования экспорта грида [[\common\widgets\GridView\GridView]].
+ *
+ * ```php
+ *     <?= GridView::widget([
+ *         ...
+ *         'exportGrid' => [
+ *             'enable' => true,
+ *             'format' => [GridView::EXCEL, GridView::PDF],
+ *             'idReportLoader' => 'wk-report-loader',
+ *         ],
+ *         ...
+ *     ]) ?>
+ * ```
+ */
 class GWExportGridConfiguration
 {
     protected $enable = false;
     protected $format = [GridView::EXCEL, GridView::PDF];
     protected $idReportLoader;
 
+    /**
+     * Конструктор класса.
+     *
+     * @param array $config Конфигурация Yii2
+     * @throws \Exception
+     */
     public function __construct($config = [])
     {
         if ($config['enable'] !== false && empty($config['idReportLoader'])) {
@@ -37,16 +57,31 @@ class GWExportGridConfiguration
         }
     }
 
+    /**
+     * Проверяет активацию экспорта грида.
+     *
+     * @return bool
+     */
     public function isEnable()
     {
         return $this->enable;
     }
 
+    /**
+     * Возвращает массив с настроенными форматами экспорта грида. Возмдные значения (GridView::EXCEL, GridView::PDF).
+     *
+     * @return array
+     */
     public function getFormat()
     {
         return $this->format;
     }
 
+    /**
+     * Возвращает id атрибут HTML Виджета обработчика отчетов.
+     *
+     * @return string
+     */
     public function getIdReportLoader()
     {
         return $this->idReportLoader;

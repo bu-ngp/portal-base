@@ -2,7 +2,6 @@
 
 namespace common\widgets\GridView;
 
-use common\widgets\GridView\assets\GridViewAsset;
 use common\widgets\GridView\services\ActionButtons;
 use common\widgets\GridView\services\GWAddCrudConfigForCreate;
 use common\widgets\GridView\services\GWCustomizeDialog;
@@ -11,50 +10,182 @@ use common\widgets\GridView\services\GWExportGridConfiguration;
 use common\widgets\GridView\services\GWFilterDialog;
 use common\widgets\GridView\services\GWFilterDialogConfiguration;
 use common\widgets\GridView\services\GWPrepareColumns;
-use common\widgets\PropellerAssets\ButtonAsset;
 use common\widgets\PropellerAssets\PropellerAsset;
 use Yii;
 use yii\base\Model;
 use yii\bootstrap\Html;
 use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
-use yii\web\View;
 
+/**
+ * Виджет грида с дополнительными возможностями.
+ *
+ * Грид содержит следующие возможности:
+ * * Имеется возможность настроить грид в модальном окне: Изменить видимость, порядок колонок. Количество отображаемых записей на странице грида;
+ * * Экспорт данных грида в `PDF` или `Excel`;
+ * * Возможность выбора записей из других гридов справочников, при создании или обновлении записи;
+ * * Возможность исключить уже выбранные записи из грида
+ *
+ * ```php
+ *     <?= GridView::widget([
+ *         'dataProvider' => $dataProvider,
+ *         'filterModel' => $searchModel,
+ *         'exportGrid' => [
+ *             'idReportLoader' => 'wk-Report-Loader',
+ *         ],
+ *         'columns' => [
+ *             'build_name',
+ *         ],
+ *         'crudSettings' => [
+ *             'create' => [
+ *                 'urlGrid' => 'build/create',
+ *                 'beforeRender' => function () {
+ *                     return Yii::$app->user->can(RbacHelper::BUILD_EDIT);
+ *                 },
+ *             ],
+ *             'update' => [
+ *                 'url' => 'build/update',
+ *                 'beforeRender' => function () {
+ *                     return Yii::$app->user->can(RbacHelper::BUILD_EDIT);
+ *                 },
+ *             ],
+ *             'delete' => [
+ *                 'url' => 'build/delete',
+ *                 'beforeRender' => function () {
+ *                     return Yii::$app->user->can(RbacHelper::BUILD_EDIT);
+ *                 },
+ *             ],
+ *         ],
+ *         'gridExcludeIdsFunc' => function (ActiveQuery $activeQuery, array $ids) {
+ *             $activeQuery->andWhere(['not in', 'build_id', $ids]);
+ *         }
+ *     ]); ?>
+ * ```
+ *
+ */
 class GridView extends \kartik\grid\GridView
 {
+    /** Вывод грида для добавления записи */
     const ADD = 'add';
+    /** Вывод грида для обновления записи */
     const EDIT = 'edit';
 
+    /**
+     * @var bool Активировать Hover эффект при наведении мыши на зиписи грида.
+     */
     public $hover = true;
+    /**
+     * @var bool Использовать `pjax` для фильтрации и сортировки записей.
+     */
     public $pjax = true;
+    /**
+     * @var bool Изменение размера колонок грида.
+     */
     public $resizableColumns = false;
+    /**
+     * @var array Конфигурация кнопок пагинации
+     */
     public $pager = [
         'prevPageLabel' => '<i class="fa fa-angle-left"></i>',
         'nextPageLabel' => '<i class="fa fa-angle-right"></i>',
     ];
 
+    /**
+     * @var array Массив с конфигурацией `CRUD` грида.
+     *
+     * Содержит следующие опции ключей массива:
+     * * `create` - Кнопка добавления записи грида;
+     * * `update` - Кнопка обновления записи грида;
+     * * `delete` - Кнопка удаления записи грида.
+     * Каждое значение может содержать url в виде строки или массива, или конфигурационный массив с определенным набором ключей
+     *
+     * Конфигурация для каждой кнопки в виде ключей массивов:
+     *
+     * Имя ключа массива | Тип значения | Ключ массива, для которого доступна опция | Описание
+     * ----------------- | ------------ | ----------------------------------------- | ------------
+     * `urlGrid`         | `string`     | `create`, `update`, `delete`              | Ссылка грида [[GridView]], у которого выбирается запись
+     * `inputName`       | `string`     | `create`, `delete`                        | Имя HTML атрибута `name` HTML элемента `input`, в который будет записываться `json` ключей выбранных записей. Используется при создании новой записи.
+     * `beforeRender`    | `\Closure`   | `create`, `update`, `delete`              | Анонимная функция возвращающая `true` или `false`. Отображать кнопку в гриде или нет. Например для проверки прав доступа пользователя.
+     */
     public $crudSettings = [];
+    /**
+     * @var array Панель-заголовок виджета.
+     *
+     * Содержит следующие опции ключей массива:
+     *
+     * Имя ключа массива | Тип значения | Описание
+     * ----------------- | ------------ | ------------
+     * `title`           | `string`     | Заголовок грида
+     * `icon`            | `string`     | Иконка грида, пример: `FA::icon(FA::_HOME)`
+     */
     public $panelHeading = [];
+    /**
+     * @var bool Активировать возможность выделения записей грида.
+     */
     public $selectColumn = false;
+    /**
+     * @var bool Активировать столбец с нумерацией записей.
+     */
     public $serialColumn = true;
+    /**
+     * @var bool|int Минимальная высота грида в пикселях, если `false`, то `height: auto`.
+     */
     public $minHeight = false;
+    /**
+     * @var bool Активировать диалог настроек грида (Видимость колонок, порядок, количество отображаемых записей).
+     */
     public $customizeDialog = true;
-    /** @var  GWFilterDialogConfiguration|array */
+    /**
+     * @var GWFilterDialogConfiguration|array Класс конфигурации дополнительных фильтров [[\common\widgets\GridView\services\GWFilterDialogConfiguration]], или конфигурационный массив.
+     *
+     * Конфигурационный массив содержит следующие опции ключи массива:
+     *
+     * Имя ключа массива | Тип значения                                                               | Описание
+     * ----------------- | -------------------------------------------------------------------------- | ------------
+     * `enable`          | `bool`                                                                     | Активировать кнопку с модальным окном дополнительного фильтра
+     * `filterModel`     | [\yii\base\Model](https://www.yiiframework.com/doc/api/2.0/yii-base-model) | Модель дополнительного фильтра
+     * `filterView`      | `string`                                                                   | Представление дополнительного фильтра, по умолчанию `_filter`
+     */
     public $filterDialog = [
         'enable' => false,
     ];
-    /** @var  GWExportGridConfiguration|array */
+    /**
+     * @var GWExportGridConfiguration|array Класс конфигурации экспорта грида [[\common\widgets\GridView\services\GWExportGridConfiguration]], или конфигурационный массив.
+     *
+     * Конфигурационный массив содержит следующие опции ключи массива:
+     *
+     * Имя ключа массива | Тип значения | Описание
+     * ----------------- | ------------ | ------------
+     * `enable`          | `bool`       | Активировать кнопку с возможность экспорта грида
+     * `format`          | array        | Доступные форматы для экспорта, доступно `[GridView::EXCEL, GridView::PDF]`
+     * `idReportLoader`  | `string`     | HTML атрибут `id` обработчика отчетов [[\common\widgets\ReportLoader\ReportLoader]]
+     */
     public $exportGrid = [
         'enable' => false,
     ];
+    /**
+     * @var array Переопределенный массив конфигурации `\kartik\grid\GridView`
+     */
     public $toolbar = [];
+    /**
+     * @var string Доболнительный контент слева относительно верхней панели кнопок.
+     */
     public $leftBottomToolbar = '';
+    /**
+     * @var string Доболнительный контент справа относительно верхней панели кнопок.
+     */
     public $rightBottomToolbar = '';
+    /**
+     * @var array Переопределенный массив конфигурации `\kartik\grid\GridView`, изменена анимация ожидания загрузки грида.
+     */
     public $pjaxSettings = [
         'loadingCssClass' => 'wk-widget-grid-loading',
         //  'loadingCssClass' => false,
         // 'options' => ['clientOptions' => ['async' => false]],
     ];
+    /**
+     * @var string Шаблон панелей грида
+     */
     public $panelTemplate = <<< HTML
         <div class="{prefix}{type}">   
             {panelHeading}
@@ -68,6 +199,9 @@ class GridView extends \kartik\grid\GridView
             {panelFooter}   
         </div>
 HTML;
+    /**
+     * @var string Шаблон нижней панели грида
+     */
     public $panelAfterTemplate = <<< HTML
         <div class="btn-toolbar kv-grid-toolbar" role="toolbar" style="display: inline-block;">
             <div class="btn-group">
@@ -81,6 +215,9 @@ HTML;
             </div>
         </div>
 HTML;
+    /**
+     * @var string Шаблон верхней панели грида
+     */
     public $panelBeforeTemplate = <<< HTML
         <div class="wk-grid-errors">
             {gridErrors}
@@ -103,6 +240,7 @@ HTML;
         {before}
         <div class="clearfix"></div>
 HTML;
+    /** @var string Шаблон подвала грида */
     public $panelFooterTemplate = <<< HTML
         <div class="kv-panel-pager pull-left">
             {pager}
@@ -111,6 +249,9 @@ HTML;
         {footer}
         <div class="clearfix"></div>
 HTML;
+    /**
+     * @var string Шаблон заголовка грида
+     */
     public $panelHeadingTemplate = <<< HTML
     <div class="pull-right">
         {summary}
@@ -120,13 +261,81 @@ HTML;
     </h3>
     <div class="clearfix"></div>
 HTML;
+    /**
+     * @var array Массив с контентом дополнительных кнопок грида
+     */
     public $customButtons = [];
+    /**
+     * @var array Массив с контентом внутренних дополнительных кнопок грида
+     */
     public $customButtonsInternal = [];
+    /**
+     * @var array Массив с контентом дополнительных кнопок действия грида
+     */
     public $customActionButtons = [];
+    /**
+     * @var \Closure Анонимная функция для исключения уже выбранных записей.
+     *
+     * Содержит следующие параметры:
+     * * `$activeQuery` - [\yii\db\ActiveQuery](https://www.yiiframework.com/doc/api/2.0/yii-db-activequery) Результирующего набора грида.
+     * * `$ids` - Массив первичных ключей, выбранных записей, которые необходимо исключить из выборки.
+     *
+     * ```php
+     *     ...
+     *     'gridExcludeIdsFunc' => function (ActiveQuery $activeQuery, array $ids) {
+     *         // Исключаем первичные ключи, находящиеся в массиве $ids
+     *         $activeQuery->andWhere(['not in', 'build_id', $ids]);
+     *     }
+     *     ...
+     * ```
+     */
     public $gridExcludeIdsFunc;
-    public $gridInject;
+    /**
+     * @var \Closure Анонимная функция добавляет запись в грид при обновлении текущей записи, из другого грида.
+     *
+     * Конфигурационный массив содержит следующие опции ключи массива:
+     *
+     * Имя ключа массива     | Тип значения | Описание
+     * --------------------- | ------------ | ------------
+     * `mainField`           | `string`     | Имя атрибута к кому добавляем запись
+     * `mainIdParameterName` | `string`     | Имя параметра значения атрибута для вывода в Url
+     * `foreignField`        | `string`     | Имя атрибута значение, которое добавляем
+     * `modelClassName`      | `string`     | Имя класса модели, которой добавляем запись
+     * `saveFunc`            | `\Closure`   | Анонимная функция выполняющая сохранение, имеется по умолчанию
+     *
+     * *В данном коде Пользователю с ИД `user_id` добавляется роль `item_name`, выбранная в справочнике ролей*
+     *
+     * ```php
+     *     ...
+     *     'gridInject' => [
+     *         'mainField' => 'user_id',
+     *         'mainIdParameterName' => 'id',
+     *         'foreignField' => 'item_name',
+     *         'modelClassName' => 'domain\models\base\AuthAssignment',
+     *         'saveFunc' => function (\yii\db\ActiveRecord $model, $mainId, $mainField, $foreignField, $foreignId) {
+     *             $role = $Yii::$app->authManager->getRole($foreignId);
+     *
+     *             if (!Yii::$app->authManager->assign($role, $mainId)) {
+     *                 throw new \DomainException('Saving error.');
+     *             }
+     *         },
+     *     ],
+     *     ...
+     * ```
+     *
+     * **Функция `saveFunc` по умолчанию:**
+     *
+     * ```php
+     *     function (\yii\db\ActiveRecord $model, $mainId, $mainField, $foreignField, $foreignId) {
+     *         $model->$mainField = $mainId;
+     *         $model->$foreignField = $foreignId;
+     *         $model->save();
+     *     };
+     * ```
+     */
+    public    $gridInject;
     protected $js = [];
-    /** @var  GWCustomizeDialog */
+    /** @var GWCustomizeDialog */
     protected $GWCustomizeDialog;
     /** @var GWFilterDialog */
     protected $GWFilterDialog;

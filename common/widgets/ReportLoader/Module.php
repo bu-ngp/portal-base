@@ -8,11 +8,27 @@
 
 namespace common\widgets\ReportLoader;
 
-
+/**
+ * Модуль настроек для виджета [[ReportLoader]].
+ *
+ * ```php
+ *     'modules' => [
+ *         ...
+ *         'report-loader' => [
+ *             'class' => '\common\widgets\ReportLoader\Module',
+ *             'id' => 'customId',
+ *         ],
+ *         ...
+ *     ],
+ * ```
+ */
 class Module extends \yii\base\Module
 {
     /**
-     * @inheritdoc
+     * Инициализация модуля.
+     * ```php
+     * $this->id = 'reportLoader';
+     * ```
      */
     public function init()
     {
