@@ -58,11 +58,14 @@ class PodrazRepository
 
     /**
      * @param Podraz $podraz
+     * @return bool
      */
     public function delete(Podraz $podraz)
     {
-        if (!$podraz->delete()) {
-            throw new \DomainException(Yii::t('domain/base', 'Deleting error.'));
+        try {
+            return $podraz->delete() !== false;
+        } catch (\Exception $e) {
+            throw new \DomainException(Yii::t('domain/base', 'Deleting error.'), 0, $e);
         }
     }
 }

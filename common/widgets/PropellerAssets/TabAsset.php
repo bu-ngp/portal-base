@@ -8,28 +8,38 @@
 
 namespace common\widgets\PropellerAssets;
 
-
 use yii\web\AssetBundle;
 
+/**
+ * Пакет jquery плагина PropellerKit для Tab.
+ */
 class TabAsset extends AssetBundle
 {
-    public function init()
-    {
-        $this->sourcePath = '@npm';
-        $this->css = [
-            'material-design-icons/iconfont/material-icons.css',
-            'propellerkit/components/tab/css/tab.css',
-        ];
+    /**
+     * @var string Источник ресурсов
+     */
+    public $sourcePath = '@npm';
 
-        $this->js = [
-            'propellerkit/components/tab/js/tab-scrollable.js',
-        ];
+    /**
+     * @var array Набор css стилей
+     */
+    public $css = [
+        'material-design-icons/iconfont/material-icons.css',
+        'propellerkit/components/tab/css/tab.css',
+    ];
 
-        $this->depends = [
-            'yii\web\YiiAsset',
-            'yii\bootstrap\BootstrapAsset',
-        ];
+    /**
+     * @var array Набор js скриптов
+     */
+    public $js = [
+        'propellerkit/components/tab/js/tab-scrollable.js',
+    ];
 
-        parent::init();
-    }
+    /**
+     * @var array Зависимости
+     */
+    public $depends = [
+        'yii\web\YiiAsset',
+        'yii\bootstrap\BootstrapAsset',
+    ];
 }

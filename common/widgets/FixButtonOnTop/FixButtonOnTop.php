@@ -8,20 +8,31 @@
 
 namespace common\widgets\FixButtonOnTop;
 
-
-use common\widgets\FixButtonOnTop\assets\FixButtonOnTopAsset;
 use Yii;
 use yii\base\Widget;
 use yii\bootstrap\Html;
 
+/**
+ * Виджет добавляет внизу справа страницы кнопку для перехода наверх страницы.
+ *
+ * ```php
+ * <?= FixButtonOnTop::widget() ?>
+ * ```
+ */
 class FixButtonOnTop extends Widget
 {
+    /**
+     * Инициализация виджета.
+     */
     public function init()
     {
         $this->registerTranslations();
         parent::init();
     }
 
+    /**
+     * Регистрация сообщений i18n
+     */
     public function registerTranslations()
     {
         $i18n = Yii::$app->i18n;
@@ -32,9 +43,12 @@ class FixButtonOnTop extends Widget
         ];
     }
 
+    /**
+     * Выполнение виджета
+     */
     public function run()
     {
-        echo Html::tag('div', '', ['id' => $this->id, 'class' => 'wk-fix-button-on-top','title' => Yii::t('wk-fix-button-on-top', 'On Top')]);
+        echo Html::tag('div', '', ['id' => $this->id, 'class' => 'wk-fix-button-on-top', 'title' => Yii::t('wk-fix-button-on-top', 'On Top')]);
         $this->registerAssets();
     }
 

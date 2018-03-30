@@ -48,11 +48,14 @@ class BuildRepository
 
     /**
      * @param Build $build
+     * @return bool
      */
     public function delete(Build $build)
     {
-        if (!$build->delete()) {
-            throw new \DomainException(Yii::t('domain/base', 'Deleting error.'));
+        try {
+            return $build->delete() !== false;
+        } catch (\Exception $e) {
+            throw new \DomainException(Yii::t('domain/base', 'Deleting error.'), 0, $e);
         }
     }
 }

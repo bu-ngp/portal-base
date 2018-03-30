@@ -61,7 +61,7 @@ class AjaxResponse
     public function __construct($result, $message = '')
     {
         $this->result = $result;
-        $this->message = $message;
+        $this->message = iconv("UTF-8", "UTF-8//IGNORE", $message);
     }
 
     /**

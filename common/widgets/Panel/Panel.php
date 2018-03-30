@@ -8,16 +8,33 @@
 
 namespace common\widgets\Panel;
 
-
-use common\widgets\PropellerAssets\PropellerAsset;
 use yii\base\Widget;
 use yii\helpers\Html;
 
+/**
+ * Виджет `Bootstrap` панели.
+ *
+ * ```php
+ *     <?= Panel::widget([
+ *         'label' => 'Builds',
+ *         'content' => $this->render('_form', ['modelForm' => $modelForm]),
+ *     ]) ?>
+ * ```
+ */
 class Panel extends Widget
 {
+    /**
+     * @var string Заголовок панели, по умолчанию `Header`.
+     */
     public $label = 'Header';
+    /**
+     * @var string Контент панели.
+     */
     public $content = '';
 
+    /**
+     * Выполнение виджета
+     */
     public function run()
     {
         return Html::tag('div', $this->label() . $this->content(), ['class' => 'panel panel-default']);

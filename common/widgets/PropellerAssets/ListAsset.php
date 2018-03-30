@@ -8,23 +8,30 @@
 
 namespace common\widgets\PropellerAssets;
 
-
 use yii\web\AssetBundle;
 
+/**
+ * Пакет jquery плагина PropellerKit для списков.
+ */
 class ListAsset extends AssetBundle
 {
-    public function init()
-    {
-        $this->sourcePath = '@npm/propellerkit';
-        $this->css = [
-            'components/list/css/list.css',
-        ];
+    /**
+     * @var string Источник ресурсов
+     */
+    public $sourcePath = '@npm/propellerkit';
 
-        $this->depends = [
-            'yii\web\YiiAsset',
-            'yii\bootstrap\BootstrapAsset',
-        ];
+    /**
+     * @var array Набор css стилей
+     */
+    public $css = [
+        'components/list/css/list.css',
+    ];
 
-        parent::init();
-    }
+    /**
+     * @var array Зависимости
+     */
+    public $depends = [
+        'yii\web\YiiAsset',
+        'yii\bootstrap\BootstrapAsset',
+    ];
 }

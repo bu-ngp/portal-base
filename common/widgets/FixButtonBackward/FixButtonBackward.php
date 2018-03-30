@@ -8,20 +8,31 @@
 
 namespace common\widgets\FixButtonBackward;
 
-
-use common\widgets\FixButtonBackward\assets\FixButtonBackwardAsset;
 use Yii;
 use yii\bootstrap\Html;
 use yii\bootstrap\Widget;
 
+/**
+ * Виджет добавляет внизу слева страницы кнопку для перехода на предыдущую страницу.
+ *
+ * ```php
+ * <?= FixButtonBackward::widget() ?>
+ * ```
+ */
 class FixButtonBackward extends Widget
 {
+    /**
+     * Инициализация виджета.
+     */
     public function init()
     {
         $this->registerTranslations();
         parent::init();
     }
 
+    /**
+     * Регистрация сообщений i18n
+     */
     public function registerTranslations()
     {
         $i18n = Yii::$app->i18n;
@@ -32,6 +43,9 @@ class FixButtonBackward extends Widget
         ];
     }
 
+    /**
+     * Выполнение виджета
+     */
     public function run()
     {
         echo Html::tag('div', '', ['id' => $this->id, 'class' => 'wk-fix-button-backward', 'title' => Yii::t('wk-fix-button-backward', 'Backward')]);

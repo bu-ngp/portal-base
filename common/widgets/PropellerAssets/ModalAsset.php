@@ -8,27 +8,37 @@
 
 namespace common\widgets\PropellerAssets;
 
-
 use yii\web\AssetBundle;
 
+/**
+ * Пакет jquery плагина PropellerKit для модальных окон.
+ */
 class ModalAsset extends AssetBundle
 {
-    public function init()
-    {
-        $this->sourcePath = '@npm/propellerkit';
-        $this->css = [
-            'components/modal/css/modal.css',
-        ];
+    /**
+     * @var string Источник ресурсов
+     */
+    public $sourcePath = '@npm/propellerkit';
 
-        $this->js = [
-            'components/modal/js/modal.js',
-        ];
+    /**
+     * @var array Набор css стилей
+     */
+    public $css = [
+        'components/modal/css/modal.css',
+    ];
 
-        $this->depends = [
-            'yii\web\YiiAsset',
-            'yii\bootstrap\BootstrapAsset',
-        ];
+    /**
+     * @var array Набор js скриптов
+     */
+    public $js = [
+        'components/modal/js/modal.js',
+    ];
 
-        parent::init();
-    }
+    /**
+     * @var array Зависимости
+     */
+    public $depends = [
+        'yii\web\YiiAsset',
+        'yii\bootstrap\BootstrapAsset',
+    ];
 }

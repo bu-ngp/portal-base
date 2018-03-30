@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="language" content="en" />
+        <link href="./assets/68294dbd/css/bootstrap.css" rel="stylesheet">
+<link href="./assets/bf114760/solarized_light.css" rel="stylesheet">
+<link href="./assets/5c617f36/style.css" rel="stylesheet">
+<script src="./assets/f8a50b49/jquery.js"></script>
+<script src="./assets/68294dbd/js/bootstrap.js"></script>
+<script src="./assets/192b8f1c/jssearch.js"></script>    <title>Breadcrumbs, common\widgets\Breadcrumbs\Breadcrumbs - wk-portal Doc</title>
+</head>
+<body>
+
+<div class="wrap">
+    <nav id="w98" class="navbar-inverse navbar-fixed-top navbar"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#w98-collapse"><span class="sr-only">Toggle navigation</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span></button><a class="navbar-brand" href="./index.html">wk-portal Doc</a></div><div id="w98-collapse" class="collapse navbar-collapse"><ul id="w99" class="navbar-nav nav"><li><a href="./index.html">Class reference</a></li></ul><div class="navbar-form navbar-left" role="search">
+  <div class="form-group">
+    <input id="searchbox" type="text" class="form-control" placeholder="Search">
+  </div>
+</div>
+</div></nav>
+    <div id="search-resultbox" style="display: none;" class="modal-content">
+        <ul id="search-results">
+        </ul>
+    </div>
+
+    
+<div class="row">
+    <div class="col-md-3">
+                <div id="navigation" class="list-group"><a class="list-group-item" href="#navigation-75" data-toggle="collapse" data-parent="#navigation">common\widgets\ActiveForm <b class="caret"></b></a><div id="navigation-75" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-activeform-activefield.html">ActiveField</a>
+<a class="list-group-item" href="./common-widgets-activeform-activefilterform.html">ActiveFilterForm</a>
+<a class="list-group-item" href="./common-widgets-activeform-activeform.html">ActiveForm</a></div>
+<a class="list-group-item active" href="#navigation-76" data-toggle="collapse" data-parent="#navigation">common\widgets\Breadcrumbs <b class="caret"></b></a><div id="navigation-76" class="submenu panel-collapse collapse in"><a class="list-group-item active" href="./common-widgets-breadcrumbs-breadcrumbs.html">Breadcrumbs</a>
+<a class="list-group-item" href="./common-widgets-breadcrumbs-breadcrumbsasset.html">BreadcrumbsAsset</a></div>
+<a class="list-group-item" href="#navigation-77" data-toggle="collapse" data-parent="#navigation">common\widgets\CardList <b class="caret"></b></a><div id="navigation-77" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-cardlist-cardlist.html">CardList</a>
+<a class="list-group-item" href="./common-widgets-cardlist-cardlistasset.html">CardListAsset</a>
+<a class="list-group-item" href="./common-widgets-cardlist-cardlisthelper.html">CardListHelper</a>
+<a class="list-group-item" href="./common-widgets-cardlist-masonryasset.html">MasonryAsset</a>
+<a class="list-group-item" href="./common-widgets-cardlist-module.html">Module</a></div>
+<a class="list-group-item" href="#navigation-78" data-toggle="collapse" data-parent="#navigation">common\widgets\Documenter <b class="caret"></b></a><div id="navigation-78" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-documenter-documenter.html">Documenter</a>
+<a class="list-group-item" href="./common-widgets-documenter-documenterasset.html">DocumenterAsset</a></div>
+<a class="list-group-item" href="#navigation-79" data-toggle="collapse" data-parent="#navigation">common\widgets\Documenter\services <b class="caret"></b></a><div id="navigation-79" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-documenter-services-documentercontainer.html">DocumenterContainer</a>
+<a class="list-group-item" href="./common-widgets-documenter-services-documenterviewer.html">DocumenterViewer</a></div>
+<a class="list-group-item" href="#navigation-80" data-toggle="collapse" data-parent="#navigation">common\widgets\FixButtonBackward <b class="caret"></b></a><div id="navigation-80" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-fixbuttonbackward-fixbuttonbackward.html">FixButtonBackward</a>
+<a class="list-group-item" href="./common-widgets-fixbuttonbackward-fixbuttonbackwardasset.html">FixButtonBackwardAsset</a></div>
+<a class="list-group-item" href="#navigation-81" data-toggle="collapse" data-parent="#navigation">common\widgets\FixButtonOnTop <b class="caret"></b></a><div id="navigation-81" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-fixbuttonontop-fixbuttonontop.html">FixButtonOnTop</a>
+<a class="list-group-item" href="./common-widgets-fixbuttonontop-fixbuttonontopasset.html">FixButtonOnTopAsset</a></div>
+<a class="list-group-item" href="#navigation-82" data-toggle="collapse" data-parent="#navigation">common\widgets\GridViewModal <b class="caret"></b></a><div id="navigation-82" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-gridviewmodal-gridviewmodal.html">GridViewModal</a>
+<a class="list-group-item" href="./common-widgets-gridviewmodal-gridviewmodalasset.html">GridViewModalAsset</a></div>
+<a class="list-group-item" href="#navigation-83" data-toggle="collapse" data-parent="#navigation">common\widgets\GridView <b class="caret"></b></a><div id="navigation-83" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-gridview-gridview.html">GridView</a>
+<a class="list-group-item" href="./common-widgets-gridview-gridviewasset.html">GridViewAsset</a>
+<a class="list-group-item" href="./common-widgets-gridview-sortableasset.html">SortableAsset</a></div>
+<a class="list-group-item" href="#navigation-84" data-toggle="collapse" data-parent="#navigation">common\widgets\GridView\services <b class="caret"></b></a><div id="navigation-84" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-gridview-services-actionbuttonchoose.html">ActionButtonChoose</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-actionbuttoncreate.html">ActionButtonCreate</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-actionbuttondelete.html">ActionButtonDelete</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-actionbuttonupdate.html">ActionButtonUpdate</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-actionbuttons.html">ActionButtons</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-ajaxresponse.html">AjaxResponse</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-checkboxstoragecolumn.html">CheckboxStorageColumn</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwaddcrudconfigforcreate.html">GWAddCrudConfigForCreate</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwaddcrudconfigforupdate.html">GWAddCrudConfigForUpdate</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwcustomizedialog.html">GWCustomizeDialog</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwdeletecrudconfigforcreate.html">GWDeleteCrudConfigForCreate</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwexportgrid.html">GWExportGrid</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwexportgridconfiguration.html">GWExportGridConfiguration</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwfilterdialog.html">GWFilterDialog</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwfilterdialogconfiguration.html">GWFilterDialogConfiguration</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwitemstrait.html">GWItemsTrait</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwpreparecolumns.html">GWPrepareColumns</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwsavemodelforupdate.html">GWSaveModelForUpdate</a></div>
+<a class="list-group-item" href="#navigation-85" data-toggle="collapse" data-parent="#navigation">common\widgets\HeaderPanel <b class="caret"></b></a><div id="navigation-85" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-headerpanel-headerpanel.html">HeaderPanel</a>
+<a class="list-group-item" href="./common-widgets-headerpanel-headerpanelasset.html">HeaderPanelAsset</a></div>
+<a class="list-group-item" href="#navigation-86" data-toggle="collapse" data-parent="#navigation">common\widgets\Html <b class="caret"></b></a><div id="navigation-86" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-html-html.html">Html</a></div>
+<a class="list-group-item" href="#navigation-87" data-toggle="collapse" data-parent="#navigation">common\widgets\Panel <b class="caret"></b></a><div id="navigation-87" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-panel-panel.html">Panel</a></div>
+<a class="list-group-item" href="#navigation-88" data-toggle="collapse" data-parent="#navigation">common\widgets\PropellerAssets <b class="caret"></b></a><div id="navigation-88" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-propellerassets-assetbundlepropeller.html">AssetBundlePropeller</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-buttonasset.html">ButtonAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-cardasset.html">CardAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-checkboxasset.html">CheckboxAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-datetimepickerasset.html">DateTimePickerAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-dropdownasset.html">DropdownAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-listasset.html">ListAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-modalasset.html">ModalAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-navbarasset.html">NavBarAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-propellerasset.html">PropellerAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-radioasset.html">RadioAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-select2asset.html">Select2Asset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-shadowasset.html">ShadowAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-tabasset.html">TabAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-textfieldasset.html">TextFieldAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-textfieldselect2asset.html">TextFieldSelect2Asset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-toggleswitchasset.html">ToggleSwitchAsset</a></div>
+<a class="list-group-item" href="#navigation-89" data-toggle="collapse" data-parent="#navigation">common\widgets\ReportLoader <b class="caret"></b></a><div id="navigation-89" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-reportloader-blameablebehavior.html">BlameableBehavior</a>
+<a class="list-group-item" href="./common-widgets-reportloader-module.html">Module</a>
+<a class="list-group-item" href="./common-widgets-reportloader-progressbarasset.html">ProgressbarAsset</a>
+<a class="list-group-item" href="./common-widgets-reportloader-reportbymodel.html">ReportByModel</a>
+<a class="list-group-item" href="./common-widgets-reportloader-reportbytemplate.html">ReportByTemplate</a>
+<a class="list-group-item" href="./common-widgets-reportloader-reportloader.html">ReportLoader</a>
+<a class="list-group-item" href="./common-widgets-reportloader-reportloaderasset.html">ReportLoaderAsset</a>
+<a class="list-group-item" href="./common-widgets-reportloader-reportprocess.html">ReportProcess</a></div>
+<a class="list-group-item" href="#navigation-90" data-toggle="collapse" data-parent="#navigation">common\widgets\ReportLoader\controllers <b class="caret"></b></a><div id="navigation-90" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-reportloader-controllers-reportcontroller.html">ReportController</a>
+<a class="list-group-item" href="./common-widgets-reportloader-controllers-wkloadercontroller.html">WkloaderController</a></div>
+<a class="list-group-item" href="#navigation-91" data-toggle="collapse" data-parent="#navigation">common\widgets\ReportLoader\models <b class="caret"></b></a><div id="navigation-91" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-reportloader-models-reportloader.html">ReportLoader</a></div>
+<a class="list-group-item" href="#navigation-92" data-toggle="collapse" data-parent="#navigation">common\widgets\Select2 <b class="caret"></b></a><div id="navigation-92" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-select2-select2.html">Select2</a>
+<a class="list-group-item" href="./common-widgets-select2-select2asset.html">Select2Asset</a></div>
+<a class="list-group-item" href="#navigation-93" data-toggle="collapse" data-parent="#navigation">common\widgets\SystemInfo <b class="caret"></b></a><div id="navigation-93" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-systeminfo-systeminfo.html">SystemInfo</a>
+<a class="list-group-item" href="./common-widgets-systeminfo-systeminfoasset.html">SystemInfoAsset</a></div>
+<a class="list-group-item" href="#navigation-94" data-toggle="collapse" data-parent="#navigation">common\widgets\Tabs <b class="caret"></b></a><div id="navigation-94" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-tabs-tabs.html">Tabs</a></div>
+<a class="list-group-item" href="#navigation-95" data-toggle="collapse" data-parent="#navigation">common\widgets\Tabs\assets <b class="caret"></b></a><div id="navigation-95" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-tabs-assets-tabsasset.html">TabsAsset</a></div>
+<a class="list-group-item" href="#navigation-96" data-toggle="collapse" data-parent="#navigation">common\widgets\gridSelected2TextInput <b class="caret"></b></a><div id="navigation-96" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-gridselected2textinput-gridselected2textinputasset.html">GridSelected2TextInputAsset</a></div>
+<a class="list-group-item" href="#navigation-97" data-toggle="collapse" data-parent="#navigation">common\widgets\wkdialog <b class="caret"></b></a><div id="navigation-97" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-wkdialog-wkdialogasset.html">WkDialogAsset</a></div></div>    </div>
+    <div class="col-md-9 api-content" role="main">
+        <h1>Class common\widgets\Breadcrumbs\Breadcrumbs</h1>
+<div class="top-nav">
+    <a href="index.html">All Classes</a>
+            | <a href="#properties">Properties</a>
+                | <a href="#methods">Methods</a>
+            </div>
+
+<table class="summaryTable docClass table table-bordered">
+    <colgroup>
+        <col class="col-name" />
+        <col class="col-value" />
+    </colgroup>
+            <tr><th>Inheritance</th><td><a href="common-widgets-breadcrumbs-breadcrumbs.html">common\widgets\Breadcrumbs\Breadcrumbs</a> &raquo;
+yii\bootstrap\Widget</td></tr>
+                                        </table>
+
+<div class="class-description">
+    <p><strong>Виджет хлебных крошек.</strong></p>
+    <p>Используется в предсталении layout.</p>
+<p>Содержит следующие возможности:</p>
+<ul>
+<li>Автоматически выводит историю переходов на страницы. Нет необходимости добавлять виджет в каждое представление, достаточно добавить в главное представление <code>layout</code>;</li>
+<li>Сохраняет данные элементов форм, у которых имеется атрибут <code>wkkeep</code>. Данные не исчезнут после обновления страницы;</li>
+<li>Гибкое управление виджетом с помощью методов <code>show()</code>, <code>hide()</code>, <code>root()</code>, <code>removeLastCrumb()</code>;</li>
+<li>Возможность вывести предыдущий Url, на котором побывал пользователь с помощью метода <code>previousUrl()</code>, относительно открытой вкладки браузера. <code>Url::previous()</code> в данном случае не подходит.</li>
+</ul>
+<pre><code class="hljs php language-php"><span class="hljs-preprocessor">&lt;?</span>= Breadcrumbs::widget([
+     <span class="hljs-string">'urlManagerName'</span> =&gt; Yii::<span class="hljs-variable">$app</span>-&gt;getUser()-&gt;isGuest ? <span class="hljs-string">'FrontendUrlManager'</span> : <span class="hljs-string">'urlManagerAdmin'</span>,
+]) <span class="hljs-preprocessor">?&gt;</span>
+</code></pre>
+
+    </div>
+
+<a id="properties"></a>
+
+<div class="summary doc-property">
+<h2>Public Properties</h2>
+
+<p><a href="#" class="toggle">Hide inherited properties</a></p>
+
+<table class="summary-table table table-striped table-bordered table-hover">
+<colgroup>
+    <col class="col-property" />
+    <col class="col-type" />
+    <col class="col-description" />
+    <col class="col-defined" />
+</colgroup>
+<tr>
+  <th>Property</th><th>Type</th><th>Description</th><th>Defined By</th>
+</tr>
+        <tr id="$cookieId">
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html#$cookieId-detail">$cookieId</a></td>
+        <td><a href="http://www.php.net/language.types.string">string</a></td>
+        <td>Идентификатор Cookie, по умолчанию <code>wk_breadcrumb</code></td>
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html">common\widgets\Breadcrumbs\Breadcrumbs</a></td>
+    </tr>
+            <tr id="$defaultShow">
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html#$defaultShow-detail">$defaultShow</a></td>
+        <td><a href="http://www.php.net/language.types.boolean">boolean</a></td>
+        <td>Поведение отображения виджета Breadcrumbs по умолчанию, по умолчанию <code>true</code></td>
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html">common\widgets\Breadcrumbs\Breadcrumbs</a></td>
+    </tr>
+            <tr id="$id">
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html#$id-detail">$id</a></td>
+        <td><a href="http://www.php.net/language.types.string">string</a></td>
+        <td>ИД виджета</td>
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html">common\widgets\Breadcrumbs\Breadcrumbs</a></td>
+    </tr>
+            <tr id="$root">
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html#$root-detail">$root</a></td>
+        <td><a href="http://www.php.net/language.types.boolean">boolean</a></td>
+        <td>Устанавливает хлебную крошку в начало пути после "Главной", по умолчанию <code>false</code></td>
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html">common\widgets\Breadcrumbs\Breadcrumbs</a></td>
+    </tr>
+            <tr id="$show">
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html#$show-detail">$show</a></td>
+        <td><a href="http://www.php.net/language.types.boolean">boolean</a></td>
+        <td>Отобразить виджет Breadcrumbs, по умолчанию <code>true</code></td>
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html">common\widgets\Breadcrumbs\Breadcrumbs</a></td>
+    </tr>
+            <tr id="$urlManagerName">
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html#$urlManagerName-detail">$urlManagerName</a></td>
+        <td><a href="http://www.php.net/language.types.string">string</a></td>
+        <td>Имя компонента <code>UrlManager</code>, для определения ссылки на главную страницу, по умолчанию <code>Yii::$app-&gt;getHomeUrl()</code></td>
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html">common\widgets\Breadcrumbs\Breadcrumbs</a></td>
+    </tr>
+    </table>
+</div>
+
+<a id="methods"></a>
+
+<div class="summary doc-method">
+<h2>Public Methods</h2>
+
+<p><a href="#" class="toggle">Hide inherited methods</a></p>
+
+<table class="summary-table table table-striped table-bordered table-hover">
+<colgroup>
+    <col class="col-method" />
+    <col class="col-description" />
+    <col class="col-defined" />
+</colgroup>
+<tr>
+  <th>Method</th><th>Description</th><th>Defined By</th>
+</tr>
+                <tr id="hide()">
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html#hide()-detail">hide()</a></td>
+        <td>Скрывает виджет</td>
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html">common\widgets\Breadcrumbs\Breadcrumbs</a></td>
+    </tr>
+            <tr id="init()">
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html#init()-detail">init()</a></td>
+        <td>Инициализация виджета.</td>
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html">common\widgets\Breadcrumbs\Breadcrumbs</a></td>
+    </tr>
+            <tr id="previousUrl()">
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html#previousUrl()-detail">previousUrl()</a></td>
+        <td>Вернуть ссылку на предыдущую страницу из Cookie виджета.</td>
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html">common\widgets\Breadcrumbs\Breadcrumbs</a></td>
+    </tr>
+                <tr id="registerTranslations()">
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html#registerTranslations()-detail">registerTranslations()</a></td>
+        <td>Регистрация сообщений i18n</td>
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html">common\widgets\Breadcrumbs\Breadcrumbs</a></td>
+    </tr>
+            <tr id="removeLastCrumb()">
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html#removeLastCrumb()-detail">removeLastCrumb()</a></td>
+        <td>Удалить последнюю хлебную крошку.</td>
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html">common\widgets\Breadcrumbs\Breadcrumbs</a></td>
+    </tr>
+            <tr id="root()">
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html#root()-detail">root()</a></td>
+        <td>Устанавливает хлебную крошку в начало пути после "Главной", например <code>Главная / Настройки</code>.</td>
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html">common\widgets\Breadcrumbs\Breadcrumbs</a></td>
+    </tr>
+            <tr id="run()">
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html#run()-detail">run()</a></td>
+        <td>Выполнение виджета</td>
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html">common\widgets\Breadcrumbs\Breadcrumbs</a></td>
+    </tr>
+            <tr id="show()">
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html#show()-detail">show()</a></td>
+        <td>Отображает виджет.</td>
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html">common\widgets\Breadcrumbs\Breadcrumbs</a></td>
+    </tr>
+    </table>
+</div>
+
+<div class="summary doc-method">
+<h2>Protected Methods</h2>
+
+<p><a href="#" class="toggle">Hide inherited methods</a></p>
+
+<table class="summary-table table table-striped table-bordered table-hover">
+<colgroup>
+    <col class="col-method" />
+    <col class="col-description" />
+    <col class="col-defined" />
+</colgroup>
+<tr>
+  <th>Method</th><th>Description</th><th>Defined By</th>
+</tr>
+        <tr id="getCurrentCrumbId()">
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html#getCurrentCrumbId()-detail">getCurrentCrumbId()</a></td>
+        <td></td>
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html">common\widgets\Breadcrumbs\Breadcrumbs</a></td>
+    </tr>
+            <tr id="getRemoveLastCrumb()">
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html#getRemoveLastCrumb()-detail">getRemoveLastCrumb()</a></td>
+        <td></td>
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html">common\widgets\Breadcrumbs\Breadcrumbs</a></td>
+    </tr>
+                        <tr id="registerAssets()">
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html#registerAssets()-detail">registerAssets()</a></td>
+        <td></td>
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html">common\widgets\Breadcrumbs\Breadcrumbs</a></td>
+    </tr>
+                        </table>
+</div>
+
+<a id="events"></a>
+
+<a id="constants"></a>
+
+<h2>Property Details</h2>
+
+<div class="property-doc">
+
+    <div class="detail-header h3" id="$cookieId-detail">
+        <a href="#" class="tool-link" title="go to top"><span class="glyphicon glyphicon-arrow-up"></span></a>
+        <a class="tool-link hash" href="common-widgets-breadcrumbs-breadcrumbs.html#$cookieId-detail" title="direct link to this method"><span class="glyphicon icon-hash"></span></a>
+        
+        $cookieId        <span class="detail-header-tag small">
+            public            static                                    property
+                    </span>
+    </div>
+
+    
+    <div class="doc-description">
+        <p>Идентификатор Cookie, по умолчанию <code>wk_breadcrumb</code></p>
+
+            </div>
+
+    <div class="signature"><span class="signature-defs">public static</span> <span class="signature-type"><a href="http://www.php.net/language.types.string">string</a></span> <a href="common-widgets-breadcrumbs-breadcrumbs.html#$cookieId-detail">$cookieId</a> <span style="color: #0000BB"></span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'wk_breadcrumb'</span></div>
+
+
+    <div class="detail-header h3" id="$defaultShow-detail">
+        <a href="#" class="tool-link" title="go to top"><span class="glyphicon glyphicon-arrow-up"></span></a>
+        <a class="tool-link hash" href="common-widgets-breadcrumbs-breadcrumbs.html#$defaultShow-detail" title="direct link to this method"><span class="glyphicon icon-hash"></span></a>
+        
+        $defaultShow        <span class="detail-header-tag small">
+            public                                                property
+                    </span>
+    </div>
+
+    
+    <div class="doc-description">
+        <p>Поведение отображения виджета Breadcrumbs по умолчанию, по умолчанию <code>true</code></p>
+
+            </div>
+
+    <div class="signature"><span class="signature-defs">public</span> <span class="signature-type"><a href="http://www.php.net/language.types.boolean">boolean</a></span> <a href="common-widgets-breadcrumbs-breadcrumbs.html#$defaultShow-detail">$defaultShow</a> <span style="color: #0000BB"></span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">true</span></div>
+
+
+    <div class="detail-header h3" id="$id-detail">
+        <a href="#" class="tool-link" title="go to top"><span class="glyphicon glyphicon-arrow-up"></span></a>
+        <a class="tool-link hash" href="common-widgets-breadcrumbs-breadcrumbs.html#$id-detail" title="direct link to this method"><span class="glyphicon icon-hash"></span></a>
+        
+        $id        <span class="detail-header-tag small">
+            public                                                property
+                    </span>
+    </div>
+
+    
+    <div class="doc-description">
+        <p>ИД виджета</p>
+
+            </div>
+
+    <div class="signature"><span class="signature-defs">public</span> <span class="signature-type"><a href="http://www.php.net/language.types.string">string</a></span> <a href="common-widgets-breadcrumbs-breadcrumbs.html#$id-detail">$id</a> <span style="color: #0000BB"></span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null</span></div>
+
+
+    <div class="detail-header h3" id="$root-detail">
+        <a href="#" class="tool-link" title="go to top"><span class="glyphicon glyphicon-arrow-up"></span></a>
+        <a class="tool-link hash" href="common-widgets-breadcrumbs-breadcrumbs.html#$root-detail" title="direct link to this method"><span class="glyphicon icon-hash"></span></a>
+        
+        $root        <span class="detail-header-tag small">
+            public            static                                    property
+                    </span>
+    </div>
+
+    
+    <div class="doc-description">
+        <p>Устанавливает хлебную крошку в начало пути после "Главной", по умолчанию <code>false</code></p>
+
+            </div>
+
+    <div class="signature"><span class="signature-defs">public static</span> <span class="signature-type"><a href="http://www.php.net/language.types.boolean">boolean</a></span> <a href="common-widgets-breadcrumbs-breadcrumbs.html#$root-detail">$root</a> <span style="color: #0000BB"></span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">false</span></div>
+
+
+    <div class="detail-header h3" id="$show-detail">
+        <a href="#" class="tool-link" title="go to top"><span class="glyphicon glyphicon-arrow-up"></span></a>
+        <a class="tool-link hash" href="common-widgets-breadcrumbs-breadcrumbs.html#$show-detail" title="direct link to this method"><span class="glyphicon icon-hash"></span></a>
+        
+        $show        <span class="detail-header-tag small">
+            public            static                                    property
+                    </span>
+    </div>
+
+    
+    <div class="doc-description">
+        <p>Отобразить виджет Breadcrumbs, по умолчанию <code>true</code></p>
+
+            </div>
+
+    <div class="signature"><span class="signature-defs">public static</span> <span class="signature-type"><a href="http://www.php.net/language.types.boolean">boolean</a></span> <a href="common-widgets-breadcrumbs-breadcrumbs.html#$show-detail">$show</a> <span style="color: #0000BB"></span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null</span></div>
+
+
+    <div class="detail-header h3" id="$urlManagerName-detail">
+        <a href="#" class="tool-link" title="go to top"><span class="glyphicon glyphicon-arrow-up"></span></a>
+        <a class="tool-link hash" href="common-widgets-breadcrumbs-breadcrumbs.html#$urlManagerName-detail" title="direct link to this method"><span class="glyphicon icon-hash"></span></a>
+        
+        $urlManagerName        <span class="detail-header-tag small">
+            public                                                property
+                    </span>
+    </div>
+
+    
+    <div class="doc-description">
+        <p>Имя компонента <code>UrlManager</code>, для определения ссылки на главную страницу, по умолчанию <code>Yii::$app-&gt;getHomeUrl()</code></p>
+
+            </div>
+
+    <div class="signature"><span class="signature-defs">public</span> <span class="signature-type"><a href="http://www.php.net/language.types.string">string</a></span> <a href="common-widgets-breadcrumbs-breadcrumbs.html#$urlManagerName-detail">$urlManagerName</a> <span style="color: #0000BB"></span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null</span></div>
+
+</div>
+<h2>Method Details</h2>
+
+<div class="method-doc">
+
+    <div class="detail-header h3" id="getCurrentCrumbId()-detail">
+        <a href="#" class="tool-link" title="go to top"><span class="glyphicon glyphicon-arrow-up"></span></a>
+        <a class="tool-link hash" href="common-widgets-breadcrumbs-breadcrumbs.html#getCurrentCrumbId()-detail" title="direct link to this method"><span class="glyphicon icon-hash"></span></a>
+        
+        getCurrentCrumbId()
+        <span class="detail-header-tag small">
+            protected                                    method
+                    </span>
+    </div>
+
+    
+    <div class="doc-description">
+        <p><strong></strong></p>
+
+        
+            </div>
+
+    <table class="detail-table table table-striped table-bordered table-hover">
+        <tr><td colspan="3" class="signature"><span class="signature-defs">protected</span> <span class="signature-type">void</span> <strong><a href="common-widgets-breadcrumbs-breadcrumbs.html#getCurrentCrumbId()-detail">getCurrentCrumbId</a></strong> ( )</td></tr>
+            </table>
+
+<!--	-->
+
+    <div class="detail-header h3" id="getRemoveLastCrumb()-detail">
+        <a href="#" class="tool-link" title="go to top"><span class="glyphicon glyphicon-arrow-up"></span></a>
+        <a class="tool-link hash" href="common-widgets-breadcrumbs-breadcrumbs.html#getRemoveLastCrumb()-detail" title="direct link to this method"><span class="glyphicon icon-hash"></span></a>
+        
+        getRemoveLastCrumb()
+        <span class="detail-header-tag small">
+            protected                                    method
+                    </span>
+    </div>
+
+    
+    <div class="doc-description">
+        <p><strong></strong></p>
+
+        
+            </div>
+
+    <table class="detail-table table table-striped table-bordered table-hover">
+        <tr><td colspan="3" class="signature"><span class="signature-defs">protected</span> <span class="signature-type">void</span> <strong><a href="common-widgets-breadcrumbs-breadcrumbs.html#getRemoveLastCrumb()-detail">getRemoveLastCrumb</a></strong> ( )</td></tr>
+            </table>
+
+<!--	-->
+
+    <div class="detail-header h3" id="hide()-detail">
+        <a href="#" class="tool-link" title="go to top"><span class="glyphicon glyphicon-arrow-up"></span></a>
+        <a class="tool-link hash" href="common-widgets-breadcrumbs-breadcrumbs.html#hide()-detail" title="direct link to this method"><span class="glyphicon icon-hash"></span></a>
+        
+        hide()
+        <span class="detail-header-tag small">
+            public                        static            method
+                    </span>
+    </div>
+
+    
+    <div class="doc-description">
+        <p><strong>Скрывает виджет</strong></p>
+
+        <p>Используется в представлениях.</p>
+<pre><code class="hljs php language-php">   <span class="hljs-comment">// Если открыта страница авторизации, скрыть виджет хлебных крошек.</span>
+   <span class="hljs-preprocessor">&lt;?php</span> <span class="hljs-variable">$this</span>-&gt;context-&gt;id === <span class="hljs-string">"site"</span> &amp;&amp; <span class="hljs-variable">$this</span>-&gt;context-&gt;action-&gt;id === <span class="hljs-string">"login"</span> ? Breadcrumbs::hide() : <span class="hljs-keyword">null</span> <span class="hljs-preprocessor">?&gt;</span>
+</code></pre>
+
+            </div>
+
+    <table class="detail-table table table-striped table-bordered table-hover">
+        <tr><td colspan="3" class="signature"><span class="signature-defs">public static</span> <span class="signature-type">void</span> <strong><a href="common-widgets-breadcrumbs-breadcrumbs.html#hide()-detail">hide</a></strong> ( )</td></tr>
+            </table>
+
+<!--	-->
+
+    <div class="detail-header h3" id="init()-detail">
+        <a href="#" class="tool-link" title="go to top"><span class="glyphicon glyphicon-arrow-up"></span></a>
+        <a class="tool-link hash" href="common-widgets-breadcrumbs-breadcrumbs.html#init()-detail" title="direct link to this method"><span class="glyphicon icon-hash"></span></a>
+        
+        init()
+        <span class="detail-header-tag small">
+            public                                    method
+                    </span>
+    </div>
+
+    
+    <div class="doc-description">
+        <p><strong>Инициализация виджета.</strong></p>
+
+        
+            </div>
+
+    <table class="detail-table table table-striped table-bordered table-hover">
+        <tr><td colspan="3" class="signature"><span class="signature-defs">public</span> <span class="signature-type">void</span> <strong><a href="common-widgets-breadcrumbs-breadcrumbs.html#init()-detail">init</a></strong> ( )</td></tr>
+            </table>
+
+<!--	-->
+
+    <div class="detail-header h3" id="previousUrl()-detail">
+        <a href="#" class="tool-link" title="go to top"><span class="glyphicon glyphicon-arrow-up"></span></a>
+        <a class="tool-link hash" href="common-widgets-breadcrumbs-breadcrumbs.html#previousUrl()-detail" title="direct link to this method"><span class="glyphicon icon-hash"></span></a>
+        
+        previousUrl()
+        <span class="detail-header-tag small">
+            public                        static            method
+                    </span>
+    </div>
+
+    
+    <div class="doc-description">
+        <p><strong>Вернуть ссылку на предыдущую страницу из Cookie виджета.</strong></p>
+
+        <p><strong>Пример:</strong></p>
+<pre><code class="hljs php language-php">    <span class="hljs-comment">// Controller</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">actionCreate</span><span class="hljs-params">()</span>
+    </span>{
+        <span class="hljs-variable">$form</span> = <span class="hljs-keyword">new</span> BuildForm();
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable">$form</span>-&gt;load(Yii::<span class="hljs-variable">$app</span>-&gt;request-&gt;post())
+            &amp;&amp; <span class="hljs-variable">$form</span>-&gt;validate()
+            &amp;&amp; <span class="hljs-variable">$this</span>-&gt;service-&gt;create(<span class="hljs-variable">$form</span>)
+        ) {
+            Yii::<span class="hljs-variable">$app</span>-&gt;session-&gt;setFlash(<span class="hljs-string">'Запись сохранена.'</span>);
+            <span class="hljs-comment">// В случае, если запись сохранилась, отправиться на предыдущую страницу.</span>
+            <span class="hljs-keyword">return</span> <span class="hljs-variable">$this</span>-&gt;redirect(Breadcrumbs::previousUrl());
+        }
+
+        <span class="hljs-keyword">return</span> <span class="hljs-variable">$this</span>-&gt;render(<span class="hljs-string">'create'</span>, [
+            <span class="hljs-string">'modelForm'</span> =&gt; <span class="hljs-variable">$form</span>,
+        ]);
+    }
+</code></pre>
+
+            </div>
+
+    <table class="detail-table table table-striped table-bordered table-hover">
+        <tr><td colspan="3" class="signature"><span class="signature-defs">public static</span> <span class="signature-type"><a href="http://www.php.net/language.types.string">string</a></span> <strong><a href="common-widgets-breadcrumbs-breadcrumbs.html#previousUrl()-detail">previousUrl</a></strong> ( )</td></tr>
+            </table>
+
+<!--	-->
+
+    <div class="detail-header h3" id="registerAssets()-detail">
+        <a href="#" class="tool-link" title="go to top"><span class="glyphicon glyphicon-arrow-up"></span></a>
+        <a class="tool-link hash" href="common-widgets-breadcrumbs-breadcrumbs.html#registerAssets()-detail" title="direct link to this method"><span class="glyphicon icon-hash"></span></a>
+        
+        registerAssets()
+        <span class="detail-header-tag small">
+            protected                                    method
+                    </span>
+    </div>
+
+    
+    <div class="doc-description">
+        <p><strong></strong></p>
+
+        
+            </div>
+
+    <table class="detail-table table table-striped table-bordered table-hover">
+        <tr><td colspan="3" class="signature"><span class="signature-defs">protected</span> <span class="signature-type">void</span> <strong><a href="common-widgets-breadcrumbs-breadcrumbs.html#registerAssets()-detail">registerAssets</a></strong> ( )</td></tr>
+            </table>
+
+<!--	-->
+
+    <div class="detail-header h3" id="registerTranslations()-detail">
+        <a href="#" class="tool-link" title="go to top"><span class="glyphicon glyphicon-arrow-up"></span></a>
+        <a class="tool-link hash" href="common-widgets-breadcrumbs-breadcrumbs.html#registerTranslations()-detail" title="direct link to this method"><span class="glyphicon icon-hash"></span></a>
+        
+        registerTranslations()
+        <span class="detail-header-tag small">
+            public                                    method
+                    </span>
+    </div>
+
+    
+    <div class="doc-description">
+        <p><strong>Регистрация сообщений i18n</strong></p>
+
+        
+            </div>
+
+    <table class="detail-table table table-striped table-bordered table-hover">
+        <tr><td colspan="3" class="signature"><span class="signature-defs">public</span> <span class="signature-type">void</span> <strong><a href="common-widgets-breadcrumbs-breadcrumbs.html#registerTranslations()-detail">registerTranslations</a></strong> ( )</td></tr>
+            </table>
+
+<!--	-->
+
+    <div class="detail-header h3" id="removeLastCrumb()-detail">
+        <a href="#" class="tool-link" title="go to top"><span class="glyphicon glyphicon-arrow-up"></span></a>
+        <a class="tool-link hash" href="common-widgets-breadcrumbs-breadcrumbs.html#removeLastCrumb()-detail" title="direct link to this method"><span class="glyphicon icon-hash"></span></a>
+        
+        removeLastCrumb()
+        <span class="detail-header-tag small">
+            public                        static            method
+                    </span>
+    </div>
+
+    
+    <div class="doc-description">
+        <p><strong>Удалить последнюю хлебную крошку.</strong></p>
+
+        <p><strong>Пример:</strong></p>
+<pre><code class="hljs php language-php">   <span class="hljs-comment">// Controller</span>
+   <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">actionCreate</span><span class="hljs-params">()</span>
+   </span>{
+       <span class="hljs-variable">$userForm</span> = <span class="hljs-keyword">new</span> UserForm();
+       <span class="hljs-keyword">if</span> (<span class="hljs-variable">$userForm</span>-&gt;load(Yii::<span class="hljs-variable">$app</span>-&gt;request-&gt;post())
+           &amp;&amp; <span class="hljs-variable">$userForm</span>-&gt;validate()
+           &amp;&amp; <span class="hljs-variable">$newPersonId</span> = <span class="hljs-variable">$this</span>-&gt;service-&gt;create(<span class="hljs-variable">$userForm</span>, <span class="hljs-variable">$profileForm</span>)
+       ) {
+           Yii::<span class="hljs-variable">$app</span>-&gt;session-&gt;setFlash(<span class="hljs-string">'Пользователь сохранен. Добавьте специальность.'</span>);
+           <span class="hljs-comment">// При создании пользователя переходим на страницу его профиля</span>
+           <span class="hljs-comment">// Удаляем последнюю хлебную крошку "Создать пользователя". Она заменится на "Обновить пользователя"</span>
+           Breadcrumbs::removeLastCrumb();
+           <span class="hljs-keyword">return</span> <span class="hljs-variable">$this</span>-&gt;redirect([<span class="hljs-string">'update'</span>, <span class="hljs-string">'id'</span> =&gt; <span class="hljs-variable">$newPersonId</span>]);
+       }
+       <span class="hljs-keyword">return</span> <span class="hljs-variable">$this</span>-&gt;render(<span class="hljs-string">'create'</span>, [
+           <span class="hljs-string">'modelUserForm'</span> =&gt; <span class="hljs-variable">$userForm</span>,
+       ]);
+   }
+</code></pre>
+
+            </div>
+
+    <table class="detail-table table table-striped table-bordered table-hover">
+        <tr><td colspan="3" class="signature"><span class="signature-defs">public static</span> <span class="signature-type">void</span> <strong><a href="common-widgets-breadcrumbs-breadcrumbs.html#removeLastCrumb()-detail">removeLastCrumb</a></strong> ( )</td></tr>
+            </table>
+
+<!--	-->
+
+    <div class="detail-header h3" id="root()-detail">
+        <a href="#" class="tool-link" title="go to top"><span class="glyphicon glyphicon-arrow-up"></span></a>
+        <a class="tool-link hash" href="common-widgets-breadcrumbs-breadcrumbs.html#root()-detail" title="direct link to this method"><span class="glyphicon icon-hash"></span></a>
+        
+        root()
+        <span class="detail-header-tag small">
+            public                        static            method
+                    </span>
+    </div>
+
+    
+    <div class="doc-description">
+        <p><strong>Устанавливает хлебную крошку в начало пути после "Главной", например <code>Главная / Настройки</code>.</strong></p>
+
+        <p>Используется в представлениях.</p>
+
+            </div>
+
+    <table class="detail-table table table-striped table-bordered table-hover">
+        <tr><td colspan="3" class="signature"><span class="signature-defs">public static</span> <span class="signature-type">void</span> <strong><a href="common-widgets-breadcrumbs-breadcrumbs.html#root()-detail">root</a></strong> ( )</td></tr>
+            </table>
+
+<!--	-->
+
+    <div class="detail-header h3" id="run()-detail">
+        <a href="#" class="tool-link" title="go to top"><span class="glyphicon glyphicon-arrow-up"></span></a>
+        <a class="tool-link hash" href="common-widgets-breadcrumbs-breadcrumbs.html#run()-detail" title="direct link to this method"><span class="glyphicon icon-hash"></span></a>
+        
+        run()
+        <span class="detail-header-tag small">
+            public                                    method
+                    </span>
+    </div>
+
+    
+    <div class="doc-description">
+        <p><strong>Выполнение виджета</strong></p>
+
+        
+            </div>
+
+    <table class="detail-table table table-striped table-bordered table-hover">
+        <tr><td colspan="3" class="signature"><span class="signature-defs">public</span> <span class="signature-type">void</span> <strong><a href="common-widgets-breadcrumbs-breadcrumbs.html#run()-detail">run</a></strong> ( )</td></tr>
+            </table>
+
+<!--	-->
+
+    <div class="detail-header h3" id="show()-detail">
+        <a href="#" class="tool-link" title="go to top"><span class="glyphicon glyphicon-arrow-up"></span></a>
+        <a class="tool-link hash" href="common-widgets-breadcrumbs-breadcrumbs.html#show()-detail" title="direct link to this method"><span class="glyphicon icon-hash"></span></a>
+        
+        show()
+        <span class="detail-header-tag small">
+            public                        static            method
+                    </span>
+    </div>
+
+    
+    <div class="doc-description">
+        <p><strong>Отображает виджет.</strong></p>
+
+        <p>Используется в представлениях.</p>
+
+            </div>
+
+    <table class="detail-table table table-striped table-bordered table-hover">
+        <tr><td colspan="3" class="signature"><span class="signature-defs">public static</span> <span class="signature-type">void</span> <strong><a href="common-widgets-breadcrumbs-breadcrumbs.html#show()-detail">show</a></strong> ( )</td></tr>
+            </table>
+
+<!--	-->
+</div>
+        </div>
+</div>
+
+<script type="text/javascript">
+    /*<![CDATA[*/
+    $("a.toggle").on('click', function () {
+        var $this = $(this);
+        if ($this.hasClass('properties-hidden')) {
+            $this.text($this.text().replace(/Show/,'Hide'));
+            $this.parents(".summary").find(".inherited").show();
+            $this.removeClass('properties-hidden');
+        } else {
+            $this.text($this.text().replace(/Hide/,'Show'));
+            $this.parents(".summary").find(".inherited").hide();
+            $this.addClass('properties-hidden');
+        }
+
+        return false;
+    });
+    /*
+     $(".sourceCode a.show").toggle(function () {
+     $(this).text($(this).text().replace(/show/,'hide'));
+     $(this).parents(".sourceCode").find("div.code").show();
+     },function () {
+     $(this).text($(this).text().replace(/hide/,'show'));
+     $(this).parents(".sourceCode").find("div.code").hide();
+     });
+     $("a.sourceLink").click(function () {
+     $(this).attr('target','_blank');
+     });
+     */
+    /*]]>*/
+</script>
+
+
+</div>
+
+<footer class="footer">
+        <p class="pull-right"><small>Page generated on Fri, 30 Mar 2018 17:43:45 +0500</small></p>
+    Powered by <a href="http://www.yiiframework.com/" rel="external">Yii Framework</a></footer>
+
+<script>jQuery(function ($) {
+    var shiftWindow = function () { scrollBy(0, -50) };
+    if (location.hash) setTimeout(shiftWindow, 1);
+    window.addEventListener("hashchange", shiftWindow);
+var element = document.createElement("script");
+element.src = "./jssearch.index.js";
+document.body.appendChild(element);
+
+var searchBox = $('#searchbox');
+
+// search when typing in search field
+searchBox.on("keyup", function(event) {
+    var query = $(this).val();
+
+    if (query == '' || event.which == 27) {
+        $('#search-resultbox').hide();
+        return;
+    } else if (event.which == 13) {
+        var selectedLink = $('#search-resultbox a.selected');
+        if (selectedLink.length != 0) {
+            document.location = selectedLink.attr('href');
+            return;
+        }
+    } else if (event.which == 38 || event.which == 40) {
+        $('#search-resultbox').show();
+
+        var selected = $('#search-resultbox a.selected');
+        if (selected.length == 0) {
+            $('#search-results').find('a').first().addClass('selected');
+        } else {
+            var next;
+            if (event.which == 40) {
+                next = selected.parent().next().find('a').first();
+            } else {
+                next = selected.parent().prev().find('a').first();
+            }
+            if (next.length != 0) {
+                var resultbox = $('#search-results');
+                var position = next.position();
+
+//              TODO scrolling is buggy and jumps around
+//                resultbox.scrollTop(Math.floor(position.top));
+//                console.log(position.top);
+
+                selected.removeClass('selected');
+                next.addClass('selected');
+            }
+        }
+
+        return;
+    }
+    $('#search-resultbox').show();
+    $('#search-results').html('<li><span class="no-results">No results</span></li>');
+
+    var result = jssearch.search(query);
+
+    if (result.length > 0) {
+        var i = 0;
+        var resHtml = '';
+
+        for (var key in result) {
+            if (i++ > 20) {
+                break;
+            }
+            resHtml = resHtml +
+            '<li><a href="' + result[key].file.u.substr(3) +'"><span class="title">' + result[key].file.t + '</span>' +
+            '<span class="description">' + result[key].file.d + '</span></a></li>';
+        }
+        $('#search-results').html(resHtml);
+    }
+});
+
+// hide the search results on ESC
+$(document).on("keyup", function(event) { if (event.which == 27) { $('#search-resultbox').hide(); } });
+// hide search results on click to document
+$(document).bind('click', function (e) { $('#search-resultbox').hide(); });
+// except the following:
+searchBox.bind('click', function(e) { e.stopPropagation(); });
+$('#search-resultbox').bind('click', function(e) { e.stopPropagation(); });
+
+});</script></body>
+</html>

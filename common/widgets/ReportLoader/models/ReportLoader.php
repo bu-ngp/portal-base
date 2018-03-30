@@ -9,7 +9,7 @@ use yii\db\ActiveRecord;
 use yii\db\Expression;
 
 /**
- * Класс модели для таблицы БД "{{%report_loader}}".
+ * Класс модели для таблицы БД `{{%report_loader}}`.
  *
  * @property string $rl_id
  * @property string $rl_process_id

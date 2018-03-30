@@ -8,13 +8,20 @@
 
 namespace common\widgets\PropellerAssets;
 
-
 use yii\web\AssetBundle;
 
+/**
+ * Абстрактный класс пакета подключаемых скриптов и стилей для PropellerKit.
+ *
+ * Собирает зависимости от пакетов PropellerKit в зависимости от содержащихся виджетов на странице.
+ */
 abstract class AssetBundlePropeller extends AssetBundle
 {
     private static $widgetsList = [];
 
+    /**
+     * Инициализация пакета.
+     */
     public function init()
     {
         $this->depends = [
@@ -33,6 +40,11 @@ abstract class AssetBundlePropeller extends AssetBundle
         parent::init();
     }
 
+    /**
+     * Добавить виджет для последующего определения зависимостей от пакетов.
+     *
+     * @param string $class Полное имя класса виджета
+     */
     public static function setWidget($class)
     {
         if (!in_array($class, self::$widgetsList)) {
@@ -40,5 +52,26 @@ abstract class AssetBundlePropeller extends AssetBundle
         }
     }
 
+    /**
+     * Абстрактный метод с конфигурацией виджетов и их зависимостей в виде массива.
+     *
+     * ```php
+     *     function initDepends()
+     *     {
+     *         return [
+     *             'common\widgets\Select2\Select2' => [
+     *                 'common\widgets\PropellerAssets\ButtonAsset',
+     *                 'common\widgets\PropellerAssets\Select2Asset',
+     *                 'common\widgets\PropellerAssets\TextFieldSelect2Asset',
+     *             ],
+     *             'yii\bootstrap\NavBar' => [
+     *                 'common\widgets\PropellerAssets\NavBarAsset',
+     *             ],
+     *         ];
+     *     }
+     * ```
+     *
+     * @return array
+     */
     abstract function initDepends();
 }

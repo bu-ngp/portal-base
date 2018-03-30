@@ -8,20 +8,46 @@
 
 namespace common\widgets\SystemInfo;
 
-
-use common\widgets\SystemInfo\assets\SystemInfoAsset;
 use Yii;
-use yii\bootstrap\Html;
 use yii\bootstrap\Modal;
 use yii\bootstrap\Widget;
-use yii\helpers\ArrayHelper;
 
+/**
+ * Виджет с кнопкой-версией приложения, открывающей модальное окно с системной информацией.
+ *
+ * Виджет выводит следующую информцию:
+ * * Имя текущего пользователя. Если гость, то выводится `Гость`;
+ * * Тип авторизации текущего пользователя. (`Гость`, `Доменная`, `Локальная`);
+ * * Последняя дата обновления пакетов проекта;
+ * * Версия PHP;
+ * * Версия Yii;
+ * * Дисковое пространство на сервере в формате `Всего 20Гб, Free 15Гб (75%)`;
+ * * Активация LDAP авторизации;
+ * * Включение только LDAP авторизации;
+ * * Активация Автоматического импорт сотрудников.
+ *
+ * ```php
+ * <?= SystemInfo::widget() ?>
+ * ```
+ */
 class SystemInfo extends Widget
 {
+    /**
+     * @var string Таблица БД с данными о версии приложения.
+     */
     public $tableVersion = '{{%version}}';
+    /**
+     * @var string Таблица БД с данными конфигурации приложения.
+     */
     public $tableConfigCommon = '{{%config_common}}';
+    /**
+     * @var string Таблица БД с данными конфигурации `LDAP` приложения.
+     */
     public $tableConfigLdap = '{{%config_ldap}}';
 
+    /**
+     * Регистрация сообщений i18n
+     */
     public function registerTranslations()
     {
         $i18n = Yii::$app->i18n;
@@ -32,12 +58,18 @@ class SystemInfo extends Widget
         ];
     }
 
+    /**
+     * Инициализация виджета.
+     */
     public function init()
     {
         $this->registerTranslations();
         parent::init();
     }
 
+    /**
+     * Выполнение виджета
+     */
     public function run()
     {
         $this->registerAssets();

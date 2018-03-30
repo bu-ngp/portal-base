@@ -1,31 +1,44 @@
 <?php
-namespace common\widgets\PropellerAssets;
-
-use yii\web\AssetBundle;
 /**
  * Created by PhpStorm.
  * User: sysadmin
  * Date: 05.10.2017
  * Time: 9:43
  */
+
+namespace common\widgets\PropellerAssets;
+
+use yii\web\AssetBundle;
+
+/**
+ * Пакет jquery плагина PropellerKit для Radio кнопок.
+ */
 class RadioAsset extends AssetBundle
 {
-    public function init()
-    {
-        $this->sourcePath = '@npm/propellerkit';
-        $this->css = [
-            'components/radio/css/radio.css',
-        ];
+    /**
+     * @var string Источник ресурсов
+     */
+    public $sourcePath = '@npm/propellerkit';
 
-        $this->js = [
-            'components/radio/js/radio.js',
-        ];
+    /**
+     * @var array Набор css стилей
+     */
+    public $css = [
+        'components/radio/css/radio.css',
+    ];
 
-        $this->depends = [
-            'yii\web\YiiAsset',
-            'yii\bootstrap\BootstrapAsset',
-        ];
+    /**
+     * @var array Набор js скриптов
+     */
+    public $js = [
+        'components/radio/js/radio.js',
+    ];
 
-        parent::init();
-    }
+    /**
+     * @var array Зависимости
+     */
+    public $depends = [
+        'yii\web\YiiAsset',
+        'yii\bootstrap\BootstrapAsset',
+    ];
 }

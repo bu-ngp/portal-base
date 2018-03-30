@@ -5,24 +5,32 @@ namespace common\widgets\gridSelected2TextInput;
 use yii\web\AssetBundle;
 
 /**
- * Main backend application asset bundle.
+ * Пакет скриптов для jquery плагина `gridselected2textinput.js`.
  */
 class GridSelected2TextInputAsset extends AssetBundle
 {
     /**
-     * @inheritdoc
+     * @var array Набор js скриптов
+     */
+    public $js = [
+        'gridselected2textinput.js',
+    ];
+    /**
+     * @var array Зависимости
+     */
+    public $depends = [
+        'yii\web\YiiAsset',
+    ];
+
+    /**
+     * Инициализация пакета.
+     * ```php
+     * $this->sourcePath = __DIR__ . DIRECTORY_SEPARATOR . 'assets';
+     * ```
      */
     public function init()
     {
-        $this->sourcePath = __DIR__;
-        $this->js = [
-            'gridselected2textinput.js',
-        ];
-
-        $this->depends = [
-            'yii\web\JqueryAsset',
-        ];
-
+        $this->sourcePath = __DIR__ . DIRECTORY_SEPARATOR . 'assets';
         parent::init();
     }
 }

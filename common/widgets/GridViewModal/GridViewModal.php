@@ -8,18 +8,22 @@
 
 namespace common\widgets\GridViewModal;
 
-
 use common\widgets\GridView\GridView;
-use common\widgets\GridViewModal\assets\GridViewModalAsset;
 use Yii;
 use yii\helpers\Url;
 use yii\web\JsExpression;
 
+/**
+ * Виджет [[\common\widgets\GridView\GridView]] для использования в модальных окнах.
+ */
 class GridViewModal extends GridView
 {
     public $panelPrefix = 'wkModalGrid panel panel-';
-    public $minHeight = 510;
+    public $minHeight   = 510;
 
+    /**
+     * Выполнение виджета
+     */
     public function run()
     {
         parent::run();

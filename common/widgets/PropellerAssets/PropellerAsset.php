@@ -8,9 +8,27 @@
 
 namespace common\widgets\PropellerAssets;
 
-
+/**
+ * Класс с определенными зависимостями PropellerKit.
+ *
+ * ```php
+ * ...
+ * PropellerAsset::setWidget('yii\bootstrap\NavBar');
+ * ...
+ * PropellerAsset::setWidget('common\widgets\Select2\Select2');
+ * ...
+ * // layout.php
+ * PropellerAsset::register($this);
+ * $this->endBody()
+ * ```
+ */
 class PropellerAsset extends AssetBundlePropeller
 {
+    /**
+     * Метод с конфигурацией виджетов и их зависимостей.
+     *
+     * @return array
+     */
     function initDepends()
     {
         return [

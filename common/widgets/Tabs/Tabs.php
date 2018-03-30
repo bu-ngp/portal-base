@@ -14,13 +14,34 @@ use yii\bootstrap\Dropdown;
 use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
 
+/**
+ * Виджет `Bootstrap` вкладок Tabs с использованием jquery плагина `PropellerKit` на базе стандартного виджета `\yii\bootstrap\Tabs`.
+ *
+ * ```php
+ *     <?= Tabs::widget([
+ *         'items' => [
+ *             [
+ *                 'label' => 'Main',
+ *                 'content' => $form->field($model, 'post_name')->textInput(),
+ *             ],
+ *             [
+ *                 'label' => 'Additional',
+ *                 'content' => $form->field($model, 'post_description')->textInput(),
+ *             ],
+ *         ],
+ *     ]) ?>
+ * ```
+ */
 class Tabs extends \yii\bootstrap\Tabs
 {
-    public $options = ['role' => 'tablist'];
+    public $options       = ['role' => 'tablist'];
     public $headerOptions = ['role' => 'presentation'];
-    public $linkOptions = ['role' => 'tab'];
-    public $itemOptions = ['role' => 'tabpanel'];
+    public $linkOptions   = ['role' => 'tab'];
+    public $itemOptions   = ['role' => 'tabpanel'];
 
+    /**
+     * Выполнение виджета
+     */
     public function run()
     {
         $this->registerAssets();
@@ -61,7 +82,7 @@ class Tabs extends \yii\bootstrap\Tabs
                     $linkOptions['data-toggle'] = 'dropdown';
                 }
                 $header = Html::a($label, "#", $linkOptions) . "\n"
-                    . Dropdown::widget(['items' => $item['items'], 'clientOptions' => false, 'view' => $this->getView()]);
+                          . Dropdown::widget(['items' => $item['items'], 'clientOptions' => false, 'view' => $this->getView()]);
             } else {
                 $options = array_merge($this->itemOptions, ArrayHelper::getValue($item, 'options', []));
                 $options['id'] = ArrayHelper::getValue($options, 'id', $this->options['id'] . '-tab' . $n);
@@ -112,5 +133,4 @@ class Tabs extends \yii\bootstrap\Tabs
 
         $view->registerJs("$(document).find('.pmd-tabs').pmdTab()");
     }
-
 }

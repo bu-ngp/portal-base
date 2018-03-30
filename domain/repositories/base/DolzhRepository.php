@@ -58,11 +58,14 @@ class DolzhRepository
 
     /**
      * @param Dolzh $dolzh
+     * @return bool
      */
     public function delete(Dolzh $dolzh)
     {
-        if (!$dolzh->delete()) {
-            throw new \DomainException(Yii::t('domain/base', 'Deleting error.'));
+        try {
+            return $dolzh->delete() !== false;
+        } catch (\Exception $e) {
+            throw new \DomainException(Yii::t('domain/base', 'Deleting error.'), 0, $e);
         }
     }
 }

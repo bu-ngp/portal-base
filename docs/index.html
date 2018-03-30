@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="language" content="en" />
+        <link href="./assets/68294dbd/css/bootstrap.css" rel="stylesheet">
+<link href="./assets/bf114760/solarized_light.css" rel="stylesheet">
+<link href="./assets/5c617f36/style.css" rel="stylesheet">
+<script src="./assets/f8a50b49/jquery.js"></script>
+<script src="./assets/68294dbd/js/bootstrap.js"></script>
+<script src="./assets/192b8f1c/jssearch.js"></script>    <title>wk-portal Doc</title>
+</head>
+<body>
+
+<div class="wrap">
+    <nav id="w2073" class="navbar-inverse navbar-fixed-top navbar"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#w2073-collapse"><span class="sr-only">Toggle navigation</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span></button><a class="navbar-brand" href="./index.html">wk-portal Doc</a></div><div id="w2073-collapse" class="collapse navbar-collapse"><ul id="w2074" class="navbar-nav nav"><li><a href="./index.html">Class reference</a></li></ul><div class="navbar-form navbar-left" role="search">
+  <div class="form-group">
+    <input id="searchbox" type="text" class="form-control" placeholder="Search">
+  </div>
+</div>
+</div></nav>
+    <div id="search-resultbox" style="display: none;" class="modal-content">
+        <ul id="search-results">
+        </ul>
+    </div>
+
+    
+<div class="row">
+    <div class="col-md-3">
+                <div id="navigation" class="list-group"><a class="list-group-item" href="#navigation-2050" data-toggle="collapse" data-parent="#navigation">common\widgets\ActiveForm <b class="caret"></b></a><div id="navigation-2050" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-activeform-activefield.html">ActiveField</a>
+<a class="list-group-item" href="./common-widgets-activeform-activefilterform.html">ActiveFilterForm</a>
+<a class="list-group-item" href="./common-widgets-activeform-activeform.html">ActiveForm</a></div>
+<a class="list-group-item" href="#navigation-2051" data-toggle="collapse" data-parent="#navigation">common\widgets\Breadcrumbs <b class="caret"></b></a><div id="navigation-2051" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-breadcrumbs-breadcrumbs.html">Breadcrumbs</a>
+<a class="list-group-item" href="./common-widgets-breadcrumbs-breadcrumbsasset.html">BreadcrumbsAsset</a></div>
+<a class="list-group-item" href="#navigation-2052" data-toggle="collapse" data-parent="#navigation">common\widgets\CardList <b class="caret"></b></a><div id="navigation-2052" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-cardlist-cardlist.html">CardList</a>
+<a class="list-group-item" href="./common-widgets-cardlist-cardlistasset.html">CardListAsset</a>
+<a class="list-group-item" href="./common-widgets-cardlist-cardlisthelper.html">CardListHelper</a>
+<a class="list-group-item" href="./common-widgets-cardlist-masonryasset.html">MasonryAsset</a>
+<a class="list-group-item" href="./common-widgets-cardlist-module.html">Module</a></div>
+<a class="list-group-item" href="#navigation-2053" data-toggle="collapse" data-parent="#navigation">common\widgets\Documenter <b class="caret"></b></a><div id="navigation-2053" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-documenter-documenter.html">Documenter</a>
+<a class="list-group-item" href="./common-widgets-documenter-documenterasset.html">DocumenterAsset</a></div>
+<a class="list-group-item" href="#navigation-2054" data-toggle="collapse" data-parent="#navigation">common\widgets\Documenter\services <b class="caret"></b></a><div id="navigation-2054" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-documenter-services-documentercontainer.html">DocumenterContainer</a>
+<a class="list-group-item" href="./common-widgets-documenter-services-documenterviewer.html">DocumenterViewer</a></div>
+<a class="list-group-item" href="#navigation-2055" data-toggle="collapse" data-parent="#navigation">common\widgets\FixButtonBackward <b class="caret"></b></a><div id="navigation-2055" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-fixbuttonbackward-fixbuttonbackward.html">FixButtonBackward</a>
+<a class="list-group-item" href="./common-widgets-fixbuttonbackward-fixbuttonbackwardasset.html">FixButtonBackwardAsset</a></div>
+<a class="list-group-item" href="#navigation-2056" data-toggle="collapse" data-parent="#navigation">common\widgets\FixButtonOnTop <b class="caret"></b></a><div id="navigation-2056" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-fixbuttonontop-fixbuttonontop.html">FixButtonOnTop</a>
+<a class="list-group-item" href="./common-widgets-fixbuttonontop-fixbuttonontopasset.html">FixButtonOnTopAsset</a></div>
+<a class="list-group-item" href="#navigation-2057" data-toggle="collapse" data-parent="#navigation">common\widgets\GridViewModal <b class="caret"></b></a><div id="navigation-2057" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-gridviewmodal-gridviewmodal.html">GridViewModal</a>
+<a class="list-group-item" href="./common-widgets-gridviewmodal-gridviewmodalasset.html">GridViewModalAsset</a></div>
+<a class="list-group-item" href="#navigation-2058" data-toggle="collapse" data-parent="#navigation">common\widgets\GridView <b class="caret"></b></a><div id="navigation-2058" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-gridview-gridview.html">GridView</a>
+<a class="list-group-item" href="./common-widgets-gridview-gridviewasset.html">GridViewAsset</a>
+<a class="list-group-item" href="./common-widgets-gridview-sortableasset.html">SortableAsset</a></div>
+<a class="list-group-item" href="#navigation-2059" data-toggle="collapse" data-parent="#navigation">common\widgets\GridView\services <b class="caret"></b></a><div id="navigation-2059" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-gridview-services-actionbuttonchoose.html">ActionButtonChoose</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-actionbuttoncreate.html">ActionButtonCreate</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-actionbuttondelete.html">ActionButtonDelete</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-actionbuttonupdate.html">ActionButtonUpdate</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-actionbuttons.html">ActionButtons</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-ajaxresponse.html">AjaxResponse</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-checkboxstoragecolumn.html">CheckboxStorageColumn</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwaddcrudconfigforcreate.html">GWAddCrudConfigForCreate</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwaddcrudconfigforupdate.html">GWAddCrudConfigForUpdate</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwcustomizedialog.html">GWCustomizeDialog</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwdeletecrudconfigforcreate.html">GWDeleteCrudConfigForCreate</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwexportgrid.html">GWExportGrid</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwexportgridconfiguration.html">GWExportGridConfiguration</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwfilterdialog.html">GWFilterDialog</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwfilterdialogconfiguration.html">GWFilterDialogConfiguration</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwitemstrait.html">GWItemsTrait</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwpreparecolumns.html">GWPrepareColumns</a>
+<a class="list-group-item" href="./common-widgets-gridview-services-gwsavemodelforupdate.html">GWSaveModelForUpdate</a></div>
+<a class="list-group-item" href="#navigation-2060" data-toggle="collapse" data-parent="#navigation">common\widgets\HeaderPanel <b class="caret"></b></a><div id="navigation-2060" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-headerpanel-headerpanel.html">HeaderPanel</a>
+<a class="list-group-item" href="./common-widgets-headerpanel-headerpanelasset.html">HeaderPanelAsset</a></div>
+<a class="list-group-item" href="#navigation-2061" data-toggle="collapse" data-parent="#navigation">common\widgets\Html <b class="caret"></b></a><div id="navigation-2061" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-html-html.html">Html</a></div>
+<a class="list-group-item" href="#navigation-2062" data-toggle="collapse" data-parent="#navigation">common\widgets\Panel <b class="caret"></b></a><div id="navigation-2062" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-panel-panel.html">Panel</a></div>
+<a class="list-group-item" href="#navigation-2063" data-toggle="collapse" data-parent="#navigation">common\widgets\PropellerAssets <b class="caret"></b></a><div id="navigation-2063" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-propellerassets-assetbundlepropeller.html">AssetBundlePropeller</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-buttonasset.html">ButtonAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-cardasset.html">CardAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-checkboxasset.html">CheckboxAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-datetimepickerasset.html">DateTimePickerAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-dropdownasset.html">DropdownAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-listasset.html">ListAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-modalasset.html">ModalAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-navbarasset.html">NavBarAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-propellerasset.html">PropellerAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-radioasset.html">RadioAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-select2asset.html">Select2Asset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-shadowasset.html">ShadowAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-tabasset.html">TabAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-textfieldasset.html">TextFieldAsset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-textfieldselect2asset.html">TextFieldSelect2Asset</a>
+<a class="list-group-item" href="./common-widgets-propellerassets-toggleswitchasset.html">ToggleSwitchAsset</a></div>
+<a class="list-group-item" href="#navigation-2064" data-toggle="collapse" data-parent="#navigation">common\widgets\ReportLoader <b class="caret"></b></a><div id="navigation-2064" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-reportloader-blameablebehavior.html">BlameableBehavior</a>
+<a class="list-group-item" href="./common-widgets-reportloader-module.html">Module</a>
+<a class="list-group-item" href="./common-widgets-reportloader-progressbarasset.html">ProgressbarAsset</a>
+<a class="list-group-item" href="./common-widgets-reportloader-reportbymodel.html">ReportByModel</a>
+<a class="list-group-item" href="./common-widgets-reportloader-reportbytemplate.html">ReportByTemplate</a>
+<a class="list-group-item" href="./common-widgets-reportloader-reportloader.html">ReportLoader</a>
+<a class="list-group-item" href="./common-widgets-reportloader-reportloaderasset.html">ReportLoaderAsset</a>
+<a class="list-group-item" href="./common-widgets-reportloader-reportprocess.html">ReportProcess</a></div>
+<a class="list-group-item" href="#navigation-2065" data-toggle="collapse" data-parent="#navigation">common\widgets\ReportLoader\controllers <b class="caret"></b></a><div id="navigation-2065" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-reportloader-controllers-reportcontroller.html">ReportController</a>
+<a class="list-group-item" href="./common-widgets-reportloader-controllers-wkloadercontroller.html">WkloaderController</a></div>
+<a class="list-group-item" href="#navigation-2066" data-toggle="collapse" data-parent="#navigation">common\widgets\ReportLoader\models <b class="caret"></b></a><div id="navigation-2066" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-reportloader-models-reportloader.html">ReportLoader</a></div>
+<a class="list-group-item" href="#navigation-2067" data-toggle="collapse" data-parent="#navigation">common\widgets\Select2 <b class="caret"></b></a><div id="navigation-2067" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-select2-select2.html">Select2</a>
+<a class="list-group-item" href="./common-widgets-select2-select2asset.html">Select2Asset</a></div>
+<a class="list-group-item" href="#navigation-2068" data-toggle="collapse" data-parent="#navigation">common\widgets\SystemInfo <b class="caret"></b></a><div id="navigation-2068" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-systeminfo-systeminfo.html">SystemInfo</a>
+<a class="list-group-item" href="./common-widgets-systeminfo-systeminfoasset.html">SystemInfoAsset</a></div>
+<a class="list-group-item" href="#navigation-2069" data-toggle="collapse" data-parent="#navigation">common\widgets\Tabs <b class="caret"></b></a><div id="navigation-2069" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-tabs-tabs.html">Tabs</a></div>
+<a class="list-group-item" href="#navigation-2070" data-toggle="collapse" data-parent="#navigation">common\widgets\Tabs\assets <b class="caret"></b></a><div id="navigation-2070" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-tabs-assets-tabsasset.html">TabsAsset</a></div>
+<a class="list-group-item" href="#navigation-2071" data-toggle="collapse" data-parent="#navigation">common\widgets\gridSelected2TextInput <b class="caret"></b></a><div id="navigation-2071" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-gridselected2textinput-gridselected2textinputasset.html">GridSelected2TextInputAsset</a></div>
+<a class="list-group-item" href="#navigation-2072" data-toggle="collapse" data-parent="#navigation">common\widgets\wkdialog <b class="caret"></b></a><div id="navigation-2072" class="submenu panel-collapse collapse"><a class="list-group-item" href="./common-widgets-wkdialog-wkdialogasset.html">WkDialogAsset</a></div></div>    </div>
+    <div class="col-md-9 api-content" role="main">
+        <h1>Class Reference</h1>
+
+<table class="summaryTable docIndex table table-bordered table-striped table-hover">
+    <colgroup>
+        <col class="col-package" />
+        <col class="col-class" />
+        <col class="col-description" />
+    </colgroup>
+    <tr>
+        <th>Class</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-activeform-activefield.html">common\widgets\ActiveForm\ActiveField</a></td>
+        <td>Класс полей <code>ActiveForm</code> на базе класса <a href="https://www.yiiframework.com/doc-2.0/yii-bootstrap-activefield.html">\yii\bootstrap\ActiveField</a></td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-activeform-activefilterform.html">common\widgets\ActiveForm\ActiveFilterForm</a></td>
+        <td>Класс формы для использования в модальных окнах дополнительных фильтров.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-activeform-activeform.html">common\widgets\ActiveForm\ActiveForm</a></td>
+        <td>Класс формы ActiveForm</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-breadcrumbs-breadcrumbs.html">common\widgets\Breadcrumbs\Breadcrumbs</a></td>
+        <td>Виджет хлебных крошек.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-breadcrumbs-breadcrumbsasset.html">common\widgets\Breadcrumbs\BreadcrumbsAsset</a></td>
+        <td>Пакет стилей и скриптов для виджета <a href="common-widgets-breadcrumbs-breadcrumbs.html">common\widgets\Breadcrumbs\Breadcrumbs</a></td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-cardlist-cardlist.html">common\widgets\CardList\CardList</a></td>
+        <td>Виджет набора плиток кнопок с возможностью сортировки по популярности, поиска.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-cardlist-cardlistasset.html">common\widgets\CardList\CardListAsset</a></td>
+        <td>Пакет стилей и скриптов для виджета <a href="common-widgets-cardlist-cardlist.html">common\widgets\CardList\CardList</a></td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-cardlist-cardlisthelper.html">common\widgets\CardList\CardListHelper</a></td>
+        <td>Хелпер для использования <a href="common-widgets-cardlist-cardlist.html">common\widgets\CardList\CardList</a></td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-cardlist-masonryasset.html">common\widgets\CardList\MasonryAsset</a></td>
+        <td>Пакет jquery плагина masonry для <a href="common-widgets-cardlist-cardlist.html">common\widgets\CardList\CardList</a></td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-cardlist-module.html">common\widgets\CardList\Module</a></td>
+        <td>Модуль настроек для виджета <a href="common-widgets-cardlist-cardlist.html">common\widgets\CardList\CardList</a>.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-documenter-documenter.html">common\widgets\Documenter\Documenter</a></td>
+        <td>Виджет для отображения обновлений приложения, или документации.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-documenter-documenterasset.html">common\widgets\Documenter\DocumenterAsset</a></td>
+        <td>Пакет стилей и скриптов для виджета <a href="common-widgets-documenter-documenter.html">common\widgets\Documenter\Documenter</a></td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-documenter-services-documentercontainer.html">common\widgets\Documenter\services\DocumenterContainer</a></td>
+        <td>Класс контейнер документов для виджета <a href="common-widgets-documenter-documenter.html">common\widgets\Documenter\Documenter</a></td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-documenter-services-documenterviewer.html">common\widgets\Documenter\services\DocumenterViewer</a></td>
+        <td>Класс для вывода контента документа для виджета <a href="common-widgets-documenter-documenter.html">common\widgets\Documenter\Documenter</a></td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-fixbuttonbackward-fixbuttonbackward.html">common\widgets\FixButtonBackward\FixButtonBackward</a></td>
+        <td>Виджет добавляет внизу слева страницы кнопку для перехода на предыдущую страницу.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-fixbuttonbackward-fixbuttonbackwardasset.html">common\widgets\FixButtonBackward\FixButtonBackwardAsset</a></td>
+        <td>Пакет стилей и скриптов для виджета <a href="common-widgets-fixbuttonbackward-fixbuttonbackward.html">common\widgets\FixButtonBackward\FixButtonBackward</a></td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-fixbuttonontop-fixbuttonontop.html">common\widgets\FixButtonOnTop\FixButtonOnTop</a></td>
+        <td>Виджет добавляет внизу справа страницы кнопку для перехода наверх страницы.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-fixbuttonontop-fixbuttonontopasset.html">common\widgets\FixButtonOnTop\FixButtonOnTopAsset</a></td>
+        <td>Пакет стилей и скриптов для виджета <a href="common-widgets-fixbuttonontop-fixbuttonontop.html">common\widgets\FixButtonOnTop\FixButtonOnTop</a></td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridviewmodal-gridviewmodal.html">common\widgets\GridViewModal\GridViewModal</a></td>
+        <td>Виджет <a href="common-widgets-gridview-gridview.html">common\widgets\GridView\GridView</a> для использования в модальных окнах.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridviewmodal-gridviewmodalasset.html">common\widgets\GridViewModal\GridViewModalAsset</a></td>
+        <td>Пакет стилей и скриптов для виджета <a href="common-widgets-gridviewmodal-gridviewmodal.html">common\widgets\GridViewModal\GridViewModal</a></td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-gridview.html">common\widgets\GridView\GridView</a></td>
+        <td>Виджет грида с дополнительными возможностями.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-gridviewasset.html">common\widgets\GridView\GridViewAsset</a></td>
+        <td>Пакет стилей и скриптов для виджета <a href="common-widgets-gridview-gridview.html">common\widgets\GridView\GridView</a></td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-sortableasset.html">common\widgets\GridView\SortableAsset</a></td>
+        <td>Пакет jquery плагина <code>sortable.js</code> для виджета <a href="common-widgets-gridview-gridview.html">common\widgets\GridView\GridView</a></td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-services-actionbuttonchoose.html">common\widgets\GridView\services\ActionButtonChoose</a></td>
+        <td>Класс кнопки действия грида "Выбрать"</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-services-actionbuttoncreate.html">common\widgets\GridView\services\ActionButtonCreate</a></td>
+        <td>Класс кнопки грида "Создать" запись</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-services-actionbuttondelete.html">common\widgets\GridView\services\ActionButtonDelete</a></td>
+        <td>Класс кнопки действия грида "Удалить" запись</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-services-actionbuttonupdate.html">common\widgets\GridView\services\ActionButtonUpdate</a></td>
+        <td>Класс кнопки действия грида "Обновить" запись</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-services-actionbuttons.html">common\widgets\GridView\services\ActionButtons</a></td>
+        <td>Класс кнопок действия <code>CRUD</code></td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-services-ajaxresponse.html">common\widgets\GridView\services\AjaxResponse</a></td>
+        <td>Класс ajax ответа http запроса.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-services-checkboxstoragecolumn.html">common\widgets\GridView\services\CheckboxStorageColumn</a></td>
+        <td>Класс колонки <code>\yii\grid\GridView</code>.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-services-gwaddcrudconfigforcreate.html">common\widgets\GridView\services\GWAddCrudConfigForCreate</a></td>
+        <td>Класс конфигурации добавления новой записи в грид при создании новой записи.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-services-gwaddcrudconfigforupdate.html">common\widgets\GridView\services\GWAddCrudConfigForUpdate</a></td>
+        <td>Класс конфигурации добавления новой записи в грид при обновлении текущей записи.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-services-gwcustomizedialog.html">common\widgets\GridView\services\GWCustomizeDialog</a></td>
+        <td>Класс формирующий диалог настройки грида.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-services-gwdeletecrudconfigforcreate.html">common\widgets\GridView\services\GWDeleteCrudConfigForCreate</a></td>
+        <td>Класс конфигурации удаления записи в гриде при создании новой записи.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-services-gwexportgrid.html">common\widgets\GridView\services\GWExportGrid</a></td>
+        <td>Класс формирует контент для экспорта данных грида в <code>Excel</code> или <code>PDF</code>. Также осуществляет сам экспорт.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-services-gwexportgridconfiguration.html">common\widgets\GridView\services\GWExportGridConfiguration</a></td>
+        <td>Класс конфигурирования экспорта грида <a href="common-widgets-gridview-gridview.html">common\widgets\GridView\GridView</a>.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-services-gwfilterdialog.html">common\widgets\GridView\services\GWFilterDialog</a></td>
+        <td>Класс формирует контент для дополнительного фильтра грида <a href="common-widgets-gridview-gridview.html">common\widgets\GridView\GridView</a>.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-services-gwfilterdialogconfiguration.html">common\widgets\GridView\services\GWFilterDialogConfiguration</a></td>
+        <td>Класс конфигурирования дополнительного фильтра грида <a href="common-widgets-gridview-gridview.html">common\widgets\GridView\GridView</a>.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-services-gwitemstrait.html">common\widgets\GridView\services\GWItemsTrait</a></td>
+        <td>Трейт используется в моделях для преобразования ключей-значений в читабельные данные.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-services-gwpreparecolumns.html">common\widgets\GridView\services\GWPrepareColumns</a></td>
+        <td>Класс подготавливает конфигурационный массив колонок для <a href="common-widgets-gridview-gridview.html">common\widgets\GridView\GridView</a>.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridview-services-gwsavemodelforupdate.html">common\widgets\GridView\services\GWSaveModelForUpdate</a></td>
+        <td>Класс конфигурации и выполнения сохранения в БД выбранной записи в гриде <a href="common-widgets-gridview-gridview.html">common\widgets\GridView\GridView</a>, при обновления текущей записи.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-headerpanel-headerpanel.html">common\widgets\HeaderPanel\HeaderPanel</a></td>
+        <td>Виджет панель-заголовок.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-headerpanel-headerpanelasset.html">common\widgets\HeaderPanel\HeaderPanelAsset</a></td>
+        <td>Пакет стилей для <a href="common-widgets-headerpanel-headerpanel.html">common\widgets\HeaderPanel\HeaderPanel</a></td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-html-html.html">common\widgets\Html\Html</a></td>
+        <td>Расширение стандартного класса Yii2 <code>\yii\bootstrap\Html</code>.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-panel-panel.html">common\widgets\Panel\Panel</a></td>
+        <td>Виджет <code>Bootstrap</code> панели.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-propellerassets-assetbundlepropeller.html">common\widgets\PropellerAssets\AssetBundlePropeller</a></td>
+        <td>Абстрактный класс пакета подключаемых скриптов и стилей для PropellerKit.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-propellerassets-buttonasset.html">common\widgets\PropellerAssets\ButtonAsset</a></td>
+        <td>Пакет jquery плагина PropellerKit для кнопок.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-propellerassets-cardasset.html">common\widgets\PropellerAssets\CardAsset</a></td>
+        <td>Пакет jquery плагина PropellerKit для карт-плиток.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-propellerassets-checkboxasset.html">common\widgets\PropellerAssets\CheckboxAsset</a></td>
+        <td>Пакет jquery плагина PropellerKit для Checkbox.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-propellerassets-datetimepickerasset.html">common\widgets\PropellerAssets\DateTimePickerAsset</a></td>
+        <td>Пакет jquery плагина PropellerKit для выбора дат из календаря.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-propellerassets-dropdownasset.html">common\widgets\PropellerAssets\DropdownAsset</a></td>
+        <td>Пакет jquery плагина PropellerKit для DropDown.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-propellerassets-listasset.html">common\widgets\PropellerAssets\ListAsset</a></td>
+        <td>Пакет jquery плагина PropellerKit для списков.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-propellerassets-modalasset.html">common\widgets\PropellerAssets\ModalAsset</a></td>
+        <td>Пакет jquery плагина PropellerKit для модальных окон.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-propellerassets-navbarasset.html">common\widgets\PropellerAssets\NavBarAsset</a></td>
+        <td>Пакет jquery плагина PropellerKit для меню навигации.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-propellerassets-propellerasset.html">common\widgets\PropellerAssets\PropellerAsset</a></td>
+        <td>Класс с определенными зависимостями PropellerKit.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-propellerassets-radioasset.html">common\widgets\PropellerAssets\RadioAsset</a></td>
+        <td>Пакет jquery плагина PropellerKit для Radio кнопок.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-propellerassets-select2asset.html">common\widgets\PropellerAssets\Select2Asset</a></td>
+        <td>Пакет jquery плагина PropellerKit для Select2.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-propellerassets-shadowasset.html">common\widgets\PropellerAssets\ShadowAsset</a></td>
+        <td>Пакет jquery плагина PropellerKit для теней HTML элементов.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-propellerassets-tabasset.html">common\widgets\PropellerAssets\TabAsset</a></td>
+        <td>Пакет jquery плагина PropellerKit для Tab.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-propellerassets-textfieldasset.html">common\widgets\PropellerAssets\TextFieldAsset</a></td>
+        <td>Пакет jquery плагина PropellerKit для текстовых полей.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-propellerassets-textfieldselect2asset.html">common\widgets\PropellerAssets\TextFieldSelect2Asset</a></td>
+        <td>Пакет jquery плагина PropellerKit для <a href="common-widgets-select2-select2.html">common\widgets\Select2\Select2</a>.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-propellerassets-toggleswitchasset.html">common\widgets\PropellerAssets\ToggleSwitchAsset</a></td>
+        <td>Пакет jquery плагина PropellerKit для ToggleSwitch.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-reportloader-blameablebehavior.html">common\widgets\ReportLoader\BlameableBehavior</a></td>
+        <td>Поведение определяющее идентификатор пользователя. В случае отсутствия авторизованного пользователя берется идентификатор сессии пользователя.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-reportloader-module.html">common\widgets\ReportLoader\Module</a></td>
+        <td>Модуль настроек для виджета <a href="common-widgets-reportloader-reportloader.html">common\widgets\ReportLoader\ReportLoader</a>.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-reportloader-progressbarasset.html">common\widgets\ReportLoader\ProgressbarAsset</a></td>
+        <td>Пакет jquery плагина <code>progressbar.js</code> для виджета <a href="common-widgets-reportloader-reportloader.html">common\widgets\ReportLoader\ReportLoader</a></td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-reportloader-reportbymodel.html">common\widgets\ReportLoader\ReportByModel</a></td>
+        <td>Класс для обработки отчета по модели <a href="https://www.yiiframework.com/doc/api/2.0/yii-db-activerecord">\yii\db\ActiveRecord</a>.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-reportloader-reportbytemplate.html">common\widgets\ReportLoader\ReportByTemplate</a></td>
+        <td>Абстрактный класс для формирования классов отчетов по шаблонам <code>Excel</code>.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-reportloader-reportloader.html">common\widgets\ReportLoader\ReportLoader</a></td>
+        <td>Виджет обработки и формирания отчетов.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-reportloader-reportloaderasset.html">common\widgets\ReportLoader\ReportLoaderAsset</a></td>
+        <td>Пакет стилей и скриптов для виджета <a href="common-widgets-reportloader-reportloader.html">common\widgets\ReportLoader\ReportLoader</a></td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-reportloader-reportprocess.html">common\widgets\ReportLoader\ReportProcess</a></td>
+        <td>Класс процесса обработки отчетов.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-reportloader-controllers-reportcontroller.html">common\widgets\ReportLoader\controllers\ReportController</a></td>
+        <td>Веб контроллер обработчика отчетов</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-reportloader-controllers-wkloadercontroller.html">common\widgets\ReportLoader\controllers\WkloaderController</a></td>
+        <td>Класс консольного контроллера обработчика отчетов</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-reportloader-models-reportloader.html">common\widgets\ReportLoader\models\ReportLoader</a></td>
+        <td>Класс модели для таблицы БД <code>{{%report_loader}}</code>.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-select2-select2.html">common\widgets\Select2\Select2</a></td>
+        <td>Виджет выбора значений из списка с использованием jquery плагина <code>Select2</code>.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-select2-select2asset.html">common\widgets\Select2\Select2Asset</a></td>
+        <td>Пакет стилей и скриптов для виджета <a href="common-widgets-select2-select2.html">common\widgets\Select2\Select2</a></td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-systeminfo-systeminfo.html">common\widgets\SystemInfo\SystemInfo</a></td>
+        <td>Виджет с кнопкой-версией приложения, открывающей модальное окно с системной информацией.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-systeminfo-systeminfoasset.html">common\widgets\SystemInfo\SystemInfoAsset</a></td>
+        <td>Пакет стилей и скриптов для виджета <a href="common-widgets-systeminfo-systeminfo.html">common\widgets\SystemInfo\SystemInfo</a></td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-tabs-tabs.html">common\widgets\Tabs\Tabs</a></td>
+        <td>Виджет <code>Bootstrap</code> вкладок Tabs с использованием jquery плагина <code>PropellerKit</code> на базе стандартного виджета <code>\yii\bootstrap\Tabs</code>.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-tabs-assets-tabsasset.html">common\widgets\Tabs\assets\TabsAsset</a></td>
+        <td>Created by PhpStorm.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-gridselected2textinput-gridselected2textinputasset.html">common\widgets\gridSelected2TextInput\GridSelected2TextInputAsset</a></td>
+        <td>Пакет скриптов для jquery плагина <code>gridselected2textinput.js</code>.</td>
+    </tr>
+    <tr>
+        <td><a href="common-widgets-wkdialog-wkdialogasset.html">common\widgets\wkdialog\WkDialogAsset</a></td>
+        <td>Пакет скриптов для jquery плагина <code>wkdialog.js</code>.</td>
+    </tr>
+</table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    /*<![CDATA[*/
+    $("a.toggle").on('click', function () {
+        var $this = $(this);
+        if ($this.hasClass('properties-hidden')) {
+            $this.text($this.text().replace(/Show/,'Hide'));
+            $this.parents(".summary").find(".inherited").show();
+            $this.removeClass('properties-hidden');
+        } else {
+            $this.text($this.text().replace(/Hide/,'Show'));
+            $this.parents(".summary").find(".inherited").hide();
+            $this.addClass('properties-hidden');
+        }
+
+        return false;
+    });
+    /*
+     $(".sourceCode a.show").toggle(function () {
+     $(this).text($(this).text().replace(/show/,'hide'));
+     $(this).parents(".sourceCode").find("div.code").show();
+     },function () {
+     $(this).text($(this).text().replace(/hide/,'show'));
+     $(this).parents(".sourceCode").find("div.code").hide();
+     });
+     $("a.sourceLink").click(function () {
+     $(this).attr('target','_blank');
+     });
+     */
+    /*]]>*/
+</script>
+
+
+</div>
+
+<footer class="footer">
+        <p class="pull-right"><small>Page generated on Fri, 30 Mar 2018 17:43:52 +0500</small></p>
+    Powered by <a href="http://www.yiiframework.com/" rel="external">Yii Framework</a></footer>
+
+<script>jQuery(function ($) {
+    var shiftWindow = function () { scrollBy(0, -50) };
+    if (location.hash) setTimeout(shiftWindow, 1);
+    window.addEventListener("hashchange", shiftWindow);
+var element = document.createElement("script");
+element.src = "./jssearch.index.js";
+document.body.appendChild(element);
+
+var searchBox = $('#searchbox');
+
+// search when typing in search field
+searchBox.on("keyup", function(event) {
+    var query = $(this).val();
+
+    if (query == '' || event.which == 27) {
+        $('#search-resultbox').hide();
+        return;
+    } else if (event.which == 13) {
+        var selectedLink = $('#search-resultbox a.selected');
+        if (selectedLink.length != 0) {
+            document.location = selectedLink.attr('href');
+            return;
+        }
+    } else if (event.which == 38 || event.which == 40) {
+        $('#search-resultbox').show();
+
+        var selected = $('#search-resultbox a.selected');
+        if (selected.length == 0) {
+            $('#search-results').find('a').first().addClass('selected');
+        } else {
+            var next;
+            if (event.which == 40) {
+                next = selected.parent().next().find('a').first();
+            } else {
+                next = selected.parent().prev().find('a').first();
+            }
+            if (next.length != 0) {
+                var resultbox = $('#search-results');
+                var position = next.position();
+
+//              TODO scrolling is buggy and jumps around
+//                resultbox.scrollTop(Math.floor(position.top));
+//                console.log(position.top);
+
+                selected.removeClass('selected');
+                next.addClass('selected');
+            }
+        }
+
+        return;
+    }
+    $('#search-resultbox').show();
+    $('#search-results').html('<li><span class="no-results">No results</span></li>');
+
+    var result = jssearch.search(query);
+
+    if (result.length > 0) {
+        var i = 0;
+        var resHtml = '';
+
+        for (var key in result) {
+            if (i++ > 20) {
+                break;
+            }
+            resHtml = resHtml +
+            '<li><a href="' + result[key].file.u.substr(3) +'"><span class="title">' + result[key].file.t + '</span>' +
+            '<span class="description">' + result[key].file.d + '</span></a></li>';
+        }
+        $('#search-results').html(resHtml);
+    }
+});
+
+// hide the search results on ESC
+$(document).on("keyup", function(event) { if (event.which == 27) { $('#search-resultbox').hide(); } });
+// hide search results on click to document
+$(document).bind('click', function (e) { $('#search-resultbox').hide(); });
+// except the following:
+searchBox.bind('click', function(e) { e.stopPropagation(); });
+$('#search-resultbox').bind('click', function(e) { e.stopPropagation(); });
+
+});</script></body>
+</html>

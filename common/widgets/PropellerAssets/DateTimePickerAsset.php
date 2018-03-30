@@ -10,28 +10,39 @@ namespace common\widgets\PropellerAssets;
 
 use yii\web\AssetBundle;
 
+/**
+ * Пакет jquery плагина PropellerKit для выбора дат из календаря.
+ */
 class DateTimePickerAsset extends AssetBundle
 {
-    public function init()
-    {
-        $this->sourcePath = '@npm';
-        $this->css = [
-            'propellerkit/components/datetimepicker/css/bootstrap-datetimepicker.css',
-            'propellerkit/components/datetimepicker/css/pmd-datetimepicker.css',
-            'material-design-icons/iconfont/material-icons.css',
-        ];
+    /**
+     * @var string Источник ресурсов
+     */
+    public $sourcePath = '@npm';
 
-        $this->js = [
-            'moment/min/moment-with-locales.min.js',
-            'propellerkit/components/datetimepicker/js/bootstrap-datetimepicker.js',
-        ];
+    /**
+     * @var array Набор css стилей
+     */
+    public $css = [
+        'propellerkit/components/datetimepicker/css/bootstrap-datetimepicker.css',
+        'propellerkit/components/datetimepicker/css/pmd-datetimepicker.css',
+        'material-design-icons/iconfont/material-icons.css',
+    ];
 
-        $this->depends = [
-            'yii\web\YiiAsset',
-            'yii\bootstrap\BootstrapAsset',
-            'common\widgets\PropellerAssets\TextFieldAsset',
-        ];
+    /**
+     * @var array Набор js скриптов
+     */
+    public $js = [
+        'moment/min/moment-with-locales.min.js',
+        'propellerkit/components/datetimepicker/js/bootstrap-datetimepicker.js',
+    ];
 
-        parent::init();
-    }
+    /**
+     * @var array Зависимости
+     */
+    public $depends = [
+        'yii\web\YiiAsset',
+        'yii\bootstrap\BootstrapAsset',
+        'common\widgets\PropellerAssets\TextFieldAsset',
+    ];
 }
