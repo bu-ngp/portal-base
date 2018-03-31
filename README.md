@@ -4,4 +4,4 @@
 
 Класс | Описание
 --- | ---
-[\common\widgets\ActiveForm\ActiveField](common/widgets/ActiveForm/ActiveField) | Виджет поля
+[\common\widgets\ActiveForm\ActiveField](common/widgets/ActiveForm/ActiveField.php) | Виджет поля
