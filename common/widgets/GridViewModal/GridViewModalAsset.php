@@ -1,5 +1,4 @@
 <?php
-
 namespace common\widgets\GridViewModal;
 
 use yii\web\AssetBundle;

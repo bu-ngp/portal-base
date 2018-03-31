@@ -31,6 +31,9 @@ class ActiveForm extends \yii\bootstrap\ActiveForm
     public $fieldClass = 'common\widgets\ActiveForm\ActiveField';
 
     /**
+     * @param \yii\base\Model $model Модель
+     * @param string $attribute Атрибут модели
+     * @param array $options Дополнительные опции
      * @return \yii\bootstrap\ActiveField
      */
     public function field($model, $attribute, $options = [])
