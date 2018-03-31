@@ -4,4 +4,4 @@
 
 Класс | Описание
 --- | ---
-[\common\widgets\ActiveForm\ActiveField](common/widgets/ActiveForm/ActiveField.php) | Виджет поля
+[\common\widgets\ActiveForm\ActiveField](https://vovancho.github.io/wk-portal/common-widgets-activeform-activefield.html) | Расширение класса [\yii\bootstrap\ActiveField](https://www.yiiframework.com/doc-2.0/yii-bootstrap-activefield.html). <BR> Добавлены дополнительные элементы формы: <BR> `toggleSwitch` - Переключатель на базе [\yii\bootstrap\ActiveField::checkbox()](https://www.yiiframework.com/doc-2.0/yii-bootstrap-activefield.html#checkbox()-detail) <BR> `datetime` - Виджет выбора даты из календаря на базе [\yii\widgets\ActiveField::textInput()](https://www.yiiframework.com/doc/api/2.0/yii-widgets-activefield#textInput()-detail) с использованием jquery плагина `bootstrap-datetimepicker.js`. <BR> `maskedInput` - элемент формы на базе виджета [\yii\widgets\MaskedInput](https://www.yiiframework.com/doc/api/2.0/yii-widgets-maskedinput).
