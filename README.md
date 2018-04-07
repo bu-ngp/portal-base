@@ -3,7 +3,7 @@
 
 ![Портал организации wk-portal](https://github.com/vovancho/wk-portal/blob/master/01.jpg)
 
-*<p align="center">*Содержание*</p>*
+<p align="center">Содержание</p>
 
   - [Краткое описание](#Краткое-описание)
   - [Основное меню](#Основное-меню)
