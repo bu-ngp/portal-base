@@ -1,9 +1,8 @@
 Портал организации wk-portal
 ============================
+![Портал организации wk-portal](https://github.com/vovancho/wk-portal/blob/master/project/images/01.jpg)
 
-![Портал организации wk-portal](https://github.com/vovancho/wk-portal/blob/master/01.jpg)
-
-<p align="center">Содержание</p>
+**<p align="center">Содержание</p>**
 
   - [Краткое описание](#Краткое-описание)
   - [Основное меню](#Основное-меню)
@@ -52,17 +51,17 @@
 
 ## Основное меню
 
-![Основное меню](https://github.com/vovancho/wk-portal/blob/master/02.jpg)
+![Основное меню](https://github.com/vovancho/wk-portal/blob/master/project/images/02.jpg)
 *<p align="center">Основное меню содержит две плитки: `Настройки портала` и `Справочники`. Также присутствует возможность добавления меню с ссылками на дополнительные приложения</p>*
 
 ### Настройки портала
 
-![Настройки портала](https://github.com/vovancho/wk-portal/blob/master/03.jpg)
+![Настройки портала](https://github.com/vovancho/wk-portal/blob/master/project/images/03.jpg)
 *<p align="center">Настройки портала содержат две плитки: `Авторизация` и `Общие настройки портала`. Также присутствует возможность добавления меню с ссылками на дополнительные приложения</p>*
 
 ### Авторизация
 
-![Авторизация](https://github.com/vovancho/wk-portal/blob/master/04.jpg)
+![Авторизация](https://github.com/vovancho/wk-portal/blob/master/project/images/04.jpg)
 *<p align="center">Страница меню `Авторизация` содержит три плитки: `Роли`, `Настройки LDAP` и `Пользователи системы`</p>*
 
 Авторизация в системе возможна тремя способами:
@@ -75,7 +74,7 @@
 
 ### Роли
 
-![Роли](https://github.com/vovancho/wk-portal/blob/master/05.jpg)
+![Роли](https://github.com/vovancho/wk-portal/blob/master/project/images/05.jpg)
 *<p align="center">Грид со всеми ролями системы</p>*
 
 Роли делятся на два вида:
@@ -84,14 +83,14 @@
 
 > В системе используется ролевая система `RBAC` на основе ролей и разрешений
 
-![Роли2](https://github.com/vovancho/wk-portal/blob/master/06.jpg)
+![Роли2](https://github.com/vovancho/wk-portal/blob/master/project/images/06.jpg)
 *<p align="center">Профиль системной роли `Администратор системы`</p>*
 
 Каждой роли можно назначить имя доменной группы. В случае если у доменного пользователя имеется назначеная группа, то ему будет разрешена роль с этой группой.
 
 ### Настройки LDAP
 
-![Настройки LDAP](https://github.com/vovancho/wk-portal/blob/master/07.jpg)
+![Настройки LDAP](https://github.com/vovancho/wk-portal/blob/master/project/images/07.jpg)
 *<p align="center">Форма настроек доменной авторизации `LDAP`</p>*
 
 Для активации доменной авторизации необходимо указать следующие настройки:
@@ -102,7 +101,7 @@
 
 ### Пользователи системы
 
-![Пользователи системы](https://github.com/vovancho/wk-portal/blob/master/08_1.jpg)
+![Пользователи системы](https://github.com/vovancho/wk-portal/blob/master/project/images/08_1.jpg)
 *<p align="center">Грид пользователей системы</p>*
 
 Пользователи системы - это сотрудники организации.
@@ -130,7 +129,7 @@
   - Автор создавший запись
   - Автор обновивший запись
   
-![Профиль пользователя](https://github.com/vovancho/wk-portal/blob/master/11.jpg)
+![Профиль пользователя](https://github.com/vovancho/wk-portal/blob/master/project/images/11.jpg)
 *<p align="center">Профиль пользователя (сотрудника)</p>*
 
 Профиль пользователя содержит его данные и историю его специальностей и совмещений.
@@ -140,14 +139,14 @@
   - Совмещение
   - Роль (для определения разрешений в системе)
   
-![Добавление специальности](https://github.com/vovancho/wk-portal/blob/master/12.jpg)
+![Добавление специальности](https://github.com/vovancho/wk-portal/blob/master/project/images/12.jpg)
 *<p align="center">Добавление специальности пользователю (сотруднику)</p>*
 
 При добавлении специальности или совмещения, сотрудника можно привязать к определенному зданию, в котором он работает по данной специальности/совмещению.
 
 ### Общие настройки портала
 
-![Общие настройки портала](https://github.com/vovancho/wk-portal/blob/master/14.jpg)
+![Общие настройки портала](https://github.com/vovancho/wk-portal/blob/master/project/images/14.jpg)
 *<p align="center">Форма общих настроек портала</p>*
 
 Общие настройки портала содержат следующие настройки:
@@ -160,7 +159,7 @@
 
 ### Справочники
 
-![Справочники](https://github.com/vovancho/wk-portal/blob/master/15.jpg)
+![Справочники](https://github.com/vovancho/wk-portal/blob/master/project/images/15.jpg)
 *<p align="center">Справочники портала</p>*
 
 Базовая часть портала содержит следующие справочники:
@@ -186,12 +185,12 @@
 
 В системе используются особые гриды для отображения данных. Колонки гридов имеют собственную сортировку и фильтрацию.
 
-![Особенности гридов системы](https://github.com/vovancho/wk-portal/blob/master/08_2.jpg)
+![Особенности гридов системы](https://github.com/vovancho/wk-portal/blob/master/project/images/08_2.jpg)
 *<p align="center">Грид с дополнительными возможностями настройки, фильтрации и экспорта данных</p>*
 
 #### Настройки грида
 
-![Настройки грида](https://github.com/vovancho/wk-portal/blob/master/09.jpg)
+![Настройки грида](https://github.com/vovancho/wk-portal/blob/master/project/images/09.jpg)
 *<p align="center">Форма настройки грида</p>*
 
 Каждый грид в системе имеет следующие настройки:
@@ -205,14 +204,14 @@
 
 #### Дополнительный фильтр грида
 
-![Дополнительный фильтр грида](https://github.com/vovancho/wk-portal/blob/master/10.jpg)
+![Дополнительный фильтр грида](https://github.com/vovancho/wk-portal/blob/master/project/images/10.jpg)
 *<p align="center">Форма дополнительного фильтра грида</p>*
 
 Некоторые гриды в системе имееют `Дополнительный фильтр`. Он представляет из себя модальное окно с дополнительными параметрами фильтрации данных в гриде с возможностью поиска по параметрам.
 
 #### Экспорта данных грида
 
-![Экспорта данных грида](https://github.com/vovancho/wk-portal/blob/master/17.jpg)
+![Экспорта данных грида](https://github.com/vovancho/wk-portal/blob/master/project/images/17.jpg)
 *<p align="center">Экспорт данных грида в `PDF`</p>*
 
   - Данные грида можно экспортировать в форматы `PDF` или `Excel`.
@@ -226,7 +225,7 @@
 
 Некоторые гриды используются совместно с элементами-списками выбора значений, например гриды справочников
 
-![Выбор значений из грида](https://github.com/vovancho/wk-portal/blob/master/13.jpg)
+![Выбор значений из грида](https://github.com/vovancho/wk-portal/blob/master/project/images/13.jpg)
 *<p align="center">Порядок выбора записей грида с использованием списка с выбором значений</p>*
 
 Некоторые списки с выбором значений, помимо базового функционала имеют справа кнопку `...`, при нажатии на которую откроется страница с гридом, с дополнительной кнопкой действия `Выбрать` для каждой записи.
@@ -236,7 +235,7 @@
 
 ### Затребованные отчеты
 
-![Затребованные отчеты](https://github.com/vovancho/wk-portal/blob/master/16.jpg)
+![Затребованные отчеты](https://github.com/vovancho/wk-portal/blob/master/project/images/16.jpg)
 *<p align="center">Форма загрузчика отчетов</p>*
 
 При нажатии меню `Система`\\`Затребованные отчеты` откроется модальное окно Загрузчика отчетов.
@@ -251,7 +250,7 @@
 
 ### Обработчики
 
-![Обработчики](https://github.com/vovancho/wk-portal/blob/master/18.jpg)
+![Обработчики](https://github.com/vovancho/wk-portal/blob/master/project/images/18.jpg)
 *<p align="center">Обработчики портала организации</p>*
 
 При нажатии меню `Система`\\`Обработчики` откроется страница с гридом обработчиков.
@@ -268,7 +267,7 @@
   - По окончанию обработки можно скачать отчет выполнения обработчка, если он предусмотрен
   - Некоторые обработчики отображаются только пользователям, запустившим его. Некоторые всем администраторам, например импорт сотрудников
 
-![Обработчики, колонки](https://github.com/vovancho/wk-portal/blob/master/19.jpg)
+![Обработчики, колонки](https://github.com/vovancho/wk-portal/blob/master/project/images/19.jpg)
 *<p align="center">Форма настроек грида обработчиков</p>*
 
 Грид обработчиков имеет следующие колонки:
@@ -288,7 +287,7 @@
 
 ### Обновления
 
-![Обновления](https://github.com/vovancho/wk-portal/blob/master/20.jpg)
+![Обновления](https://github.com/vovancho/wk-portal/blob/master/project/images/20.jpg)
 *<p align="center">Описание обновлений системы</p>*
 
 При нажатии меню `Система`\\`Обновления` откроется страница с виджетом обновлений портала организации.
@@ -299,7 +298,7 @@
 
 ### Контакты
 
-![Контакты](https://github.com/vovancho/wk-portal/blob/master/21.jpg)
+![Контакты](https://github.com/vovancho/wk-portal/blob/master/project/images/21.jpg)
 *<p align="center">Контакты портала организации</p>*
 
 При нажатии меню `Система`\\`Контакты` откроется страница с контактами портала организации.
@@ -347,7 +346,7 @@
 
 ## Тестирование
 
-![Тестирование](https://github.com/vovancho/wk-portal/blob/master/tests.png)
+![Тестирование](https://github.com/vovancho/wk-portal/blob/master/project/images/tests.png)
 *<p align="center">Модульные тесты доменной архитектуры базовой части портала</p>*
 
 Для тестирования проекта используется тестовый фреймворк [Codeception](https://codeception.com/)
